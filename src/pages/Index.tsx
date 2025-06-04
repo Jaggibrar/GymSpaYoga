@@ -1,9 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote } from "lucide-react";
 import { Link } from "react-router-dom";
+import TrainersSection from "@/components/TrainersSection";
 
 const Index = () => {
   const categories = [
@@ -108,6 +108,11 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
+              <Link to="/trainers">
+                <Button variant="outline" className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                  Find Trainers
+                </Button>
+              </Link>
               <Link to="/register-business">
                 <Button variant="outline" className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                   List Your Business
@@ -131,7 +136,7 @@ const Index = () => {
               <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent block mt-2"> Wellness Journey</span>
             </h2>
             <p className="text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Discover and book the best gyms, spas, and yoga centers near you. Your transformation starts here.
+              Discover and book the best gyms, spas, yoga centers, and expert trainers near you. Your transformation starts here.
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-6 mb-16">
@@ -236,8 +241,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Trainers Section */}
+      <TrainersSection />
+
       {/* User Testimonials */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-white/60 backdrop-blur-sm">
         <div className="container mx-auto">
           <h3 className="text-4xl font-bold text-center text-gray-800 mb-16">
             What Our Users Say
@@ -301,12 +309,20 @@ const Index = () => {
             <p className="text-2xl text-emerald-100 mb-12 max-w-3xl mx-auto leading-relaxed">
               Join our platform and reach thousands of potential customers. List your business for just ₹4,999 and start growing today!
             </p>
-            <Link to="/register-business">
-              <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 text-xl px-12 py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300">
-                Register Your Business - ₹4,999
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-6">
+              <Link to="/register-business">
+                <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100 text-xl px-12 py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300">
+                  Register Your Business - ₹4,999
+                  <ArrowRight className="ml-3 h-6 w-6" />
+                </Button>
+              </Link>
+              <Link to="/register-trainer">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600 text-xl px-12 py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300">
+                  Become a Trainer - ₹2,999
+                  <ArrowRight className="ml-3 h-6 w-6" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -330,6 +346,7 @@ const Index = () => {
                 <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300">Find Gyms</Link></li>
                 <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300">Find Spas</Link></li>
                 <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300">Find Yoga Centers</Link></li>
+                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300">Find Trainers</Link></li>
                 <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300">About Us</Link></li>
               </ul>
             </div>
@@ -337,6 +354,7 @@ const Index = () => {
               <h5 className="font-bold mb-6 text-xl">For Business</h5>
               <ul className="space-y-3 text-gray-400">
                 <li><Link to="/register-business" className="hover:text-emerald-400 transition-colors duration-300">List Your Business</Link></li>
+                <li><Link to="/register-trainer" className="hover:text-emerald-400 transition-colors duration-300">Become a Trainer</Link></li>
                 <li>Manage Bookings</li>
                 <li>Pricing Plans</li>
                 <li>Support</li>

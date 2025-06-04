@@ -13,6 +13,8 @@ import SpaDetails from "./pages/SpaDetails";
 import YogaDetails from "./pages/YogaDetails";
 import RegisterBusiness from "./pages/RegisterBusiness";
 import About from "./pages/About";
+import Trainers from "./pages/Trainers";
+import RegisterTrainer from "./pages/RegisterTrainer";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,8 @@ const App = () => (
           <Route path="/spa/:id" element={<SpaDetails />} />
           <Route path="/yoga/:id" element={<YogaDetails />} />
           <Route path="/register-business" element={<RegisterBusiness />} />
+          <Route path="/trainers" element={<Trainers />} />
+          <Route path="/register-trainer" element={<RegisterTrainer />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
