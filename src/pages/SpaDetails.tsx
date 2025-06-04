@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +35,8 @@ const SpaDetails = () => {
     }
   };
 
-  const spa = spaData[id as keyof typeof spaData] || spaData[1];
+  const spaId = Number(id) || 1;
+  const spa = spaData[spaId as keyof typeof spaData] || spaData[1];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">

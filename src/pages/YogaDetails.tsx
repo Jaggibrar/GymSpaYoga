@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,7 +41,8 @@ const YogaDetails = () => {
     }
   };
 
-  const studio = yogaData[id as keyof typeof yogaData] || yogaData[1];
+  const yogaId = Number(id) || 1;
+  const studio = yogaData[yogaId as keyof typeof yogaData] || yogaData[1];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">

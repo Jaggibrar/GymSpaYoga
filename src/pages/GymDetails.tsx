@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +35,8 @@ const GymDetails = () => {
     }
   };
 
-  const gym = gymData[id as keyof typeof gymData] || gymData[1];
+  const gymId = Number(id) || 1;
+  const gym = gymData[gymId as keyof typeof gymData] || gymData[1];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
