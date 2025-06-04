@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Star, Clock, Phone, Heart, Users, Wifi, Car, Shield, Camera, ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import BookingModal from "@/components/BookingModal";
 
 const YogaDetails = () => {
   const { id } = useParams();
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Mock data - in real app this would come from API
   const yogaData = {
@@ -47,18 +50,18 @@ const YogaDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+      <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/yoga" className="flex items-center space-x-2">
+            <Link to="/yoga" className="flex items-center space-x-2 hover:text-green-600 transition-colors duration-300">
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Yoga</span>
             </Link>
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="h-12 w-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300">
+                <Heart className="h-7 w-7 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </Link>
@@ -130,11 +133,14 @@ const YogaDetails = () => {
 
               <Separator className="my-4" />
 
-              <div className="space-y-3">
-                <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-lg py-3">
+              <div className="space-y-4">
+                <Button 
+                  onClick={() => setIsBookingOpen(true)}
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
                   Book Class
                 </Button>
-                <Button variant="outline" className="w-full border-green-500 text-green-600 hover:bg-green-50">
+                <Button variant="outline" className="w-full border-green-500 text-green-600 hover:bg-green-50 text-lg py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   Call Now
                 </Button>
               </div>
@@ -223,3 +229,11 @@ const YogaDetails = () => {
 };
 
 export default YogaDetails;
+
+<BookingModal
+  isOpen={isBookingOpen}
+  onClose={() => setIsBookingOpen(false)}
+  businessName={studio.name}
+  businessType="Yoga Class"
+  price={studio.price}
+/>

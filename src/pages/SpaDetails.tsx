@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Star, Clock, Phone, Waves, Users, Wifi, Car, Shield, Camera, ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import BookingModal from "@/components/BookingModal";
 
 const SpaDetails = () => {
   const { id } = useParams();
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Mock data - in real app this would come from API
   const spaData = {
@@ -41,18 +44,18 @@ const SpaDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+      <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/spas" className="flex items-center space-x-2">
+            <Link to="/spas" className="flex items-center space-x-2 hover:text-blue-600 transition-colors duration-300">
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Spas</span>
             </Link>
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
-                <Waves className="h-6 w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="h-12 w-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300">
+                <Waves className="h-7 w-7 text-white" />
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </Link>
@@ -125,11 +128,14 @@ const SpaDetails = () => {
 
               <Separator className="my-4" />
 
-              <div className="space-y-3">
-                <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-lg py-3">
+              <div className="space-y-4">
+                <Button 
+                  onClick={() => setIsBookingOpen(true)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+                >
                   Book Treatment
                 </Button>
-                <Button variant="outline" className="w-full border-blue-500 text-blue-600 hover:bg-blue-50">
+                <Button variant="outline" className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 text-lg py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   Call Now
                 </Button>
               </div>
@@ -192,6 +198,14 @@ const SpaDetails = () => {
           </div>
         </div>
       </div>
+
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        businessName={spa.name}
+        businessType="Spa Treatment"
+        price={spa.price}
+      />
     </div>
   );
 };
