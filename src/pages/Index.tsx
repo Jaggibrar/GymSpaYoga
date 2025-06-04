@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Yoga } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -24,7 +24,7 @@ const Index = () => {
     {
       title: "Yoga Centers",
       description: "Mind, body & soul harmony",
-      icon: <Yoga className="h-8 w-8" />,
+      icon: <Heart className="h-8 w-8" />,
       color: "from-green-500 to-emerald-500",
       link: "/yoga"
     }

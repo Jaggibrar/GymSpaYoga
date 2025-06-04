@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Star, Clock, Phone, Yoga as YogaIcon, Search, Filter } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Heart, Search, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Yoga = () => {
@@ -100,7 +100,7 @@ const Yoga = () => {
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2">
               <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <YogaIcon className="h-6 w-6 text-white" />
+                <Heart className="h-6 w-6 text-white" />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                 GymSpaYoga
