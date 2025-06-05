@@ -17,7 +17,7 @@ const TrainersSection = () => {
       hourlyRate: 1500,
       location: "Mumbai",
       specializations: ["Weight Training", "Bodybuilding"],
-      image: "/placeholder.svg"
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
     },
     {
       id: 2,
@@ -29,7 +29,7 @@ const TrainersSection = () => {
       hourlyRate: 1200,
       location: "Pune",
       specializations: ["Hatha Yoga", "Meditation"],
-      image: "/placeholder.svg"
+      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
     },
     {
       id: 3,
@@ -41,7 +41,7 @@ const TrainersSection = () => {
       hourlyRate: 2000,
       location: "Bangalore",
       specializations: ["Deep Tissue", "Aromatherapy"],
-      image: "/placeholder.svg"
+      image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
     }
   ];
 
@@ -64,45 +64,45 @@ const TrainersSection = () => {
   };
 
   return (
-    <section className="py-20 px-4">
+    <section className="py-12 sm:py-20 px-4">
       <div className="container mx-auto">
-        <div className="text-center mb-16">
-          <h3 className="text-4xl font-bold text-gray-800 mb-6">
+        <div className="text-center mb-12 sm:mb-16">
+          <h3 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-6">
             Expert Trainers & Instructors
           </h3>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto">
             Connect with certified professionals for personalized training and guidance
           </p>
-          <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-2xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-600">500+</div>
-              <div className="text-gray-600">Certified Trainers</div>
+              <div className="text-2xl sm:text-3xl font-bold text-emerald-600">500+</div>
+              <div className="text-gray-600 text-sm sm:text-base">Certified Trainers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">98%</div>
-              <div className="text-gray-600">Client Satisfaction</div>
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600">98%</div>
+              <div className="text-gray-600 text-sm sm:text-base">Client Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">24/7</div>
-              <div className="text-gray-600">Available Support</div>
+              <div className="text-2xl sm:text-3xl font-bold text-purple-600">24/7</div>
+              <div className="text-gray-600 text-sm sm:text-base">Available Support</div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {featuredTrainers.map((trainer) => (
             <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 bg-white/90 backdrop-blur-sm">
               <div className="relative">
                 <img 
                   src={trainer.image} 
                   alt={trainer.name}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-40 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4">
                   <Badge className={`bg-gradient-to-r ${getCategoryColor(trainer.category)} text-white shadow-lg`}>
                     <div className="flex items-center space-x-1">
                       {getCategoryIcon(trainer.category)}
-                      <span className="capitalize">{trainer.category}</span>
+                      <span className="capitalize text-xs sm:text-sm">{trainer.category}</span>
                     </div>
                   </Badge>
                 </div>
@@ -122,7 +122,7 @@ const TrainersSection = () => {
                 </CardTitle>
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-gray-600">{trainer.experience} years exp.</p>
-                  <p className="text-lg font-bold text-emerald-600">₹{trainer.hourlyRate}/hr</p>
+                  <p className="text-base sm:text-lg font-bold text-emerald-600">₹{trainer.hourlyRate}/hr</p>
                 </div>
               </CardHeader>
               
@@ -152,15 +152,15 @@ const TrainersSection = () => {
 
         <div className="text-center">
           <Link to="/trainers">
-            <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xl px-12 py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300">
+            <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto mb-4 sm:mb-6">
               View All Trainers
               <ArrowRight className="ml-3 h-6 w-6" />
             </Button>
           </Link>
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <Link to="/register-trainer">
-              <Button variant="outline" className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-lg px-8 py-3">
-                Become a Trainer - ₹2,999
+              <Button variant="outline" className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 w-full sm:w-auto">
+                Become a Trainer
               </Button>
             </Link>
           </div>
