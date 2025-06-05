@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -170,18 +169,26 @@ const Index = () => {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-12 sm:mb-16">
-            <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-emerald-500 hover:bg-emerald-600">
-              📍 Nearby Locations
-            </Badge>
-            <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-blue-500 hover:bg-blue-600">
-              💎 Luxury Experience
-            </Badge>
-            <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-purple-500 hover:bg-purple-600">
-              ⭐ Premium Quality
-            </Badge>
-            <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-orange-500 hover:bg-orange-600">
-              💰 Best Value
-            </Badge>
+            <Link to="/gyms">
+              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-emerald-500 hover:bg-emerald-600 cursor-pointer transition-all duration-300 hover:scale-105">
+                📍 Nearby Locations
+              </Badge>
+            </Link>
+            <Link to="/spas">
+              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-blue-500 hover:bg-blue-600 cursor-pointer transition-all duration-300 hover:scale-105">
+                💎 Luxury Experience
+              </Badge>
+            </Link>
+            <Link to="/yoga">
+              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-purple-500 hover:bg-purple-600 cursor-pointer transition-all duration-300 hover:scale-105">
+                ⭐ Premium Quality
+              </Badge>
+            </Link>
+            <Link to="/gyms">
+              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-orange-500 hover:bg-orange-600 cursor-pointer transition-all duration-300 hover:scale-105">
+                💰 Best Value
+              </Badge>
+            </Link>
           </div>
         </div>
       </section>
