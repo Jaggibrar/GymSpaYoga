@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Star, Clock, Phone, Heart, Search, Filter, Users, Lotus } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Heart, Search, Filter, Users, Flower } from "lucide-react";
 import { Link } from "react-router-dom";
 import CategoryTrainers from "@/components/CategoryTrainers";
 
