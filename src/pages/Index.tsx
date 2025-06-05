@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -152,6 +153,60 @@ const Index = () => {
             Discover and book the best gyms, spas, yoga centers, and expert trainers near you. 
             Your transformation starts with the perfect match.
           </p>
+
+          {/* Hero Images Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 sm:mb-16 max-w-6xl mx-auto">
+            <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+              <img 
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                alt="Modern Gym"
+                className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div className="absolute bottom-6 left-6 text-white">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Dumbbell className="h-6 w-6" />
+                  <span className="text-sm font-semibold">PREMIUM GYMS</span>
+                </div>
+                <h3 className="text-2xl font-bold">State-of-the-Art Fitness</h3>
+                <p className="text-sm opacity-90">Professional equipment & expert guidance</p>
+              </div>
+            </div>
+
+            <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+              <img 
+                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                alt="Luxury Spa"
+                className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div className="absolute bottom-6 left-6 text-white">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Waves className="h-6 w-6" />
+                  <span className="text-sm font-semibold">LUXURY SPAS</span>
+                </div>
+                <h3 className="text-2xl font-bold">Ultimate Relaxation</h3>
+                <p className="text-sm opacity-90">Rejuvenate your mind, body & soul</p>
+              </div>
+            </div>
+
+            <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+              <img 
+                src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                alt="Peaceful Yoga Studio"
+                className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div className="absolute bottom-6 left-6 text-white">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Heart className="h-6 w-6" />
+                  <span className="text-sm font-semibold">YOGA CENTERS</span>
+                </div>
+                <h3 className="text-2xl font-bold">Inner Peace & Balance</h3>
+                <p className="text-sm opacity-90">Find harmony through ancient practices</p>
+              </div>
+            </div>
+          </div>
           
           {/* Stats Section */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-12 sm:mb-16">
