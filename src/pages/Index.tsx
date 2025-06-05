@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import TrainersSection from "@/components/TrainersSection";
 
@@ -169,22 +169,22 @@ const Index = () => {
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-12 sm:mb-16">
-            <Link to="/gyms">
+            <Link to="/gyms?filter=luxury">
               <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-emerald-500 hover:bg-emerald-600 cursor-pointer transition-all duration-300 hover:scale-105">
                 📍 Nearby Locations
               </Badge>
             </Link>
-            <Link to="/spas">
+            <Link to="/spas?filter=luxury">
               <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-blue-500 hover:bg-blue-600 cursor-pointer transition-all duration-300 hover:scale-105">
                 💎 Luxury Experience
               </Badge>
             </Link>
-            <Link to="/yoga">
+            <Link to="/yoga?filter=premium">
               <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-purple-500 hover:bg-purple-600 cursor-pointer transition-all duration-300 hover:scale-105">
                 ⭐ Premium Quality
               </Badge>
             </Link>
-            <Link to="/gyms">
+            <Link to="/gyms?filter=budget">
               <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-orange-500 hover:bg-orange-600 cursor-pointer transition-all duration-300 hover:scale-105">
                 💰 Best Value
               </Badge>
@@ -355,7 +355,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Business Registration CTA - Removed Prices */}
+      {/* Enhanced Business Registration CTA */}
       <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="container mx-auto text-center">
           <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8">
@@ -385,16 +385,57 @@ const Index = () => {
       {/* Enhanced Footer */}
       <footer className="bg-gray-900 text-white py-12 sm:py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12">
+            <div className="lg:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="h-12 w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
                   <Dumbbell className="h-6 w-6 text-white" />
                 </div>
                 <h4 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
               </div>
-              <p className="text-gray-300 text-lg">Your wellness journey starts here.</p>
+              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+                Your wellness journey starts here. We connect fitness enthusiasts with the best gyms, spas, and yoga centers across India. Transform your health, transform your life.
+              </p>
+              
+              {/* Social Media Icons */}
+              <div className="flex space-x-4 mb-6">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <Facebook className="h-5 w-5 text-white" />
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 p-3 rounded-full transition-all duration-300 transform hover:scale-110">
+                  <Instagram className="h-5 w-5 text-white" />
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <X className="h-5 w-5 text-white" />
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <Linkedin className="h-5 w-5 text-white" />
+                </a>
+              </div>
+
+              {/* Payment Methods */}
+              <div>
+                <h6 className="text-sm font-semibold text-gray-400 mb-3">We Accept</h6>
+                <div className="flex space-x-3">
+                  <div className="bg-white rounded-lg p-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-6 w-10" />
+                  </div>
+                  <div className="bg-white rounded-lg p-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-6 w-10" />
+                  </div>
+                  <div className="bg-white rounded-lg p-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express" className="h-6 w-10" />
+                  </div>
+                  <div className="bg-white rounded-lg p-2">
+                    <img src="https://logos-world.net/wp-content/uploads/2020/09/PayPal-Logo.png" alt="PayPal" className="h-6 w-10" />
+                  </div>
+                  <div className="bg-white rounded-lg p-2">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" className="h-6 w-10" />
+                  </div>
+                </div>
+              </div>
             </div>
+            
             <div>
               <h5 className="font-bold mb-6 text-xl text-emerald-400">For Users</h5>
               <ul className="space-y-3 text-gray-300">
@@ -405,6 +446,7 @@ const Index = () => {
                 <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300">About Us</Link></li>
               </ul>
             </div>
+            
             <div>
               <h5 className="font-bold mb-6 text-xl text-blue-400">For Business</h5>
               <ul className="space-y-3 text-gray-300">
@@ -415,6 +457,7 @@ const Index = () => {
                 <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Support</span></li>
               </ul>
             </div>
+            
             <div>
               <h5 className="font-bold mb-6 text-xl text-purple-400">Contact</h5>
               <div className="space-y-3 text-gray-300">
