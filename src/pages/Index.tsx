@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X, Search, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import TrainersSection from "@/components/TrainersSection";
 
 const Index = () => {
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchCategory, setSearchCategory] = useState("");
+
   const categories = [
     {
       title: "Gyms",
@@ -106,6 +112,11 @@ const Index = () => {
     { number: "50+", label: "Cities", icon: <Sparkles className="h-6 w-6" /> }
   ];
 
+  const handleSearch = () => {
+    console.log("Searching for:", searchCategory, "in", searchLocation);
+    // Add search logic here
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       {/* Header */}
@@ -126,6 +137,16 @@ const Index = () => {
                   Find Trainers
                 </Button>
               </Link>
+              <Link to="/blogs">
+                <Button variant="outline" className="text-xs sm:text-sm">
+                  Blogs
+                </Button>
+              </Link>
+              <Link to="/pricing">
+                <Button variant="outline" className="text-xs sm:text-sm">
+                  Pricing
+                </Button>
+              </Link>
               <Link to="/register-business">
                 <Button variant="outline" className="text-xs sm:text-sm">
                   List Your Business
@@ -141,17 +162,113 @@ const Index = () => {
 
       {/* Enhanced Hero Section */}
       <section className="py-16 sm:py-24 lg:py-32 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-4xl sm:text-6xl lg:text-8xl font-bold text-gray-800 mb-6 sm:mb-8 leading-tight">
-            Transform Your
-            <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent block mt-2 sm:mt-4">
-              Wellness Journey
-            </span>
-          </h2>
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
-            Discover and book the best gyms, spas, yoga centers, and expert trainers near you. 
-            Your transformation starts with the perfect match.
-          </p>
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl sm:text-6xl lg:text-8xl font-bold text-gray-800 mb-6 sm:mb-8 leading-tight">
+              Transform Your
+              <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent block mt-2 sm:mt-4">
+                Wellness Journey
+              </span>
+            </h2>
+            <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
+              Discover and book the best gyms, spas, yoga centers, and expert trainers near you. 
+              Your transformation starts with the perfect match.
+            </p>
+
+            {/* Search Bar */}
+            <div className="max-w-4xl mx-auto mb-12">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    <Select onValueChange={setSearchCategory}>
+                      <SelectTrigger className="h-14 text-lg">
+                        <SelectValue placeholder="What are you looking for?" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="gym">Gym</SelectItem>
+                        <SelectItem value="spa">Spa</SelectItem>
+                        <SelectItem value="yoga">Yoga Center</SelectItem>
+                        <SelectItem value="trainer">Personal Trainer</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1">
+                    <Input
+                      placeholder="Enter your location..."
+                      value={searchLocation}
+                      onChange={(e) => setSearchLocation(e.target.value)}
+                      className="h-14 text-lg"
+                    />
+                  </div>
+                  <Button 
+                    onClick={handleSearch}
+                    className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg"
+                  >
+                    <Search className="h-5 w-5 mr-2" />
+                    Search
+                  </Button>
+                </div>
+                <div className="flex items-center justify-center mt-4 text-sm text-gray-600">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <span>Advanced filters available after search</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Images Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto">
+              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+                <img 
+                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                  alt="Modern Gym"
+                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Dumbbell className="h-6 w-6" />
+                    <span className="text-sm font-semibold">PREMIUM GYMS</span>
+                  </div>
+                  <h3 className="text-2xl font-bold">State-of-the-Art Fitness</h3>
+                  <p className="text-sm opacity-90">Professional equipment & expert guidance</p>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+                <img 
+                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                  alt="Luxury Spa"
+                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Waves className="h-6 w-6" />
+                    <span className="text-sm font-semibold">LUXURY SPAS</span>
+                  </div>
+                  <h3 className="text-2xl font-bold">Ultimate Relaxation</h3>
+                  <p className="text-sm opacity-90">Rejuvenate your mind, body & soul</p>
+                </div>
+              </div>
+
+              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
+                <img 
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                  alt="Peaceful Yoga Studio"
+                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Heart className="h-6 w-6" />
+                    <span className="text-sm font-semibold">YOGA CENTERS</span>
+                  </div>
+                  <h3 className="text-2xl font-bold">Inner Peace & Balance</h3>
+                  <p className="text-sm opacity-90">Find harmony through ancient practices</p>
+                </div>
+              </div>
+            </div>
+          </div>
           
           {/* Stats Section */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-12 sm:mb-16">
@@ -452,8 +569,8 @@ const Index = () => {
               <ul className="space-y-3 text-gray-300">
                 <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300">List Your Business</Link></li>
                 <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300">Become a Trainer</Link></li>
-                <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Manage Bookings</span></li>
-                <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Pricing Plans</span></li>
+                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300">Manage Bookings</Link></li>
+                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300">Pricing Plans</Link></li>
                 <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Support</span></li>
               </ul>
             </div>

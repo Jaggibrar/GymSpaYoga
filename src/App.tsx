@@ -16,6 +16,9 @@ import About from "./pages/About";
 import Trainers from "./pages/Trainers";
 import RegisterTrainer from "./pages/RegisterTrainer";
 import NotFound from "./pages/NotFound";
+import Blogs from "./pages/Blogs";
+import Pricing from "./pages/Pricing";
+import ManageBookings from "./pages/ManageBookings";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,9 @@ const App = () => (
           <Route path="/trainers" element={<Trainers />} />
           <Route path="/register-trainer" element={<RegisterTrainer />} />
           <Route path="/about" element={<About />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/manage-bookings" element={<ManageBookings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
