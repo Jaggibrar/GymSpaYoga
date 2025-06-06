@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -160,174 +161,131 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Enhanced Hero Section */}
-      <section className="py-16 sm:py-24 lg:py-32 px-4">
-        <div className="container mx-auto">
+      {/* Enhanced Hero Section with Three Panel Layout */}
+      <section className="relative h-screen overflow-hidden">
+        {/* Three Panel Background Images */}
+        <div className="absolute inset-0 grid grid-cols-3 h-full">
+          {/* Gym Panel */}
+          <div className="relative overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+              alt="Modern gym equipment and workout space"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+          
+          {/* Spa Panel */}
+          <div className="relative overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+              alt="Luxury spa relaxation and wellness center"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+          
+          {/* Yoga Panel */}
+          <div className="relative overflow-hidden">
+            <img 
+              src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+              alt="Peaceful yoga studio and meditation space"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+        </div>
+
+        {/* Hero Content Overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-10">
+          {/* Main Heading */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl sm:text-6xl lg:text-8xl font-bold text-gray-800 mb-6 sm:mb-8 leading-tight">
-              Transform Your
-              <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent block mt-2 sm:mt-4">
-                Wellness Journey
-              </span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+              Find Your Center Of
+            </h1>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-emerald-400 mb-6">
+              Wellness
             </h2>
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
-              Discover and book the best gyms, spas, yoga centers, and expert trainers near you. 
-              Your transformation starts with the perfect match.
+            <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+              Discover Premium Gyms, Relaxing Spas And Peaceful Yoga Studios All In One Place
             </p>
+          </div>
 
-            {/* Search Bar */}
-            <div className="max-w-4xl mx-auto mb-12">
-              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
-                    <Select onValueChange={setSearchCategory}>
-                      <SelectTrigger className="h-14 text-lg">
-                        <SelectValue placeholder="What are you looking for?" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="gym">Gym</SelectItem>
-                        <SelectItem value="spa">Spa</SelectItem>
-                        <SelectItem value="yoga">Yoga Center</SelectItem>
-                        <SelectItem value="trainer">Personal Trainer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex-1">
-                    <Input
-                      placeholder="Enter your location..."
-                      value={searchLocation}
-                      onChange={(e) => setSearchLocation(e.target.value)}
-                      className="h-14 text-lg"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handleSearch}
-                    className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg"
-                  >
-                    <Search className="h-5 w-5 mr-2" />
-                    Search
-                  </Button>
+          {/* Search Bar */}
+          <div className="w-full max-w-4xl">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Search by location"
+                    value={searchLocation}
+                    onChange={(e) => setSearchLocation(e.target.value)}
+                    className="h-14 text-lg border-gray-200 focus:border-emerald-500"
+                  />
                 </div>
-                <div className="flex items-center justify-center mt-4 text-sm text-gray-600">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <span>Advanced filters available after search</span>
+                <div className="flex-1">
+                  <Select onValueChange={setSearchCategory}>
+                    <SelectTrigger className="h-14 text-lg border-gray-200 focus:border-emerald-500">
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
+                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="gym">Gym</SelectItem>
+                      <SelectItem value="spa">Spa</SelectItem>
+                      <SelectItem value="yoga">Yoga Center</SelectItem>
+                      <SelectItem value="trainer">Personal Trainer</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </div>
-            </div>
-
-            {/* Hero Images Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto">
-              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
-                <img 
-                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Modern Gym"
-                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Dumbbell className="h-6 w-6" />
-                    <span className="text-sm font-semibold">PREMIUM GYMS</span>
-                  </div>
-                  <h3 className="text-2xl font-bold">State-of-the-Art Fitness</h3>
-                  <p className="text-sm opacity-90">Professional equipment & expert guidance</p>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
-                <img 
-                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Luxury Spa"
-                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Waves className="h-6 w-6" />
-                    <span className="text-sm font-semibold">LUXURY SPAS</span>
-                  </div>
-                  <h3 className="text-2xl font-bold">Ultimate Relaxation</h3>
-                  <p className="text-sm opacity-90">Rejuvenate your mind, body & soul</p>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-500">
-                <img 
-                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                  alt="Peaceful Yoga Studio"
-                  className="w-full h-64 sm:h-80 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Heart className="h-6 w-6" />
-                    <span className="text-sm font-semibold">YOGA CENTERS</span>
-                  </div>
-                  <h3 className="text-2xl font-bold">Inner Peace & Balance</h3>
-                  <p className="text-sm opacity-90">Find harmony through ancient practices</p>
-                </div>
+                <Button 
+                  onClick={handleSearch}
+                  className="h-14 px-8 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold"
+                >
+                  Search
+                </Button>
               </div>
             </div>
           </div>
-          
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 mb-12 sm:mb-16">
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center transform hover:scale-110 transition-all duration-300">
-                <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl mb-4 backdrop-blur-sm">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl mb-4 backdrop-blur-sm">
                   <div className="text-emerald-600">
                     {stat.icon}
                   </div>
                 </div>
-                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                <div className="text-gray-600 text-sm sm:text-base">{stat.label}</div>
+                <div className="text-3xl lg:text-4xl font-bold text-gray-800 mb-2">{stat.number}</div>
+                <div className="text-gray-600">{stat.label}</div>
               </div>
             ))}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-6 mb-12 sm:mb-16">
-            <Link to="/gyms?filter=luxury">
-              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-emerald-500 hover:bg-emerald-600 cursor-pointer transition-all duration-300 hover:scale-105">
-                📍 Nearby Locations
-              </Badge>
-            </Link>
-            <Link to="/spas?filter=luxury">
-              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-blue-500 hover:bg-blue-600 cursor-pointer transition-all duration-300 hover:scale-105">
-                💎 Luxury Experience
-              </Badge>
-            </Link>
-            <Link to="/yoga?filter=premium">
-              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-purple-500 hover:bg-purple-600 cursor-pointer transition-all duration-300 hover:scale-105">
-                ⭐ Premium Quality
-              </Badge>
-            </Link>
-            <Link to="/gyms?filter=budget">
-              <Badge className="px-4 sm:px-8 py-2 sm:py-4 text-sm sm:text-lg bg-orange-500 hover:bg-orange-600 cursor-pointer transition-all duration-300 hover:scale-105">
-                💰 Best Value
-              </Badge>
-            </Link>
           </div>
         </div>
       </section>
 
       {/* Enhanced Categories */}
-      <section className="py-12 sm:py-20 px-4">
+      <section className="py-20 px-4">
         <div className="container mx-auto">
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-12 sm:mb-16">
+          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
             Explore by Category
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {categories.map((category) => (
               <Link key={category.title} to={category.link}>
                 <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-6 cursor-pointer transform hover:scale-105">
                   <CardHeader className="text-center pb-6">
-                    <div className={`mx-auto w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-r ${category.color} rounded-3xl flex items-center justify-center text-white mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 shadow-xl`}>
+                    <div className={`mx-auto w-28 h-28 bg-gradient-to-r ${category.color} rounded-3xl flex items-center justify-center text-white mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 shadow-xl`}>
                       {category.icon}
                     </div>
-                    <CardTitle className="text-2xl sm:text-3xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                    <CardTitle className="text-3xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
                       {category.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 text-lg sm:text-xl mb-4">
+                    <CardDescription className="text-gray-600 text-xl mb-4">
                       {category.description}
                     </CardDescription>
                     <Badge className="bg-emerald-500 hover:bg-emerald-600">
@@ -347,20 +305,20 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Featured Listings */}
-      <section className="py-12 sm:py-20 px-4 bg-gray-50">
+      {/* Featured Listings */}
+      <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-12 sm:mb-16">
+          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
             Featured Listings
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {featuredListings.map((listing) => (
               <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
                 <div className="relative overflow-hidden">
                   <img 
                     src={listing.image} 
                     alt={listing.name}
-                    className="w-full h-48 sm:h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
@@ -370,7 +328,7 @@ const Index = () => {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                      <CardTitle className="text-2xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
                         {listing.name}
                       </CardTitle>
                       <p className="text-emerald-600 font-semibold text-lg">{listing.type}</p>
@@ -414,16 +372,16 @@ const Index = () => {
       {/* Trainers Section */}
       <TrainersSection />
 
-      {/* Enhanced User Testimonials */}
-      <section className="py-12 sm:py-20 px-4 bg-gray-50">
+      {/* User Testimonials */}
+      <section className="py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-12 sm:mb-16">
+          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
             What Our Users Say
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 transform hover:scale-105">
-                <CardContent className="p-6 sm:p-8">
+                <CardContent className="p-8">
                   <div className="flex items-center mb-6">
                     <Quote className="h-8 w-8 text-emerald-600 mr-3" />
                     <div className="flex">
@@ -434,7 +392,7 @@ const Index = () => {
                   </div>
                   <p className="text-gray-600 text-lg mb-6 leading-relaxed">"{testimonial.text}"</p>
                   <div className="flex items-center">
-                    <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 sm:w-16 sm:h-16 rounded-full mr-4" />
+                    <img src={testimonial.image} alt={testimonial.name} className="w-16 h-16 rounded-full mr-4" />
                     <div>
                       <p className="font-bold text-gray-800 text-lg">{testimonial.name}</p>
                       <p className="text-sm text-emerald-600">{testimonial.profession}</p>
@@ -449,21 +407,21 @@ const Index = () => {
       </section>
 
       {/* Vision & Mission */}
-      <section className="py-12 sm:py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
+      <section className="py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 text-white">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 text-white">
             <div className="transform hover:scale-105 transition-all duration-500">
-              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 sm:p-8">
-                <h3 className="text-3xl sm:text-4xl font-bold mb-6">Our Vision</h3>
-                <p className="text-lg sm:text-xl leading-relaxed">
+              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8">
+                <h3 className="text-4xl font-bold mb-6">Our Vision</h3>
+                <p className="text-xl leading-relaxed">
                   To become the leading platform that connects wellness seekers with the perfect fitness and wellness destinations, making healthy living accessible to everyone across India and beyond.
                 </p>
               </div>
             </div>
             <div className="transform hover:scale-105 transition-all duration-500">
-              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 sm:p-8">
-                <h3 className="text-3xl sm:text-4xl font-bold mb-6">Our Mission</h3>
-                <p className="text-lg sm:text-xl leading-relaxed">
+              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8">
+                <h3 className="text-4xl font-bold mb-6">Our Mission</h3>
+                <p className="text-xl leading-relaxed">
                   We strive to simplify the wellness journey by providing comprehensive information, seamless booking experiences, and building a community that supports healthy lifestyle choices.
                 </p>
               </div>
@@ -472,25 +430,25 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Business Registration CTA */}
-      <section className="py-16 sm:py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800">
+      {/* Business Registration CTA */}
+      <section className="py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="container mx-auto text-center">
-          <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8">
+          <h3 className="text-5xl lg:text-6xl font-bold text-white mb-8">
             Own a Gym, Spa, or Yoga Center?
           </h3>
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl lg:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
             Join our platform and reach thousands of potential customers. 
             List your business and start growing today!
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
             <Link to="/register-business">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
+              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xl px-12 py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
                 Register Your Business
                 <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
             </Link>
             <Link to="/register-trainer">
-              <Button size="lg" variant="outline" className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 backdrop-blur-sm text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 backdrop-blur-sm text-xl px-12 py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
                 Become a Trainer
                 <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
@@ -499,16 +457,16 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Footer */}
-      <footer className="bg-gray-900 text-white py-12 sm:py-16 px-4">
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
             <div className="lg:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="h-12 w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
                   <Dumbbell className="h-6 w-6 text-white" />
                 </div>
-                <h4 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
+                <h4 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
               </div>
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
                 Your wellness journey starts here. We connect fitness enthusiasts with the best gyms, spas, and yoga centers across India. Transform your health, transform your life.
