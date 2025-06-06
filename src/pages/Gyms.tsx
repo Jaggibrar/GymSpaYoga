@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Star, Clock, Dumbbell, Search, Filter, Users, Wifi, Car, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import CategoryTrainers from "@/components/CategoryTrainers";
 
 const Gyms = () => {
@@ -82,32 +83,45 @@ const Gyms = () => {
     const matchesSearch = gym.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          gym.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation = !locationFilter || gym.location.toLowerCase().includes(locationFilter.toLowerCase());
+    const matchesPrice = !priceFilter || 
+      (priceFilter === 'budget' && gym.category.toLowerCase() === 'budget') ||
+      (priceFilter === 'standard' && gym.category.toLowerCase() === 'standard') ||
+      (priceFilter === 'luxury' && gym.category.toLowerCase() === 'luxury');
     
-    return matchesSearch && matchesLocation;
+    return matchesSearch && matchesLocation && matchesPrice;
   });
+
+  const handleBookNow = (gymName: string) => {
+    toast.success(`Booking initiated for ${gymName}!`);
+    // In real app, this would open booking modal
+  };
+
+  const handleApplyFilters = () => {
+    toast.success("Filters applied successfully!");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Futuristic Header */}
+      {/* Mobile Responsive Header */}
       <header className="bg-black/20 backdrop-blur-2xl shadow-2xl sticky top-0 z-50 border-b border-cyan-500/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300 border border-cyan-400/30">
-                <Dumbbell className="h-7 w-7 text-white" />
+              <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300 border border-cyan-400/30">
+                <Dumbbell className="h-5 md:h-7 w-5 md:w-7 text-white" />
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </Link>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <Link to="/trainers">
-                <Button variant="outline" className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 backdrop-blur-sm">
+                <Button variant="outline" className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 backdrop-blur-sm text-xs md:text-sm">
                   Find Trainers
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button variant="outline" className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 backdrop-blur-sm">
+                <Button variant="outline" className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 backdrop-blur-sm text-xs md:text-sm">
                   List Your Gym
                 </Button>
               </Link>
@@ -116,32 +130,32 @@ const Gyms = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-6xl font-bold text-white mb-6 drop-shadow-2xl">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        {/* Hero Section - Mobile Responsive */}
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 md:mb-6 drop-shadow-2xl">
             Find the Perfect Gym
           </h2>
-          <p className="text-xl text-cyan-200 mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-cyan-200 mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed">
             Discover state-of-the-art fitness centers with cutting-edge equipment and expert trainers
           </p>
         </div>
 
-        {/* Futuristic Filters */}
-        <Card className="mb-8 shadow-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30">
-          <CardContent className="p-6">
+        {/* Mobile Responsive Filters */}
+        <Card className="mb-6 md:mb-8 shadow-2xl bg-black/40 backdrop-blur-xl border border-cyan-500/30">
+          <CardContent className="p-4 md:p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-400 h-5 w-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-cyan-400 h-4 md:h-5 w-4 md:w-5" />
                 <Input
                   placeholder="Search gyms..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 bg-black/20 border-cyan-500/30 text-white placeholder:text-cyan-300/70"
+                  className="pl-8 md:pl-10 h-10 md:h-12 bg-black/20 border-cyan-500/30 text-white placeholder:text-cyan-300/70 text-sm md:text-base"
                 />
               </div>
               <Select value={priceFilter} onValueChange={setPriceFilter}>
-                <SelectTrigger className="h-12 bg-black/20 border-cyan-500/30 text-white">
+                <SelectTrigger className="h-10 md:h-12 bg-black/20 border-cyan-500/30 text-white text-sm md:text-base">
                   <SelectValue placeholder="Price Range" />
                 </SelectTrigger>
                 <SelectContent>
@@ -154,34 +168,37 @@ const Gyms = () => {
                 placeholder="Location"
                 value={locationFilter}
                 onChange={(e) => setLocationFilter(e.target.value)}
-                className="h-12 bg-black/20 border-cyan-500/30 text-white placeholder:text-cyan-300/70"
+                className="h-10 md:h-12 bg-black/20 border-cyan-500/30 text-white placeholder:text-cyan-300/70 text-sm md:text-base"
               />
-              <Button className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 h-12 shadow-lg">
-                <Filter className="h-5 w-5 mr-2" />
+              <Button 
+                onClick={handleApplyFilters}
+                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 h-10 md:h-12 shadow-lg text-sm md:text-base"
+              >
+                <Filter className="h-4 md:h-5 w-4 md:w-5 mr-2" />
                 Apply Filters
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Enhanced Gyms Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-16">
+        {/* Enhanced Gyms Grid - Mobile Responsive */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
           {filteredGyms.map((gym) => (
             <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 bg-black/40 backdrop-blur-xl border border-cyan-500/30">
               <div className="relative overflow-hidden">
                 <img 
                   src={gym.image} 
                   alt={gym.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-48 md:h-64 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg px-3 py-1">
+                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg px-2 md:px-3 py-1 text-xs md:text-sm">
                   {gym.category}
                 </Badge>
                 <div className="absolute bottom-4 left-4 text-white">
                   <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4" />
-                    <span className="text-sm">{gym.memberCount}</span>
+                    <Users className="h-3 md:h-4 w-3 md:w-4" />
+                    <span className="text-xs md:text-sm">{gym.memberCount}</span>
                   </div>
                 </div>
               </div>
@@ -189,35 +206,35 @@ const Gyms = () => {
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
+                    <CardTitle className="text-lg md:text-2xl font-bold text-white group-hover:text-cyan-400 transition-colors duration-300">
                       {gym.name}
                     </CardTitle>
                     <div className="flex items-center space-x-2 mt-2">
-                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-lg font-semibold text-cyan-200">{gym.rating}</span>
-                      <span className="text-gray-400">({gym.reviews} reviews)</span>
+                      <Star className="h-4 md:h-5 w-4 md:w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="text-base md:text-lg font-semibold text-cyan-200">{gym.rating}</span>
+                      <span className="text-gray-400 text-sm md:text-base">({gym.reviews} reviews)</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-cyan-400">{gym.price}</p>
+                    <p className="text-lg md:text-2xl font-bold text-cyan-400">{gym.price}</p>
                   </div>
                 </div>
               </CardHeader>
               
               <CardContent className="pt-0">
-                <div className="space-y-4 mb-6">
+                <div className="space-y-3 md:space-y-4 mb-4 md:mb-6">
                   <div className="flex items-center text-gray-300">
-                    <MapPin className="h-4 w-4 mr-2 text-cyan-400" />
-                    <span>{gym.location}</span>
+                    <MapPin className="h-3 md:h-4 w-3 md:w-4 mr-2 text-cyan-400" />
+                    <span className="text-sm md:text-base">{gym.location}</span>
                   </div>
                   <div className="flex items-center text-gray-300">
-                    <Clock className="h-4 w-4 mr-2 text-cyan-400" />
-                    <span>{gym.hours}</span>
+                    <Clock className="h-3 md:h-4 w-3 md:w-4 mr-2 text-cyan-400" />
+                    <span className="text-sm md:text-base">{gym.hours}</span>
                   </div>
-                  <p className="text-gray-300 text-sm leading-relaxed">{gym.description}</p>
+                  <p className="text-gray-300 text-xs md:text-sm leading-relaxed">{gym.description}</p>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-2 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
                   {gym.features.map((feature) => (
                     <Badge key={feature} variant="outline" className="text-xs border-cyan-500/30 text-cyan-300 justify-center">
                       {feature}
@@ -225,7 +242,7 @@ const Gyms = () => {
                   ))}
                 </div>
                 
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-1 md:gap-2 mb-4 md:mb-6">
                   {gym.amenities.slice(0, 4).map((amenity) => (
                     <Badge key={amenity} variant="outline" className="text-xs border-blue-500/30 text-blue-300">
                       {amenity}
@@ -238,13 +255,17 @@ const Gyms = () => {
                   )}
                 </div>
                 
-                <div className="flex space-x-3">
+                <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-3">
                   <Link to={`/gym/${gym.id}`} className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                    <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm md:text-base">
                       View Details
                     </Button>
                   </Link>
-                  <Button variant="outline" className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10">
+                  <Button 
+                    onClick={() => handleBookNow(gym.name)}
+                    variant="outline" 
+                    className="border-cyan-400 text-cyan-400 hover:bg-cyan-400/10 text-sm md:text-base"
+                  >
                     Book Now
                   </Button>
                 </div>
@@ -252,6 +273,25 @@ const Gyms = () => {
             </Card>
           ))}
         </div>
+
+        {/* No Results Message */}
+        {filteredGyms.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-2xl font-bold text-white mb-4">No gyms found</h3>
+            <p className="text-cyan-200 mb-6">Try adjusting your search criteria or filters.</p>
+            <Button 
+              onClick={() => {
+                setSearchTerm("");
+                setPriceFilter("");
+                setLocationFilter("");
+                toast.success("Filters cleared!");
+              }}
+              className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
+            >
+              Clear Filters
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Gym Trainers Section */}

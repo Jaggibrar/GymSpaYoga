@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +98,102 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Custom CSS for Mobile Optimization */
+@layer components {
+  /* Hide scrollbars while maintaining functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Mobile-first responsive design utilities */
+  .mobile-container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+
+  /* Touch-friendly button sizes */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Optimized text sizing for mobile readability */
+  .mobile-text {
+    @apply text-sm leading-relaxed;
+  }
+
+  @screen md {
+    .mobile-text {
+      @apply text-base;
+    }
+  }
+
+  /* Improved horizontal scrolling for mobile */
+  .horizontal-scroll {
+    @apply overflow-x-auto overflow-y-hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .horizontal-scroll > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav {
+    @apply flex overflow-x-auto space-x-2 scrollbar-hide;
+  }
+
+  .mobile-nav > * {
+    @apply flex-shrink-0;
+  }
+}
+
+/* Performance optimizations */
+@layer utilities {
+  /* GPU acceleration for smooth animations */
+  .gpu-accelerated {
+    @apply transform-gpu;
+  }
+
+  /* Optimized image loading */
+  .optimized-image {
+    @apply object-cover will-change-transform;
+  }
+
+  /* Smooth touch scrolling */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile viewport fixes */
+@supports (-webkit-touch-callout: none) {
+  .ios-scroll-fix {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus management for mobile */
+@media (pointer: coarse) {
+  .focus\:outline-mobile:focus {
+    @apply outline-2 outline-blue-500 outline-offset-2;
   }
 }

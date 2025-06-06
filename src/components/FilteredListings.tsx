@@ -6,6 +6,7 @@ import { MapPin, Star, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface Listing {
   id: number;
@@ -64,10 +65,15 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
     }
   };
 
+  const handleBookNow = (listingName: string) => {
+    toast.success(`Booking initiated for ${listingName}!`);
+    // In real app, this would open booking modal or navigate to booking page
+  };
+
   return (
-    <div>
+    <div className="px-4">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
           {getFilterTitle()} - {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s
         </h2>
         {filter && (
@@ -91,43 +97,57 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
                 {listing.category}
               </Badge>
             </div>
-            <CardHeader>
+            <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                  <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
                     {listing.name}
                   </CardTitle>
-                  <p className="text-emerald-600 font-semibold">{listing.type}</p>
+                  <p className="text-emerald-600 font-semibold text-sm md:text-base">{listing.type}</p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  <span className="font-semibold">{listing.rating}</span>
+                  <Star className="h-4 md:h-5 w-4 md:w-5 fill-yellow-400 text-yellow-400" />
+                  <span className="font-semibold text-sm md:text-base">{listing.rating}</span>
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-gray-600">
-                  <MapPin className="h-5 w-5 mr-3 text-emerald-600" />
-                  <span>{listing.location}</span>
+                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-3 text-emerald-600" />
+                  <span className="text-sm md:text-base">{listing.location}</span>
                 </div>
-                <div className="flex items-center text-emerald-600 font-bold text-lg">
+                <div className="flex items-center text-emerald-600 font-bold text-base md:text-lg">
                   <span>{listing.price}</span>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2 mb-6">
-                {listing.amenities.map((amenity) => (
-                  <Badge key={amenity} variant="outline" className="text-sm">
+                {listing.amenities.slice(0, 3).map((amenity) => (
+                  <Badge key={amenity} variant="outline" className="text-xs">
                     {amenity}
                   </Badge>
                 ))}
+                {listing.amenities.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{listing.amenities.length - 3}
+                  </Badge>
+                )}
               </div>
-              <Link to={listing.link}>
-                <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                  View Details
-                  <ArrowRight className="ml-2 h-5 w-5" />
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Link to={listing.link} className="flex-1">
+                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
+                    View Details
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+                <Button 
+                  onClick={() => handleBookNow(listing.name)}
+                  variant="outline" 
+                  className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm"
+                >
+                  Book Now
                 </Button>
-              </Link>
+              </div>
             </CardContent>
           </Card>
         ))}

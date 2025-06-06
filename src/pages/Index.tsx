@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X, Search, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
 import TrainersSection from "@/components/TrainersSection";
 
 const Index = () => {
@@ -17,7 +18,7 @@ const Index = () => {
     {
       title: "Gyms",
       description: "State-of-the-art fitness centers",
-      icon: <Dumbbell className="h-8 w-8" />,
+      icon: <Dumbbell className="h-6 md:h-8 w-6 md:w-8" />,
       color: "from-cyan-500 to-blue-500",
       link: "/gyms",
       count: "500+"
@@ -25,7 +26,7 @@ const Index = () => {
     {
       title: "Spas",
       description: "Luxury wellness & relaxation",
-      icon: <Waves className="h-8 w-8" />,
+      icon: <Waves className="h-6 md:h-8 w-6 md:w-8" />,
       color: "from-blue-500 to-purple-500",
       link: "/spas",
       count: "300+"
@@ -33,7 +34,7 @@ const Index = () => {
     {
       title: "Yoga Centers",
       description: "Mind, body & soul harmony",
-      icon: <Heart className="h-8 w-8" />,
+      icon: <Heart className="h-6 md:h-8 w-6 md:w-8" />,
       color: "from-emerald-500 to-green-500",
       link: "/yoga",
       count: "250+"
@@ -107,53 +108,75 @@ const Index = () => {
   ];
 
   const stats = [
-    { number: "10,000+", label: "Happy Members", icon: <Heart className="h-6 w-6" /> },
-    { number: "1,000+", label: "Partner Venues", icon: <Shield className="h-6 w-6" /> },
-    { number: "500+", label: "Expert Trainers", icon: <Zap className="h-6 w-6" /> },
-    { number: "50+", label: "Cities", icon: <Sparkles className="h-6 w-6" /> }
+    { number: "10,000+", label: "Happy Members", icon: <Heart className="h-4 md:h-6 w-4 md:w-6" /> },
+    { number: "1,000+", label: "Partner Venues", icon: <Shield className="h-4 md:h-6 w-4 md:w-6" /> },
+    { number: "500+", label: "Expert Trainers", icon: <Zap className="h-4 md:h-6 w-4 md:w-6" /> },
+    { number: "50+", label: "Cities", icon: <Sparkles className="h-4 md:h-6 w-4 md:w-6" /> }
   ];
 
   const handleSearch = () => {
+    if (!searchLocation && !searchCategory) {
+      toast.error("Please enter a location or select a category");
+      return;
+    }
+    
     console.log("Searching for:", searchCategory, "in", searchLocation);
-    // Add search logic here
+    toast.success("Search initiated! Redirecting to results...");
+    
+    // Navigate based on category
+    if (searchCategory === "gym") {
+      window.location.href = "/gyms";
+    } else if (searchCategory === "spa") {
+      window.location.href = "/spas";
+    } else if (searchCategory === "yoga") {
+      window.location.href = "/yoga";
+    } else {
+      toast.info("Showing all categories");
+    }
+  };
+
+  const handleBookNow = (listingName: string) => {
+    toast.success(`Booking initiated for ${listingName}!`);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      {/* Header */}
+      {/* Mobile Responsive Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Dumbbell className="h-6 w-6 text-white" />
+              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <Dumbbell className="h-4 md:h-6 w-4 md:w-6 text-white" />
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </div>
-            <div className="flex items-center space-x-2 sm:space-x-4">
+            
+            {/* Mobile Navigation - Horizontal Scroll */}
+            <div className="flex items-center overflow-x-auto space-x-2 md:space-x-4 scrollbar-hide">
               <Link to="/trainers">
-                <Button variant="outline" className="text-xs sm:text-sm">
-                  Find Trainers
+                <Button variant="outline" className="text-xs md:text-sm whitespace-nowrap">
+                  Trainers
                 </Button>
               </Link>
               <Link to="/blogs">
-                <Button variant="outline" className="text-xs sm:text-sm">
+                <Button variant="outline" className="text-xs md:text-sm whitespace-nowrap">
                   Blogs
                 </Button>
               </Link>
               <Link to="/pricing">
-                <Button variant="outline" className="text-xs sm:text-sm">
+                <Button variant="outline" className="text-xs md:text-sm whitespace-nowrap">
                   Pricing
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button variant="outline" className="text-xs sm:text-sm">
-                  List Your Business
+                <Button variant="outline" className="text-xs md:text-sm whitespace-nowrap">
+                  List Business
                 </Button>
               </Link>
-              <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs sm:text-sm">
+              <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs md:text-sm whitespace-nowrap">
                 Sign In
               </Button>
             </div>
@@ -161,10 +184,10 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Enhanced Hero Section with Three Panel Layout */}
+      {/* Mobile Responsive Hero Section */}
       <section className="relative h-screen overflow-hidden">
-        {/* Three Panel Background Images */}
-        <div className="absolute inset-0 grid grid-cols-3 h-full">
+        {/* Three Panel Background Images - Stack on mobile */}
+        <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-3 h-full">
           {/* Gym Panel */}
           <div className="relative overflow-hidden">
             <img 
@@ -175,8 +198,8 @@ const Index = () => {
             <div className="absolute inset-0 bg-black/40"></div>
           </div>
           
-          {/* Spa Panel */}
-          <div className="relative overflow-hidden">
+          {/* Spa Panel - Hidden on mobile */}
+          <div className="relative overflow-hidden hidden md:block">
             <img 
               src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
               alt="Luxury spa relaxation and wellness center"
@@ -185,8 +208,8 @@ const Index = () => {
             <div className="absolute inset-0 bg-black/40"></div>
           </div>
           
-          {/* Yoga Panel */}
-          <div className="relative overflow-hidden">
+          {/* Yoga Panel - Hidden on mobile */}
+          <div className="relative overflow-hidden hidden md:block">
             <img 
               src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
               alt="Peaceful yoga studio and meditation space"
@@ -196,36 +219,34 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Hero Content Overlay */}
+        {/* Hero Content Overlay - Mobile Responsive */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-10">
           {/* Main Heading */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-4 leading-tight">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-2 md:mb-4 leading-tight">
               Find Your Center Of
             </h1>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-emerald-400 mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-emerald-400 mb-4 md:mb-6">
               Wellness
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed px-4">
               Discover Premium Gyms, Relaxing Spas And Peaceful Yoga Studios All In One Place
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full max-w-4xl">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
+          {/* Search Bar - Mobile Responsive */}
+          <div className="w-full max-w-4xl px-4">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-2xl">
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Input
                     placeholder="Search by location"
                     value={searchLocation}
                     onChange={(e) => setSearchLocation(e.target.value)}
-                    className="h-14 text-lg border-gray-200 focus:border-emerald-500"
+                    className="h-12 md:h-14 text-base md:text-lg border-gray-200 focus:border-emerald-500"
                   />
-                </div>
-                <div className="flex-1">
                   <Select onValueChange={setSearchCategory}>
-                    <SelectTrigger className="h-14 text-lg border-gray-200 focus:border-emerald-500">
+                    <SelectTrigger className="h-12 md:h-14 text-base md:text-lg border-gray-200 focus:border-emerald-500">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
@@ -239,8 +260,9 @@ const Index = () => {
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="h-14 px-8 bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-semibold"
+                  className="h-12 md:h-14 bg-emerald-600 hover:bg-emerald-700 text-white text-base md:text-lg font-semibold w-full"
                 >
+                  <Search className="h-4 md:h-5 w-4 md:w-5 mr-2" />
                   Search
                 </Button>
               </div>
@@ -249,43 +271,44 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
+      {/* Stats Section - Mobile Responsive */}
+      <section className="py-12 md:py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center transform hover:scale-110 transition-all duration-300">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl mb-4 backdrop-blur-sm">
+                <div className="inline-flex items-center justify-center w-12 md:w-16 h-12 md:h-16 bg-gradient-to-r from-emerald-500/20 to-blue-500/20 rounded-2xl mb-2 md:mb-4 backdrop-blur-sm">
                   <div className="text-emerald-600">
                     {stat.icon}
                   </div>
                 </div>
-                <div className="text-3xl lg:text-4xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                <div className="text-gray-600">{stat.label}</div>
+                <div className="text-2xl md:text-4xl font-bold text-gray-800 mb-1 md:mb-2">{stat.number}</div>
+                <div className="text-gray-600 text-sm md:text-base">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Enhanced Categories */}
-      <section className="py-20 px-4">
+      {/* Categories - Mobile Horizontal Scroll */}
+      <section className="py-12 md:py-20 px-4">
         <div className="container mx-auto">
-          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
+          <h3 className="text-3xl md:text-5xl font-bold text-center text-gray-800 mb-8 md:mb-16">
             Explore by Category
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {categories.map((category) => (
               <Link key={category.title} to={category.link}>
                 <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-6 cursor-pointer transform hover:scale-105">
                   <CardHeader className="text-center pb-6">
-                    <div className={`mx-auto w-28 h-28 bg-gradient-to-r ${category.color} rounded-3xl flex items-center justify-center text-white mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 shadow-xl`}>
+                    <div className={`mx-auto w-20 md:w-28 h-20 md:h-28 bg-gradient-to-r ${category.color} rounded-3xl flex items-center justify-center text-white mb-4 md:mb-6 group-hover:scale-125 group-hover:rotate-12 transition-transform duration-500 shadow-xl`}>
                       {category.icon}
                     </div>
-                    <CardTitle className="text-3xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                    <CardTitle className="text-2xl md:text-3xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
                       {category.title}
                     </CardTitle>
-                    <CardDescription className="text-gray-600 text-xl mb-4">
+                    <CardDescription className="text-gray-600 text-lg md:text-xl mb-4">
                       {category.description}
                     </CardDescription>
                     <Badge className="bg-emerald-500 hover:bg-emerald-600">
@@ -302,16 +325,50 @@ const Index = () => {
               </Link>
             ))}
           </div>
+          
+          {/* Mobile Horizontal Scroll */}
+          <div className="md:hidden overflow-x-auto pb-4">
+            <div className="flex space-x-4" style={{ width: 'max-content' }}>
+              {categories.map((category) => (
+                <Link key={category.title} to={category.link}>
+                  <Card className="w-64 group hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                    <CardHeader className="text-center pb-4">
+                      <div className={`mx-auto w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center text-white mb-3 shadow-lg`}>
+                        {category.icon}
+                      </div>
+                      <CardTitle className="text-xl font-bold text-gray-800">
+                        {category.title}
+                      </CardTitle>
+                      <CardDescription className="text-gray-600 text-sm mb-3">
+                        {category.description}
+                      </CardDescription>
+                      <Badge className="bg-emerald-500 hover:bg-emerald-600 text-xs">
+                        {category.count} Available
+                      </Badge>
+                    </CardHeader>
+                    <CardContent className="text-center pt-0">
+                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
+                        Explore
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Featured Listings */}
-      <section className="py-20 px-4 bg-gray-50">
+      {/* Featured Listings - Mobile Responsive */}
+      <section className="py-12 md:py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
+          <h3 className="text-3xl md:text-5xl font-bold text-center text-gray-800 mb-8 md:mb-16">
             Featured Listings
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {featuredListings.map((listing) => (
               <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
                 <div className="relative overflow-hidden">
@@ -356,15 +413,92 @@ const Index = () => {
                       </Badge>
                     ))}
                   </div>
-                  <Link to={listing.link}>
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                      View Details
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                  <div className="flex flex-col gap-2">
+                    <Link to={listing.link}>
+                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                        View Details
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </Button>
+                    </Link>
+                    <Button 
+                      onClick={() => handleBookNow(listing.name)}
+                      variant="outline"
+                      className="w-full border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+                    >
+                      Book Now
                     </Button>
-                  </Link>
+                  </div>
                 </CardContent>
               </Card>
             ))}
+          </div>
+          
+          {/* Mobile Horizontal Scroll */}
+          <div className="md:hidden overflow-x-auto pb-4">
+            <div className="flex space-x-4" style={{ width: 'max-content' }}>
+              {featuredListings.map((listing) => (
+                <Card key={listing.id} className="w-72 group hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={listing.image} 
+                      alt={listing.name}
+                      className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                    <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
+                      {listing.category}
+                    </Badge>
+                  </div>
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                          {listing.name}
+                        </CardTitle>
+                        <p className="text-emerald-600 font-semibold text-sm">{listing.type}</p>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold text-gray-800">{listing.rating}</span>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="h-4 w-4 mr-2 text-emerald-600" />
+                        <span className="text-sm">{listing.location}</span>
+                      </div>
+                      <div className="flex items-center text-emerald-600 font-bold text-lg">
+                        <span>{listing.price}</span>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {listing.amenities.map((amenity) => (
+                        <Badge key={amenity} variant="outline" className="text-xs">
+                          {amenity}
+                        </Badge>
+                      ))}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Link to={listing.link}>
+                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
+                          View Details
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                      <Button 
+                        onClick={() => handleBookNow(listing.name)}
+                        variant="outline"
+                        className="w-full border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm"
+                      >
+                        Book Now
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -372,13 +506,15 @@ const Index = () => {
       {/* Trainers Section */}
       <TrainersSection />
 
-      {/* User Testimonials */}
-      <section className="py-20 px-4 bg-gray-50">
+      {/* User Testimonials - Mobile Responsive */}
+      <section className="py-12 md:py-20 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h3 className="text-4xl lg:text-5xl font-bold text-center text-gray-800 mb-16">
+          <h3 className="text-3xl md:text-5xl font-bold text-center text-gray-800 mb-8 md:mb-16">
             What Our Users Say
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          
+          {/* Desktop Grid */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <Card key={index} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 transform hover:scale-105">
                 <CardContent className="p-8">
@@ -403,25 +539,54 @@ const Index = () => {
               </Card>
             ))}
           </div>
+          
+          {/* Mobile Horizontal Scroll */}
+          <div className="md:hidden overflow-x-auto pb-4">
+            <div className="flex space-x-4" style={{ width: 'max-content' }}>
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="w-80 group hover:shadow-2xl transition-all duration-500">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-4">
+                      <Quote className="h-6 w-6 text-emerald-600 mr-2" />
+                      <div className="flex">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-4 leading-relaxed">"{testimonial.text}"</p>
+                    <div className="flex items-center">
+                      <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 rounded-full mr-3" />
+                      <div>
+                        <p className="font-bold text-gray-800">{testimonial.name}</p>
+                        <p className="text-xs text-emerald-600">{testimonial.profession}</p>
+                        <p className="text-xs text-gray-500">{testimonial.location}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Vision & Mission */}
-      <section className="py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
+      {/* Vision & Mission - Mobile Responsive */}
+      <section className="py-12 md:py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 text-white">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 text-white">
             <div className="transform hover:scale-105 transition-all duration-500">
-              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8">
-                <h3 className="text-4xl font-bold mb-6">Our Vision</h3>
-                <p className="text-xl leading-relaxed">
+              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8">
+                <h3 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Our Vision</h3>
+                <p className="text-lg md:text-xl leading-relaxed">
                   To become the leading platform that connects wellness seekers with the perfect fitness and wellness destinations, making healthy living accessible to everyone across India and beyond.
                 </p>
               </div>
             </div>
             <div className="transform hover:scale-105 transition-all duration-500">
-              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8">
-                <h3 className="text-4xl font-bold mb-6">Our Mission</h3>
-                <p className="text-xl leading-relaxed">
+              <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8">
+                <h3 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Our Mission</h3>
+                <p className="text-lg md:text-xl leading-relaxed">
                   We strive to simplify the wellness journey by providing comprehensive information, seamless booking experiences, and building a community that supports healthy lifestyle choices.
                 </p>
               </div>
@@ -430,128 +595,117 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Business Registration CTA */}
-      <section className="py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800">
+      {/* Business Registration CTA - Mobile Responsive */}
+      <section className="py-16 md:py-24 px-4 bg-gradient-to-r from-gray-900 to-gray-800">
         <div className="container mx-auto text-center">
-          <h3 className="text-5xl lg:text-6xl font-bold text-white mb-8">
+          <h3 className="text-3xl md:text-6xl font-bold text-white mb-6 md:mb-8">
             Own a Gym, Spa, or Yoga Center?
           </h3>
-          <p className="text-xl lg:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-2xl text-gray-300 mb-8 md:mb-12 max-w-4xl mx-auto leading-relaxed">
             Join our platform and reach thousands of potential customers. 
             List your business and start growing today!
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-6">
             <Link to="/register-business">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xl px-12 py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
+              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg md:text-xl px-8 md:px-12 py-4 md:py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
                 Register Your Business
-                <ArrowRight className="ml-3 h-6 w-6" />
+                <ArrowRight className="ml-3 h-5 md:h-6 w-5 md:w-6" />
               </Button>
             </Link>
             <Link to="/register-trainer">
-              <Button size="lg" variant="outline" className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 backdrop-blur-sm text-xl px-12 py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 backdrop-blur-sm text-lg md:text-xl px-8 md:px-12 py-4 md:py-6 shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto">
                 Become a Trainer
-                <ArrowRight className="ml-3 h-6 w-6" />
+                <ArrowRight className="ml-3 h-5 md:h-6 w-5 md:w-6" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-4">
+      {/* Footer - Mobile Responsive */}
+      <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
             <div className="lg:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="h-12 w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Dumbbell className="h-6 w-6 text-white" />
+              <div className="flex items-center space-x-3 mb-4 md:mb-6">
+                <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                  <Dumbbell className="h-5 md:h-6 w-5 md:w-6 text-white" />
                 </div>
-                <h4 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
+                <h4 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
               </div>
-              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
+              <p className="text-gray-300 text-base md:text-lg mb-4 md:mb-6 leading-relaxed">
                 Your wellness journey starts here. We connect fitness enthusiasts with the best gyms, spas, and yoga centers across India. Transform your health, transform your life.
               </p>
               
               {/* Social Media Icons */}
-              <div className="flex space-x-4 mb-6">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <Facebook className="h-5 w-5 text-white" />
+              <div className="flex space-x-4 mb-4 md:mb-6">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-blue-600 hover:bg-blue-700 p-2 md:p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <Facebook className="h-4 md:h-5 w-4 md:w-5 text-white" />
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 p-3 rounded-full transition-all duration-300 transform hover:scale-110">
-                  <Instagram className="h-5 w-5 text-white" />
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 p-2 md:p-3 rounded-full transition-all duration-300 transform hover:scale-110">
+                  <Instagram className="h-4 md:h-5 w-4 md:w-5 text-white" />
                 </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <X className="h-5 w-5 text-white" />
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-800 p-2 md:p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <X className="h-4 md:h-5 w-4 md:w-5 text-white" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <Linkedin className="h-5 w-5 text-white" />
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-800 p-2 md:p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
+                  <Linkedin className="h-4 md:h-5 w-4 md:w-5 text-white" />
                 </a>
-              </div>
-
-              {/* Payment Methods */}
-              <div>
-                <h6 className="text-sm font-semibold text-gray-400 mb-3">We Accept</h6>
-                <div className="flex space-x-3">
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://logos-world.net/wp-content/uploads/2020/09/PayPal-Logo.png" alt="PayPal" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" className="h-6 w-10" />
-                  </div>
-                </div>
               </div>
             </div>
             
             <div>
-              <h5 className="font-bold mb-6 text-xl text-emerald-400">For Users</h5>
-              <ul className="space-y-3 text-gray-300">
-                <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300">Find Gyms</Link></li>
-                <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300">Find Spas</Link></li>
-                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300">Find Yoga Centers</Link></li>
-                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300">Find Trainers</Link></li>
-                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300">About Us</Link></li>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-emerald-400">For Users</h5>
+              <ul className="space-y-2 md:space-y-3 text-gray-300">
+                <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Gyms</Link></li>
+                <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Spas</Link></li>
+                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Yoga Centers</Link></li>
+                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Trainers</Link></li>
+                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">About Us</Link></li>
               </ul>
             </div>
             
             <div>
-              <h5 className="font-bold mb-6 text-xl text-blue-400">For Business</h5>
-              <ul className="space-y-3 text-gray-300">
-                <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300">List Your Business</Link></li>
-                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300">Become a Trainer</Link></li>
-                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300">Manage Bookings</Link></li>
-                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300">Pricing Plans</Link></li>
-                <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Support</span></li>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-blue-400">For Business</h5>
+              <ul className="space-y-2 md:space-y-3 text-gray-300">
+                <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">List Your Business</Link></li>
+                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Become a Trainer</Link></li>
+                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Manage Bookings</Link></li>
+                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Pricing Plans</Link></li>
+                <li><Link to="/support" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Support</Link></li>
               </ul>
             </div>
             
             <div>
-              <h5 className="font-bold mb-6 text-xl text-purple-400">Contact</h5>
-              <div className="space-y-3 text-gray-300">
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact</h5>
+              <div className="space-y-2 md:space-y-3 text-gray-300">
                 <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-purple-400" />
-                  <span>+91 98765 43210</span>
+                  <Phone className="h-4 md:h-5 w-4 md:w-5 mr-2 md:mr-3 text-purple-400" />
+                  <span className="text-sm md:text-base">+91 98765 43210</span>
                 </div>
                 <div className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-3 text-purple-400" />
-                  <span>Mumbai, India</span>
+                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-2 md:mr-3 text-purple-400" />
+                  <span className="text-sm md:text-base">Mumbai, India</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 GymSpaYoga. All rights reserved.</p>
+          <div className="border-t border-gray-700 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-gray-400">
+            <p className="text-sm md:text-base">&copy; 2024 GymSpaYoga. All rights reserved.</p>
           </div>
         </div>
       </footer>
+
+      {/* Custom CSS for hiding scrollbars */}
+      <style jsx>{`
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 };
