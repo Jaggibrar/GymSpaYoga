@@ -1,282 +1,269 @@
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Phone, Mail, Clock, MessageCircle, HelpCircle, Users, Settings, CreditCard, Dumbbell, ArrowLeft, Send, Search } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dumbbell, Phone, Mail, MapPin, Clock, MessageCircle, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Support = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  useScrollToTop();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
 
-  const supportCategories = [
-    {
-      title: "Account & Billing",
-      icon: <CreditCard className="h-8 w-8" />,
-      description: "Manage your account, payments, and subscription",
-      color: "from-blue-500 to-purple-500"
-    },
-    {
-      title: "Booking Issues",
-      icon: <Settings className="h-8 w-8" />,
-      description: "Help with reservations and cancellations",
-      color: "from-green-500 to-teal-500"
-    },
-    {
-      title: "Business Partnership",
-      icon: <Users className="h-8 w-8" />,
-      description: "Partner with us to grow your business",
-      color: "from-red-500 to-pink-500"
-    },
-    {
-      title: "Technical Support",
-      icon: <Settings className="h-8 w-8" />,
-      description: "App issues and technical difficulties",
-      color: "from-orange-500 to-yellow-500"
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    toast.success("Logged out successfully!");
+    navigate('/login');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
     }
-  ];
+
+    toast.success("Support ticket submitted successfully! We'll get back to you within 24 hours.");
+    setFormData({ name: "", email: "", subject: "", message: "" });
+  };
 
   const faqs = [
     {
-      question: "How do I book a gym membership?",
-      answer: "Simply search for gyms in your area, compare prices and amenities, then click 'Book Now' on your preferred gym. You'll be guided through a simple booking process."
+      question: "How do I book a gym session?",
+      answer: "Simply browse our gym listings, select your preferred gym, choose a membership plan or day pass, and click 'Book Now'. You'll receive a confirmation email with all the details."
     },
     {
       question: "Can I cancel my booking?",
-      answer: "Yes, you can cancel bookings up to 24 hours before your scheduled session. Go to 'My Bookings' and select the booking you want to cancel."
+      answer: "Yes, you can cancel your booking up to 2 hours before your scheduled session. Go to 'Manage Bookings' in your account to cancel or reschedule."
     },
     {
-      question: "How do I list my gym/spa/yoga center?",
-      answer: "Click on 'List Your Business' in the header, fill out the registration form, choose your pricing plan, and our team will verify and activate your listing within 24-48 hours."
+      question: "Are there any hidden fees?",
+      answer: "No, we believe in transparent pricing. All fees are clearly displayed during the booking process. The only additional charges may be for premium amenities or personal training sessions."
     },
     {
-      question: "What analytics do I get as a business owner?",
-      answer: "You get comprehensive analytics including booking trends, customer demographics, revenue tracking, ROI metrics, and performance insights to help grow your business."
+      question: "How do I become a business partner?",
+      answer: "Visit our 'Register Business' page and fill out the application form. Our team will review your submission and contact you within 5-7 business days."
     },
     {
-      question: "How does the pricing work for businesses?",
-      answer: "We have three plans: Budget (₹2,999), Standard (₹4,999), and Luxury (₹9,999) one-time registration fees, plus ₹20 per customer booking."
+      question: "What payment methods do you accept?",
+      answer: "We accept all major credit cards, debit cards, UPI, net banking, and digital wallets like PayTM, PhonePe, and Google Pay."
     },
     {
       question: "Is there a mobile app available?",
-      answer: "Currently, we offer a responsive web platform that works seamlessly on all devices. A dedicated mobile app is coming soon!"
+      answer: "Currently, we offer a mobile-optimized website. A dedicated mobile app is in development and will be available soon on both iOS and Android platforms."
     }
   ];
 
-  const filteredFaqs = faqs.filter(faq => 
-    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
+      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2">
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Home</span>
-            </Link>
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="h-7 w-7 text-white" />
+              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <Dumbbell className="h-4 md:h-6 w-4 md:w-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </Link>
+            
+            <div className="flex items-center space-x-2 md:space-x-4">
+              <Link to="/">
+                <Button variant="outline" className="text-xs md:text-sm">
+                  Home
+                </Button>
+              </Link>
+              <Button 
+                onClick={handleLogout}
+                variant="outline" 
+                className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <LogOut className="h-3 w-3 mr-1" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <h2 className="text-5xl font-bold text-gray-800 mb-6">
-            How Can We 
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"> Help You?</span>
-          </h2>
-          <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Get instant support, find answers to common questions, or contact our expert team for personalized assistance.
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            Support Center
+          </h1>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            We're here to help! Find answers to common questions or get in touch with our support team.
           </p>
         </div>
-      </section>
 
-      {/* Quick Contact */}
-      <section className="py-16 px-4 bg-white/60 backdrop-blur-sm">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
-                <Phone className="h-8 w-8" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Call Us</h3>
-              <p className="text-gray-600 mb-4">Speak with our support team</p>
-              <p className="text-xl font-semibold text-green-600">+91 98765 43210</p>
-              <p className="text-sm text-gray-500">Available 24/7</p>
-            </Card>
-
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
-                <Mail className="h-8 w-8" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Email Us</h3>
-              <p className="text-gray-600 mb-4">Get detailed assistance</p>
-              <p className="text-xl font-semibold text-blue-600">support@gymspayoga.com</p>
-              <p className="text-sm text-gray-500">Response within 2 hours</p>
-            </Card>
-
-            <Card className="text-center p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-white">
-                <MessageCircle className="h-8 w-8" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Live Chat</h3>
-              <p className="text-gray-600 mb-4">Instant messaging support</p>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                Start Chat
-              </Button>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Support Categories */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <h3 className="text-4xl font-bold text-center text-gray-800 mb-16">Support Categories</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {supportCategories.map((category, index) => (
-              <Card key={index} className="text-center p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm cursor-pointer">
-                <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center mx-auto mb-4 text-white`}>
-                  {category.icon}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
+          {/* Contact Form */}
+          <Card className="shadow-xl">
+            <CardHeader>
+              <CardTitle className="text-2xl md:text-3xl flex items-center">
+                <MessageCircle className="h-6 w-6 mr-3 text-emerald-600" />
+                Contact Support
+              </CardTitle>
+              <CardDescription>
+                Send us a message and we'll respond within 24 hours
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
-                <h4 className="text-xl font-bold text-gray-800 mb-2">{category.title}</h4>
-                <p className="text-gray-600">{category.description}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    placeholder="What's this about?"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    placeholder="Describe your issue or question in detail"
+                    rows={5}
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                >
+                  Send Message
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
 
-      {/* FAQ Section */}
-      <section className="py-20 px-4 bg-white/60 backdrop-blur-sm">
-        <div className="container mx-auto">
-          <h3 className="text-4xl font-bold text-center text-gray-800 mb-16">Frequently Asked Questions</h3>
-          
-          {/* FAQ Search */}
-          <div className="max-w-2xl mx-auto mb-12">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                placeholder="Search FAQs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-12 bg-white/90 border-gray-200"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {filteredFaqs.map((faq, index) => (
-              <Card key={index} className="p-6 hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
-                <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-start">
-                  <HelpCircle className="h-6 w-6 text-purple-600 mr-3 mt-0.5 flex-shrink-0" />
-                  {faq.question}
-                </h4>
-                <p className="text-gray-600 leading-relaxed pl-9">{faq.answer}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="max-w-4xl mx-auto">
-            <Card className="p-8 shadow-2xl bg-white/90 backdrop-blur-sm">
-              <CardHeader className="text-center">
-                <CardTitle className="text-3xl font-bold text-gray-800 mb-4">Send Us a Message</CardTitle>
-                <p className="text-gray-600">Can't find what you're looking for? Send us a detailed message and we'll get back to you.</p>
+          {/* Contact Information */}
+          <div className="space-y-6">
+            <Card className="shadow-xl">
+              <CardHeader>
+                <CardTitle className="text-xl md:text-2xl">Get in Touch</CardTitle>
+                <CardDescription>
+                  Multiple ways to reach our support team
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <CardContent className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-emerald-600" />
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                    <Input placeholder="Your full name" className="h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <Input type="email" placeholder="your.email@example.com" className="h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                    <Input placeholder="+91 98765 43210" className="h-12" />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-                    <Select onValueChange={setSelectedCategory}>
-                      <SelectTrigger className="h-12">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="account">Account & Billing</SelectItem>
-                        <SelectItem value="booking">Booking Issues</SelectItem>
-                        <SelectItem value="business">Business Partnership</SelectItem>
-                        <SelectItem value="technical">Technical Support</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                    <Textarea 
-                      placeholder="Describe your issue or question in detail..." 
-                      rows={6}
-                      className="resize-none"
-                    />
+                    <p className="font-semibold">Phone Support</p>
+                    <p className="text-gray-600">+91 98765 43210</p>
+                    <p className="text-sm text-gray-500">Mon-Fri, 9 AM - 7 PM IST</p>
                   </div>
                 </div>
-                <div className="mt-8 text-center">
-                  <Button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 px-8 py-4 text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                    <Send className="h-5 w-5 mr-2" />
-                    Send Message
-                  </Button>
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <p className="font-semibold">Email Support</p>
+                    <p className="text-gray-600">support@gymspayoga.com</p>
+                    <p className="text-sm text-gray-500">Response within 24 hours</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-5 w-5 text-purple-600" />
+                  <div>
+                    <p className="font-semibold">Office Address</p>
+                    <p className="text-gray-600">Mumbai, Maharashtra, India</p>
+                    <p className="text-sm text-gray-500">Headquarters</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Clock className="h-5 w-5 text-orange-600" />
+                  <div>
+                    <p className="font-semibold">Business Hours</p>
+                    <p className="text-gray-600">Monday - Friday: 9 AM - 7 PM</p>
+                    <p className="text-gray-600">Saturday: 10 AM - 4 PM</p>
+                    <p className="text-sm text-gray-500">Sunday: Closed</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
-      </section>
 
-      {/* Business Hours */}
-      <section className="py-16 px-4 bg-gradient-to-r from-purple-600 to-blue-600">
-        <div className="container mx-auto text-center">
-          <h3 className="text-3xl font-bold text-white mb-8">Support Hours</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6">
-              <Clock className="h-8 w-8 text-white mx-auto mb-4" />
-              <h4 className="text-xl font-bold text-white mb-2">Phone Support</h4>
-              <p className="text-white/90">Available 24/7</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6">
-              <Mail className="h-8 w-8 text-white mx-auto mb-4" />
-              <h4 className="text-xl font-bold text-white mb-2">Email Support</h4>
-              <p className="text-white/90">Response within 2 hours</p>
-            </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6">
-              <MessageCircle className="h-8 w-8 text-white mx-auto mb-4" />
-              <h4 className="text-xl font-bold text-white mb-2">Live Chat</h4>
-              <p className="text-white/90">Mon-Sun: 9 AM - 11 PM</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        {/* FAQ Section */}
+        <Card className="shadow-xl">
+          <CardHeader>
+            <CardTitle className="text-2xl md:text-3xl text-center">
+              Frequently Asked Questions
+            </CardTitle>
+            <CardDescription className="text-center">
+              Quick answers to common questions
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full">
+              {faqs.map((faq, index) => (
+                <AccordionItem key={index} value={`item-${index}`}>
+                  <AccordionTrigger className="text-left">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -3,15 +3,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X, Search, Filter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MapPin, Star, Clock, Phone, Dumbbell, Waves, Heart, ArrowRight, Quote, Sparkles, Zap, Shield, Facebook, Instagram, Linkedin, X, Search, Filter, Target, Eye, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
 import TrainersSection from "@/components/TrainersSection";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const Index = () => {
+  useScrollToTop();
+  const navigate = useNavigate();
   const [searchLocation, setSearchLocation] = useState("");
   const [searchCategory, setSearchCategory] = useState("");
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    toast.success("Logged out successfully!");
+    navigate('/login');
+  };
 
   const categories = [
     {
@@ -124,11 +133,11 @@ const Index = () => {
     
     // Navigate based on category
     if (searchCategory === "gym") {
-      window.location.href = "/gyms";
+      navigate("/gyms");
     } else if (searchCategory === "spa") {
-      window.location.href = "/spas";
+      navigate("/spas");
     } else if (searchCategory === "yoga") {
-      window.location.href = "/yoga";
+      navigate("/yoga");
     } else {
       toast.info("Showing all categories");
     }
@@ -175,8 +184,13 @@ const Index = () => {
                   List Business
                 </Button>
               </Link>
-              <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs md:text-sm whitespace-nowrap">
-                Sign In
+              <Button 
+                onClick={handleLogout}
+                variant="outline" 
+                className="text-xs md:text-sm whitespace-nowrap text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <LogOut className="h-3 w-3 mr-1" />
+                Logout
               </Button>
             </div>
           </div>
@@ -315,7 +329,7 @@ const Index = () => {
                     </Badge>
                   </CardHeader>
                   <CardContent className="text-center">
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl group-hover:shadow-2xl transform group-hover:scale-105 transition-all duration-300">
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs md:text-sm whitespace-nowrap">
                       Explore {category.title}
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
                     </Button>
@@ -414,7 +428,7 @@ const Index = () => {
                   </div>
                   <div className="flex flex-col gap-2">
                     <Link to={listing.link}>
-                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl group-hover:shadow-2xl transform group-hover:scale-105 transition-all duration-300">
                         View Details
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
@@ -570,13 +584,18 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Vision & Mission - Mobile Responsive */}
+      {/* Vision & Mission - Mobile Responsive with Icons */}
       <section className="py-12 md:py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 text-white">
             <div className="transform hover:scale-105 transition-all duration-500">
               <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8">
-                <h3 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Our Vision</h3>
+                <div className="flex items-center mb-4 md:mb-6">
+                  <div className="h-12 w-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                    <Target className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold">Our Vision</h3>
+                </div>
                 <p className="text-lg md:text-xl leading-relaxed">
                   To become the leading platform that connects wellness seekers with the perfect fitness and wellness destinations, making healthy living accessible to everyone across India and beyond.
                 </p>
@@ -584,7 +603,12 @@ const Index = () => {
             </div>
             <div className="transform hover:scale-105 transition-all duration-500">
               <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-6 md:p-8">
-                <h3 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Our Mission</h3>
+                <div className="flex items-center mb-4 md:mb-6">
+                  <div className="h-12 w-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                    <Eye className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold">Our Mission</h3>
+                </div>
                 <p className="text-lg md:text-xl leading-relaxed">
                   We strive to simplify the wellness journey by providing comprehensive information, seamless booking experiences, and building a community that supports healthy lifestyle choices.
                 </p>
