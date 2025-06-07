@@ -1,36 +1,42 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Users, Award, Target, Heart, Dumbbell, ArrowLeft, TrendingUp, BarChart3, Activity } from "lucide-react";
+import { MapPin, Star, Users, Award, Target, Heart, Dumbbell, ArrowLeft, TrendingUp, BarChart3, Activity, CheckCircle, Play, Volume2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const About = () => {
+  useScrollToTop();
+  const [isFounderInView, setIsFounderInView] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [isDrawingSignature, setIsDrawingSignature] = useState(false);
+  const founderRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsFounderInView(true);
+          setTimeout(() => setIsDrawingSignature(true), 1000);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (founderRef.current) {
+      observer.observe(founderRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const stats = [
     { icon: <Users className="h-8 w-8" />, number: "50,000+", label: "Happy Users" },
     { icon: <Dumbbell className="h-8 w-8" />, number: "1,000+", label: "Listed Businesses" },
     { icon: <Star className="h-8 w-8" />, number: "4.8", label: "Average Rating" },
     { icon: <Award className="h-8 w-8" />, number: "25+", label: "Cities Covered" }
-  ];
-
-  const team = [
-    {
-      name: "Jagdeep Singh",
-      role: "CEO & Founder",
-      image: "/placeholder.svg",
-      description: "Visionary leader transforming the wellness industry through innovative technology and customer-centric solutions."
-    },
-    {
-      name: "Priya Sharma",
-      role: "CTO",
-      image: "/placeholder.svg",
-      description: "Tech enthusiast with expertise in building scalable platforms for the wellness ecosystem."
-    },
-    {
-      name: "Jagdeep Singh",
-      role: "Head of Operations",
-      image: "/placeholder.svg",
-      description: "Operations excellence expert ensuring seamless experiences and continuous growth for both users and business partners."
-    }
   ];
 
   return (
@@ -39,7 +45,7 @@ const About = () => {
       <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2 hover:text-emerald-600 transition-colors">
               <ArrowLeft className="h-5 w-5" />
               <span>Back to Home</span>
             </Link>
@@ -113,7 +119,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Vision & Mission */}
+      {/* Vision & Mission with Icons */}
       <section className="py-20 px-4 bg-gradient-to-r from-emerald-600 to-blue-600">
         <div className="container mx-auto">
           <h3 className="text-4xl font-bold text-center text-white mb-16">Our Purpose</h3>
@@ -140,19 +146,75 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="py-20 px-4">
+      {/* Founder Vision Card */}
+      <section className="py-20 px-4" ref={founderRef}>
         <div className="container mx-auto">
-          <h3 className="text-4xl font-bold text-center text-gray-800 mb-16">Meet Our Team</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <Card key={index} className="text-center p-8 hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-white/90 backdrop-blur-sm">
-                <img src={member.image} alt={member.name} className="w-24 h-24 rounded-full mx-auto mb-6 object-cover" />
-                <h4 className="text-xl font-bold text-gray-800 mb-2">{member.name}</h4>
-                <p className="text-emerald-600 font-semibold mb-4">{member.role}</p>
-                <p className="text-gray-600 leading-relaxed">{member.description}</p>
-              </Card>
-            ))}
+          <h3 className="text-4xl font-bold text-center text-gray-800 mb-16">Founder's Vision</h3>
+          
+          <div className={`max-w-4xl mx-auto transition-all duration-1000 ${isFounderInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            {/* Glassmorphic Container */}
+            <div className="relative bg-gradient-to-r from-white/40 via-white/30 to-white/40 backdrop-blur-xl rounded-3xl p-8 md:p-12 shadow-2xl border border-white/20">
+              {/* Animated Background Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-blue-500/10 to-purple-500/10 rounded-3xl animate-pulse"></div>
+              
+              <div className="relative z-10">
+                {/* Founder Header with Verified Badge */}
+                <div className="flex items-center justify-center mb-8">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <h4 className="text-3xl md:text-4xl font-bold text-gray-800 mr-3">Jagdeep Singh</h4>
+                      <div 
+                        className="relative"
+                        onMouseEnter={() => setShowTooltip(true)}
+                        onMouseLeave={() => setShowTooltip(false)}
+                      >
+                        <div className="bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full p-2 shadow-lg animate-pulse">
+                          <CheckCircle className="h-6 w-6 text-white" />
+                        </div>
+                        {showTooltip && (
+                          <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-sm px-3 py-1 rounded-lg whitespace-nowrap">
+                            Verified Wellness Visionary
+                            <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-emerald-600 font-semibold text-lg">CEO & Founder</p>
+                  </div>
+                </div>
+
+                {/* Founder Message */}
+                <div className="text-center mb-8">
+                  <blockquote className="text-xl md:text-2xl text-gray-700 leading-relaxed font-medium italic">
+                    "Let's build a movement of fitness and wellness that transforms lifestyles and empowers communities."
+                  </blockquote>
+                </div>
+
+                {/* Audio Button */}
+                <div className="flex justify-center mb-8">
+                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    <Play className="h-5 w-5 mr-2" />
+                    Play Audio from Founder
+                    <Volume2 className="h-4 w-4 ml-2 animate-pulse" />
+                  </Button>
+                </div>
+
+                {/* Animated Signature */}
+                <div className="text-right">
+                  <div className={`inline-flex items-center transition-all duration-2000 ${isDrawingSignature ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                    <span className="text-lg text-gray-600 mr-2">✍️</span>
+                    <span className="text-xl font-bold text-emerald-600 font-serif italic">
+                      – Jagdeep Singh
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Elements */}
+              <div className="absolute top-4 left-4 w-3 h-3 bg-emerald-400 rounded-full animate-ping"></div>
+              <div className="absolute bottom-4 right-4 w-2 h-2 bg-blue-400 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+              <div className="absolute top-1/2 left-4 w-1 h-1 bg-purple-400 rounded-full animate-ping" style={{animationDelay: '2s'}}></div>
+            </div>
           </div>
         </div>
       </section>
@@ -214,26 +276,6 @@ const About = () => {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-white/90 backdrop-blur-lg shadow-xl sticky bottom-0 z-50 border-t border-white/20">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <ArrowLeft className="h-5 w-5" />
-              <span>Back to Home</span>
-            </Link>
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="h-7 w-7 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
