@@ -16,11 +16,14 @@ import { toast } from "sonner";
 interface BookingModalProps {
   businessName: string;
   businessType: string;
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
+  isOpen?: boolean;
+  onClose?: () => void;
+  price?: string;
 }
 
-const BookingModal = ({ businessName, businessType, trigger }: BookingModalProps) => {
-  const [open, setOpen] = useState(false);
+const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, price }: BookingModalProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState({
     date: undefined as Date | undefined,
@@ -33,6 +36,16 @@ const BookingModal = ({ businessName, businessType, trigger }: BookingModalProps
     specialRequests: ''
   });
   const [bookingStatus, setBookingStatus] = useState<'pending' | 'confirmed' | 'rejected' | null>(null);
+
+  // Use external open/close if provided, otherwise use internal state
+  const modalOpen = isOpen !== undefined ? isOpen : internalOpen;
+  const handleOpenChange = (open: boolean) => {
+    if (onClose && !open) {
+      onClose();
+    } else {
+      setInternalOpen(open);
+    }
+  };
 
   const timeSlots = [
     '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', 
@@ -194,6 +207,7 @@ const BookingModal = ({ businessName, businessType, trigger }: BookingModalProps
                 <p><strong>Time:</strong> {bookingData.time}</p>
                 <p><strong>Duration:</strong> {bookingData.duration} minutes</p>
                 <p><strong>Contact:</strong> {bookingData.name} ({bookingData.phone})</p>
+                {price && <p><strong>Price:</strong> {price}</p>}
               </div>
             </div>
             
@@ -227,11 +241,88 @@ const BookingModal = ({ businessName, businessType, trigger }: BookingModalProps
     }
   };
 
+  // If trigger is provided, use DialogTrigger pattern
+  if (trigger) {
+    return (
+      <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>
+          {trigger}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <span>Book at {businessName}</span>
+              <Badge variant="outline">{businessType}</Badge>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Progress Steps */}
+            <div className="flex items-center justify-center space-x-4">
+              {[1, 2, 3].map((stepNum) => (
+                <div key={stepNum} className="flex items-center">
+                  <div className={`
+                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                    ${step >= stepNum 
+                      ? 'bg-emerald-500 text-white' 
+                      : 'bg-gray-200 text-gray-600'
+                    }
+                  `}>
+                    {stepNum}
+                  </div>
+                  {stepNum < 3 && (
+                    <div className={`
+                      w-12 h-1 mx-2
+                      ${step > stepNum ? 'bg-emerald-500' : 'bg-gray-200'}
+                    `} />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {renderStepContent()}
+
+            <div className="flex justify-between">
+              {step > 1 && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep(step - 1)}
+                  disabled={bookingStatus === 'pending'}
+                >
+                  Previous
+                </Button>
+              )}
+              
+              {step < 3 ? (
+                <Button 
+                  onClick={() => setStep(step + 1)}
+                  className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                  disabled={
+                    (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time)) ||
+                    (step === 2 && (!bookingData.name || !bookingData.phone || !bookingData.email))
+                  }
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleSubmit}
+                  className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                  disabled={bookingStatus !== null}
+                >
+                  {bookingStatus === 'pending' ? 'Submitting...' : 'Confirm Booking'}
+                </Button>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // If no trigger, use controlled dialog pattern (for backward compatibility)
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
+    <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
