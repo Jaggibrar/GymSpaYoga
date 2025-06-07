@@ -45,8 +45,8 @@ const RegisterBusiness = () => {
   const getPriceByCategory = (category: string) => {
     switch (category) {
       case "luxury":
-        return "₹9,999";
-      case "standard":
+        return "₹7,999";
+      case "premium":
         return "₹4,999";
       case "budget":
         return "₹2,999";
@@ -59,7 +59,7 @@ const RegisterBusiness = () => {
     switch (category) {
       case "luxury":
         return "bg-purple-500 hover:bg-purple-600";
-      case "standard":
+      case "premium":
         return "bg-blue-500 hover:bg-blue-600";
       case "budget":
         return "bg-green-500 hover:bg-green-600";
@@ -150,8 +150,8 @@ const RegisterBusiness = () => {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="luxury">Luxury - ₹9,999</SelectItem>
-                    <SelectItem value="standard">Standard - ₹4,999</SelectItem>
+                    <SelectItem value="luxury">Luxury - ₹7,999</SelectItem>
+                    <SelectItem value="premium">Premium - ₹4,999</SelectItem>
                     <SelectItem value="budget">Budget Friendly - ₹2,999</SelectItem>
                   </SelectContent>
                 </Select>

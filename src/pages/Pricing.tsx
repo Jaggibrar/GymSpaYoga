@@ -25,7 +25,7 @@ const Pricing = () => {
       popular: false
     },
     {
-      name: "Standard",
+      name: "Premium",
       price: "₹4,999",
       description: "Ideal for established businesses looking to grow",
       icon: <Star className="h-8 w-8" />,
@@ -45,12 +45,12 @@ const Pricing = () => {
     },
     {
       name: "Luxury",
-      price: "₹9,999",
+      price: "₹7,999",
       description: "Premium solution for luxury establishments",
       icon: <Crown className="h-8 w-8" />,
       color: "from-purple-500 to-pink-500",
       features: [
-        "Everything in Standard",
+        "Everything in Premium",
         "Unlimited photos & videos",
         "Featured business badge",
         "Top search result placement",
