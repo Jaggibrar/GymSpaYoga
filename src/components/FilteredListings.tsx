@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,8 @@ import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import SmartFilters from "./SmartFilters";
+import BookingModal from "./BookingModal";
 
 interface Listing {
   id: number;
@@ -27,15 +28,20 @@ interface FilteredListingsProps {
 }
 
 const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [filteredListings, setFilteredListings] = useState(listings);
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [activeSort, setActiveSort] = useState('popular');
   const filter = searchParams.get('filter');
 
   useEffect(() => {
-    if (filter) {
-      const filtered = listings.filter(listing => {
+    let filtered = [...listings];
+
+    // Apply filters
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(listing => {
         const category = listing.category.toLowerCase();
-        switch (filter) {
+        switch (activeFilter) {
           case 'luxury':
             return category === 'luxury';
           case 'premium':
@@ -46,14 +52,65 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
             return true;
         }
       });
-      setFilteredListings(filtered);
-    } else {
-      setFilteredListings(listings);
     }
-  }, [filter, listings]);
+
+    // Apply sorting
+    switch (activeSort) {
+      case 'price-low':
+        filtered.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^\d]/g, ''));
+          const priceB = parseInt(b.price.replace(/[^\d]/g, ''));
+          return priceA - priceB;
+        });
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => {
+          const priceA = parseInt(a.price.replace(/[^\d]/g, ''));
+          const priceB = parseInt(b.price.replace(/[^\d]/g, ''));
+          return priceB - priceA;
+        });
+        break;
+      case 'rating':
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'popular':
+      default:
+        // Keep original order for popularity
+        break;
+    }
+
+    setFilteredListings(filtered);
+  }, [activeFilter, activeSort, listings]);
+
+  useEffect(() => {
+    if (filter) {
+      setActiveFilter(filter);
+    }
+  }, [filter]);
+
+  const handleFilterChange = (newFilter: string) => {
+    setActiveFilter(newFilter);
+    // Save to localStorage
+    localStorage.setItem(`lastFilter_${pageType}`, newFilter);
+  };
+
+  const handleSortChange = (newSort: string) => {
+    setActiveSort(newSort);
+    // Save to localStorage
+    localStorage.setItem(`lastSort_${pageType}`, newSort);
+  };
+
+  // Load saved preferences on mount
+  useEffect(() => {
+    const savedFilter = localStorage.getItem(`lastFilter_${pageType}`);
+    const savedSort = localStorage.getItem(`lastSort_${pageType}`);
+    
+    if (savedFilter) setActiveFilter(savedFilter);
+    if (savedSort) setActiveSort(savedSort);
+  }, [pageType]);
 
   const getFilterTitle = () => {
-    switch (filter) {
+    switch (activeFilter) {
       case 'luxury':
         return 'Luxury Experience';
       case 'premium':
@@ -67,7 +124,6 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
 
   const handleBookNow = (listingName: string) => {
     toast.success(`Booking initiated for ${listingName}!`);
-    // In real app, this would open booking modal or navigate to booking page
   };
 
   return (
@@ -76,12 +132,17 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
           {getFilterTitle()} - {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s
         </h2>
-        {filter && (
-          <Badge className="mb-4 bg-emerald-500">
-            Showing {filteredListings.length} results for {getFilterTitle()}
-          </Badge>
-        )}
+        <Badge className="mb-4 bg-emerald-500">
+          Showing {filteredListings.length} results
+        </Badge>
       </div>
+
+      <SmartFilters 
+        onFilterChange={handleFilterChange}
+        onSortChange={handleSortChange}
+        activeFilter={activeFilter}
+        activeSort={activeSort}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredListings.map((listing) => (
@@ -140,13 +201,18 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
-                <Button 
-                  onClick={() => handleBookNow(listing.name)}
-                  variant="outline" 
-                  className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm"
-                >
-                  Book Now
-                </Button>
+                <BookingModal 
+                  businessName={listing.name}
+                  businessType={listing.type.toLowerCase()}
+                  trigger={
+                    <Button 
+                      variant="outline" 
+                      className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm"
+                    >
+                      Book Now
+                    </Button>
+                  }
+                />
               </div>
             </CardContent>
           </Card>
@@ -155,10 +221,16 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
 
       {filteredListings.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">No {pageType}s found for the selected filter.</p>
-          <Link to={`/${pageType}s`}>
-            <Button className="mt-4">View All {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s</Button>
-          </Link>
+          <p className="text-gray-600 text-lg">No {pageType}s found for the selected filters.</p>
+          <Button 
+            className="mt-4"
+            onClick={() => {
+              setActiveFilter('all');
+              setActiveSort('popular');
+            }}
+          >
+            Clear Filters
+          </Button>
         </div>
       )}
     </div>
