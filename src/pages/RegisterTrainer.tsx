@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { MapPin, Star, Heart, Dumbbell, Waves, ArrowLeft, Upload, CheckCircle } from "lucide-react";
+import { MapPin, Star, Heart, Dumbbell, Waves, ArrowLeft, Upload, CheckCircle, CreditCard, Wallet, QrCode, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,6 +18,7 @@ const RegisterTrainer = () => {
     email: "",
     phone: "",
     category: "",
+    trainerTier: "",
     experience: "",
     certifications: "",
     specializations: [],
@@ -32,6 +32,13 @@ const RegisterTrainer = () => {
     { value: "gym", label: "Gym Trainer", icon: Dumbbell },
     { value: "spa", label: "Spa Therapist", icon: Waves },
     { value: "yoga", label: "Yoga Instructor", icon: Heart }
+  ];
+
+  const trainerTiers = [
+    { value: "elite", label: "Elite", price: "₹4,999", color: "from-purple-500 to-pink-500" },
+    { value: "pro", label: "Pro", price: "₹3,999", color: "from-blue-500 to-indigo-500" },
+    { value: "intermediate", label: "Intermediate", price: "₹2,999", color: "from-green-500 to-emerald-500" },
+    { value: "basic", label: "Basic", price: "₹1,700", color: "from-orange-500 to-red-500" }
   ];
 
   const specializations = {
@@ -55,6 +62,7 @@ const RegisterTrainer = () => {
       email: "",
       phone: "",
       category: "",
+      trainerTier: "",
       experience: "",
       certifications: "",
       specializations: [],
@@ -72,6 +80,10 @@ const RegisterTrainer = () => {
         ? [...prev.specializations, specialization]
         : prev.specializations.filter(s => s !== specialization)
     }));
+  };
+
+  const getSelectedTierDetails = () => {
+    return trainerTiers.find(tier => tier.value === formData.trainerTier);
   };
 
   return (
@@ -126,7 +138,7 @@ const RegisterTrainer = () => {
               <CardTitle className="text-3xl font-bold text-gray-800">
                 Trainer Registration
               </CardTitle>
-              <p className="text-gray-600">Registration Fee: ₹2,999 (One-time)</p>
+              <p className="text-gray-600">Choose your trainer tier and register</p>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-8">
@@ -182,6 +194,29 @@ const RegisterTrainer = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+
+                {/* Trainer Tier Selection */}
+                <div className="space-y-4">
+                  <Label>Trainer Tier *</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {trainerTiers.map((tier) => (
+                      <div 
+                        key={tier.value}
+                        className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                          formData.trainerTier === tier.value 
+                            ? 'border-emerald-500 bg-emerald-50' 
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        onClick={() => setFormData(prev => ({ ...prev, trainerTier: tier.value }))}
+                      >
+                        <div className={`w-full h-3 bg-gradient-to-r ${tier.color} rounded-full mb-3`}></div>
+                        <h3 className="font-bold text-lg">{tier.label}</h3>
+                        <p className="text-2xl font-bold text-gray-800">{tier.price}</p>
+                        <p className="text-sm text-gray-600">One-time registration</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -278,6 +313,48 @@ const RegisterTrainer = () => {
                   </div>
                 </div>
 
+                {/* Pricing Display */}
+                {formData.trainerTier && (
+                  <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-xl border border-emerald-200">
+                    <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                      <Star className="h-6 w-6 mr-2 text-emerald-600" />
+                      Registration Pricing
+                    </h4>
+                    <div className={`bg-gradient-to-r ${getSelectedTierDetails()?.color} text-white p-4 rounded-lg`}>
+                      <div className="text-center">
+                        <div className="text-lg font-semibold">{getSelectedTierDetails()?.label} Tier</div>
+                        <div className="text-2xl font-bold">{getSelectedTierDetails()?.price}</div>
+                        <div className="text-sm opacity-90">One-time registration fee</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Payment Methods */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <CreditCard className="h-6 w-6 mr-2 text-blue-600" />
+                    Payment Methods
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                      <Wallet className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                      <h5 className="font-semibold">Digital Wallet</h5>
+                      <p className="text-sm text-gray-600">PayTM, PhonePe, GPay</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                      <Building2 className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                      <h5 className="font-semibold">Bank Transfer</h5>
+                      <p className="text-sm text-gray-600">Direct bank account</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                      <QrCode className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                      <h5 className="font-semibold">QR Code</h5>
+                      <p className="text-sm text-gray-600">Scan & Pay</p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="bg-emerald-50 p-6 rounded-lg">
                   <h3 className="font-bold text-lg mb-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-emerald-600 mr-2" />
@@ -298,7 +375,7 @@ const RegisterTrainer = () => {
                     type="submit"
                     className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-12 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                   >
-                    Register & Pay ₹2,999
+                    Register Now
                   </Button>
                 </div>
               </form>

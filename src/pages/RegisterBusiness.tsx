@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Upload, MapPin, Phone, Mail, Clock, Dumbbell, CreditCard } from "lucide-react";
+import { Upload, MapPin, Phone, Mail, Clock, Dumbbell, CreditCard, Wallet, QrCode, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -144,15 +143,15 @@ const RegisterBusiness = () => {
 
               {/* Category */}
               <div className="space-y-2">
-                <Label htmlFor="category" className="text-base sm:text-lg font-semibold">Category *</Label>
+                <Label htmlFor="category" className="text-base sm:text-lg font-semibold">Destination Category *</Label>
                 <Select onValueChange={setSelectedCategory}>
                   <SelectTrigger className="h-10 sm:h-12">
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Select destination category" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="luxury">Luxury - ₹7,999</SelectItem>
-                    <SelectItem value="premium">Premium - ₹4,999</SelectItem>
-                    <SelectItem value="budget">Budget Friendly - ₹2,999</SelectItem>
+                    <SelectItem value="luxury">Luxury Destination</SelectItem>
+                    <SelectItem value="premium">Premium Destination</SelectItem>
+                    <SelectItem value="budget">Budget Friendly Destination</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -284,7 +283,58 @@ const RegisterBusiness = () => {
                 </p>
               </div>
 
-              {/* Terms and Payment */}
+              {/* Pricing Display */}
+              {selectedCategory && (
+                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-xl border border-emerald-200">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                    <Building2 className="h-6 w-6 mr-2 text-emerald-600" />
+                    Registration Pricing
+                  </h4>
+                  <div className={`${getCategoryBadgeColor(selectedCategory)} text-white p-4 rounded-lg`}>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold">{getPriceByCategory(selectedCategory)}</div>
+                      <div className="text-sm opacity-90">One-time registration fee</div>
+                    </div>
+                  </div>
+                  <div className="mt-4 text-sm text-gray-600">
+                    <p className="font-semibold mb-2">What's included:</p>
+                    <ul className="space-y-1">
+                      <li>• Lifetime business listing on our platform</li>
+                      <li>• Featured placement in search results</li>
+                      <li>• Customer booking management system</li>
+                      <li>• Analytics dashboard</li>
+                      <li>• Mobile app presence</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {/* Payment Methods */}
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
+                <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                  <CreditCard className="h-6 w-6 mr-2 text-blue-600" />
+                  Payment Methods
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                    <Wallet className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                    <h5 className="font-semibold">Digital Wallet</h5>
+                    <p className="text-sm text-gray-600">PayTM, PhonePe, GPay</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                    <Building2 className="h-8 w-8 mx-auto mb-2 text-blue-600" />
+                    <h5 className="font-semibold">Bank Transfer</h5>
+                    <p className="text-sm text-gray-600">Direct bank account</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
+                    <QrCode className="h-8 w-8 mx-auto mb-2 text-purple-600" />
+                    <h5 className="font-semibold">QR Code</h5>
+                    <p className="text-sm text-gray-600">Scan & Pay</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Terms and Registration */}
               <div className="space-y-6 pt-6 border-t">
                 <div className="flex items-start space-x-3">
                   <Checkbox id="terms" />
@@ -293,28 +343,15 @@ const RegisterBusiness = () => {
                   </Label>
                 </div>
 
-                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 sm:p-6 rounded-xl">
-                  <h4 className="font-semibold text-lg mb-2">What you get:</h4>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>✅ Lifetime business listing on our platform</li>
-                    <li>✅ Featured placement in search results</li>
-                    <li>✅ Customer booking management system</li>
-                    <li>✅ Analytics dashboard to track performance</li>
-                    <li>✅ Direct customer communication tools</li>
-                    <li>✅ Mobile app presence</li>
-                  </ul>
-                </div>
-
                 <div className="text-center">
                   <Button 
                     size="lg" 
                     className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 w-full sm:w-auto"
                   >
-                    <CreditCard className="h-5 w-5 mr-2" />
-                    Pay {selectedCategory ? getPriceByCategory(selectedCategory) : "₹4,999"} & Register Business
+                    Register Now
                   </Button>
                   <p className="text-sm text-gray-500 mt-4">
-                    Secure payment powered by Stripe • SSL encrypted
+                    Secure payment • SSL encrypted
                   </p>
                 </div>
               </div>
