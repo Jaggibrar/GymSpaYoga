@@ -1,268 +1,222 @@
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Star, Clock, Phone, Waves, Search, Filter, Users, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
-import CategoryTrainers from "@/components/CategoryTrainers";
+import { Waves, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
+import FilteredListings from "@/components/FilteredListings";
+import LoadingScreen from "@/components/LoadingScreen";
 
 const Spas = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [priceFilter, setPriceFilter] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  useScrollToTop();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const spaListings = [
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    toast.success("Logged out successfully!");
+    navigate('/login');
+  };
+
+  const spas = [
     {
       id: 1,
-      name: "Serenity Spa & Wellness",
-      category: "Luxury",
+      name: "Serenity Wellness Spa",
+      type: "Luxury Spa",
+      category: "luxury",
       rating: 4.9,
-      reviews: 156,
-      location: "Koregaon Park, Pune",
-      price: "₹3,500/session",
-      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      services: ["Swedish Massage", "Aromatherapy", "Facial", "Body Wrap", "Sauna", "Steam Bath"],
-      hours: "9:00 AM - 9:00 PM",
-      phone: "+91 98765 43220",
-      description: "Luxury wellness retreat offering premium spa treatments in a tranquil environment",
-      specialties: ["Hot Stone Therapy", "Couples Massage", "Detox Programs"],
-      clientCount: "200+ Happy Clients"
+      location: "Juhu, Mumbai",
+      price: "₹4,500/session",
+      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Aromatherapy", "Hot Stone Massage", "Jacuzzi", "Steam Room", "Couples Suite"],
+      link: "/spa/1"
     },
     {
       id: 2,
-      name: "Bliss Wellness Center",
-      category: "Standard",
-      rating: 4.6,
-      reviews: 89,
-      location: "Bandra West, Mumbai",
-      price: "₹2,200/session",
-      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      services: ["Deep Tissue Massage", "Hot Stone", "Facial", "Manicure", "Pedicure"],
-      hours: "10:00 AM - 8:00 PM",
-      phone: "+91 98765 43221",
-      description: "Complete wellness center with therapeutic treatments and beauty services",
-      specialties: ["Therapeutic Massage", "Anti-Aging Treatments", "Wellness Packages"],
-      clientCount: "150+ Regular Clients"
+      name: "Tranquil Touch Spa",
+      type: "Wellness Spa",
+      category: "premium",
+      rating: 4.7,
+      location: "Koramangala, Bangalore",
+      price: "₹2,800/session",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Deep Tissue Massage", "Facial Treatments", "Sauna", "Reflexology"],
+      link: "/spa/2"
     },
     {
       id: 3,
-      name: "Relax Spa Studio",
-      category: "Budget Friendly",
-      rating: 4.3,
-      reviews: 67,
-      location: "Indiranagar, Bangalore",
-      price: "₹1,200/session",
-      image: "https://images.unsplash.com/photo-1560750588-73207b1ef5b8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      services: ["Thai Massage", "Foot Massage", "Basic Facial", "Head Massage"],
-      hours: "10:00 AM - 7:00 PM",
-      phone: "+91 98765 43222",
-      description: "Affordable spa services with traditional massage techniques and relaxation therapies",
-      specialties: ["Traditional Thai", "Reflexology", "Express Treatments"],
-      clientCount: "100+ Satisfied Clients"
+      name: "Bliss Day Spa",
+      type: "Day Spa",
+      category: "budget",
+      rating: 4.4,
+      location: "Connaught Place, Delhi",
+      price: "₹1,500/session",
+      image: "https://images.unsplash.com/photo-1583454110551-4515c1934342?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Swedish Massage", "Body Scrub", "Hair Spa", "Manicure/Pedicure"],
+      link: "/spa/3"
     },
     {
       id: 4,
-      name: "Royal Spa Retreat",
-      category: "Luxury",
+      name: "Royal Rejuvenation",
+      type: "Premium Spa",
+      category: "luxury",
       rating: 4.8,
-      reviews: 234,
-      location: "Vasant Vihar, Delhi",
-      price: "₹4,200/session",
-      image: "https://images.unsplash.com/photo-1596178060810-7d7fdb88b4b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      services: ["Ayurvedic Massage", "Couples Massage", "Body Scrub", "Jacuzzi", "Pool Access"],
-      hours: "8:00 AM - 10:00 PM",
-      phone: "+91 98765 43223",
-      description: "Ultimate luxury spa experience with royal treatments and premium amenities",
-      specialties: ["Ayurvedic Treatments", "Royal Packages", "Holistic Wellness"],
-      clientCount: "500+ Elite Clients"
+      location: "Bandra West, Mumbai",
+      price: "₹6,000/session",
+      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Gold Facial", "Thai Massage", "Private Pool", "Champagne Service", "Personal Butler"],
+      link: "/spa/4"
+    },
+    {
+      id: 5,
+      name: "Zen Harmony Spa",
+      type: "Holistic Spa",
+      category: "premium",
+      rating: 4.6,
+      location: "Whitefield, Bangalore",
+      price: "₹3,200/session",
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Ayurvedic Treatment", "Meditation Room", "Herbal Steam", "Sound Therapy"],
+      link: "/spa/5"
+    },
+    {
+      id: 6,
+      name: "Quick Refresh Spa",
+      type: "Express Spa",
+      category: "budget",
+      rating: 4.3,
+      location: "Sector 18, Gurgaon",
+      price: "₹1,200/session",
+      image: "https://images.unsplash.com/photo-1583454110551-4515c1934342?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      amenities: ["Express Facial", "Chair Massage", "Quick Pedicure", "Stress Relief"],
+      link: "/spa/6"
     }
   ];
 
-  const filteredSpas = spaListings.filter(spa => {
-    const matchesSearch = spa.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         spa.location.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLocation = !locationFilter || spa.location.toLowerCase().includes(locationFilter.toLowerCase());
-    
-    return matchesSearch && matchesLocation;
-  });
+  if (isLoading) {
+    return <LoadingScreen category="spa" onComplete={() => setIsLoading(false)} />;
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Futuristic Header */}
-      <header className="bg-black/20 backdrop-blur-2xl shadow-2xl sticky top-0 z-50 border-b border-blue-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300 border border-blue-400/30">
-                <Waves className="h-7 w-7 text-white" />
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                <Waves className="h-4 md:h-6 w-4 md:w-6 text-white" />
               </div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 GymSpaYoga
               </h1>
             </Link>
-            <div className="flex items-center space-x-4">
-              <Link to="/trainers">
-                <Button variant="outline" className="border-blue-400 text-blue-400 hover:bg-blue-400/10 backdrop-blur-sm">
-                  Find Therapists
+            
+            <div className="flex items-center space-x-2 md:space-x-4">
+              <Link to="/">
+                <Button variant="outline" className="text-xs md:text-sm">
+                  Home
                 </Button>
               </Link>
-              <Link to="/register-business">
-                <Button variant="outline" className="border-blue-400 text-blue-400 hover:bg-blue-400/10 backdrop-blur-sm">
-                  List Your Spa
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleLogout}
+                variant="outline" 
+                className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
+              >
+                <LogOut className="h-3 w-3 mr-1" />
+                Logout
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-6xl font-bold text-white mb-6 drop-shadow-2xl">
-            Luxury Spa Experience
-          </h2>
-          <p className="text-xl text-blue-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Indulge in premium wellness treatments and rejuvenating experiences at world-class spas
-          </p>
+      {/* Hero Section */}
+      <section className="relative h-96 overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+          alt="Luxury spa with relaxing ambiance"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-10">
+          <div className="text-center mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 md:mb-4 leading-tight">
+              Find Your Perfect
+            </h1>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-purple-400 mb-4 md:mb-6">
+              Spa
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+              Discover ultimate relaxation and rejuvenation experiences.
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Futuristic Filters */}
-        <Card className="mb-8 shadow-2xl bg-black/40 backdrop-blur-xl border border-blue-500/30">
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-5 w-5" />
-                <Input
-                  placeholder="Search spas..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 bg-black/20 border-blue-500/30 text-white placeholder:text-blue-300/70"
-                />
+      {/* Filtered Listings */}
+      <FilteredListings listings={spas} pageType="spa" />
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
+            <div className="lg:col-span-2">
+              <div className="flex items-center space-x-3 mb-4 md:mb-6">
+                <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <Waves className="h-5 md:h-6 w-5 md:w-6 text-white" />
+                </div>
+                <h4 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">GymSpaYoga</h4>
               </div>
-              <Select value={priceFilter} onValueChange={setPriceFilter}>
-                <SelectTrigger className="h-12 bg-black/20 border-blue-500/30 text-white">
-                  <SelectValue placeholder="Price Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="budget">Budget (₹1,000-₹2,000)</SelectItem>
-                  <SelectItem value="standard">Standard (₹2,000-₹3,500)</SelectItem>
-                  <SelectItem value="luxury">Luxury (₹3,500+)</SelectItem>
-                </SelectContent>
-              </Select>
-              <Input
-                placeholder="Location"
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="h-12 bg-black/20 border-blue-500/30 text-white placeholder:text-blue-300/70"
-              />
-              <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 h-12 shadow-lg">
-                <Filter className="h-5 w-5 mr-2" />
-                Apply Filters
-              </Button>
+              <p className="text-gray-300 text-base md:text-lg mb-4 md:mb-6 leading-relaxed">
+                Your wellness journey starts here. We connect wellness enthusiasts with the best gyms, spas, and yoga centers across India.
+              </p>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Enhanced Spas Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {filteredSpas.map((spa) => (
-            <Card key={spa.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 bg-black/40 backdrop-blur-xl border border-blue-500/30">
-              <div className="relative overflow-hidden">
-                <img 
-                  src={spa.image} 
-                  alt={spa.name}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                <Badge className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-cyan-500 shadow-lg px-3 py-1">
-                  {spa.category}
-                </Badge>
-                <div className="absolute bottom-4 left-4 text-white">
-                  <div className="flex items-center space-x-2">
-                    <Users className="h-4 w-4" />
-                    <span className="text-sm">{spa.clientCount}</span>
-                  </div>
-                </div>
+            
+            <div>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-emerald-400">For Users</h5>
+              <ul className="space-y-2 md:space-y-3 text-gray-300">
+                <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Gyms</Link></li>
+                <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Spas</Link></li>
+                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Yoga Centers</Link></li>
+                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Trainers</Link></li>
+                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">About Us</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-blue-400">For Business</h5>
+              <ul className="space-y-2 md:space-y-3 text-gray-300">
+                <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">List Your Business</Link></li>
+                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Become a Trainer</Link></li>
+                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Manage Bookings</Link></li>
+                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Pricing Plans</Link></li>
+                <li><Link to="/support" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Support</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact</h5>
+              <div className="space-y-2 md:space-y-3 text-gray-300">
+                <p className="text-sm md:text-base">Mumbai, India</p>
+                <p className="text-sm md:text-base">contact@gymspayoga.com</p>
               </div>
-              
-              <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors duration-300">
-                      {spa.name}
-                    </CardTitle>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                      <span className="text-lg font-semibold text-blue-200">{spa.rating}</span>
-                      <span className="text-gray-400">({spa.reviews} reviews)</span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-400">{spa.price}</p>
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="pt-0">
-                <div className="space-y-4 mb-6">
-                  <div className="flex items-center text-gray-300">
-                    <MapPin className="h-4 w-4 mr-2 text-blue-400" />
-                    <span>{spa.location}</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <Clock className="h-4 w-4 mr-2 text-blue-400" />
-                    <span>{spa.hours}</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <Phone className="h-4 w-4 mr-2 text-blue-400" />
-                    <span>{spa.phone}</span>
-                  </div>
-                  <p className="text-gray-300 text-sm leading-relaxed">{spa.description}</p>
-                </div>
-                
-                <div className="grid grid-cols-3 gap-2 mb-4">
-                  {spa.specialties.map((specialty) => (
-                    <Badge key={specialty} variant="outline" className="text-xs border-blue-500/30 text-blue-300 justify-center">
-                      {specialty}
-                    </Badge>
-                  ))}
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {spa.services.slice(0, 4).map((service) => (
-                    <Badge key={service} variant="outline" className="text-xs border-cyan-500/30 text-cyan-300">
-                      {service}
-                    </Badge>
-                  ))}
-                  {spa.services.length > 4 && (
-                    <Badge variant="outline" className="text-xs border-cyan-500/30 text-cyan-300">
-                      +{spa.services.length - 4} more
-                    </Badge>
-                  )}
-                </div>
-                
-                <div className="flex space-x-3">
-                  <Link to={`/spa/${spa.id}`} className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                      View Details
-                    </Button>
-                  </Link>
-                  <Button variant="outline" className="border-blue-400 text-blue-400 hover:bg-blue-400/10">
-                    Book Treatment
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+            </div>
+          </div>
+          <div className="border-t border-gray-700 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-gray-400">
+            <p className="text-sm md:text-base">&copy; 2024 GymSpaYoga. All rights reserved.</p>
+          </div>
         </div>
-      </div>
-
-      {/* Spa Therapists Section */}
-      <CategoryTrainers category="spa" />
+      </footer>
     </div>
   );
 };
