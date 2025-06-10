@@ -45,18 +45,46 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
     } else {
       setInternalOpen(open);
     }
+    
+    // Reset form when closing
+    if (!open) {
+      setStep(1);
+      setBookingData({
+        date: undefined,
+        time: '',
+        duration: '',
+        service: '',
+        name: '',
+        phone: '',
+        email: '',
+        specialRequests: ''
+      });
+      setBookingStatus(null);
+    }
   };
 
   const timeSlots = [
-    '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', 
-    '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+    '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', 
+    '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'
   ];
 
   const services = {
-    gym: ['Personal Training', 'Group Classes', 'Equipment Access', 'Nutrition Consultation'],
-    spa: ['Full Body Massage', 'Facial Treatment', 'Body Wrap', 'Aromatherapy'],
-    yoga: ['Hatha Yoga', 'Vinyasa Flow', 'Meditation Session', 'Private Class']
+    gym: ['Personal Training', 'Group Classes', 'Equipment Access', 'Nutrition Consultation', 'CrossFit Training', 'Weight Training'],
+    spa: ['Full Body Massage', 'Facial Treatment', 'Body Wrap', 'Aromatherapy', 'Hot Stone Therapy', 'Swedish Massage'],
+    yoga: ['Hatha Yoga', 'Vinyasa Flow', 'Meditation Session', 'Private Class', 'Power Yoga', 'Yin Yoga']
   };
+
+  // Determine service type based on businessType
+  const getServiceType = () => {
+    const lowerBusinessType = businessType.toLowerCase();
+    if (lowerBusinessType.includes('gym') || lowerBusinessType.includes('fitness')) return 'gym';
+    if (lowerBusinessType.includes('spa') || lowerBusinessType.includes('massage')) return 'spa';
+    if (lowerBusinessType.includes('yoga') || lowerBusinessType.includes('meditation')) return 'yoga';
+    return 'gym'; // default
+  };
+
+  const serviceType = getServiceType();
+  const availableServices = services[serviceType] || services.gym;
 
   const handleSubmit = () => {
     // Simulate booking submission
@@ -84,13 +112,15 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
           <div className="space-y-4">
             <div>
               <Label htmlFor="service">Select Service</Label>
-              <Select onValueChange={(value) => setBookingData({...bookingData, service: value})}>
-                <SelectTrigger>
+              <Select value={bookingData.service} onValueChange={(value) => setBookingData({...bookingData, service: value})}>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a service" />
                 </SelectTrigger>
-                <SelectContent>
-                  {services[businessType as keyof typeof services]?.map((service) => (
-                    <SelectItem key={service} value={service}>{service}</SelectItem>
+                <SelectContent className="bg-white z-50">
+                  {availableServices.map((service) => (
+                    <SelectItem key={service} value={service} className="hover:bg-gray-100">
+                      {service}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -105,7 +135,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
                     {bookingData.date ? format(bookingData.date, "PPP") : "Pick a date"}
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
+                <PopoverContent className="w-auto p-0 bg-white z-50">
                   <Calendar
                     mode="single"
                     selected={bookingData.date}
@@ -119,13 +149,15 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Time Slot</Label>
-                <Select onValueChange={(value) => setBookingData({...bookingData, time: value})}>
+                <Select value={bookingData.time} onValueChange={(value) => setBookingData({...bookingData, time: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white z-50">
                     {timeSlots.map((time) => (
-                      <SelectItem key={time} value={time}>{time}</SelectItem>
+                      <SelectItem key={time} value={time} className="hover:bg-gray-100">
+                        {time}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -133,15 +165,15 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
               
               <div>
                 <Label>Duration</Label>
-                <Select onValueChange={(value) => setBookingData({...bookingData, duration: value})}>
+                <Select value={bookingData.duration} onValueChange={(value) => setBookingData({...bookingData, duration: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Duration" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="30">30 minutes</SelectItem>
-                    <SelectItem value="60">1 hour</SelectItem>
-                    <SelectItem value="90">1.5 hours</SelectItem>
-                    <SelectItem value="120">2 hours</SelectItem>
+                  <SelectContent className="bg-white z-50">
+                    <SelectItem value="30" className="hover:bg-gray-100">30 minutes</SelectItem>
+                    <SelectItem value="60" className="hover:bg-gray-100">1 hour</SelectItem>
+                    <SelectItem value="90" className="hover:bg-gray-100">1.5 hours</SelectItem>
+                    <SelectItem value="120" className="hover:bg-gray-100">2 hours</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -248,7 +280,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] bg-white">
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
               <span>Book at {businessName}</span>
@@ -298,7 +330,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
                   onClick={() => setStep(step + 1)}
                   className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
                   disabled={
-                    (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time)) ||
+                    (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.duration)) ||
                     (step === 2 && (!bookingData.name || !bookingData.phone || !bookingData.email))
                   }
                 >
@@ -323,7 +355,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
   // If no trigger, use controlled dialog pattern (for backward compatibility)
   return (
     <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] bg-white">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <span>Book at {businessName}</span>
@@ -373,7 +405,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
                 onClick={() => setStep(step + 1)}
                 className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
                 disabled={
-                  (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time)) ||
+                  (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.duration)) ||
                   (step === 2 && (!bookingData.name || !bookingData.phone || !bookingData.email))
                 }
               >

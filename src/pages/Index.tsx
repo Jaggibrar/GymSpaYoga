@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Dumbbell, Waves, Heart, Users, Search, Shield, Award, Clock, User, LogOut } from "lucide-react";
+import { MapPin, Star, Dumbbell, Waves, Heart, Users, Search, Shield, Award, Clock, User, LogOut, CheckCircle, Phone, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
@@ -11,7 +11,8 @@ import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
 
 const Index = () => {
-  useScrollToTop();
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [targetCategory, setTargetCategory] = useState<string>("");
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState<'gym' | 'spa' | 'yoga' | null>(null);
@@ -22,14 +23,13 @@ const Index = () => {
     navigate('/login');
   };
 
-  const handleCategoryClick = (category: 'gym' | 'spa' | 'yoga', path: string) => {
-    setIsLoading(true);
-    setLoadingCategory(category);
+  const handleCategoryClick = (category: string, path: string) => {
+    setTargetCategory(category);
+    setShowLoadingScreen(true);
     
     setTimeout(() => {
-      setIsLoading(false);
-      setLoadingCategory(null);
       navigate(path);
+      setShowLoadingScreen(false);
     }, 2000);
   };
 
@@ -68,25 +68,28 @@ const Index = () => {
 
   const testimonials = [
     {
-      id: 201,
       name: "Priya Sharma",
       role: "Fitness Enthusiast",
-      comment: "I found the perfect gym through this platform! The filters helped me find a gym with all the amenities I needed.",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b8d21c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+      content: "I found the perfect gym through this platform! The filters helped me find a gym with all the amenities I needed.",
+      verified: true
     },
     {
-      id: 202,
       name: "Amit Patel",
       role: "Wellness Seeker",
-      comment: "The spa listings are fantastic. I booked a relaxing session at a top-rated spa and felt completely rejuvenated.",
-      avatar: "https://images.unsplash.com/photo-1531427186611-ecfd6d936e63?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      content: "The spa listings are fantastic. I booked a relaxing session at a top-rated spa and felt completely rejuvenated.",
+      verified: true
     },
     {
-      id: 203,
       name: "Anjali Kapoor",
       role: "Yoga Practitioner",
-      comment: "I discovered an amazing yoga studio that perfectly matches my preferences. The variety of options is impressive!",
-      avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60"
+      content: "Found an amazing yoga studio nearby. The instructors are certified and the environment is so peaceful.",
+      verified: true
+    },
+    {
+      name: "Rohit Singh",
+      role: "Business Owner",
+      content: "As a gym owner, this platform helped me reach more customers. The registration process was smooth and effective.",
+      verified: true
     }
   ];
 
@@ -414,34 +417,40 @@ const Index = () => {
       <TrainersSection />
 
       {/* Testimonials Section */}
-      <section className="py-12 md:py-16 px-4 bg-gray-50">
-        <div className="container mx-auto">
-          <div className="text-center mb-10 md:mb-14">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 md:mb-5">
-              What Our Users Say
+      <section className="py-24 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+              Success Stories
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Read inspiring stories from individuals who have transformed their lives with GymSpaYoga.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Hear from our community members who have transformed their lives with GymSpaYoga.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="p-6 bg-white/90 backdrop-blur-sm shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
-                <div className="flex items-center space-x-4 mb-4">
-                  <img 
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800">{testimonial.name}</h3>
-                    <p className="text-gray-500">{testimonial.role}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <Card key={index} className="p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-gray-50">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-white font-bold text-xl">
+                      {testimonial.name.charAt(0)}
+                    </span>
                   </div>
+                  <div className="flex items-center justify-center mb-2">
+                    <h4 className="text-xl font-bold text-gray-800">{testimonial.name}</h4>
+                    {testimonial.verified && (
+                      <Badge className="ml-2 bg-green-500 hover:bg-green-600 text-white">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Verified
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-gray-500 font-medium">{testimonial.role}</p>
                 </div>
-                <p className="text-gray-600 text-base leading-relaxed italic">
-                  "{testimonial.comment}"
-                </p>
+                <blockquote className="text-gray-600 italic leading-relaxed">
+                  "{testimonial.content}"
+                </blockquote>
               </Card>
             ))}
           </div>
@@ -449,58 +458,97 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
-            <div className="lg:col-span-2">
-              <div className="flex items-center space-x-3 mb-4 md:mb-6">
-                <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Dumbbell className="h-5 md:h-6 w-5 md:w-6 text-white" />
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="h-12 w-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center">
+                  <Dumbbell className="h-7 w-7 text-white" />
                 </div>
-                <h4 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
+                <h3 className="text-2xl font-bold">GymSpaYoga</h3>
               </div>
-              <p className="text-gray-300 text-base md:text-lg mb-4 md:mb-6 leading-relaxed">
-                Your wellness journey starts here. We connect fitness enthusiasts with the best gyms, spas, and yoga centers across India. Transform your health, transform your life.
+              <p className="text-gray-400 leading-relaxed">
+                Your ultimate destination for fitness, wellness, and mindfulness. 
+                Discover the best gyms, spas, and yoga studios in your area.
               </p>
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-emerald-400">For Users</h5>
-              <ul className="space-y-2 md:space-y-3 text-gray-300">
-                <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Gyms</Link></li>
-                <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Spas</Link></li>
-                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Yoga Centers</Link></li>
-                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Trainers</Link></li>
-                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">About Us</Link></li>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                <li><Link to="/gyms" className="text-gray-400 hover:text-white transition-colors">Find Gyms</Link></li>
+                <li><Link to="/spas" className="text-gray-400 hover:text-white transition-colors">Find Spas</Link></li>
+                <li><Link to="/yoga" className="text-gray-400 hover:text-white transition-colors">Find Yoga</Link></li>
+                <li><Link to="/trainers" className="text-gray-400 hover:text-white transition-colors">Find Trainers</Link></li>
               </ul>
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-blue-400">For Business</h5>
-              <ul className="space-y-2 md:space-y-3 text-gray-300">
-                <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">List Your Business</Link></li>
-                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Become a Trainer</Link></li>
-                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Manage Bookings</Link></li>
-                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Pricing Plans</Link></li>
-                <li><Link to="/support" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Support</Link></li>
+              <h4 className="text-lg font-semibold mb-4">For Business</h4>
+              <ul className="space-y-2">
+                <li><Link to="/register-business" className="text-gray-400 hover:text-white transition-colors">List Your Business</Link></li>
+                <li><Link to="/register-trainer" className="text-gray-400 hover:text-white transition-colors">Join as Trainer</Link></li>
+                <li><Link to="/pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
+                <li><Link to="/manage-bookings" className="text-gray-400 hover:text-white transition-colors">Manage Bookings</Link></li>
               </ul>
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact</h5>
-              <div className="space-y-2 md:space-y-3 text-gray-300">
-                <div className="flex items-center">
-                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-2 md:mr-3 text-purple-400" />
-                  <span className="text-sm md:text-base">Mumbai, India</span>
+              <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-400">Kolkata, West Bengal</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-400">+91 98765 43210</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                  <span className="text-gray-400">info@gymspayoga.com</span>
                 </div>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-gray-400">
-            <p className="text-sm md:text-base">&copy; 2024 GymSpaYoga. All rights reserved.</p>
+          
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-400 mb-4 md:mb-0">
+                © 2024 GymSpaYoga. All rights reserved.
+              </p>
+              <div className="flex space-x-6">
+                <Link to="/about" className="text-gray-400 hover:text-white transition-colors">About</Link>
+                <Link to="/blogs" className="text-gray-400 hover:text-white transition-colors">Blogs</Link>
+                <Link to="/support" className="text-gray-400 hover:text-white transition-colors">Support</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* Loading Screen */}
+      {showLoadingScreen && (
+        <div className="fixed inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center z-50">
+          <div className="text-center">
+            <div className="relative mb-8">
+              <div className="w-24 h-24 border-4 border-white/20 rounded-full animate-spin">
+                <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-white rounded-full animate-pulse"></div>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full animate-bounce flex items-center justify-center">
+                  {targetCategory === "gym" && <Dumbbell className="h-6 w-6 text-white" />}
+                  {targetCategory === "spa" && <Waves className="h-6 w-6 text-white" />}
+                  {targetCategory === "yoga" && <Heart className="h-6 w-6 text-white" />}
+                </div>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-white mb-2">Loading {targetCategory}...</h2>
+            <p className="text-white/70">Finding the best options for you</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
