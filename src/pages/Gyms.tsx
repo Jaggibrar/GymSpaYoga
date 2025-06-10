@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Dumbbell, LogOut } from "lucide-react";
+import { Dumbbell, LogOut, MapPin, Phone, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -173,8 +173,8 @@ const Gyms = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-8">
+            <div>
               <div className="flex items-center space-x-3 mb-4 md:mb-6">
                 <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
                   <Dumbbell className="h-5 md:h-6 w-5 md:w-6 text-white" />
@@ -207,15 +207,34 @@ const Gyms = () => {
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact</h5>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact Info</h5>
               <div className="space-y-2 md:space-y-3 text-gray-300">
-                <p className="text-sm md:text-base">Mumbai, India</p>
-                <p className="text-sm md:text-base">contact@gymspayoga.com</p>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">Kolkata, West Bengal</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">+91 98765 43210</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">info@gymspayoga.com</span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-gray-400">
-            <p className="text-sm md:text-base">&copy; 2024 GymSpaYoga. All rights reserved.</p>
+          <div className="border-t border-gray-700 pt-6 md:pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-400 mb-4 md:mb-0 text-sm md:text-base">
+                © 2024 GymSpaYoga. All rights reserved.
+              </p>
+              <div className="flex space-x-6">
+                <Link to="/about" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">About</Link>
+                <Link to="/blogs" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Blogs</Link>
+                <Link to="/support" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Support</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

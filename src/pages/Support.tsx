@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -220,7 +219,7 @@ const Support = () => {
                   <MapPin className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="font-semibold">Office Address</p>
-                    <p className="text-gray-600">Mumbai, Maharashtra, India</p>
+                    <p className="text-gray-600">Kolkata, West Bengal, India</p>
                     <p className="text-sm text-gray-500">Headquarters</p>
                   </div>
                 </div>
