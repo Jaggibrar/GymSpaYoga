@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Heart, LogOut } from "lucide-react";
+import { Heart, LogOut, MapPin, Phone, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -113,11 +113,14 @@ const Yoga = () => {
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <Heart className="h-4 md:h-6 w-4 md:w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-2 group">
+              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-lg group-hover:shadow-green-200">
+                <div className="relative">
+                  <Heart className="h-4 md:h-6 w-4 md:w-6 text-white animate-pulse group-hover:animate-bounce" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-ping group-hover:animate-none"></div>
+                </div>
               </div>
-              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent hover:from-green-700 hover:to-emerald-700 transition-all duration-300">
                 GymSpaYoga
               </h1>
             </Link>
@@ -173,27 +176,27 @@ const Yoga = () => {
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-12">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-8">
+            <div>
               <div className="flex items-center space-x-3 mb-4 md:mb-6">
                 <div className="h-10 md:h-12 w-10 md:w-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
                   <Heart className="h-5 md:h-6 w-5 md:w-6 text-white" />
                 </div>
-                <h4 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">GymSpaYoga</h4>
+                <h4 className="text-xl md:text-2xl font-bold">GymSpaYoga</h4>
               </div>
               <p className="text-gray-300 text-base md:text-lg mb-4 md:mb-6 leading-relaxed">
-                Your wellness journey starts here. We connect wellness enthusiasts with the best gyms, spas, and yoga centers across India.
+                Your ultimate destination for fitness, wellness, and mindfulness. 
+                Discover the best gyms, spas, and yoga studios in your area.
               </p>
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-emerald-400">For Users</h5>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-emerald-400">Quick Links</h5>
               <ul className="space-y-2 md:space-y-3 text-gray-300">
                 <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Gyms</Link></li>
                 <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Spas</Link></li>
-                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Yoga Centers</Link></li>
+                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Yoga</Link></li>
                 <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">Find Trainers</Link></li>
-                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300 text-sm md:text-base">About Us</Link></li>
               </ul>
             </div>
             
@@ -201,23 +204,42 @@ const Yoga = () => {
               <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-blue-400">For Business</h5>
               <ul className="space-y-2 md:space-y-3 text-gray-300">
                 <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">List Your Business</Link></li>
-                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Become a Trainer</Link></li>
+                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Join as Trainer</Link></li>
                 <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Manage Bookings</Link></li>
-                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Pricing Plans</Link></li>
+                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Pricing</Link></li>
                 <li><Link to="/support" className="hover:text-blue-400 transition-colors duration-300 text-sm md:text-base">Support</Link></li>
               </ul>
             </div>
             
             <div>
-              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact</h5>
+              <h5 className="font-bold mb-4 md:mb-6 text-lg md:text-xl text-purple-400">Contact Info</h5>
               <div className="space-y-2 md:space-y-3 text-gray-300">
-                <p className="text-sm md:text-base">Mumbai, India</p>
-                <p className="text-sm md:text-base">contact@gymspayoga.com</p>
+                <div className="flex items-center space-x-3">
+                  <MapPin className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">Kolkata, West Bengal</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Phone className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">+91 98765 43210</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm md:text-base">info@gymspayoga.com</span>
+                </div>
               </div>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-8 md:mt-12 pt-6 md:pt-8 text-center text-gray-400">
-            <p className="text-sm md:text-base">&copy; 2024 GymSpaYoga. All rights reserved.</p>
+          <div className="border-t border-gray-700 pt-6 md:pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p className="text-gray-400 mb-4 md:mb-0 text-sm md:text-base">
+                © 2024 GymSpaYoga. All rights reserved.
+              </p>
+              <div className="flex space-x-6">
+                <Link to="/about" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">About</Link>
+                <Link to="/blogs" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Blogs</Link>
+                <Link to="/support" className="text-gray-400 hover:text-white transition-colors text-sm md:text-base">Support</Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
