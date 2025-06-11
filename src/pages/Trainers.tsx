@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -53,7 +52,7 @@ const Trainers = () => {
         backgroundImage="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
       />
 
-      <CategoryTrainers category="trainer" />
+      <CategoryTrainers category="gym" />
 
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
