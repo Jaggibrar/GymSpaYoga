@@ -43,7 +43,8 @@ export const MultiStepForm = ({
   };
 
   const handleNext = () => {
-    if (!validateCurrentStep()) {
+    const isValid = validateCurrentStep();
+    if (!isValid) {
       toast.error('Please complete all required fields before proceeding');
       return;
     }
@@ -71,7 +72,8 @@ export const MultiStepForm = ({
   };
 
   const handleSubmit = () => {
-    if (!validateCurrentStep()) {
+    const isValid = validateCurrentStep();
+    if (!isValid) {
       toast.error('Please complete all required fields before submitting');
       return;
     }
@@ -193,7 +195,7 @@ export const MultiStepForm = ({
                     <Button
                       type="button"
                       onClick={handleNext}
-                      disabled={!canProceed && steps[currentStep].validate}
+                      disabled={!canProceed && Boolean(steps[currentStep].validate)}
                       className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next Step
@@ -202,7 +204,7 @@ export const MultiStepForm = ({
                     <Button
                       type="button"
                       onClick={handleSubmit}
-                      disabled={isSubmitting || (!canProceed && steps[currentStep].validate)}
+                      disabled={isSubmitting || (!canProceed && Boolean(steps[currentStep].validate))}
                       className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-12 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? "Submitting..." : "Complete Registration"}
