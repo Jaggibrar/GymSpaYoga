@@ -673,9 +673,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Use the consistent AppFooter component */}
-        <AppFooter />
-
         {/* Loading Screen */}
         {showLoadingScreen && (
           <div className="fixed inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center z-50">
