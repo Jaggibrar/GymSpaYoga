@@ -70,24 +70,37 @@ const Trainers = () => {
             <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
               <div className="relative overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                  alt="Trainer"
+                  src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
+                  alt={trainer.name}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
-                  Trainer #{trainer.id}
+                  {trainer.trainer_tier}
                 </Badge>
               </div>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
-                  Trainer #{trainer.id}
+                  {trainer.name}
                 </CardTitle>
-                <p className="text-emerald-600 font-semibold text-sm md:text-base">Personal Trainer</p>
+                <p className="text-emerald-600 font-semibold text-sm md:text-base">
+                  {trainer.specializations.length > 0 ? trainer.specializations.join(", ") : "Personal Trainer"}
+                </p>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-gray-600 text-sm">
-                  Created: {new Date(trainer.created_at).toLocaleDateString()}
-                </p>
+                <div className="space-y-2">
+                  <p className="text-gray-600 text-sm">
+                    <span className="font-semibold">Experience:</span> {trainer.experience} years
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    <span className="font-semibold">Rate:</span> ₹{trainer.hourly_rate}/hour
+                  </p>
+                  <p className="text-gray-600 text-sm">
+                    <span className="font-semibold">Location:</span> {trainer.location}
+                  </p>
+                  <p className="text-gray-600 text-sm line-clamp-2">
+                    {trainer.bio}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -95,7 +108,10 @@ const Trainers = () => {
 
         {trainers.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No trainers found.</p>
+            <p className="text-gray-600 text-lg">No approved trainers found.</p>
+            <p className="text-gray-500 text-sm mt-2">
+              Check back later or try registering as a trainer!
+            </p>
           </div>
         )}
       </div>

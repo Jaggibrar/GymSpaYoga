@@ -3,7 +3,24 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Spa {
-  id: number;
+  id: string;
+  business_name: string;
+  business_type: string;
+  category: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  pin_code: string;
+  opening_time: string;
+  closing_time: string;
+  monthly_price?: number;
+  session_price?: number;
+  description?: string;
+  amenities: string[];
+  image_urls: string[];
+  status: string;
   created_at: string;
 }
 
@@ -17,8 +34,10 @@ export const useSpas = () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('spas')
+          .from('business_profiles')
           .select('*')
+          .eq('business_type', 'spa')
+          .eq('status', 'approved')
           .order('created_at', { ascending: false });
 
         if (error) {
