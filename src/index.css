@@ -113,9 +113,29 @@
     display: none;
   }
 
-  /* Mobile-first responsive design utilities */
+  /* Mobile-first responsive design utilities - full width on mobile */
   .mobile-container {
-    @apply px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl;
+    @apply w-full mx-auto;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  @screen sm {
+    .mobile-container {
+      @apply px-4 max-w-none;
+    }
+  }
+
+  @screen md {
+    .mobile-container {
+      @apply px-6 max-w-7xl;
+    }
+  }
+
+  @screen lg {
+    .mobile-container {
+      @apply px-8;
+    }
   }
 
   /* Touch-friendly button sizes for all mobile devices */
@@ -228,9 +248,9 @@
     }
   }
 
-  /* Mobile-first spacing utilities */
+  /* Mobile-first spacing utilities - full width on mobile */
   .mobile-section {
-    @apply py-8 px-3;
+    @apply py-8 px-3 w-full;
   }
 
   @screen sm {
@@ -276,7 +296,7 @@
     pointer-events: none;
   }
 
-  /* Mobile-specific responsive utilities */
+  /* Mobile-specific responsive utilities - full width on mobile */
   .mobile-w-full {
     @apply w-full;
   }
@@ -296,6 +316,12 @@
     .mobile-flex-col {
       @apply flex-row;
     }
+  }
+
+  /* Full width utility for mobile */
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
   }
 }
 
@@ -324,9 +350,13 @@
 
 /* Mobile-specific improvements for all screen sizes */
 @media (max-width: 640px) {
-  /* Extra small mobile devices */
+  /* Extra small mobile devices - full width */
   .mobile-section {
-    @apply px-3 py-6;
+    @apply px-3 py-6 w-full;
+  }
+
+  .mobile-container {
+    @apply px-3 w-full max-w-none;
   }
 
   button, .touch-target {
@@ -343,6 +373,11 @@
 
   .mobile-optimized-card {
     @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+
+  /* Ensure full width for all containers on mobile */
+  .container {
+    @apply px-3 w-full max-w-none;
   }
 }
 

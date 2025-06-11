@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const AppFooter = () => {
   return (
-    <footer className="bg-gray-900 text-white py-8 sm:py-12 px-4">
-      <div className="container mx-auto max-w-7xl">
+    <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
         {/* Mobile Horizontal Layout - Stack sections horizontally on mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12">
           {/* Brand Section - Full width on mobile */}
@@ -103,8 +103,8 @@ const AppFooter = () => {
           </div>
         </div>
         
-        {/* Bottom Section */}
-        <div className="border-t border-gray-700 mt-8 lg:mt-12 pt-6 lg:pt-8">
+        {/* Bottom Section - full width */}
+        <div className="border-t border-gray-700 mt-8 lg:mt-12 pt-6 lg:pt-8 w-full">
           <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left">
             <p className="text-gray-400 mb-4 md:mb-0 text-sm lg:text-base">
               © 2024 GymSpaYoga. All rights reserved.

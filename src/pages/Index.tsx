@@ -50,12 +50,12 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      {/* Hero Section without background image */}
-      <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 w-full">
+      {/* Hero Section without background image - full width */}
+      <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden w-full">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-600"></div>
         
-        <div className="relative mobile-container text-center">
+        <div className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 leading-tight">
             Find Your Perfect
             <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
@@ -89,8 +89,8 @@ const Index = () => {
             </span>
           </p>
           
-          {/* Mobile-optimized Search Bar */}
-          <div className="max-w-4xl mx-auto mb-6 md:mb-8">
+          {/* Mobile-optimized Search Bar - full width */}
+          <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8">
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 md:p-4 shadow-2xl">
               <div className="flex flex-col gap-3 md:flex-row md:gap-4">
                 <div className="relative flex-1">
@@ -121,8 +121,8 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Mobile-optimized Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto">
+          {/* Mobile-optimized Quick Stats - full width */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mx-auto">
             {stats.map((stat, index) => (
               <div key={index} className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white">
                 <stat.icon className={`h-6 w-6 md:h-8 md:w-8 ${stat.color} mx-auto mb-1 md:mb-2`} />
@@ -134,9 +134,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Mobile-optimized Categories Section */}
-      <section className="py-12 md:py-16">
-        <div className="mobile-container">
+      {/* Mobile-optimized Categories Section - full width */}
+      <section className="py-12 md:py-16 w-full">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Explore Our Categories
@@ -197,9 +197,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Mobile-optimized Featured Businesses */}
-      <section className="py-12 md:py-16 bg-white/50">
-        <div className="mobile-container">
+      {/* Mobile-optimized Featured Businesses - full width */}
+      <section className="py-12 md:py-16 bg-white/50 w-full">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Featured Destinations
@@ -293,9 +293,9 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Mobile-optimized CTA Section */}
-      <section className="py-12 md:py-16 bg-gradient-to-r from-emerald-500 to-blue-500">
-        <div className="mobile-container text-center">
+      {/* Mobile-optimized CTA Section - full width */}
+      <section className="py-12 md:py-16 bg-gradient-to-r from-emerald-500 to-blue-500 w-full">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl text-center">
           <div className="max-w-3xl mx-auto text-white">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
               Ready to Start Your Wellness Journey?
