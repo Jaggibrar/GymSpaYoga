@@ -153,8 +153,10 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section with Animated Grid */}
-      <AnimatedHeroGrid />
+      {/* Hero Section with Animated Grid - Added top padding */}
+      <div className="pt-8 px-4">
+        <AnimatedHeroGrid />
+      </div>
 
       {/* Category Cards */}
       <section className="py-16 md:py-24 px-4">
