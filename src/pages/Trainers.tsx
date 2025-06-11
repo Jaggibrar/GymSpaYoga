@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -38,7 +39,7 @@ const Trainers = () => {
   }
 
   if (isLoading || trainersLoading) {
-    return <LoadingScreen category="trainer" onComplete={() => setIsLoading(false)} />;
+    return <LoadingScreen category="gym" onComplete={() => setIsLoading(false)} />;
   }
 
   return (
