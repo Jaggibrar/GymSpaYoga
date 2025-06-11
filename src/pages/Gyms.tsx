@@ -7,12 +7,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGyms } from "@/hooks/useGyms";
 import { useSearch } from "@/hooks/useSearch";
 import LoadingScreen from "@/components/LoadingScreen";
-import MainNavigation from "@/components/MainNavigation";
 import SearchAndFilters from "@/components/SearchAndFilters";
 import AdvancedSearchFilters from "@/components/AdvancedSearchFilters";
 import EnhancedBusinessCard from "@/components/EnhancedBusinessCard";
 import PageHero from "@/components/PageHero";
-import AppFooter from "@/components/AppFooter";
 import { Badge } from "@/components/ui/badge";
 
 const Gyms = () => {
@@ -50,8 +48,6 @@ const Gyms = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      <MainNavigation />
-      
       <PageHero
         title="Find Your Perfect"
         subtitle="Gym"
@@ -106,8 +102,6 @@ const Gyms = () => {
           </div>
         )}
       </div>
-      
-      <AppFooter />
     </div>
   );
 };
