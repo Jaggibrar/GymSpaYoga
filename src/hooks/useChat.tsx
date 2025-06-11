@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -32,11 +32,15 @@ export const useChat = () => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
-  const fetchChatRooms = async () => {
-    if (!user) return;
+  const fetchChatRooms = useCallback(async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('chat_rooms')
         .select('*')
@@ -61,7 +65,7 @@ export const useChat = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   const fetchMessages = async (chatRoomId: string) => {
     try {
@@ -158,7 +162,7 @@ export const useChat = () => {
     }
   };
 
-  const subscribeToMessages = (chatRoomId: string) => {
+  const subscribeToMessages = useCallback((chatRoomId: string) => {
     const channel = supabase
       .channel(`chat-room-${chatRoomId}`)
       .on(
@@ -183,11 +187,11 @@ export const useChat = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  };
+  }, []);
 
   useEffect(() => {
     fetchChatRooms();
-  }, [user]);
+  }, [fetchChatRooms]);
 
   return {
     chatRooms,

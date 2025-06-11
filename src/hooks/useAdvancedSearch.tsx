@@ -29,10 +29,14 @@ export const useAdvancedSearch = () => {
   const { user } = useAuth();
 
   const fetchSavedFilters = async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('search_filters')
         .select('*')
@@ -87,12 +91,14 @@ export const useAdvancedSearch = () => {
   };
 
   const updateFilter = async (filterId: string, updates: Partial<SearchFilter>) => {
+    if (!user) throw new Error('User not authenticated');
+
     try {
       const { data, error } = await supabase
         .from('search_filters')
         .update({ ...updates, updated_at: new Date().toISOString() })
         .eq('id', filterId)
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .select()
         .single();
 
@@ -115,12 +121,14 @@ export const useAdvancedSearch = () => {
   };
 
   const deleteFilter = async (filterId: string) => {
+    if (!user) throw new Error('User not authenticated');
+
     try {
       const { error } = await supabase
         .from('search_filters')
         .delete()
         .eq('id', filterId)
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
       setSavedFilters(prev => prev.filter(filter => filter.id !== filterId));
@@ -133,19 +141,21 @@ export const useAdvancedSearch = () => {
   };
 
   const setDefaultFilter = async (filterId: string) => {
+    if (!user) throw new Error('User not authenticated');
+
     try {
       // First, unset all default filters
       await supabase
         .from('search_filters')
         .update({ is_default: false })
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       // Then set the new default
       const { data, error } = await supabase
         .from('search_filters')
         .update({ is_default: true })
         .eq('id', filterId)
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .select()
         .single();
 
@@ -165,7 +175,7 @@ export const useAdvancedSearch = () => {
 
   useEffect(() => {
     fetchSavedFilters();
-  }, [user]);
+  }, [user?.id]); // Fixed dependency array
 
   return {
     savedFilters,

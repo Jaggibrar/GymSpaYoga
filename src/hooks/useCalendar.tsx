@@ -26,10 +26,14 @@ export const useCalendar = () => {
   const { user } = useAuth();
 
   const fetchEvents = async () => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     try {
       setLoading(true);
+      setError(null);
       const { data, error } = await supabase
         .from('calendar_events')
         .select('*')
@@ -82,12 +86,14 @@ export const useCalendar = () => {
   };
 
   const updateEvent = async (eventId: string, updates: Partial<CalendarEvent>) => {
+    if (!user) throw new Error('User not authenticated');
+
     try {
       const { data, error } = await supabase
         .from('calendar_events')
         .update(updates)
         .eq('id', eventId)
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .select()
         .single();
 
@@ -109,12 +115,14 @@ export const useCalendar = () => {
   };
 
   const deleteEvent = async (eventId: string) => {
+    if (!user) throw new Error('User not authenticated');
+
     try {
       const { error } = await supabase
         .from('calendar_events')
         .delete()
         .eq('id', eventId)
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
       setEvents(prev => prev.filter(event => event.id !== eventId));
@@ -128,7 +136,7 @@ export const useCalendar = () => {
 
   useEffect(() => {
     fetchEvents();
-  }, [user]);
+  }, [user?.id]); // Fixed dependency array
 
   return {
     events,
