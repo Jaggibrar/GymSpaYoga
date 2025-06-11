@@ -107,46 +107,48 @@ export const MultiStepForm = ({
             <Progress value={progress} className="h-2" />
           </div>
 
-          {/* Step Indicators */}
-          <div className="flex justify-between mb-8 overflow-x-auto">
-            {steps.map((step, index) => {
-              const isCompleted = completedSteps.has(index);
-              const isCurrent = index === currentStep;
-              const canAccess = index <= currentStep || completedSteps.has(index - 1);
-              
-              return (
-                <div
-                  key={step.id}
-                  className={`flex flex-col items-center transition-all min-w-0 flex-1 ${
-                    canAccess ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
-                  } ${
-                    isCompleted ? 'text-green-600' : 
-                    isCurrent ? 'text-blue-600' : 'text-gray-400'
-                  }`}
-                  onClick={() => handleStepClick(index)}
-                >
-                  <div className="flex items-center justify-center mb-2">
-                    {isCompleted ? (
-                      <CheckCircle className="h-8 w-8 text-green-500" />
-                    ) : isCurrent && !canProceed ? (
-                      <AlertCircle className="h-8 w-8 text-orange-500" />
-                    ) : (
-                      <Circle 
-                        className={`h-8 w-8 ${
-                          isCurrent ? 'text-blue-600 fill-blue-100' : 'text-gray-400'
-                        }`} 
-                      />
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <div className="text-sm font-medium truncate max-w-24">{step.title}</div>
-                    <div className="text-xs text-gray-500 max-w-24 hidden md:block truncate">
-                      {step.description}
+          {/* Step Indicators - Fixed for mobile */}
+          <div className="mb-8 overflow-x-auto">
+            <div className="flex gap-x-3 sm:gap-x-4 min-w-max pb-2">
+              {steps.map((step, index) => {
+                const isCompleted = completedSteps.has(index);
+                const isCurrent = index === currentStep;
+                const canAccess = index <= currentStep || completedSteps.has(index - 1);
+                
+                return (
+                  <div
+                    key={step.id}
+                    className={`flex flex-col items-center transition-all min-w-[80px] sm:min-w-[100px] ${
+                      canAccess ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                    } ${
+                      isCompleted ? 'text-green-600' : 
+                      isCurrent ? 'text-blue-600' : 'text-gray-400'
+                    }`}
+                    onClick={() => handleStepClick(index)}
+                  >
+                    <div className="flex items-center justify-center mb-2">
+                      {isCompleted ? (
+                        <CheckCircle className="h-8 w-8 text-green-500" />
+                      ) : isCurrent && !canProceed ? (
+                        <AlertCircle className="h-8 w-8 text-orange-500" />
+                      ) : (
+                        <Circle 
+                          className={`h-8 w-8 ${
+                            isCurrent ? 'text-blue-600 fill-blue-100' : 'text-gray-400'
+                          }`} 
+                        />
+                      )}
+                    </div>
+                    <div className="text-center">
+                      <div className="text-sm font-medium truncate w-20 text-center">{step.title}</div>
+                      <div className="text-xs text-gray-500 truncate w-20 text-center hidden sm:block">
+                        {step.description}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Form Content */}
