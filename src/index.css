@@ -101,7 +101,7 @@
   }
 }
 
-/* Enhanced Mobile Horizontal Scrolling */
+/* Enhanced Mobile Responsive Design */
 @layer components {
   /* Hide scrollbars while maintaining functionality */
   .scrollbar-hide {
@@ -115,17 +115,23 @@
 
   /* Mobile-first responsive design utilities */
   .mobile-container {
-    @apply px-4 mx-auto max-w-7xl;
+    @apply px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl;
   }
 
-  /* Touch-friendly button sizes */
+  /* Touch-friendly button sizes for all mobile devices */
   .touch-target {
-    @apply min-h-[44px] min-w-[44px];
+    @apply min-h-[44px] min-w-[44px] relative;
   }
 
-  /* Optimized text sizing for mobile readability */
+  /* Responsive text sizing optimized for all screen sizes */
   .mobile-text {
-    @apply text-sm leading-relaxed;
+    @apply text-xs leading-relaxed;
+  }
+
+  @screen sm {
+    .mobile-text {
+      @apply text-sm;
+    }
   }
 
   @screen md {
@@ -158,7 +164,7 @@
 
   /* Mobile horizontal card layout */
   .mobile-horizontal-cards {
-    @apply flex gap-4 overflow-x-auto pb-4 scrollbar-hide;
+    @apply flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
@@ -169,13 +175,25 @@
     scroll-snap-align: start;
   }
 
-  /* Mobile card sizing */
+  /* Responsive card sizing for all devices */
   .mobile-card {
-    @apply min-w-[280px] max-w-[320px];
+    @apply min-w-[250px] max-w-[280px];
+  }
+
+  @screen sm {
+    .mobile-card {
+      @apply min-w-[280px] max-w-[320px];
+    }
   }
 
   .mobile-card-sm {
-    @apply min-w-[240px] max-w-[260px];
+    @apply min-w-[200px] max-w-[220px];
+  }
+
+  @screen sm {
+    .mobile-card-sm {
+      @apply min-w-[240px] max-w-[260px];
+    }
   }
 
   /* Text truncation utilities */
@@ -191,6 +209,40 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+  }
+
+  /* Responsive grid utilities */
+  .responsive-grid {
+    @apply grid grid-cols-1 gap-4;
+  }
+
+  @screen sm {
+    .responsive-grid {
+      @apply grid-cols-2 gap-6;
+    }
+  }
+
+  @screen md {
+    .responsive-grid {
+      @apply grid-cols-3 gap-8;
+    }
+  }
+
+  /* Mobile-first spacing utilities */
+  .mobile-section {
+    @apply py-8 px-3;
+  }
+
+  @screen sm {
+    .mobile-section {
+      @apply py-12 px-4;
+    }
+  }
+
+  @screen md {
+    .mobile-section {
+      @apply py-16 px-6;
+    }
   }
 }
 
@@ -223,6 +275,28 @@
     background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
     pointer-events: none;
   }
+
+  /* Mobile-specific responsive utilities */
+  .mobile-w-full {
+    @apply w-full;
+  }
+
+  @screen sm {
+    .mobile-w-full {
+      @apply w-auto;
+    }
+  }
+
+  /* Responsive flexbox utilities */
+  .mobile-flex-col {
+    @apply flex flex-col;
+  }
+
+  @screen sm {
+    .mobile-flex-col {
+      @apply flex-row;
+    }
+  }
 }
 
 /* Mobile viewport fixes */
@@ -248,19 +322,17 @@
   }
 }
 
-/* Mobile-specific improvements */
-@media (max-width: 768px) {
-  /* Ensure proper spacing for horizontal scrolling sections */
+/* Mobile-specific improvements for all screen sizes */
+@media (max-width: 640px) {
+  /* Extra small mobile devices */
   .mobile-section {
-    @apply px-4 py-6;
+    @apply px-3 py-6;
   }
 
-  /* Optimize touch targets for mobile */
   button, .touch-target {
     @apply min-h-[44px] min-w-[44px];
   }
 
-  /* Mobile typography adjustments */
   h1 {
     @apply text-2xl leading-tight;
   }
@@ -269,8 +341,41 @@
     @apply text-xl leading-tight;
   }
 
-  /* Mobile card optimizations */
   .mobile-optimized-card {
     @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  /* Small tablets and large mobile devices */
+  .mobile-section {
+    @apply px-4 py-8;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablets */
+  .mobile-section {
+    @apply px-6 py-12;
+  }
+}
+
+/* Ultra-wide and large screen optimizations */
+@media (min-width: 1440px) {
+  .mobile-container {
+    @apply max-w-8xl;
+  }
+}
+
+/* Portrait and landscape orientation handling */
+@media (orientation: portrait) {
+  .portrait-optimized {
+    @apply flex-col;
+  }
+}
+
+@media (orientation: landscape) {
+  .landscape-optimized {
+    @apply flex-row;
   }
 }
