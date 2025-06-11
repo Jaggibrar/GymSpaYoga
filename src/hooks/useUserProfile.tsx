@@ -38,9 +38,8 @@ export const useUserProfile = () => {
 
       try {
         setLoading(true);
-        // Direct query to user_profiles table with type assertion
         const { data, error } = await supabase
-          .from('user_profiles' as any)
+          .from('user_profiles')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
@@ -52,7 +51,7 @@ export const useUserProfile = () => {
         }
 
         if (data) {
-          setProfile(data as UserProfile);
+          setProfile(data);
         }
       } catch (err) {
         setError('Failed to fetch profile');
@@ -72,9 +71,8 @@ export const useUserProfile = () => {
     }
 
     try {
-      // Use type assertion for raw SQL upsert
       const { data, error } = await supabase
-        .from('user_profiles' as any)
+        .from('user_profiles')
         .upsert({
           user_id: user.id,
           ...updates,
@@ -88,7 +86,7 @@ export const useUserProfile = () => {
       }
 
       if (data) {
-        setProfile(data as UserProfile);
+        setProfile(data);
       }
       toast.success('Profile updated successfully!');
       return true;
