@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useBookingConfirmation } from '@/hooks/useBookingConfirmation';
 
 export interface Booking {
   id: number;
@@ -18,6 +19,12 @@ export interface Booking {
   notes: string | null;
   created_at: string;
   updated_at: string | null;
+  confirmation_code: string | null;
+  confirmed_at: string | null;
+  cancelled_at: string | null;
+  cancellation_reason: string | null;
+  business_response: string | null;
+  response_at: string | null;
 }
 
 export const useBookings = () => {
@@ -25,6 +32,7 @@ export const useBookings = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const { createBooking } = useBookingConfirmation();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -57,31 +65,37 @@ export const useBookings = () => {
     };
 
     fetchBookings();
+
+    // Set up real-time subscription for booking updates
+    const channel = supabase
+      .channel('booking-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings',
+          filter: `user_id=eq.${user?.id}`
+        },
+        (payload) => {
+          console.log('Booking update received:', payload);
+          fetchBookings(); // Refetch bookings on any change
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
-  const createBooking = async (bookingData: Omit<Booking, 'id' | 'created_at' | 'updated_at'>) => {
-    if (!user) {
-      throw new Error('User not authenticated');
+  const submitBooking = async (bookingData: Omit<Booking, 'id' | 'created_at' | 'updated_at' | 'confirmation_code' | 'confirmed_at' | 'cancelled_at' | 'cancellation_reason' | 'business_response' | 'response_at'>) => {
+    const booking = await createBooking(bookingData);
+    if (booking) {
+      setBookings(prev => [booking, ...prev]);
     }
-
-    try {
-      const { data, error } = await supabase
-        .from('bookings')
-        .insert([{ ...bookingData, user_id: user.id }])
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      setBookings(prev => [data, ...prev]);
-      return data;
-    } catch (err) {
-      console.error('Error creating booking:', err);
-      throw err;
-    }
+    return booking;
   };
 
-  return { bookings, loading, error, createBooking };
+  return { bookings, loading, error, submitBooking };
 };

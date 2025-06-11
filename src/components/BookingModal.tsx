@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -9,20 +8,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, Clock, User, Phone, Mail, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { CalendarIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { useBookings } from '@/hooks/useBookings';
+import { useAuth } from '@/hooks/useAuth';
 
 interface BookingModalProps {
   businessName: string;
   businessType: string;
+  businessId?: string;
   trigger?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
   price?: string;
 }
 
-const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, price }: BookingModalProps) => {
+const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen, onClose, price }: BookingModalProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [bookingData, setBookingData] = useState({
@@ -35,7 +37,10 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
     email: '',
     specialRequests: ''
   });
-  const [bookingStatus, setBookingStatus] = useState<'pending' | 'confirmed' | 'rejected' | null>(null);
+  const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
+  
+  const { submitBooking } = useBookings();
+  const { user } = useAuth();
 
   // Use external open/close if provided, otherwise use internal state
   const modalOpen = isOpen !== undefined ? isOpen : internalOpen;
@@ -59,7 +64,7 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
         email: '',
         specialRequests: ''
       });
-      setBookingStatus(null);
+      setSubmissionStatus('idle');
     }
   };
 
@@ -86,23 +91,39 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
   const serviceType = getServiceType();
   const availableServices = services[serviceType] || services.gym;
 
-  const handleSubmit = () => {
-    // Simulate booking submission
-    setBookingStatus('pending');
-    toast.success("Booking request submitted!");
+  const handleSubmit = async () => {
+    if (!user) {
+      toast.error("Please login to submit a booking");
+      return;
+    }
+
+    if (!businessId) {
+      toast.error("Business ID is required");
+      return;
+    }
+
+    setSubmissionStatus('submitting');
     
-    // Simulate owner response after 3 seconds
-    setTimeout(() => {
-      const responses = ['confirmed', 'rejected'];
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)] as 'confirmed' | 'rejected';
-      setBookingStatus(randomResponse);
-      
-      if (randomResponse === 'confirmed') {
-        toast.success("Booking confirmed by owner!");
-      } else {
-        toast.error("Booking declined. Please try another time slot.");
-      }
-    }, 3000);
+    const booking = await submitBooking({
+      user_id: user.id,
+      business_id: businessId,
+      business_type: businessType,
+      trainer_id: null,
+      booking_date: bookingData.date ? format(bookingData.date, 'yyyy-MM-dd') : null,
+      booking_time: bookingData.time,
+      duration_minutes: parseInt(bookingData.duration),
+      total_amount: price ? parseInt(price.replace(/[^\d]/g, '')) : null,
+      status: 'pending',
+      payment_status: 'pending',
+      notes: bookingData.specialRequests
+    });
+
+    if (booking) {
+      setSubmissionStatus('submitted');
+      toast.success("Booking request submitted successfully!");
+    } else {
+      setSubmissionStatus('idle');
+    }
   };
 
   const renderStepContent = () => {
@@ -243,24 +264,18 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
               </div>
             </div>
             
-            {bookingStatus && (
+            {submissionStatus !== 'idle' && (
               <div className="text-center">
-                {bookingStatus === 'pending' && (
-                  <div className="flex items-center justify-center space-x-2 text-yellow-600">
+                {submissionStatus === 'submitting' && (
+                  <div className="flex items-center justify-center space-x-2 text-blue-600">
                     <AlertCircle className="h-5 w-5 animate-spin" />
-                    <span>Waiting for owner confirmation...</span>
+                    <span>Submitting booking request...</span>
                   </div>
                 )}
-                {bookingStatus === 'confirmed' && (
+                {submissionStatus === 'submitted' && (
                   <div className="flex items-center justify-center space-x-2 text-green-600">
                     <CheckCircle className="h-5 w-5" />
-                    <span>Booking Confirmed!</span>
-                  </div>
-                )}
-                {bookingStatus === 'rejected' && (
-                  <div className="flex items-center justify-center space-x-2 text-red-600">
-                    <XCircle className="h-5 w-5" />
-                    <span>Booking Declined</span>
+                    <span>Booking Request Submitted!</span>
                   </div>
                 )}
               </div>
@@ -315,11 +330,10 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
             {renderStepContent()}
 
             <div className="flex justify-between">
-              {step > 1 && (
+              {step > 1 && submissionStatus === 'idle' && (
                 <Button 
                   variant="outline" 
                   onClick={() => setStep(step - 1)}
-                  disabled={bookingStatus === 'pending'}
                 >
                   Previous
                 </Button>
@@ -340,9 +354,9 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
                 <Button 
                   onClick={handleSubmit}
                   className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                  disabled={bookingStatus !== null}
+                  disabled={submissionStatus !== 'idle'}
                 >
-                  {bookingStatus === 'pending' ? 'Submitting...' : 'Confirm Booking'}
+                  {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
                 </Button>
               )}
             </div>
@@ -390,11 +404,10 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
           {renderStepContent()}
 
           <div className="flex justify-between">
-            {step > 1 && (
+            {step > 1 && submissionStatus === 'idle' && (
               <Button 
                 variant="outline" 
                 onClick={() => setStep(step - 1)}
-                disabled={bookingStatus === 'pending'}
               >
                 Previous
               </Button>
@@ -415,9 +428,9 @@ const BookingModal = ({ businessName, businessType, trigger, isOpen, onClose, pr
               <Button 
                 onClick={handleSubmit}
                 className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                disabled={bookingStatus !== null}
+                disabled={submissionStatus !== 'idle'}
               >
-                {bookingStatus === 'pending' ? 'Submitting...' : 'Confirm Booking'}
+                {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
               </Button>
             )}
           </div>

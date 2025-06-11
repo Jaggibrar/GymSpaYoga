@@ -33,17 +33,61 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_status_history: {
+        Row: {
+          booking_id: number | null
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_status: string | null
+          notes: string | null
+          old_status: string | null
+        }
+        Insert: {
+          booking_id?: number | null
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          old_status?: string | null
+        }
+        Update: {
+          booking_id?: number | null
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_status?: string | null
+          notes?: string | null
+          old_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_status_history_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booking_date: string | null
           booking_time: string | null
           business_id: string | null
+          business_response: string | null
           business_type: string | null
+          cancellation_reason: string | null
+          cancelled_at: string | null
+          confirmation_code: string | null
+          confirmed_at: string | null
           created_at: string
           duration_minutes: number | null
           id: number
           notes: string | null
           payment_status: string | null
+          response_at: string | null
           status: string | null
           total_amount: number | null
           trainer_id: string | null
@@ -54,12 +98,18 @@ export type Database = {
           booking_date?: string | null
           booking_time?: string | null
           business_id?: string | null
+          business_response?: string | null
           business_type?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmation_code?: string | null
+          confirmed_at?: string | null
           created_at?: string
           duration_minutes?: number | null
           id?: number
           notes?: string | null
           payment_status?: string | null
+          response_at?: string | null
           status?: string | null
           total_amount?: number | null
           trainer_id?: string | null
@@ -70,12 +120,18 @@ export type Database = {
           booking_date?: string | null
           booking_time?: string | null
           business_id?: string | null
+          business_response?: string | null
           business_type?: string | null
+          cancellation_reason?: string | null
+          cancelled_at?: string | null
+          confirmation_code?: string | null
+          confirmed_at?: string | null
           created_at?: string
           duration_minutes?: number | null
           id?: number
           notes?: string | null
           payment_status?: string | null
+          response_at?: string | null
           status?: string | null
           total_amount?: number | null
           trainer_id?: string | null
@@ -168,6 +224,39 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+        }
+        Relationships: []
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_bookings: boolean | null
+          email_confirmations: boolean | null
+          email_reminders: boolean | null
+          id: string
+          sms_bookings: boolean | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email_bookings?: boolean | null
+          email_confirmations?: boolean | null
+          email_reminders?: boolean | null
+          id?: string
+          sms_bookings?: boolean | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email_bookings?: boolean | null
+          email_confirmations?: boolean | null
+          email_reminders?: boolean | null
+          id?: string
+          sms_bookings?: boolean | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -404,7 +493,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      update_booking_status: {
+        Args: {
+          booking_id_param: number
+          new_status_param: string
+          user_id_param?: string
+          notes_param?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
