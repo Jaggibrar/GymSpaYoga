@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { useScrollToTop } from "@/hooks/useScrollToTop";
 
 const MainNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const location = useLocation();
   useScrollToTop();
 
@@ -33,7 +32,7 @@ const MainNavigation = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    await signOut();
     setIsOpen(false);
   };
 
