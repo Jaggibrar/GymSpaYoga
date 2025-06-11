@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +7,6 @@ import { MapPin, Star, Dumbbell, Waves, Heart, Users, Search, Shield, Award, Clo
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
-import MainNavigation from "@/components/MainNavigation";
 import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -20,19 +20,11 @@ const Index = () => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [targetCategory, setTargetCategory] = useState<string>("");
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingCategory, setLoadingCategory] = useState<'gym' | 'spa' | 'yoga' | null>(null);
 
   // Fetch real data from backend
   const { gyms } = useGyms();
   const { spas } = useSpas();
   const { yogaStudios } = useYogaStudios();
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    toast.success("Logged out successfully!");
-    navigate('/login');
-  };
 
   const handleCategoryClick = (category: string, path: string) => {
     setTargetCategory(category);
@@ -54,7 +46,7 @@ const Index = () => {
       location: `${gym.city}, ${gym.state}`,
       price: gym.monthly_price ? `₹${gym.monthly_price}/month` : `₹${gym.session_price}/session`,
       image: gym.image_urls[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      link: `/gym/${gym.id}`
+      link: `/gyms/${gym.id}`
     }))),
     ...(spas.slice(0, 1).map(spa => ({
       id: spa.id,
@@ -64,7 +56,7 @@ const Index = () => {
       location: `${spa.city}, ${spa.state}`,
       price: spa.session_price ? `₹${spa.session_price}/session` : `₹${spa.monthly_price}/month`,
       image: spa.image_urls[0] || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-      link: `/spa/${spa.id}`
+      link: `/spas/${spa.id}`
     }))),
     ...(yogaStudios.slice(0, 1).map(studio => ({
       id: studio.id,
@@ -129,10 +121,6 @@ const Index = () => {
     }
   };
 
-  if (isLoading && loadingCategory) {
-    return <LoadingScreen category={loadingCategory} onComplete={() => setIsLoading(false)} />;
-  }
-
   return (
     <>
       <SEOHead 
@@ -144,9 +132,7 @@ const Index = () => {
       />
       
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-        <MainNavigation />
-
-        {/* Hero Section with Animated Grid - Added top padding */}
+        {/* Hero Section with Animated Grid */}
         <div className="pt-8 px-4">
           <AnimatedHeroGrid />
         </div>

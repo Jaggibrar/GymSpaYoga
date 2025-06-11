@@ -1,22 +1,23 @@
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { CreditCard, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Clock, CreditCard, MapPin, User } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
+import { useBookings } from '@/hooks/useBookings';
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
   businessId: string;
-  serviceType: string;
+  serviceType: 'gym' | 'spa' | 'yoga';
   serviceName: string;
   price: number;
-  priceType: string;
+  priceType: 'monthly' | 'session';
 }
 
 const PaymentModal = ({ 
@@ -28,47 +29,46 @@ const PaymentModal = ({
   price, 
   priceType 
 }: PaymentModalProps) => {
-  const [isProcessing, setIsProcessing] = useState(false);
   const { user } = useAuth();
+  const { submitBooking, loading } = useBookings();
+  const [bookingData, setBookingData] = useState({
+    date: '',
+    time: '',
+    duration: 60,
+    notes: ''
+  });
 
-  const handlePayment = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     if (!user) {
-      toast.error("Please login to make a payment");
+      toast.error("Please login to book a session");
       return;
     }
 
-    setIsProcessing(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          businessId,
-          serviceType,
-          serviceName,
-          price,
-          priceType
-        }
-      });
+    if (!bookingData.date || !bookingData.time) {
+      toast.error("Please select date and time");
+      return;
+    }
 
-      if (error) {
-        console.error('Checkout error:', error);
-        toast.error("Failed to create checkout session");
-        return;
-      }
+    const booking = await submitBooking({
+      user_id: user.id,
+      business_type: serviceType,
+      business_id: businessId,
+      trainer_id: null,
+      booking_date: bookingData.date,
+      booking_time: bookingData.time,
+      duration_minutes: bookingData.duration,
+      total_amount: price,
+      status: 'pending',
+      payment_status: 'pending',
+      notes: bookingData.notes
+    });
 
-      if (data?.url) {
-        // Open Stripe checkout in a new tab
-        window.open(data.url, '_blank');
-        onClose();
-        toast.success("Redirecting to payment...");
-      } else {
-        toast.error("No checkout URL received");
-      }
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast.error("An error occurred while processing payment");
-    } finally {
-      setIsProcessing(false);
+    if (booking) {
+      toast.success("Booking request submitted successfully!");
+      onClose();
+      setBookingData({ date: '', time: '', duration: 60, notes: '' });
     }
   };
 
@@ -78,63 +78,89 @@ const PaymentModal = ({
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <CreditCard className="h-5 w-5" />
-            <span>Complete Payment</span>
+            <span>Book {serviceName}</span>
           </DialogTitle>
         </DialogHeader>
         
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">{serviceName}</CardTitle>
-            <Badge variant="outline">{serviceType}</Badge>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Price ({priceType}):</span>
-              <span className="text-2xl font-bold text-emerald-600">₹{price}</span>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="flex items-center space-x-2 mb-2">
+              <MapPin className="h-4 w-4 text-gray-600" />
+              <span className="font-semibold">{serviceName}</span>
+            </div>
+            <p className="text-lg font-bold text-emerald-600">
+              ₹{price}/{priceType}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="date" className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4" />
+                <span>Date</span>
+              </Label>
+              <Input
+                id="date"
+                type="date"
+                value={bookingData.date}
+                onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
+                min={new Date().toISOString().split('T')[0]}
+                required
+              />
             </div>
             
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center font-semibold">
-                <span>Total Amount:</span>
-                <span className="text-2xl text-emerald-600">₹{price}</span>
-              </div>
+            <div>
+              <Label htmlFor="time" className="flex items-center space-x-2">
+                <Clock className="h-4 w-4" />
+                <span>Time</span>
+              </Label>
+              <Input
+                id="time"
+                type="time"
+                value={bookingData.time}
+                onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
+                required
+              />
             </div>
+          </div>
 
-            <div className="space-y-2 pt-4">
-              <Button 
-                onClick={handlePayment}
-                disabled={isProcessing}
-                className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                size="lg"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Pay with Stripe
-                  </>
-                )}
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                onClick={onClose}
-                className="w-full"
-                disabled={isProcessing}
-              >
-                Cancel
-              </Button>
-            </div>
+          <div>
+            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Input
+              id="duration"
+              type="number"
+              value={bookingData.duration}
+              onChange={(e) => setBookingData({ ...bookingData, duration: parseInt(e.target.value) })}
+              min="30"
+              max="180"
+              step="15"
+            />
+          </div>
 
-            <div className="text-xs text-gray-500 text-center">
-              Secure payment powered by Stripe
-            </div>
-          </CardContent>
-        </Card>
+          <div>
+            <Label htmlFor="notes">Special Requests (Optional)</Label>
+            <Textarea
+              id="notes"
+              value={bookingData.notes}
+              onChange={(e) => setBookingData({ ...bookingData, notes: e.target.value })}
+              placeholder="Any special requirements or preferences..."
+              rows={3}
+            />
+          </div>
+
+          <div className="flex space-x-3 pt-4">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+            >
+              {loading ? "Booking..." : "Submit Booking Request"}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
