@@ -84,15 +84,15 @@ const AppFooter = () => {
             <div className="space-y-3 text-gray-300">
               <div className="flex items-center">
                 <Phone className="h-5 w-5 mr-3 text-purple-400" />
-                <span>+91 98765 43210</span>
+                <span>+91 7596958097</span>
               </div>
               <div className="flex items-center">
                 <MapPin className="h-5 w-5 mr-3 text-purple-400" />
-                <span>Mumbai, India</span>
+                <span>India</span>
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-purple-400" />
-                <span>info@gymspayoga.com</span>
+                <span>gymspayoga@gmail.com</span>
               </div>
             </div>
           </div>
