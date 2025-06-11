@@ -1,17 +1,20 @@
-
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useAuth } from "@/hooks/useAuth";
 import { useGyms } from "@/hooks/useGyms";
+import { useSearch } from "@/hooks/useSearch";
 import LoadingScreen from "@/components/LoadingScreen";
-import AppHeader from "@/components/AppHeader";
+import MainNavigation from "@/components/MainNavigation";
+import SearchAndFilters from "@/components/SearchAndFilters";
 import PageHero from "@/components/PageHero";
 import AppFooter from "@/components/AppFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Gyms = () => {
   useScrollToTop();
@@ -20,6 +23,16 @@ const Gyms = () => {
   const { gyms, loading: gymsLoading, error } = useGyms();
   const [isLoading, setIsLoading] = useState(true);
 
+  const {
+    filteredBusinesses,
+    availableAmenities,
+    selectedAmenities,
+    handleSearchChange,
+    handleLocationChange,
+    handlePriceRangeChange,
+    handleAmenityToggle
+  } = useSearch(gyms);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -27,12 +40,6 @@ const Gyms = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const handleLogout = async () => {
-    await signOut();
-    toast.success("Logged out successfully!");
-    navigate('/login');
-  };
 
   if (error) {
     toast.error(error);
@@ -44,7 +51,7 @@ const Gyms = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      <AppHeader onLogout={handleLogout} />
+      <MainNavigation />
       
       <PageHero
         title="Find Your Perfect"
@@ -54,17 +61,27 @@ const Gyms = () => {
       />
 
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
+        <SearchAndFilters
+          onSearchChange={handleSearchChange}
+          onLocationChange={handleLocationChange}
+          onPriceRangeChange={handlePriceRangeChange}
+          onAmenityToggle={handleAmenityToggle}
+          selectedAmenities={selectedAmenities}
+          availableAmenities={availableAmenities}
+          businessType="gym"
+        />
+
+        <div className="text-center mb-8 mt-8">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
             Available Gyms
           </h2>
           <Badge className="mb-4 bg-emerald-500">
-            Showing {gyms.length} results
+            Showing {filteredBusinesses.length} results
           </Badge>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gyms.map((gym) => (
+          {filteredBusinesses.map((gym) => (
             <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
               <div className="relative overflow-hidden">
                 <img 
@@ -127,17 +144,22 @@ const Gyms = () => {
                       )}
                     </div>
                   )}
+                  <Link to={`/gym/${gym.id}`}>
+                    <Button className="w-full mt-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                      View Details
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {gyms.length === 0 && (
+        {filteredBusinesses.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No approved gyms found.</p>
+            <p className="text-gray-600 text-lg">No gyms found matching your criteria.</p>
             <p className="text-gray-500 text-sm mt-2">
-              Check back later or try registering your gym!
+              Try adjusting your search filters or check back later!
             </p>
           </div>
         )}

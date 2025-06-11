@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { MapPin, Star, Dumbbell, Waves, Heart, Users, Search, Shield, Award, Clo
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import MainNavigation from "@/components/MainNavigation";
 import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -100,58 +100,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2 group">
-              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-12 group-hover:shadow-lg group-hover:shadow-emerald-200">
-                <div className="relative">
-                  <Dumbbell className="h-4 md:h-6 w-4 md:w-6 text-white animate-pulse group-hover:animate-bounce" />
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full animate-ping group-hover:animate-none"></div>
-                </div>
-              </div>
-              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent hover:from-emerald-700 hover:to-blue-700 transition-all duration-300">
-                GymSpaYoga
-              </h1>
-            </Link>
-            
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link to="/gyms" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-300">
-                Gyms
-              </Link>
-              <Link to="/spas" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-300">
-                Spas
-              </Link>
-              <Link to="/yoga" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-300">
-                Yoga
-              </Link>
-              <Link to="/trainers" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-300">
-                Trainers
-              </Link>
-              <Link to="/about" className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-300">
-                About
-              </Link>
-            </nav>
-            
-            <div className="flex items-center space-x-2 md:space-x-4">
-              <Link to="/register-business">
-                <Button variant="outline" className="text-xs md:text-sm hover:bg-emerald-50 hover:border-emerald-300">
-                  List Business
-                </Button>
-              </Link>
-              <Button 
-                onClick={handleLogout}
-                variant="outline" 
-                className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
-              >
-                <LogOut className="h-3 w-3 mr-1" />
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <MainNavigation />
 
       {/* Hero Section with Animated Grid - Added top padding */}
       <div className="pt-8 px-4">

@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
@@ -6,12 +5,15 @@ import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useAuth } from "@/hooks/useAuth";
 import { useTrainers } from "@/hooks/useTrainers";
 import LoadingScreen from "@/components/LoadingScreen";
-import AppHeader from "@/components/AppHeader";
+import MainNavigation from "@/components/MainNavigation";
 import PageHero from "@/components/PageHero";
 import AppFooter from "@/components/AppFooter";
 import CategoryTrainers from "@/components/CategoryTrainers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Search, MapPin } from "lucide-react";
 
 const Trainers = () => {
   useScrollToTop();
@@ -19,6 +21,19 @@ const Trainers = () => {
   const { signOut } = useAuth();
   const { trainers, loading: trainersLoading, error } = useTrainers();
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
+
+  const filteredTrainers = trainers.filter(trainer => {
+    const matchesSearch = searchTerm === "" || 
+      trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      trainer.specializations.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
+    
+    const matchesLocation = locationFilter === "" ||
+      trainer.location.toLowerCase().includes(locationFilter.toLowerCase());
+
+    return matchesSearch && matchesLocation;
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -44,7 +59,7 @@ const Trainers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      <AppHeader onLogout={handleLogout} />
+      <MainNavigation />
       
       <PageHero
         title="Train with Certified"
@@ -56,17 +71,39 @@ const Trainers = () => {
       <CategoryTrainers category="gym" />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Search and Filters */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search trainers by name or specialization..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <div className="relative flex-1">
+            <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Filter by location..."
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
             Available Trainers
           </h2>
           <Badge className="mb-4 bg-emerald-500">
-            Showing {trainers.length} results
+            Showing {filteredTrainers.length} results
           </Badge>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trainers.map((trainer) => (
+          {filteredTrainers.map((trainer) => (
             <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
               <div className="relative overflow-hidden">
                 <img 
@@ -100,17 +137,20 @@ const Trainers = () => {
                   <p className="text-gray-600 text-sm line-clamp-2">
                     {trainer.bio}
                   </p>
+                  <Button className="w-full mt-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                    Book Session
+                  </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {trainers.length === 0 && (
+        {filteredTrainers.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No approved trainers found.</p>
+            <p className="text-gray-600 text-lg">No trainers found matching your criteria.</p>
             <p className="text-gray-500 text-sm mt-2">
-              Check back later or try registering as a trainer!
+              Try adjusting your search or check back later!
             </p>
           </div>
         )}

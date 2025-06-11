@@ -10,6 +10,7 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Index from "./pages/Index";
+import Profile from "./pages/Profile";
 import Gyms from "./pages/Gyms";
 import Spas from "./pages/Spas";
 import Yoga from "./pages/Yoga";
@@ -42,6 +43,11 @@ function App() {
                 <Route path="/" element={
                   <ProtectedRoute>
                     <Index />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
                   </ProtectedRoute>
                 } />
                 <Route path="/gyms" element={
