@@ -1,7 +1,7 @@
 
 import { useState, useMemo } from 'react';
 
-interface Business {
+interface BaseSearch {
   id: string;
   business_name: string;
   city: string;
@@ -12,7 +12,7 @@ interface Business {
   description?: string;
 }
 
-export const useSearch = (businesses: Business[]) => {
+export const useSearch = <T extends BaseSearch>(businesses: T[]) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("");
   const [priceRange, setPriceRange] = useState({ min: 0, max: 999999 });
