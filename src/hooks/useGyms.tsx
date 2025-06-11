@@ -33,6 +33,9 @@ export const useGyms = () => {
     try {
       setLoading(true);
       setError(null);
+      
+      console.log('Fetching gyms from database...');
+      
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
@@ -46,7 +49,12 @@ export const useGyms = () => {
         return;
       }
 
+      console.log('Fetched gyms:', data?.length || 0);
       setGyms(data || []);
+      
+      if (!data || data.length === 0) {
+        console.info('No gyms found in database');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch gyms';
       setError(errorMessage);

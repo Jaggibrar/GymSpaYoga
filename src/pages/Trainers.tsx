@@ -1,13 +1,11 @@
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
-import { useAuth } from "@/hooks/useAuth";
 import { useTrainers } from "@/hooks/useTrainers";
 import LoadingScreen from "@/components/LoadingScreen";
-import MainNavigation from "@/components/MainNavigation";
 import PageHero from "@/components/PageHero";
-import AppFooter from "@/components/AppFooter";
 import CategoryTrainers from "@/components/CategoryTrainers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +16,72 @@ import { Search, MapPin } from "lucide-react";
 const Trainers = () => {
   useScrollToTop();
   const navigate = useNavigate();
-  const { signOut } = useAuth();
   const { trainers, loading: trainersLoading, error } = useTrainers();
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
 
-  const filteredTrainers = trainers.filter(trainer => {
+  // Sample trainers for when database is empty
+  const sampleTrainers = [
+    {
+      id: "1",
+      name: "Rahul Sharma",
+      email: "rahul@example.com",
+      phone: "+91 9876543210",
+      category: "gym",
+      trainer_tier: "Premium",
+      experience: 8,
+      certifications: "ACSM Certified",
+      specializations: ["Weight Training", "Bodybuilding", "HIIT"],
+      hourly_rate: 1500,
+      location: "Mumbai",
+      bio: "Experienced personal trainer with 8 years in bodybuilding and strength training. Specialized in helping clients achieve their fitness goals through personalized workout plans.",
+      profile_image_url: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      status: "approved",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: "2",
+      name: "Priya Patel",
+      email: "priya@example.com",
+      phone: "+91 9876543211",
+      category: "yoga",
+      trainer_tier: "Expert",
+      experience: 6,
+      certifications: "RYT 500",
+      specializations: ["Hatha Yoga", "Meditation", "Prenatal Yoga"],
+      hourly_rate: 1200,
+      location: "Pune",
+      bio: "Certified yoga instructor specializing in traditional Hatha yoga and mindfulness meditation. Passionate about helping students find balance and inner peace.",
+      profile_image_url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      status: "approved",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },
+    {
+      id: "3",
+      name: "Arjun Kumar",
+      email: "arjun@example.com",
+      phone: "+91 9876543212",
+      category: "gym",
+      trainer_tier: "Standard",
+      experience: 5,
+      certifications: "NASM Certified",
+      specializations: ["Functional Training", "CrossFit", "Sports Conditioning"],
+      hourly_rate: 1000,
+      location: "Bangalore",
+      bio: "Dynamic fitness trainer focused on functional movement and athletic performance. Helping clients build strength and endurance for everyday activities.",
+      profile_image_url: "https://images.unsplash.com/photo-1567013127542-490d757e51cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+      status: "approved",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+  ];
+
+  const displayTrainers = trainers.length > 0 ? trainers : sampleTrainers;
+
+  const filteredTrainers = displayTrainers.filter(trainer => {
     const matchesSearch = searchTerm === "" || 
       trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       trainer.specializations.some(spec => spec.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -43,12 +100,6 @@ const Trainers = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLogout = async () => {
-    await signOut();
-    toast.success("Logged out successfully!");
-    navigate('/login');
-  };
-
   if (error) {
     toast.error(error);
   }
@@ -59,8 +110,6 @@ const Trainers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      <MainNavigation />
-      
       <PageHero
         title="Train with Certified"
         subtitle="Personal Trainers"
@@ -137,7 +186,10 @@ const Trainers = () => {
                   <p className="text-gray-600 text-sm line-clamp-2">
                     {trainer.bio}
                   </p>
-                  <Button className="w-full mt-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                  <Button 
+                    className="w-full mt-4 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                    onClick={() => toast.success(`Booking session with ${trainer.name}. Feature coming soon!`)}
+                  >
                     Book Session
                   </Button>
                 </div>
@@ -155,8 +207,6 @@ const Trainers = () => {
           </div>
         )}
       </div>
-      
-      <AppFooter />
     </div>
   );
 };

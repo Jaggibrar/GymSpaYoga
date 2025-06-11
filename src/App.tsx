@@ -9,7 +9,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import ErrorBoundary from "./components/ErrorBoundary";
 import MainNavigation from "./components/MainNavigation";
+import SampleDataButton from "./components/SampleDataButton";
 import { AuthProvider } from "./hooks/useAuth";
+import { useGyms } from "./hooks/useGyms";
+import { useTrainers } from "./hooks/useTrainers";
 
 // Pages
 import Index from "./pages/Index";
@@ -37,6 +40,48 @@ import "./App.css";
 
 const queryClient = new QueryClient();
 
+function AppContent() {
+  const { gyms } = useGyms();
+  const { trainers } = useTrainers();
+  
+  // Show sample data button only when there's no data
+  const showSampleDataButton = gyms.length === 0 && trainers.length === 0;
+
+  return (
+    <div className="flex flex-col min-h-screen">
+      <MainNavigation />
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/gyms" element={<Gyms />} />
+          <Route path="/gyms/:id" element={<GymDetails />} />
+          <Route path="/spas" element={<Spas />} />
+          <Route path="/spas/:id" element={<SpaDetails />} />
+          <Route path="/yoga" element={<Yoga />} />
+          <Route path="/yoga/:id" element={<YogaDetails />} />
+          <Route path="/trainers" element={<Trainers />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/blogs" element={<Blogs />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/register-trainer" element={<ProtectedRoute><RegisterTrainer /></ProtectedRoute>} />
+          <Route path="/register-business" element={<ProtectedRoute><RegisterBusiness /></ProtectedRoute>} />
+          <Route path="/manage-bookings" element={<ProtectedRoute><ManageBookings /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <AppFooter />
+      <ScrollToTopButton />
+      {showSampleDataButton && <SampleDataButton />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -46,36 +91,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <BrowserRouter>
-                <div className="flex flex-col min-h-screen">
-                  <MainNavigation />
-                  <main className="flex-grow">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/gyms" element={<Gyms />} />
-                      <Route path="/gyms/:id" element={<GymDetails />} />
-                      <Route path="/spas" element={<Spas />} />
-                      <Route path="/spas/:id" element={<SpaDetails />} />
-                      <Route path="/yoga" element={<Yoga />} />
-                      <Route path="/yoga/:id" element={<YogaDetails />} />
-                      <Route path="/trainers" element={<Trainers />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/support" element={<Support />} />
-                      <Route path="/blogs" element={<Blogs />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/signup" element={<Signup />} />
-                      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                      <Route path="/register-trainer" element={<ProtectedRoute><RegisterTrainer /></ProtectedRoute>} />
-                      <Route path="/register-business" element={<ProtectedRoute><RegisterBusiness /></ProtectedRoute>} />
-                      <Route path="/manage-bookings" element={<ProtectedRoute><ManageBookings /></ProtectedRoute>} />
-                      <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-                      <Route path="/payment-success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                  <AppFooter />
-                  <ScrollToTopButton />
-                </div>
+                <AppContent />
               </BrowserRouter>
             </TooltipProvider>
           </AuthProvider>
