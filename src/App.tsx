@@ -24,6 +24,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import GymDetails from "./pages/GymDetails";
 import SpaDetails from "./pages/SpaDetails";
 import YogaDetails from "./pages/YogaDetails";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -51,6 +52,7 @@ function App() {
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route 
                     path="/profile" 
                     element={

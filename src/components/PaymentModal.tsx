@@ -1,220 +1,140 @@
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, CreditCard, AlertCircle } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { CreditCard, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { useOrders } from "@/hooks/useOrders";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  businessId?: string;
-  trainerId?: string;
-  serviceType: 'gym' | 'spa' | 'yoga' | 'trainer';
+  businessId: string;
+  serviceType: string;
   serviceName: string;
   price: number;
-  priceType: 'monthly' | 'session';
+  priceType: string;
 }
 
 const PaymentModal = ({ 
   isOpen, 
   onClose, 
   businessId, 
-  trainerId, 
   serviceType, 
   serviceName, 
   price, 
   priceType 
 }: PaymentModalProps) => {
-  const { user } = useAuth();
-  const { createOrder } = useOrders();
-  const [bookingDate, setBookingDate] = useState<Date>();
-  const [bookingTime, setBookingTime] = useState("");
-  const [duration, setDuration] = useState(60);
-  const [notes, setNotes] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const { user } = useAuth();
 
   const handlePayment = async () => {
     if (!user) {
-      toast.error("Please log in to make a booking");
-      return;
-    }
-
-    if (!bookingDate || !bookingTime) {
-      toast.error("Please select a booking date and time");
+      toast.error("Please login to make a payment");
       return;
     }
 
     setIsProcessing(true);
-
+    
     try {
-      // Create order in database
-      const orderData = {
-        user_id: user.id,
-        business_id: businessId,
-        trainer_id: trainerId,
-        amount: price * 100, // Convert to cents
-        currency: 'inr',
-        status: 'pending',
-        payment_status: 'pending',
-        service_type: serviceType,
-        booking_date: format(bookingDate, 'yyyy-MM-dd'),
-        booking_time: bookingTime,
-        duration_minutes: duration,
-        notes: notes || null
-      };
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: {
+          businessId,
+          serviceType,
+          serviceName,
+          price,
+          priceType
+        }
+      });
 
-      const { data: order, error } = await createOrder(orderData);
-      
       if (error) {
-        throw error;
+        console.error('Checkout error:', error);
+        toast.error("Failed to create checkout session");
+        return;
       }
 
-      // TODO: Integrate with Stripe for actual payment processing
-      // For now, simulate payment processing
-      setTimeout(() => {
-        toast.success("Booking confirmed! Payment processed successfully.");
+      if (data?.url) {
+        // Open Stripe checkout in a new tab
+        window.open(data.url, '_blank');
         onClose();
-        setIsProcessing(false);
-      }, 2000);
-
-    } catch (err) {
-      console.error('Payment error:', err);
-      toast.error("Payment failed. Please try again.");
+        toast.success("Redirecting to payment...");
+      } else {
+        toast.error("No checkout URL received");
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error("An error occurred while processing payment");
+    } finally {
       setIsProcessing(false);
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <CreditCard className="h-5 w-5" />
-            <span>Book {serviceName}</span>
+            <span>Complete Payment</span>
           </DialogTitle>
         </DialogHeader>
         
-        <Alert className="mb-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Payment integration is currently in development. This is a demo booking system.
-          </AlertDescription>
-        </Alert>
-        
-        <div className="space-y-6">
-          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-gray-800 mb-2">Booking Summary</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-gray-600">Service:</span>
-                <p className="font-medium">{serviceName}</p>
-              </div>
-              <div>
-                <span className="text-gray-600">Price:</span>
-                <p className="font-medium text-emerald-600">₹{price}/{priceType}</p>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">{serviceName}</CardTitle>
+            <Badge variant="outline">{serviceType}</Badge>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Price ({priceType}):</span>
+              <span className="text-2xl font-bold text-emerald-600">₹{price}</span>
+            </div>
+            
+            <div className="border-t pt-4">
+              <div className="flex justify-between items-center font-semibold">
+                <span>Total Amount:</span>
+                <span className="text-2xl text-emerald-600">₹{price}</span>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="duration">Duration (minutes)</Label>
-              <Input 
-                id="duration" 
-                type="number" 
-                value={duration} 
-                onChange={(e) => setDuration(parseInt(e.target.value))}
-                min="30"
-                max="180"
-                className="mt-1"
-              />
+            <div className="space-y-2 pt-4">
+              <Button 
+                onClick={handlePayment}
+                disabled={isProcessing}
+                className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                size="lg"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Pay with Stripe
+                  </>
+                )}
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                onClick={onClose}
+                className="w-full"
+                disabled={isProcessing}
+              >
+                Cancel
+              </Button>
             </div>
-            <div>
-              <Label>Total Amount</Label>
-              <div className="mt-1 p-2 bg-gray-50 rounded-md border">
-                <span className="text-lg font-semibold text-emerald-600">₹{price}</span>
-              </div>
+
+            <div className="text-xs text-gray-500 text-center">
+              Secure payment powered by Stripe
             </div>
-          </div>
-
-          <div>
-            <Label>Booking Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal mt-1",
-                    !bookingDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {bookingDate ? format(bookingDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={bookingDate}
-                  onSelect={setBookingDate}
-                  disabled={(date) => date < new Date()}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-
-          <div>
-            <Label htmlFor="time">Booking Time</Label>
-            <Input 
-              id="time" 
-              type="time" 
-              value={bookingTime} 
-              onChange={(e) => setBookingTime(e.target.value)}
-              className="mt-1"
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="notes">Additional Notes (Optional)</Label>
-            <Textarea 
-              id="notes" 
-              placeholder="Any special requirements or notes..."
-              value={notes} 
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              className="mt-1"
-            />
-          </div>
-
-          <div className="flex space-x-3 pt-4">
-            <Button variant="outline" onClick={onClose} className="flex-1">
-              Cancel
-            </Button>
-            <Button 
-              onClick={handlePayment} 
-              disabled={isProcessing || !bookingDate || !bookingTime}
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-            >
-              {isProcessing ? "Processing..." : `Pay ₹${price}`}
-            </Button>
-          </div>
-
-          <div className="text-center text-sm text-gray-500">
-            <p>🔒 Secure payment powered by Stripe (Coming Soon)</p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </DialogContent>
     </Dialog>
   );
