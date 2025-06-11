@@ -1,10 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { Dumbbell, LogOut, MapPin, Phone, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { useAuth } from "@/hooks/useAuth";
 import FilteredListings from "@/components/FilteredListings";
 import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -12,6 +12,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 const Gyms = () => {
   useScrollToTop();
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -22,8 +23,8 @@ const Gyms = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
+  const handleLogout = async () => {
+    await signOut();
     toast.success("Logged out successfully!");
     navigate('/login');
   };
