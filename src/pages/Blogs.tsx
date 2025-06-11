@@ -1,18 +1,15 @@
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Calendar, User, Search, Plus, Heart, MessageCircle, Share2, Dumbbell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, User, Heart, MessageCircle, Share2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
-import AppFooter from "@/components/AppFooter";
+import BlogCard from "@/components/blog/BlogCard";
+import BlogFilters from "@/components/blog/BlogFilters";
+import WriteBlogModal from "@/components/blog/WriteBlogModal";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,54 +57,8 @@ const Blogs = () => {
       likes: 134,
       comments: 18,
       isLiked: false
-    },
-    {
-      id: 4,
-      title: "Building a Home Gym: Essential Equipment Guide",
-      excerpt: "Create an effective workout space at home with these carefully selected pieces of equipment that won't break the bank.",
-      content: "With busy schedules and convenience becoming paramount, home gyms are gaining popularity. This guide will help you create an effective workout space without overwhelming your budget...",
-      author: "Sanjay Patel",
-      category: "Fitness",
-      date: "2024-01-08",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 201,
-      comments: 35,
-      isLiked: false
-    },
-    {
-      id: 5,
-      title: "Ayurvedic Spa Rituals: Timeless Healing Traditions",
-      excerpt: "Dive deep into ancient Ayurvedic practices that form the foundation of many modern spa treatments.",
-      content: "Ayurveda, the 5,000-year-old Indian system of medicine, forms the backbone of many contemporary spa treatments. Understanding these ancient principles can enhance your spa experience...",
-      author: "Dr. Meera Nair",
-      category: "Wellness",
-      date: "2024-01-05",
-      image: "https://images.unsplash.com/photo-1563461717-96a5efe542c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 98,
-      comments: 14,
-      isLiked: false
-    },
-    {
-      id: 6,
-      title: "Power Yoga vs Traditional Yoga: Which is Right for You?",
-      excerpt: "Understanding the differences between various yoga styles to choose the perfect practice for your goals and lifestyle.",
-      content: "The world of yoga offers numerous styles and approaches, each with unique benefits and characteristics. Two popular forms that often create confusion are Power Yoga and Traditional Yoga...",
-      author: "Kavita Singh",
-      category: "Yoga",
-      date: "2024-01-03",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 167,
-      comments: 29,
-      isLiked: false
     }
   ]);
-  
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    content: "",
-    category: "",
-    author: ""
-  });
 
   const postsPerPage = 6;
   const categories = ["All", "Fitness", "Wellness", "Yoga", "Nutrition", "Mindfulness"];
@@ -161,21 +112,19 @@ const Blogs = () => {
     setIsReadMoreOpen(true);
   };
 
-  const handleSubmitBlog = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!newBlog.title || !newBlog.content || !newBlog.category || !newBlog.author) {
+  const handleSubmitBlog = (newBlogData: any) => {
+    if (!newBlogData.title || !newBlogData.content || !newBlogData.category || !newBlogData.author) {
       toast.error("Please fill in all fields");
       return;
     }
 
     const newPost = {
       id: blogPosts.length + 1,
-      title: newBlog.title,
-      excerpt: newBlog.content.substring(0, 150) + "...",
-      content: newBlog.content,
-      author: newBlog.author,
-      category: newBlog.category,
+      title: newBlogData.title,
+      excerpt: newBlogData.content.substring(0, 150) + "...",
+      content: newBlogData.content,
+      author: newBlogData.author,
+      category: newBlogData.category,
       date: new Date().toISOString().split('T')[0],
       image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 0,
@@ -184,7 +133,6 @@ const Blogs = () => {
     };
 
     setBlogPosts(prevBlogs => [newPost, ...prevBlogs]);
-    setNewBlog({ title: "", content: "", category: "", author: "" });
     setIsDialogOpen(false);
     toast.success("Blog published successfully!");
   };
@@ -195,7 +143,7 @@ const Blogs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 w-full">
       <SEOHead 
         title="Wellness Blog - Expert Fitness, Yoga & Spa Tips | GymSpaYoga"
         description="Read expert wellness blog posts about fitness, yoga, spa treatments, and healthy living. Get tips from certified trainers and wellness professionals."
@@ -203,81 +151,19 @@ const Blogs = () => {
         url="https://gymspayoga.com/blogs"
       />
 
-      <div className="container mx-auto px-4 py-8 sm:py-12">
-        {/* Hero Section with Write Blog Button */}
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl py-8 sm:py-12">
+        {/* Hero Section */}
         <div className="text-center mb-12">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-4xl sm:text-5xl font-bold text-gray-800">
               Wellness
               <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"> Blog </span>
             </h2>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Write Blog
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Write a New Blog Post</DialogTitle>
-                  <DialogDescription>
-                    Share your wellness knowledge with our community
-                  </DialogDescription>
-                </DialogHeader>
-                <form onSubmit={handleSubmitBlog} className="space-y-4">
-                  <div>
-                    <Label htmlFor="author">Author Name</Label>
-                    <Input
-                      id="author"
-                      value={newBlog.author}
-                      onChange={(e) => setNewBlog({...newBlog, author: e.target.value})}
-                      placeholder="Your name"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="title">Blog Title</Label>
-                    <Input
-                      id="title"
-                      value={newBlog.title}
-                      onChange={(e) => setNewBlog({...newBlog, title: e.target.value})}
-                      placeholder="Enter your blog title"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="category">Category</Label>
-                    <Select value={newBlog.category} onValueChange={(value) => setNewBlog({...newBlog, category: value})}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Fitness">Fitness</SelectItem>
-                        <SelectItem value="Wellness">Wellness</SelectItem>
-                        <SelectItem value="Yoga">Yoga</SelectItem>
-                        <SelectItem value="Nutrition">Nutrition</SelectItem>
-                        <SelectItem value="Mindfulness">Mindfulness</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="content">Content</Label>
-                    <Textarea
-                      id="content"
-                      value={newBlog.content}
-                      onChange={(e) => setNewBlog({...newBlog, content: e.target.value})}
-                      placeholder="Write your blog content here..."
-                      className="min-h-[200px]"
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-emerald-500 to-blue-500">
-                    Publish Blog
-                  </Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <WriteBlogModal 
+              isOpen={isDialogOpen} 
+              setIsOpen={setIsDialogOpen} 
+              onSubmit={handleSubmitBlog} 
+            />
           </div>
           
           <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -285,33 +171,13 @@ const Blogs = () => {
           </p>
 
           {/* Search and Filter */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <Input
-                    placeholder="Search blogs..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-12"
-                  />
-                </div>
-              </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-full sm:w-48 h-12">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <BlogFilters 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+            categories={categories}
+          />
 
           {/* Results count */}
           <p className="text-gray-600 mb-6">
@@ -324,67 +190,13 @@ const Blogs = () => {
         {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {paginatedBlogs.map((blog) => (
-            <Card key={blog.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
-              <div className="relative overflow-hidden">
-                <img
-                  src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <Badge className="absolute top-4 right-4 bg-emerald-500">
-                  {blog.category}
-                </Badge>
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-emerald-600 transition-colors line-clamp-2">
-                  {blog.title}
-                </CardTitle>
-                <CardDescription className="text-gray-600 line-clamp-3">
-                  {blog.excerpt}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4" />
-                    <span className="truncate">{blog.author}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4" />
-                    <span>{new Date(blog.date).toLocaleDateString()}</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <button 
-                      onClick={() => handleLike(blog.id)}
-                      className={`flex items-center space-x-1 hover:text-red-500 transition-colors ${blog.isLiked ? 'text-red-500' : ''}`}
-                    >
-                      <Heart className={`h-4 w-4 ${blog.isLiked ? 'fill-current' : ''}`} />
-                      <span>{blog.likes}</span>
-                    </button>
-                    <div className="flex items-center space-x-1">
-                      <MessageCircle className="h-4 w-4" />
-                      <span>{blog.comments}</span>
-                    </div>
-                    <button 
-                      onClick={() => handleShare(blog)}
-                      className="flex items-center space-x-1 hover:text-blue-500 transition-colors"
-                    >
-                      <Share2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="group-hover:bg-emerald-500 group-hover:text-white"
-                    onClick={() => handleReadMore(blog)}
-                  >
-                    Read More
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <BlogCard 
+              key={blog.id}
+              blog={blog}
+              onLike={handleLike}
+              onShare={handleShare}
+              onReadMore={handleReadMore}
+            />
           ))}
         </div>
 
@@ -498,8 +310,6 @@ const Blogs = () => {
           )}
         </DialogContent>
       </Dialog>
-
-      <AppFooter />
     </div>
   );
 };
