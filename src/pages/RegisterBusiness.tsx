@@ -6,13 +6,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { Upload, MapPin, Phone, Mail, Clock, Dumbbell, Star, Zap, Crown, Shield, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Crown, Star, Zap } from "lucide-react";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
 import { useAuth } from "@/hooks/useAuth";
+
+// Import new components
+import { RegistrationHeader } from "@/components/registration/RegistrationHeader";
+import { BusinessTypeSelector } from "@/components/registration/BusinessTypeSelector";
+import { CategoryTierSelector } from "@/components/registration/CategoryTierSelector";
+import { ContactInfoForm } from "@/components/registration/ContactInfoForm";
+import { AddressForm } from "@/components/registration/AddressForm";
+import { OperatingHoursForm } from "@/components/registration/OperatingHoursForm";
+import { PricingForm } from "@/components/registration/PricingForm";
+import { AmenitiesSelector } from "@/components/registration/AmenitiesSelector";
+import { ImageUpload } from "@/components/registration/ImageUpload";
 
 const RegisterBusiness = () => {
   const navigate = useNavigate();
@@ -150,25 +158,7 @@ const RegisterBusiness = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Modern Header */}
-      <header className="bg-white/95 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-gray-100">
-        <div className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-              <ArrowLeft className="h-5 w-5 text-gray-600" />
-              <span className="text-gray-600 font-medium">Back to Home</span>
-            </Link>
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="h-12 w-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="h-7 w-7 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <RegistrationHeader />
 
       <div className="container mx-auto px-6 py-12">
         <div className="max-w-5xl mx-auto">
@@ -230,63 +220,17 @@ const RegisterBusiness = () => {
                     Business Information
                   </h3>
                   
-                  {/* Business Type */}
-                  <div className="space-y-4">
-                    <Label className="text-lg font-medium text-gray-700">Business Type *</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {businessTypes.map((type) => (
-                        <div 
-                          key={type.value}
-                          className={`p-6 border-2 rounded-2xl cursor-pointer transition-all hover:shadow-lg ${
-                            businessType === type.value 
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => setBusinessType(type.value)}
-                        >
-                          <div className="text-4xl text-center mb-3">{type.icon}</div>
-                          <h4 className="font-bold text-lg text-center text-gray-800">{type.label}</h4>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <BusinessTypeSelector 
+                    businessTypes={businessTypes}
+                    selectedType={businessType}
+                    onTypeSelect={setBusinessType}
+                  />
 
-                  {/* Category Selection */}
-                  <div className="space-y-4">
-                    <Label className="text-lg font-medium text-gray-700">Destination Category *</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      {categoryTiers.map((tier) => (
-                        <div 
-                          key={tier.value}
-                          className={`p-6 border-2 rounded-2xl cursor-pointer transition-all hover:shadow-lg ${
-                            selectedCategory === tier.value 
-                              ? 'border-blue-500 bg-blue-50 shadow-md' 
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
-                          onClick={() => setSelectedCategory(tier.value)}
-                        >
-                          <div className="flex items-center justify-between mb-4">
-                            <div className={`w-12 h-12 bg-gradient-to-r ${tier.color} rounded-xl flex items-center justify-center`}>
-                              <tier.icon className="h-6 w-6 text-white" />
-                            </div>
-                            <div className="text-right">
-                              <div className="text-2xl font-bold text-gray-800">{tier.price}</div>
-                              <div className="text-sm text-gray-500">One-time</div>
-                            </div>
-                          </div>
-                          <h4 className="font-bold text-xl mb-3 text-gray-800">{tier.label}</h4>
-                          <ul className="space-y-1">
-                            {tier.features.map((feature, index) => (
-                              <li key={index} className="text-sm text-gray-600 flex items-center">
-                                <div className="w-2 h-2 bg-green-500 rounded-full mr-2 flex-shrink-0"></div>
-                                {feature}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <CategoryTierSelector 
+                    categoryTiers={categoryTiers}
+                    selectedCategory={selectedCategory}
+                    onCategorySelect={setSelectedCategory}
+                  />
 
                   {/* Business Name */}
                   <div className="space-y-3">
@@ -307,139 +251,41 @@ const RegisterBusiness = () => {
                   <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
                     Contact Information
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-3">
-                      <Label htmlFor="email" className="text-lg font-medium text-gray-700 flex items-center">
-                        <Mail className="h-5 w-5 mr-2" />
-                        Email Address *
-                      </Label>
-                      <Input 
-                        id="email" 
-                        type="email" 
-                        placeholder="business@example.com" 
-                        className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                        value={formData.email}
-                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label htmlFor="phone" className="text-lg font-medium text-gray-700 flex items-center">
-                        <Phone className="h-5 w-5 mr-2" />
-                        Phone Number *
-                      </Label>
-                      <Input 
-                        id="phone" 
-                        placeholder="+91 98765 43210" 
-                        className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                        value={formData.phone}
-                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                        required
-                      />
-                    </div>
-                  </div>
+                  <ContactInfoForm 
+                    email={formData.email}
+                    phone={formData.phone}
+                    onEmailChange={(email) => setFormData(prev => ({ ...prev, email }))}
+                    onPhoneChange={(phone) => setFormData(prev => ({ ...prev, phone }))}
+                  />
                 </div>
 
                 {/* Address Information */}
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 flex items-center">
-                    <MapPin className="h-6 w-6 mr-2" />
-                    Business Address
-                  </h3>
-                  <div className="space-y-6">
-                    <Textarea 
-                      placeholder="Complete business address"
-                      className="min-h-[100px] text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                      value={formData.address}
-                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      required
-                    />
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <Input 
-                        placeholder="City" 
-                        className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                        value={formData.city}
-                        onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
-                        required
-                      />
-                      <Input 
-                        placeholder="State" 
-                        className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                        value={formData.state}
-                        onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
-                        required
-                      />
-                      <Input 
-                        placeholder="PIN Code" 
-                        className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                        value={formData.pinCode}
-                        onChange={(e) => setFormData(prev => ({ ...prev, pinCode: e.target.value }))}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
+                <AddressForm 
+                  address={formData.address}
+                  city={formData.city}
+                  state={formData.state}
+                  pinCode={formData.pinCode}
+                  onAddressChange={(address) => setFormData(prev => ({ ...prev, address }))}
+                  onCityChange={(city) => setFormData(prev => ({ ...prev, city }))}
+                  onStateChange={(state) => setFormData(prev => ({ ...prev, state }))}
+                  onPinCodeChange={(pinCode) => setFormData(prev => ({ ...prev, pinCode }))}
+                />
 
                 {/* Operating Hours & Pricing */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                  {/* Operating Hours */}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3 flex items-center">
-                      <Clock className="h-6 w-6 mr-2" />
-                      Operating Hours
-                    </h3>
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="space-y-3">
-                        <Label className="text-lg font-medium text-gray-700">Opening Time *</Label>
-                        <Input 
-                          type="time" 
-                          className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                          value={formData.openingTime}
-                          onChange={(e) => setFormData(prev => ({ ...prev, openingTime: e.target.value }))}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label className="text-lg font-medium text-gray-700">Closing Time *</Label>
-                        <Input 
-                          type="time" 
-                          className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                          value={formData.closingTime}
-                          onChange={(e) => setFormData(prev => ({ ...prev, closingTime: e.target.value }))}
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <OperatingHoursForm 
+                    openingTime={formData.openingTime}
+                    closingTime={formData.closingTime}
+                    onOpeningTimeChange={(openingTime) => setFormData(prev => ({ ...prev, openingTime }))}
+                    onClosingTimeChange={(closingTime) => setFormData(prev => ({ ...prev, closingTime }))}
+                  />
 
-                  {/* Pricing */}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
-                      Pricing Information
-                    </h3>
-                    <div className="grid grid-cols-1 gap-6">
-                      <div className="space-y-3">
-                        <Label htmlFor="monthlyPrice" className="text-lg font-medium text-gray-700">Monthly Membership (₹)</Label>
-                        <Input 
-                          id="monthlyPrice" 
-                          placeholder="2500" 
-                          className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                          value={formData.monthlyPrice}
-                          onChange={(e) => setFormData(prev => ({ ...prev, monthlyPrice: e.target.value }))}
-                        />
-                      </div>
-                      <div className="space-y-3">
-                        <Label htmlFor="sessionPrice" className="text-lg font-medium text-gray-700">Per Session Price (₹)</Label>
-                        <Input 
-                          id="sessionPrice" 
-                          placeholder="500" 
-                          className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-                          value={formData.sessionPrice}
-                          onChange={(e) => setFormData(prev => ({ ...prev, sessionPrice: e.target.value }))}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  <PricingForm 
+                    monthlyPrice={formData.monthlyPrice}
+                    sessionPrice={formData.sessionPrice}
+                    onMonthlyPriceChange={(monthlyPrice) => setFormData(prev => ({ ...prev, monthlyPrice }))}
+                    onSessionPriceChange={(sessionPrice) => setFormData(prev => ({ ...prev, sessionPrice }))}
+                  />
                 </div>
 
                 {/* Description */}
@@ -455,47 +301,13 @@ const RegisterBusiness = () => {
                   />
                 </div>
 
-                {/* Amenities */}
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
-                    Amenities & Services
-                  </h3>
-                  <p className="text-gray-600 text-lg">Select all amenities and services you offer:</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {amenitiesList.map((amenity) => (
-                      <div key={amenity} className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50">
-                        <Checkbox 
-                          id={amenity}
-                          checked={selectedAmenities.includes(amenity)}
-                          onCheckedChange={() => toggleAmenity(amenity)}
-                          className="w-5 h-5"
-                        />
-                        <Label htmlFor={amenity} className="text-lg font-medium cursor-pointer">
-                          {amenity}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <AmenitiesSelector 
+                  amenitiesList={amenitiesList}
+                  selectedAmenities={selectedAmenities}
+                  onAmenityToggle={toggleAmenity}
+                />
 
-                {/* Images Upload */}
-                <div className="space-y-6">
-                  <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
-                    Business Images
-                  </h3>
-                  <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-blue-400 transition-colors">
-                    <Upload className="h-16 w-16 text-gray-400 mx-auto mb-6" />
-                    <p className="text-xl text-gray-600 mb-4">Upload business photos</p>
-                    <p className="text-gray-500 mb-6">Upload at least 5 high-quality images (JPG, PNG, max 5MB each)</p>
-                    <Input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="max-w-xs mx-auto text-lg"
-                    />
-                  </div>
-                </div>
+                <ImageUpload onFileChange={handleFileChange} />
 
                 {/* Terms and Submit */}
                 <div className="space-y-8 pt-8 border-t border-gray-200">
