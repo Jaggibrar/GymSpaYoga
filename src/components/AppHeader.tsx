@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Dumbbell, LogOut } from "lucide-react";
+import { Dumbbell, LogOut, Calendar, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface AppHeaderProps {
@@ -22,9 +22,16 @@ const AppHeader = ({ onLogout }: AppHeaderProps) => {
           </Link>
           
           <div className="flex items-center space-x-2 md:space-x-4">
-            <Link to="/">
+            <Link to="/user-bookings">
               <Button variant="outline" className="text-xs md:text-sm">
-                Home
+                <Calendar className="h-3 w-3 mr-1" />
+                My Bookings
+              </Button>
+            </Link>
+            <Link to="/business-bookings">
+              <Button variant="outline" className="text-xs md:text-sm">
+                <Building className="h-3 w-3 mr-1" />
+                Business
               </Button>
             </Link>
             <Button 

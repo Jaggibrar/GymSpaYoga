@@ -1,0 +1,126 @@
+
+import { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Search, Filter } from 'lucide-react';
+import { BookingCard } from './BookingCard';
+import { useRealTimeBookings } from '@/hooks/useRealTimeBookings';
+import { toast } from 'sonner';
+
+interface BookingsListProps {
+  showBusinessActions?: boolean;
+}
+
+export const BookingsList = ({ showBusinessActions = false }: BookingsListProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const { bookings, loading, updateBookingStatus } = useRealTimeBookings();
+
+  const filteredBookings = bookings.filter(booking => {
+    const matchesSearch = 
+      booking.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.id.toString().includes(searchTerm);
+    
+    const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  const handleConfirm = async (bookingId: number) => {
+    const success = await updateBookingStatus(bookingId, 'confirmed', 'Booking confirmed by business');
+    if (success) {
+      toast.success('Booking confirmed successfully');
+    } else {
+      toast.error('Failed to confirm booking');
+    }
+  };
+
+  const handleReject = async (bookingId: number) => {
+    const success = await updateBookingStatus(bookingId, 'rejected', 'Booking rejected by business');
+    if (success) {
+      toast.success('Booking rejected');
+    } else {
+      toast.error('Failed to reject booking');
+    }
+  };
+
+  const handleViewDetails = (bookingId: number) => {
+    console.log('View details for booking:', bookingId);
+    // TODO: Implement booking details modal or navigation
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Filter Bookings
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative">
+              <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
+              <Input
+                placeholder="Search by ID, type, or notes..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Bookings Grid */}
+      {filteredBookings.length === 0 ? (
+        <Card>
+          <CardContent className="text-center py-8">
+            <p className="text-gray-500">
+              {bookings.length === 0 
+                ? "No bookings found" 
+                : "No bookings match your current filters"}
+            </p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {filteredBookings.map((booking) => (
+            <BookingCard
+              key={booking.id}
+              booking={booking}
+              showActions={showBusinessActions}
+              onConfirm={handleConfirm}
+              onReject={handleReject}
+              onViewDetails={handleViewDetails}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
