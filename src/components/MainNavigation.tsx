@@ -35,6 +35,7 @@ const MainNavigation = () => {
     { name: "Yoga", href: "/yoga" },
     { name: "Trainers", href: "/trainers" },
     { name: "Pricing", href: "/pricing" },
+    { name: "Support", href: "/support" },
   ];
 
   const handleSignOut = async () => {

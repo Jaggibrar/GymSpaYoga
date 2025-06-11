@@ -1,30 +1,24 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dumbbell, Phone, Mail, MapPin, Clock, MessageCircle, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Phone, Mail, MapPin, Clock, MessageCircle, HeadphonesIcon, Users, Star } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
+import SEOHead from "@/components/SEOHead";
 
 const Support = () => {
   useScrollToTop();
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: ""
   });
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    toast.success("Logged out successfully!");
-    navigate('/login');
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
@@ -69,42 +63,32 @@ const Support = () => {
     {
       question: "Is there a mobile app available?",
       answer: "Currently, we offer a mobile-optimized website. A dedicated mobile app is in development and will be available soon on both iOS and Android platforms."
+    },
+    {
+      question: "How do I update my profile information?",
+      answer: "Log into your account and go to the Profile section where you can update your personal information, preferences, and contact details."
+    },
+    {
+      question: "What if I forget my password?",
+      answer: "Click on 'Forgot Password' on the login page and follow the instructions. You'll receive an email with a link to reset your password."
     }
+  ];
+
+  const supportStats = [
+    { icon: Users, value: "10K+", label: "Happy Customers", color: "text-emerald-500" },
+    { icon: MessageCircle, value: "24/7", label: "Support Available", color: "text-blue-500" },
+    { icon: Star, value: "4.9/5", label: "Support Rating", color: "text-yellow-500" },
+    { icon: HeadphonesIcon, value: "<2hrs", label: "Response Time", color: "text-purple-500" }
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Dumbbell className="h-4 md:h-6 w-4 md:w-6 text-white" />
-              </div>
-              <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-            
-            <div className="flex items-center space-x-2 md:space-x-4">
-              <Link to="/">
-                <Button variant="outline" className="text-xs md:text-sm">
-                  Home
-                </Button>
-              </Link>
-              <Button 
-                onClick={handleLogout}
-                variant="outline" 
-                className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
-              >
-                <LogOut className="h-3 w-3 mr-1" />
-                Logout
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <SEOHead 
+        title="Support Center - Get Help | GymSpaYoga"
+        description="Need help? Our support team is here 24/7. Find answers to common questions or contact us directly for personalized assistance."
+        keywords="support, help, customer service, FAQ, contact, GymSpaYoga"
+        url="https://gymspayoga.com/support"
+      />
 
       <div className="container mx-auto px-4 py-8 md:py-12">
         {/* Hero Section */}
@@ -112,9 +96,20 @@ const Support = () => {
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent mb-4">
             Support Center
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
             We're here to help! Find answers to common questions or get in touch with our support team.
           </p>
+          
+          {/* Support Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
+            {supportStats.map((stat, index) => (
+              <Card key={index} className="text-center p-4 hover:shadow-lg transition-all duration-300">
+                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-2`} />
+                <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
+                <div className="text-sm text-gray-600">{stat.label}</div>
+              </Card>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 mb-12">
@@ -199,31 +194,31 @@ const Support = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                   <Phone className="h-5 w-5 text-emerald-600" />
                   <div>
                     <p className="font-semibold">Phone Support</p>
-                    <p className="text-gray-600">+91 98765 43210</p>
+                    <p className="text-gray-600">+91 7596958097</p>
                     <p className="text-sm text-gray-500">Mon-Fri, 9 AM - 7 PM IST</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                   <Mail className="h-5 w-5 text-blue-600" />
                   <div>
                     <p className="font-semibold">Email Support</p>
-                    <p className="text-gray-600">support@gymspayoga.com</p>
+                    <p className="text-gray-600">gymspayoga@gmail.com</p>
                     <p className="text-sm text-gray-500">Response within 24 hours</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                   <MapPin className="h-5 w-5 text-purple-600" />
                   <div>
                     <p className="font-semibold">Office Address</p>
-                    <p className="text-gray-600">Kolkata, West Bengal, India</p>
+                    <p className="text-gray-600">India</p>
                     <p className="text-sm text-gray-500">Headquarters</p>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                   <Clock className="h-5 w-5 text-orange-600" />
                   <div>
                     <p className="font-semibold">Business Hours</p>
@@ -251,10 +246,10 @@ const Support = () => {
             <Accordion type="single" collapsible className="w-full">
               {faqs.map((faq, index) => (
                 <AccordionItem key={index} value={`item-${index}`}>
-                  <AccordionTrigger className="text-left">
+                  <AccordionTrigger className="text-left hover:text-emerald-600 transition-colors">
                     {faq.question}
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="text-gray-700">
                     {faq.answer}
                   </AccordionContent>
                 </AccordionItem>
