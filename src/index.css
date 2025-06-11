@@ -363,7 +363,7 @@
 /* Ultra-wide and large screen optimizations */
 @media (min-width: 1440px) {
   .mobile-container {
-    @apply max-w-8xl;
+    @apply max-w-7xl;
   }
 }
 
