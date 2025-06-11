@@ -4,18 +4,18 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 export interface Review {
-  id: string;
-  user_id: string;
-  business_type: 'gym' | 'spa' | 'yoga' | 'trainer';
-  business_id: string;
+  id: number;
+  user_id: string | null;
+  business_type: 'gym' | 'spa' | 'yoga' | 'trainer' | null;
+  business_id: string | null;
   trainer_id: string | null;
-  rating: number;
+  rating: number | null;
   comment: string | null;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
-export const useReviews = (businessType?: string, businessId?: string) => {
+export const useReviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,17 +25,10 @@ export const useReviews = (businessType?: string, businessId?: string) => {
     const fetchReviews = async () => {
       try {
         setLoading(true);
-        let query = supabase.from('reviews').select('*');
-
-        if (businessType && businessId) {
-          query = query
-            .eq('business_type', businessType)
-            .eq('business_id', businessId);
-        }
-
-        query = query.order('created_at', { ascending: false });
-
-        const { data, error } = await query;
+        const { data, error } = await supabase
+          .from('reviews')
+          .select('*')
+          .order('created_at', { ascending: false });
 
         if (error) {
           setError(error.message);
@@ -53,9 +46,9 @@ export const useReviews = (businessType?: string, businessId?: string) => {
     };
 
     fetchReviews();
-  }, [businessType, businessId]);
+  }, []);
 
-  const createReview = async (reviewData: Partial<Review>) => {
+  const createReview = async (reviewData: Omit<Review, 'id' | 'created_at' | 'updated_at'>) => {
     if (!user) {
       throw new Error('User not authenticated');
     }

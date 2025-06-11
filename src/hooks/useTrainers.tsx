@@ -3,24 +3,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Trainer {
-  id: string;
-  user_id: string;
-  name: string;
-  bio: string | null;
-  specializations: string[];
-  certifications: string[];
-  experience_years: number;
-  hourly_rate: number;
-  rating: number;
-  image_url: string | null;
-  phone: string | null;
-  email: string | null;
-  location: string | null;
-  availability: any;
-  is_verified: boolean;
-  is_active: boolean;
+  id: number;
   created_at: string;
-  updated_at: string;
 }
 
 export const useTrainers = () => {
@@ -35,7 +19,6 @@ export const useTrainers = () => {
         const { data, error } = await supabase
           .from('trainers')
           .select('*')
-          .eq('is_active', true)
           .order('created_at', { ascending: false });
 
         if (error) {

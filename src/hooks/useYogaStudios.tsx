@@ -3,27 +3,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface YogaStudio {
-  id: string;
-  name: string;
-  description: string | null;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
-  phone: string | null;
-  email: string | null;
-  website: string | null;
-  image_url: string | null;
-  category: 'luxury' | 'premium' | 'budget';
-  price_per_session: number;
-  rating: number;
-  yoga_styles: string[];
-  amenities: string[];
-  opening_hours: any;
-  is_verified: boolean;
-  is_active: boolean;
+  id: number;
   created_at: string;
-  updated_at: string;
 }
 
 export const useYogaStudios = () => {
@@ -38,7 +19,6 @@ export const useYogaStudios = () => {
         const { data, error } = await supabase
           .from('yoga_studios')
           .select('*')
-          .eq('is_active', true)
           .order('created_at', { ascending: false });
 
         if (error) {

@@ -4,20 +4,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
 export interface Booking {
-  id: string;
-  user_id: string;
-  business_type: 'gym' | 'spa' | 'yoga' | 'trainer';
-  business_id: string;
+  id: number;
+  user_id: string | null;
+  business_type: 'gym' | 'spa' | 'yoga' | 'trainer' | null;
+  business_id: string | null;
   trainer_id: string | null;
-  booking_date: string;
-  booking_time: string;
-  duration_minutes: number;
-  total_amount: number;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
-  payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
+  booking_date: string | null;
+  booking_time: string | null;
+  duration_minutes: number | null;
+  total_amount: number | null;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | null;
+  payment_status: 'pending' | 'paid' | 'failed' | 'refunded' | null;
   notes: string | null;
   created_at: string;
-  updated_at: string;
+  updated_at: string | null;
 }
 
 export const useBookings = () => {
@@ -59,7 +59,7 @@ export const useBookings = () => {
     fetchBookings();
   }, [user]);
 
-  const createBooking = async (bookingData: Partial<Booking>) => {
+  const createBooking = async (bookingData: Omit<Booking, 'id' | 'created_at' | 'updated_at'>) => {
     if (!user) {
       throw new Error('User not authenticated');
     }
