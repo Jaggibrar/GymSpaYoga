@@ -51,7 +51,7 @@ export const useUserProfile = () => {
           return;
         }
 
-        if (data !== null && typeof data === 'object' && !('error' in data)) {
+        if (data) {
           setProfile(data as UserProfile);
         }
       } catch (err) {
@@ -87,7 +87,7 @@ export const useUserProfile = () => {
         throw error;
       }
 
-      if (data !== null && typeof data === 'object' && !('error' in data)) {
+      if (data) {
         setProfile(data as UserProfile);
       }
       toast.success('Profile updated successfully!');
