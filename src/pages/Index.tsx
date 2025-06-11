@@ -149,9 +149,9 @@ const Index = () => {
             
             {/* Mobile: Horizontal Scroll, Desktop: Grid */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+              <div className="mobile-horizontal-cards">
                 <Card 
-                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  className="mobile-card group hover:shadow-xl transition-all duration-300 cursor-pointer"
                   onClick={() => handleCategoryClick('gym', '/gyms')}
                 >
                   <div className="relative overflow-hidden">
@@ -188,7 +188,7 @@ const Index = () => {
                 </Card>
 
                 <Card 
-                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  className="mobile-card group hover:shadow-xl transition-all duration-300 cursor-pointer"
                   onClick={() => handleCategoryClick('spa', '/spas')}
                 >
                   <div className="relative overflow-hidden">
@@ -225,7 +225,7 @@ const Index = () => {
                 </Card>
 
                 <Card 
-                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  className="mobile-card group hover:shadow-xl transition-all duration-300 cursor-pointer"
                   onClick={() => handleCategoryClick('yoga', '/yoga')}
                 >
                   <div className="relative overflow-hidden">
@@ -420,8 +420,8 @@ const Index = () => {
             
             {/* Mobile: Horizontal Scroll */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+              <div className="mobile-horizontal-cards">
+                <Card className="mobile-card-sm p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100">
                   <div className="flex items-center space-x-3 mb-3">
                     <Shield className="h-5 w-5 text-emerald-600" />
                     <h3 className="text-base font-semibold text-gray-800">Verified Listings</h3>
@@ -431,7 +431,7 @@ const Index = () => {
                   </p>
                 </Card>
                 
-                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+                <Card className="mobile-card-sm p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100">
                   <div className="flex items-center space-x-3 mb-3">
                     <Award className="h-5 w-5 text-blue-600" />
                     <h3 className="text-base font-semibold text-gray-800">Top-Rated</h3>
@@ -441,7 +441,7 @@ const Index = () => {
                   </p>
                 </Card>
                 
-                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+                <Card className="mobile-card-sm p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100">
                   <div className="flex items-center space-x-3 mb-3">
                     <Clock className="h-5 w-5 text-purple-600" />
                     <h3 className="text-base font-semibold text-gray-800">Easy Booking</h3>
@@ -503,9 +503,9 @@ const Index = () => {
               
               {/* Mobile: Horizontal Scroll */}
               <div className="md:hidden">
-                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <div className="mobile-horizontal-cards">
                   {featuredListings.map((listing) => (
-                    <Card key={listing.id} className="min-w-[280px] group hover:shadow-xl transition-all duration-300 overflow-hidden flex-shrink-0">
+                    <Card key={listing.id} className="mobile-card group hover:shadow-xl transition-all duration-300 overflow-hidden">
                       <div className="relative overflow-hidden">
                         <img 
                           src={listing.image} 
@@ -616,9 +616,9 @@ const Index = () => {
             
             {/* Mobile: Horizontal Scroll */}
             <div className="md:hidden">
-              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+              <div className="mobile-horizontal-cards">
                 {testimonials.map((testimonial, index) => (
-                  <Card key={index} className="min-w-[280px] p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50 flex-shrink-0">
+                  <Card key={index} className="mobile-card p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
                     <div className="mb-4">
                       <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
                         <span className="text-white font-bold text-lg">
