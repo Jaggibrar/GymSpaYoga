@@ -45,7 +45,15 @@ export const useChat = () => {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      setChatRooms(data || []);
+      
+      // Transform database types to our interface types
+      const transformedRooms: ChatRoom[] = (data || []).map(room => ({
+        ...room,
+        room_type: room.room_type as 'business' | 'trainer',
+        status: room.status as 'active' | 'closed' | 'archived'
+      }));
+      
+      setChatRooms(transformedRooms);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch chat rooms';
       setError(errorMessage);
@@ -64,7 +72,15 @@ export const useChat = () => {
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setMessages(data || []);
+      
+      // Transform database types to our interface types
+      const transformedMessages: ChatMessage[] = (data || []).map(message => ({
+        ...message,
+        message_type: message.message_type as 'text' | 'image' | 'file',
+        is_read: message.is_read || false
+      }));
+      
+      setMessages(transformedMessages);
     } catch (err) {
       console.error('Error fetching messages:', err);
       toast.error('Failed to fetch messages');
@@ -91,9 +107,16 @@ export const useChat = () => {
         .single();
 
       if (error) throw error;
-      setChatRooms(prev => [data, ...prev]);
+      
+      const transformedRoom: ChatRoom = {
+        ...data,
+        room_type: data.room_type as 'business' | 'trainer',
+        status: data.status as 'active' | 'closed' | 'archived'
+      };
+      
+      setChatRooms(prev => [transformedRoom, ...prev]);
       toast.success('Chat room created');
-      return data;
+      return transformedRoom;
     } catch (err) {
       console.error('Error creating chat room:', err);
       toast.error('Failed to create chat room');
@@ -119,8 +142,15 @@ export const useChat = () => {
         .single();
 
       if (error) throw error;
-      setMessages(prev => [...prev, data]);
-      return data;
+      
+      const transformedMessage: ChatMessage = {
+        ...data,
+        message_type: data.message_type as 'text' | 'image' | 'file',
+        is_read: data.is_read || false
+      };
+      
+      setMessages(prev => [...prev, transformedMessage]);
+      return transformedMessage;
     } catch (err) {
       console.error('Error sending message:', err);
       toast.error('Failed to send message');
@@ -140,7 +170,12 @@ export const useChat = () => {
           filter: `chat_room_id=eq.${chatRoomId}`
         },
         (payload) => {
-          setMessages(prev => [...prev, payload.new as ChatMessage]);
+          const transformedMessage: ChatMessage = {
+            ...(payload.new as any),
+            message_type: (payload.new as any).message_type as 'text' | 'image' | 'file',
+            is_read: (payload.new as any).is_read || false
+          };
+          setMessages(prev => [...prev, transformedMessage]);
         }
       )
       .subscribe();

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,12 +13,18 @@ const CalendarView = () => {
   const { events, loading, createEvent } = useCalendar();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [newEvent, setNewEvent] = useState({
+  const [newEvent, setNewEvent] = useState<{
+    title: string;
+    description: string;
+    start_time: string;
+    end_time: string;
+    event_type: 'booking' | 'session' | 'reminder';
+  }>({
     title: '',
     description: '',
     start_time: '',
     end_time: '',
-    event_type: 'reminder' as const
+    event_type: 'reminder'
   });
 
   const getDaysInMonth = (date: Date) => {

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import type { Tables } from '@/integrations/supabase/types';
 
 export interface CalendarEvent {
   id: string;
@@ -36,7 +37,14 @@ export const useCalendar = () => {
         .order('start_time', { ascending: true });
 
       if (error) throw error;
-      setEvents(data || []);
+      
+      // Transform database types to our interface types
+      const transformedEvents: CalendarEvent[] = (data || []).map(event => ({
+        ...event,
+        event_type: event.event_type as 'booking' | 'session' | 'reminder'
+      }));
+      
+      setEvents(transformedEvents);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch calendar events';
       setError(errorMessage);
@@ -57,9 +65,15 @@ export const useCalendar = () => {
         .single();
 
       if (error) throw error;
-      setEvents(prev => [...prev, data]);
+      
+      const transformedEvent: CalendarEvent = {
+        ...data,
+        event_type: data.event_type as 'booking' | 'session' | 'reminder'
+      };
+      
+      setEvents(prev => [...prev, transformedEvent]);
       toast.success('Calendar event created');
-      return data;
+      return transformedEvent;
     } catch (err) {
       console.error('Error creating calendar event:', err);
       toast.error('Failed to create calendar event');
@@ -78,9 +92,15 @@ export const useCalendar = () => {
         .single();
 
       if (error) throw error;
-      setEvents(prev => prev.map(event => event.id === eventId ? data : event));
+      
+      const transformedEvent: CalendarEvent = {
+        ...data,
+        event_type: data.event_type as 'booking' | 'session' | 'reminder'
+      };
+      
+      setEvents(prev => prev.map(event => event.id === eventId ? transformedEvent : event));
       toast.success('Calendar event updated');
-      return data;
+      return transformedEvent;
     } catch (err) {
       console.error('Error updating calendar event:', err);
       toast.error('Failed to update calendar event');

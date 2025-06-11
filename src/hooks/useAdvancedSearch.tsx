@@ -40,7 +40,15 @@ export const useAdvancedSearch = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setSavedFilters(data || []);
+      
+      // Transform database types to our interface types
+      const transformedFilters: SearchFilter[] = (data || []).map(filter => ({
+        ...filter,
+        business_type: filter.business_type as 'gym' | 'spa' | 'yoga',
+        filters: filter.filters as SearchFilter['filters']
+      }));
+      
+      setSavedFilters(transformedFilters);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch saved filters';
       setError(errorMessage);
@@ -61,9 +69,16 @@ export const useAdvancedSearch = () => {
         .single();
 
       if (error) throw error;
-      setSavedFilters(prev => [data, ...prev]);
+      
+      const transformedFilter: SearchFilter = {
+        ...data,
+        business_type: data.business_type as 'gym' | 'spa' | 'yoga',
+        filters: data.filters as SearchFilter['filters']
+      };
+      
+      setSavedFilters(prev => [transformedFilter, ...prev]);
       toast.success('Search filter saved');
-      return data;
+      return transformedFilter;
     } catch (err) {
       console.error('Error saving filter:', err);
       toast.error('Failed to save filter');
@@ -82,9 +97,16 @@ export const useAdvancedSearch = () => {
         .single();
 
       if (error) throw error;
-      setSavedFilters(prev => prev.map(filter => filter.id === filterId ? data : filter));
+      
+      const transformedFilter: SearchFilter = {
+        ...data,
+        business_type: data.business_type as 'gym' | 'spa' | 'yoga',
+        filters: data.filters as SearchFilter['filters']
+      };
+      
+      setSavedFilters(prev => prev.map(filter => filter.id === filterId ? transformedFilter : filter));
       toast.success('Filter updated');
-      return data;
+      return transformedFilter;
     } catch (err) {
       console.error('Error updating filter:', err);
       toast.error('Failed to update filter');
