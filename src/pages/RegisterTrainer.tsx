@@ -1,4 +1,6 @@
+
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,10 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { MapPin, Star, Heart, Dumbbell, Waves, ArrowLeft, Upload, CheckCircle, CreditCard, Wallet, QrCode, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { useTrainerRegistration } from "@/hooks/useTrainerRegistration";
+import { useAuth } from "@/hooks/useAuth";
 
 const RegisterTrainer = () => {
-  const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { registerTrainer, loading } = useTrainerRegistration();
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,12 +27,18 @@ const RegisterTrainer = () => {
     trainerTier: "",
     experience: "",
     certifications: "",
-    specializations: [],
+    specializations: [] as string[],
     hourlyRate: "",
     location: "",
     bio: "",
     profileImage: null as File | null
   });
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
 
   const categories = [
     { value: "gym", label: "Gym Trainer", icon: Dumbbell },
@@ -47,30 +59,37 @@ const RegisterTrainer = () => {
     yoga: ["Hatha Yoga", "Vinyasa", "Ashtanga", "Yin Yoga", "Power Yoga", "Meditation"]
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simulate payment processing
-    toast({
-      title: "Registration Successful!",
-      description: "Your trainer profile has been submitted for review. You will be notified once it's approved.",
-    });
-    
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      category: "",
-      trainerTier: "",
-      experience: "",
-      certifications: "",
-      specializations: [],
-      hourlyRate: "",
-      location: "",
-      bio: "",
-      profileImage: null
-    });
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.phone || !formData.category || 
+        !formData.trainerTier || !formData.experience || !formData.hourlyRate || 
+        !formData.location || !formData.bio) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const success = await registerTrainer(formData);
+    if (success) {
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        trainerTier: "",
+        experience: "",
+        certifications: "",
+        specializations: [],
+        hourlyRate: "",
+        location: "",
+        bio: "",
+        profileImage: null
+      });
+      // Redirect to home or success page
+      navigate('/');
+    }
   };
 
   const handleSpecializationChange = (specialization: string, checked: boolean) => {
@@ -84,6 +103,11 @@ const RegisterTrainer = () => {
 
   const getSelectedTierDetails = () => {
     return trainerTiers.find(tier => tier.value === formData.trainerTier);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, profileImage: file }));
   };
 
   return (
@@ -307,7 +331,7 @@ const RegisterTrainer = () => {
                       id="profileImage"
                       type="file"
                       accept="image/*"
-                      onChange={(e) => setFormData(prev => ({ ...prev, profileImage: e.target.files?.[0] || null }))}
+                      onChange={handleFileChange}
                       className="max-w-xs mx-auto"
                     />
                   </div>
@@ -330,31 +354,6 @@ const RegisterTrainer = () => {
                   </div>
                 )}
 
-                {/* Payment Methods */}
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <CreditCard className="h-6 w-6 mr-2 text-blue-600" />
-                    Payment Methods
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                      <Wallet className="h-8 w-8 mx-auto mb-2 text-green-600" />
-                      <h5 className="font-semibold">Digital Wallet</h5>
-                      <p className="text-sm text-gray-600">PayTM, PhonePe, GPay</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                      <Building2 className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                      <h5 className="font-semibold">Bank Transfer</h5>
-                      <p className="text-sm text-gray-600">Direct bank account</p>
-                    </div>
-                    <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                      <QrCode className="h-8 w-8 mx-auto mb-2 text-purple-600" />
-                      <h5 className="font-semibold">QR Code</h5>
-                      <p className="text-sm text-gray-600">Scan & Pay</p>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="bg-emerald-50 p-6 rounded-lg">
                   <h3 className="font-bold text-lg mb-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-emerald-600 mr-2" />
@@ -373,9 +372,10 @@ const RegisterTrainer = () => {
                 <div className="text-center">
                   <Button
                     type="submit"
+                    disabled={loading}
                     className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-12 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                   >
-                    Register Now
+                    {loading ? "Registering..." : "Register Now"}
                   </Button>
                 </div>
               </form>

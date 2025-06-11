@@ -60,6 +60,78 @@ export type Database = {
         }
         Relationships: []
       }
+      business_profiles: {
+        Row: {
+          address: string
+          amenities: string[] | null
+          business_name: string
+          business_type: string
+          category: string
+          city: string
+          closing_time: string
+          created_at: string | null
+          description: string | null
+          email: string
+          id: string
+          image_urls: string[] | null
+          monthly_price: number | null
+          opening_time: string
+          phone: string
+          pin_code: string
+          session_price: number | null
+          state: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          address: string
+          amenities?: string[] | null
+          business_name: string
+          business_type: string
+          category: string
+          city: string
+          closing_time: string
+          created_at?: string | null
+          description?: string | null
+          email: string
+          id?: string
+          image_urls?: string[] | null
+          monthly_price?: number | null
+          opening_time: string
+          phone: string
+          pin_code: string
+          session_price?: number | null
+          state: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          address?: string
+          amenities?: string[] | null
+          business_name?: string
+          business_type?: string
+          category?: string
+          city?: string
+          closing_time?: string
+          created_at?: string | null
+          description?: string | null
+          email?: string
+          id?: string
+          image_urls?: string[] | null
+          monthly_price?: number | null
+          opening_time?: string
+          phone?: string
+          pin_code?: string
+          session_price?: number | null
+          state?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       gyms: {
         Row: {
           created_at: string
@@ -153,6 +225,66 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+        }
+        Relationships: []
+      }
+      trainer_profiles: {
+        Row: {
+          bio: string
+          category: string
+          certifications: string | null
+          created_at: string | null
+          email: string
+          experience: number
+          hourly_rate: number
+          id: string
+          location: string
+          name: string
+          phone: string
+          profile_image_url: string | null
+          specializations: string[] | null
+          status: string | null
+          trainer_tier: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          bio: string
+          category: string
+          certifications?: string | null
+          created_at?: string | null
+          email: string
+          experience: number
+          hourly_rate: number
+          id?: string
+          location: string
+          name: string
+          phone: string
+          profile_image_url?: string | null
+          specializations?: string[] | null
+          status?: string | null
+          trainer_tier: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          bio?: string
+          category?: string
+          certifications?: string | null
+          created_at?: string | null
+          email?: string
+          experience?: number
+          hourly_rate?: number
+          id?: string
+          location?: string
+          name?: string
+          phone?: string
+          profile_image_url?: string | null
+          specializations?: string[] | null
+          status?: string | null
+          trainer_tier?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }

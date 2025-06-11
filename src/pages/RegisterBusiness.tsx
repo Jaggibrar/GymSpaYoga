@@ -1,3 +1,6 @@
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,29 +11,44 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Upload, MapPin, Phone, Mail, Clock, Dumbbell, CreditCard, Wallet, QrCode, Building2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
+import { useAuth } from "@/hooks/useAuth";
 
 const RegisterBusiness = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { registerBusiness, loading } = useBusinessRegistration();
+  
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [businessType, setBusinessType] = useState("");
+  const [businessImages, setBusinessImages] = useState<File[]>([]);
+  
+  const [formData, setFormData] = useState({
+    businessName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    pinCode: "",
+    openingTime: "",
+    closingTime: "",
+    monthlyPrice: "",
+    sessionPrice: "",
+    description: ""
+  });
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
 
   const gymAmenities = [
     "Air Conditioning", "Parking", "Lockers", "Shower Facilities", "Personal Training",
     "Group Classes", "Swimming Pool", "Sauna", "Steam Room", "Nutrition Counseling",
     "24/7 Access", "WiFi", "Cafe/Juice Bar", "Towel Service", "Equipment Rental"
-  ];
-
-  const spaServices = [
-    "Swedish Massage", "Deep Tissue Massage", "Hot Stone Massage", "Aromatherapy",
-    "Facial Treatments", "Body Wraps", "Manicure", "Pedicure", "Sauna", "Steam Bath",
-    "Jacuzzi", "Couples Treatment", "Ayurvedic Treatments", "Thai Massage"
-  ];
-
-  const yogaClasses = [
-    "Hatha Yoga", "Vinyasa", "Ashtanga", "Iyengar", "Hot Yoga", "Yin Yoga",
-    "Restorative Yoga", "Prenatal Yoga", "Kids Yoga", "Meditation Classes",
-    "Breathing Workshops", "Philosophy Classes", "Teacher Training", "Private Sessions"
   ];
 
   const toggleAmenity = (amenity: string) => {
@@ -67,6 +85,57 @@ const RegisterBusiness = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setBusinessImages(files);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.businessName || !businessType || !selectedCategory || 
+        !formData.email || !formData.phone || !formData.address || 
+        !formData.city || !formData.state || !formData.pinCode ||
+        !formData.openingTime || !formData.closingTime) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
+    const businessFormData = {
+      ...formData,
+      businessType,
+      category: selectedCategory,
+      amenities: selectedAmenities,
+      images: businessImages
+    };
+
+    const success = await registerBusiness(businessFormData);
+    if (success) {
+      // Reset form
+      setFormData({
+        businessName: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        state: "",
+        pinCode: "",
+        openingTime: "",
+        closingTime: "",
+        monthlyPrice: "",
+        sessionPrice: "",
+        description: ""
+      });
+      setSelectedAmenities([]);
+      setSelectedCategory("");
+      setBusinessType("");
+      setBusinessImages([]);
+      // Redirect to home or success page
+      navigate('/');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       {/* Header */}
@@ -81,9 +150,6 @@ const RegisterBusiness = () => {
                 GymSpaYoga
               </h1>
             </Link>
-            <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm sm:text-base">
-              Sign In
-            </Button>
           </div>
         </div>
       </header>
@@ -126,235 +192,259 @@ const RegisterBusiness = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 sm:space-y-8">
-              {/* Business Type */}
-              <div className="space-y-2">
-                <Label htmlFor="businessType" className="text-base sm:text-lg font-semibold">Business Type *</Label>
-                <Select onValueChange={setBusinessType}>
-                  <SelectTrigger className="h-10 sm:h-12">
-                    <SelectValue placeholder="Select your business type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="gym">Gym / Fitness Center</SelectItem>
-                    <SelectItem value="spa">Spa / Wellness Center</SelectItem>
-                    <SelectItem value="yoga">Yoga Studio</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Business Type */}
+                <div className="space-y-2">
+                  <Label htmlFor="businessType" className="text-base sm:text-lg font-semibold">Business Type *</Label>
+                  <Select onValueChange={setBusinessType}>
+                    <SelectTrigger className="h-10 sm:h-12">
+                      <SelectValue placeholder="Select your business type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="gym">Gym / Fitness Center</SelectItem>
+                      <SelectItem value="spa">Spa / Wellness Center</SelectItem>
+                      <SelectItem value="yoga">Yoga Studio</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Category */}
-              <div className="space-y-2">
-                <Label htmlFor="category" className="text-base sm:text-lg font-semibold">Destination Category *</Label>
-                <Select onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="h-10 sm:h-12">
-                    <SelectValue placeholder="Select destination category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="luxury">Luxury Destination</SelectItem>
-                    <SelectItem value="premium">Premium Destination</SelectItem>
-                    <SelectItem value="budget">Budget Friendly Destination</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Category */}
+                <div className="space-y-2">
+                  <Label htmlFor="category" className="text-base sm:text-lg font-semibold">Destination Category *</Label>
+                  <Select onValueChange={setSelectedCategory}>
+                    <SelectTrigger className="h-10 sm:h-12">
+                      <SelectValue placeholder="Select destination category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="luxury">Luxury Destination</SelectItem>
+                      <SelectItem value="premium">Premium Destination</SelectItem>
+                      <SelectItem value="budget">Budget Friendly Destination</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Basic Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                {/* Basic Information */}
                 <div className="space-y-2">
                   <Label htmlFor="businessName" className="text-base sm:text-lg font-semibold">Business Name *</Label>
-                  <Input id="businessName" placeholder="Enter your business name" className="h-10 sm:h-12" />
-                </div>
-              </div>
-
-              {/* Contact Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Contact Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="flex items-center space-x-2">
-                      <Mail className="h-4 w-4" />
-                      <span>Email Address *</span>
-                    </Label>
-                    <Input id="email" type="email" placeholder="business@example.com" className="h-10 sm:h-12" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="flex items-center space-x-2">
-                      <Phone className="h-4 w-4" />
-                      <span>Phone Number *</span>
-                    </Label>
-                    <Input id="phone" placeholder="+91 98765 43210" className="h-10 sm:h-12" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Address */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center space-x-2">
-                  <MapPin className="h-5 w-5" />
-                  <span>Business Address</span>
-                </h3>
-                <div className="space-y-4">
-                  <Textarea 
-                    placeholder="Complete business address" 
-                    className="min-h-[80px]"
+                  <Input 
+                    id="businessName" 
+                    placeholder="Enter your business name" 
+                    className="h-10 sm:h-12"
+                    value={formData.businessName}
+                    onChange={(e) => setFormData(prev => ({ ...prev, businessName: e.target.value }))}
+                    required
                   />
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Input placeholder="City" className="h-10 sm:h-12" />
-                    <Input placeholder="State" className="h-10 sm:h-12" />
-                    <Input placeholder="PIN Code" className="h-10 sm:h-12" />
-                  </div>
                 </div>
-              </div>
 
-              {/* Operating Hours */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center space-x-2">
-                  <Clock className="h-5 w-5" />
-                  <span>Operating Hours</span>
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Opening Time</Label>
-                    <Input type="time" className="h-10 sm:h-12" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Closing Time</Label>
-                    <Input type="time" className="h-10 sm:h-12" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Pricing */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Pricing Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="monthlyPrice">Monthly Membership (₹)</Label>
-                    <Input id="monthlyPrice" placeholder="2500" className="h-10 sm:h-12" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="sessionPrice">Per Session Price (₹)</Label>
-                    <Input id="sessionPrice" placeholder="500" className="h-10 sm:h-12" />
-                  </div>
-                </div>
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-base sm:text-lg font-semibold">Business Description</Label>
-                <Textarea 
-                  id="description"
-                  placeholder="Describe your business, facilities, and what makes you special..."
-                  className="min-h-[120px]"
-                />
-              </div>
-
-              {/* Amenities/Services */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Amenities & Services</h3>
-                <p className="text-gray-600">Select all amenities and services you offer:</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {gymAmenities.map((amenity) => (
-                    <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={amenity}
-                        checked={selectedAmenities.includes(amenity)}
-                        onCheckedChange={() => toggleAmenity(amenity)}
-                      />
-                      <Label htmlFor={amenity} className="text-sm cursor-pointer">
-                        {amenity}
+                {/* Contact Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Contact Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="flex items-center space-x-2">
+                        <Mail className="h-4 w-4" />
+                        <span>Email Address *</span>
                       </Label>
+                      <Input 
+                        id="email" 
+                        type="email" 
+                        placeholder="business@example.com" 
+                        className="h-10 sm:h-12"
+                        value={formData.email}
+                        onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        required
+                      />
                     </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Images Upload */}
-              <div className="space-y-4">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Business Images</h3>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-emerald-500 transition-colors">
-                  <Upload className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-base sm:text-lg text-gray-600 mb-2">Upload business photos</p>
-                  <p className="text-sm text-gray-500">Drag and drop files here or click to browse</p>
-                  <Button variant="outline" className="mt-4">
-                    Choose Files
-                  </Button>
-                </div>
-                <p className="text-sm text-gray-500">
-                  Upload at least 5 high-quality images of your facility (JPG, PNG, max 5MB each)
-                </p>
-              </div>
-
-              {/* Pricing Display */}
-              {selectedCategory && (
-                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-xl border border-emerald-200">
-                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                    <Building2 className="h-6 w-6 mr-2 text-emerald-600" />
-                    Registration Pricing
-                  </h4>
-                  <div className={`${getCategoryBadgeColor(selectedCategory)} text-white p-4 rounded-lg`}>
-                    <div className="text-center">
-                      <div className="text-2xl font-bold">{getPriceByCategory(selectedCategory)}</div>
-                      <div className="text-sm opacity-90">One-time registration fee</div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="flex items-center space-x-2">
+                        <Phone className="h-4 w-4" />
+                        <span>Phone Number *</span>
+                      </Label>
+                      <Input 
+                        id="phone" 
+                        placeholder="+91 98765 43210" 
+                        className="h-10 sm:h-12"
+                        value={formData.phone}
+                        onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                        required
+                      />
                     </div>
                   </div>
-                  <div className="mt-4 text-sm text-gray-600">
-                    <p className="font-semibold mb-2">What's included:</p>
-                    <ul className="space-y-1">
-                      <li>• Lifetime business listing on our platform</li>
-                      <li>• Featured placement in search results</li>
-                      <li>• Customer booking management system</li>
-                      <li>• Analytics dashboard</li>
-                      <li>• Mobile app presence</li>
-                    </ul>
-                  </div>
-                </div>
-              )}
-
-              {/* Payment Methods */}
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-xl border border-blue-200">
-                <h4 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
-                  <CreditCard className="h-6 w-6 mr-2 text-blue-600" />
-                  Payment Methods
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                    <Wallet className="h-8 w-8 mx-auto mb-2 text-green-600" />
-                    <h5 className="font-semibold">Digital Wallet</h5>
-                    <p className="text-sm text-gray-600">PayTM, PhonePe, GPay</p>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                    <Building2 className="h-8 w-8 mx-auto mb-2 text-blue-600" />
-                    <h5 className="font-semibold">Bank Transfer</h5>
-                    <p className="text-sm text-gray-600">Direct bank account</p>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border border-gray-200 text-center">
-                    <QrCode className="h-8 w-8 mx-auto mb-2 text-purple-600" />
-                    <h5 className="font-semibold">QR Code</h5>
-                    <p className="text-sm text-gray-600">Scan & Pay</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Terms and Registration */}
-              <div className="space-y-6 pt-6 border-t">
-                <div className="flex items-start space-x-3">
-                  <Checkbox id="terms" />
-                  <Label htmlFor="terms" className="text-sm leading-relaxed">
-                    I agree to the Terms & Conditions and Privacy Policy. I understand that the registration fee is non-refundable and provides lifetime listing on the platform.
-                  </Label>
                 </div>
 
-                <div className="text-center">
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 w-full sm:w-auto"
-                  >
-                    Register Now
-                  </Button>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Secure payment • SSL encrypted
+                {/* Address */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                    <MapPin className="h-5 w-5" />
+                    <span>Business Address</span>
+                  </h3>
+                  <div className="space-y-4">
+                    <Textarea 
+                      placeholder="Complete business address"
+                      className="min-h-[80px]"
+                      value={formData.address}
+                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                      required
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <Input 
+                        placeholder="City" 
+                        className="h-10 sm:h-12"
+                        value={formData.city}
+                        onChange={(e) => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                        required
+                      />
+                      <Input 
+                        placeholder="State" 
+                        className="h-10 sm:h-12"
+                        value={formData.state}
+                        onChange={(e) => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                        required
+                      />
+                      <Input 
+                        placeholder="PIN Code" 
+                        className="h-10 sm:h-12"
+                        value={formData.pinCode}
+                        onChange={(e) => setFormData(prev => ({ ...prev, pinCode: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Operating Hours */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800 flex items-center space-x-2">
+                    <Clock className="h-5 w-5" />
+                    <span>Operating Hours</span>
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Opening Time</Label>
+                      <Input 
+                        type="time" 
+                        className="h-10 sm:h-12"
+                        value={formData.openingTime}
+                        onChange={(e) => setFormData(prev => ({ ...prev, openingTime: e.target.value }))}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Closing Time</Label>
+                      <Input 
+                        type="time" 
+                        className="h-10 sm:h-12"
+                        value={formData.closingTime}
+                        onChange={(e) => setFormData(prev => ({ ...prev, closingTime: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Pricing */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Pricing Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="monthlyPrice">Monthly Membership (₹)</Label>
+                      <Input 
+                        id="monthlyPrice" 
+                        placeholder="2500" 
+                        className="h-10 sm:h-12"
+                        value={formData.monthlyPrice}
+                        onChange={(e) => setFormData(prev => ({ ...prev, monthlyPrice: e.target.value }))}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="sessionPrice">Per Session Price (₹)</Label>
+                      <Input 
+                        id="sessionPrice" 
+                        placeholder="500" 
+                        className="h-10 sm:h-12"
+                        value={formData.sessionPrice}
+                        onChange={(e) => setFormData(prev => ({ ...prev, sessionPrice: e.target.value }))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-base sm:text-lg font-semibold">Business Description</Label>
+                  <Textarea 
+                    id="description"
+                    placeholder="Describe your business, facilities, and what makes you special..."
+                    className="min-h-[120px]"
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  />
+                </div>
+
+                {/* Amenities/Services */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Amenities & Services</h3>
+                  <p className="text-gray-600">Select all amenities and services you offer:</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {gymAmenities.map((amenity) => (
+                      <div key={amenity} className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={amenity}
+                          checked={selectedAmenities.includes(amenity)}
+                          onCheckedChange={() => toggleAmenity(amenity)}
+                        />
+                        <Label htmlFor={amenity} className="text-sm cursor-pointer">
+                          {amenity}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Images Upload */}
+                <div className="space-y-4">
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-800">Business Images</h3>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 sm:p-8 text-center hover:border-emerald-500 transition-colors">
+                    <Upload className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-base sm:text-lg text-gray-600 mb-2">Upload business photos</p>
+                    <p className="text-sm text-gray-500">Drag and drop files here or click to browse</p>
+                    <Input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="mt-4"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500">
+                    Upload at least 5 high-quality images of your facility (JPG, PNG, max 5MB each)
                   </p>
                 </div>
-              </div>
+
+                {/* Terms and Registration */}
+                <div className="space-y-6 pt-6 border-t">
+                  <div className="flex items-start space-x-3">
+                    <Checkbox id="terms" />
+                    <Label htmlFor="terms" className="text-sm leading-relaxed">
+                      I agree to the Terms & Conditions and Privacy Policy. I understand that the registration fee is non-refundable and provides lifetime listing on the platform.
+                    </Label>
+                  </div>
+
+                  <div className="text-center">
+                    <Button 
+                      type="submit"
+                      disabled={loading}
+                      size="lg" 
+                      className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 w-full sm:w-auto"
+                    >
+                      {loading ? "Registering..." : "Register Now"}
+                    </Button>
+                    <p className="text-sm text-gray-500 mt-4">
+                      Secure payment • SSL encrypted
+                    </p>
+                  </div>
+                </div>
+              </form>
             </CardContent>
           </Card>
         </div>
