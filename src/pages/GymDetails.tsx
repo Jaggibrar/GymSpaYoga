@@ -1,49 +1,49 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Clock, Phone, Dumbbell, Users, Wifi, Car, Shield, Camera, ArrowLeft } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Dumbbell, Users, ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import BookingModal from "@/components/BookingModal";
+import { useGyms } from "@/hooks/useGyms";
 
 const GymDetails = () => {
   const { id } = useParams();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
+  const { gyms, loading } = useGyms();
+  const [gym, setGym] = useState<any>(null);
 
-  // Mock data - in real app this would come from API
-  const gymData = {
-    1: {
-      id: 1,
-      name: "Elite Fitness Hub",
-      category: "Luxury",
-      rating: 4.8,
-      reviews: 128,
-      location: "Bandra West, Mumbai",
-      address: "123 Linking Road, Bandra West, Mumbai 400050",
-      price: "₹2,500/month",
-      images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-      amenities: ["AC", "Parking", "Locker", "Personal Trainer", "Sauna", "Swimming Pool", "Steam Room", "Nutrition Counseling"],
-      hours: "5:00 AM - 11:00 PM",
-      phone: "+91 98765 43210",
-      email: "info@elitefitnesshub.com",
-      description: "State-of-the-art fitness facility with premium equipment and expert trainers. Our luxury gym offers a complete wellness experience with modern amenities and personalized training programs.",
-      equipment: ["Cardio Machines", "Free Weights", "Functional Training Area", "Cross Training", "Yoga Studio"],
-      trainers: 15,
-      membershipPlans: [
-        { name: "Day Pass", price: "₹500", duration: "1 Day", savings: null },
-        { name: "Monthly", price: "₹2,500", duration: "1 Month", savings: null },
-        { name: "Quarterly", price: "₹6,500", duration: "3 Months", savings: "₹1,000" },
-        { name: "Annual", price: "₹24,000", duration: "12 Months", savings: "₹6,000" }
-      ]
+  useEffect(() => {
+    if (gyms && id) {
+      const foundGym = gyms.find(g => g.id === id);
+      setGym(foundGym);
     }
-  };
+  }, [gyms, id]);
 
-  const gymId = Number(id) || 1;
-  const gym = gymData[gymId as keyof typeof gymData] || gymData[1];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-red-500"></div>
+      </div>
+    );
+  }
+
+  if (!gym) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Gym not found</h2>
+          <Link to="/gyms">
+            <Button>Back to Gyms</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const handleCallNow = () => {
     window.open(`tel:${gym.phone}`, '_self');
@@ -54,6 +54,34 @@ const GymDetails = () => {
     setSelectedPlan(planName);
     setIsBookingOpen(true);
   };
+
+  // Create membership plans based on gym pricing
+  const membershipPlans = [
+    { 
+      name: "Day Pass", 
+      price: gym.session_price ? `₹${gym.session_price}` : "₹500", 
+      duration: "1 Day", 
+      savings: null 
+    },
+    { 
+      name: "Monthly", 
+      price: gym.monthly_price ? `₹${gym.monthly_price}` : "₹2,500", 
+      duration: "1 Month", 
+      savings: null 
+    },
+    { 
+      name: "Quarterly", 
+      price: gym.monthly_price ? `₹${gym.monthly_price * 3 * 0.9}` : "₹6,500", 
+      duration: "3 Months", 
+      savings: gym.monthly_price ? `₹${gym.monthly_price * 3 * 0.1}` : "₹1,000"
+    },
+    { 
+      name: "Annual", 
+      price: gym.monthly_price ? `₹${gym.monthly_price * 12 * 0.8}` : "₹24,000", 
+      duration: "12 Months", 
+      savings: gym.monthly_price ? `₹${gym.monthly_price * 12 * 0.2}` : "₹6,000"
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
@@ -82,7 +110,11 @@ const GymDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <div className="lg:col-span-2">
             <div className="relative h-64 md:h-96 rounded-3xl overflow-hidden mb-6 shadow-2xl transform hover:scale-105 transition-all duration-500">
-              <img src={gym.images[0]} alt={gym.name} className="w-full h-full object-cover" />
+              <img 
+                src={gym.image_urls[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"} 
+                alt={gym.business_name} 
+                className="w-full h-full object-cover" 
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               <div className="absolute top-6 right-6">
                 <Badge className="bg-yellow-500 hover:bg-yellow-600 shadow-lg px-4 py-2 text-lg">
@@ -91,28 +123,32 @@ const GymDetails = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
-              {gym.images.slice(1).map((image, index) => (
-                <div key={index} className="relative h-32 md:h-48 rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <img src={image} alt={`${gym.name} ${index + 2}`} className="w-full h-full object-cover" />
-                </div>
-              ))}
-            </div>
+            {gym.image_urls.length > 1 && (
+              <div className="grid grid-cols-2 gap-4">
+                {gym.image_urls.slice(1, 3).map((image: string, index: number) => (
+                  <div key={index} className="relative h-32 md:h-48 rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-300">
+                    <img src={image} alt={`${gym.business_name} ${index + 2}`} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-6">
             <Card className="p-4 md:p-6 shadow-2xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{gym.name}</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{gym.business_name}</h1>
                   <div className="flex items-center space-x-2 mb-2">
                     <Star className="h-5 md:h-6 w-5 md:w-6 fill-yellow-400 text-yellow-400" />
-                    <span className="text-lg md:text-xl font-semibold">{gym.rating}</span>
-                    <span className="text-gray-500 text-sm md:text-base">({gym.reviews} reviews)</span>
+                    <span className="text-lg md:text-xl font-semibold">4.8</span>
+                    <span className="text-gray-500 text-sm md:text-base">(128 reviews)</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl md:text-3xl font-bold text-red-600">{gym.price}</p>
+                  <p className="text-xl md:text-3xl font-bold text-red-600">
+                    {gym.monthly_price ? `₹${gym.monthly_price}/month` : `₹${gym.session_price}/session`}
+                  </p>
                 </div>
               </div>
 
@@ -122,21 +158,17 @@ const GymDetails = () => {
                 <div className="flex items-start space-x-3">
                   <MapPin className="h-5 md:h-6 w-5 md:w-6 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="font-medium text-base md:text-lg">{gym.location}</p>
+                    <p className="font-medium text-base md:text-lg">{gym.city}, {gym.state}</p>
                     <p className="text-gray-600 text-sm md:text-base">{gym.address}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Clock className="h-5 md:h-6 w-5 md:w-6 text-gray-400" />
-                  <span className="text-base md:text-lg">{gym.hours}</span>
+                  <span className="text-base md:text-lg">{gym.opening_time} - {gym.closing_time}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="h-5 md:h-6 w-5 md:w-6 text-gray-400" />
                   <span className="text-base md:text-lg">{gym.phone}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Users className="h-5 md:h-6 w-5 md:w-6 text-gray-400" />
-                  <span className="text-base md:text-lg">{gym.trainers} Expert Trainers</span>
                 </div>
               </div>
 
@@ -166,34 +198,25 @@ const GymDetails = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* About */}
             <Card className="p-6 md:p-8 shadow-xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">About {gym.name}</h2>
-              <p className="text-gray-600 leading-relaxed text-base md:text-lg">{gym.description}</p>
-            </Card>
-
-            {/* Equipment */}
-            <Card className="p-6 md:p-8 shadow-xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Equipment & Facilities</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {gym.equipment.map((item) => (
-                  <div key={item} className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <span className="text-base md:text-lg">{item}</span>
-                  </div>
-                ))}
-              </div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">About {gym.business_name}</h2>
+              <p className="text-gray-600 leading-relaxed text-base md:text-lg">
+                {gym.description || "State-of-the-art fitness facility with premium equipment and expert trainers. Our luxury gym offers a complete wellness experience with modern amenities and personalized training programs."}
+              </p>
             </Card>
 
             {/* Amenities */}
-            <Card className="p-6 md:p-8 shadow-xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Amenities</h2>
-              <div className="flex flex-wrap gap-3">
-                {gym.amenities.map((amenity) => (
-                  <Badge key={amenity} variant="outline" className="px-3 md:px-4 py-2 text-sm md:text-lg border-red-500 text-red-600 hover:bg-red-50">
-                    {amenity}
-                  </Badge>
-                ))}
-              </div>
-            </Card>
+            {gym.amenities && gym.amenities.length > 0 && (
+              <Card className="p-6 md:p-8 shadow-xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Amenities</h2>
+                <div className="flex flex-wrap gap-3">
+                  {gym.amenities.map((amenity: string) => (
+                    <Badge key={amenity} variant="outline" className="px-3 md:px-4 py-2 text-sm md:text-lg border-red-500 text-red-600 hover:bg-red-50">
+                      {amenity}
+                    </Badge>
+                  ))}
+                </div>
+              </Card>
+            )}
           </div>
 
           {/* Membership Plans */}
@@ -201,7 +224,7 @@ const GymDetails = () => {
             <Card className="p-6 md:p-8 shadow-xl bg-white/90 backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
               <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">Membership Plans</h2>
               <div className="space-y-6">
-                {gym.membershipPlans.map((plan) => (
+                {membershipPlans.map((plan) => (
                   <div key={plan.name} className="border-2 rounded-2xl p-4 md:p-6 hover:border-red-500 transition-all duration-300 hover:shadow-lg">
                     <div className="flex justify-between items-start mb-3">
                       <h3 className="font-bold text-lg md:text-xl">{plan.name}</h3>
@@ -230,9 +253,9 @@ const GymDetails = () => {
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
-        businessName={gym.name}
+        businessName={gym.business_name}
         businessType={`Gym ${selectedPlan}`}
-        price={gym.membershipPlans.find(p => p.name === selectedPlan)?.price || gym.price}
+        price={membershipPlans.find(p => p.name === selectedPlan)?.price || (gym.monthly_price ? `₹${gym.monthly_price}` : `₹${gym.session_price}`)}
       />
     </div>
   );

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +12,9 @@ import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
 import SEOHead from "@/components/SEOHead";
 import AppFooter from "@/components/AppFooter";
+import { useGyms } from "@/hooks/useGyms";
+import { useSpas } from "@/hooks/useSpas";
+import { useYogaStudios } from "@/hooks/useYogaStudios";
 
 const Index = () => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -20,6 +22,11 @@ const Index = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [loadingCategory, setLoadingCategory] = useState<'gym' | 'spa' | 'yoga' | null>(null);
+
+  // Fetch real data from backend
+  const { gyms } = useGyms();
+  const { spas } = useSpas();
+  const { yogaStudios } = useYogaStudios();
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -37,37 +44,38 @@ const Index = () => {
     }, 2000);
   };
 
+  // Use real data for featured listings - take first 3 from each category
   const featuredListings = [
-    {
-      id: 101,
+    ...(gyms.slice(0, 1).map(gym => ({
+      id: gym.id,
       category: "Gym",
-      name: "Elite Fitness Hub",
-      rating: 4.8,
-      location: "Bandra West, Mumbai",
-      price: "₹2,500/month",
-      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      link: "/gym/1"
-    },
-    {
-      id: 102,
+      name: gym.business_name,
+      rating: 4.8, // This should come from reviews table when implemented
+      location: `${gym.city}, ${gym.state}`,
+      price: gym.monthly_price ? `₹${gym.monthly_price}/month` : `₹${gym.session_price}/session`,
+      image: gym.image_urls[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+      link: `/gym/${gym.id}`
+    }))),
+    ...(spas.slice(0, 1).map(spa => ({
+      id: spa.id,
       category: "Spa",
-      name: "Serenity Wellness Spa",
+      name: spa.business_name,
       rating: 4.9,
-      location: "Juhu, Mumbai",
-      price: "₹4,500/session",
-      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-      link: "/spa/1"
-    },
-    {
-      id: 103,
+      location: `${spa.city}, ${spa.state}`,
+      price: spa.session_price ? `₹${spa.session_price}/session` : `₹${spa.monthly_price}/month`,
+      image: spa.image_urls[0] || "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      link: `/spa/${spa.id}`
+    }))),
+    ...(yogaStudios.slice(0, 1).map(studio => ({
+      id: studio.id,
       category: "Yoga",
-      name: "Mindful Movement Studio",
-      rating: 4.9,
-      location: "Bandra West, Mumbai",
-      price: "₹2,000/month",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-      link: "/yoga/1"
-    }
+      name: studio.business_name,
+      rating: 4.6,
+      location: `${studio.city}, ${studio.state}`,
+      price: studio.monthly_price ? `₹${studio.monthly_price}/month` : `₹${studio.session_price}/session`,
+      image: studio.image_urls[0] || "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+      link: `/yoga/${studio.id}`
+    })))
   ];
 
   const testimonials = [
@@ -110,7 +118,7 @@ const Index = () => {
       "priceCurrency": "INR",
       "lowPrice": "1000",
       "highPrice": "5000",
-      "offerCount": "500+"
+      "offerCount": `${gyms.length + spas.length + yogaStudios.length}+`
     },
     "aggregateRating": {
       "@type": "AggregateRating",
@@ -168,7 +176,7 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
-                    Popular
+                    {gyms.length} Available
                   </Badge>
                 </div>
                 <CardHeader>
@@ -214,7 +222,7 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 right-4 bg-purple-500 hover:bg-purple-600">
-                    Luxury
+                    {spas.length} Available
                   </Badge>
                 </div>
                 <CardHeader>
@@ -260,7 +268,7 @@ const Index = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 right-4 bg-green-500 hover:bg-green-600">
-                    Trending
+                    {yogaStudios.length} Available
                   </Badge>
                 </div>
                 <CardHeader>
@@ -343,66 +351,68 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Featured Listings */}
-        <section className="py-12 md:py-16 px-4">
-          <div className="container mx-auto">
-            <div className="text-center mb-10 md:mb-14">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 md:mb-5">
-                Featured Listings
-              </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Explore some of our top-rated and most popular fitness and wellness destinations.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-              {featuredListings.map((listing) => (
-                <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
-                  <div className="relative overflow-hidden">
-                    <img 
-                      src={listing.image} 
-                      alt={listing.name}
-                      className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
-                      {listing.category}
-                    </Badge>
-                  </div>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-2xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
-                          {listing.name}
-                        </CardTitle>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                        <span className="text-lg font-semibold text-gray-800">{listing.rating}</span>
-                      </div>
+        {/* Featured Listings - Show real data when available */}
+        {featuredListings.length > 0 && (
+          <section className="py-12 md:py-16 px-4">
+            <div className="container mx-auto">
+              <div className="text-center mb-10 md:mb-14">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 md:mb-5">
+                  Featured Listings
+                </h2>
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                  Explore some of our top-rated and most popular fitness and wellness destinations.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+                {featuredListings.map((listing) => (
+                  <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
+                    <div className="relative overflow-hidden">
+                      <img 
+                        src={listing.image} 
+                        alt={listing.name}
+                        className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                      <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
+                        {listing.category}
+                      </Badge>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 mb-6">
-                      <div className="flex items-center text-gray-600">
-                        <MapPin className="h-5 w-5 mr-3 text-emerald-600" />
-                        <span>{listing.location}</span>
+                    <CardHeader>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-2xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                            {listing.name}
+                          </CardTitle>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                          <span className="text-lg font-semibold text-gray-800">{listing.rating}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center text-emerald-600 font-bold text-xl">
-                        <span>{listing.price}</span>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center text-gray-600">
+                          <MapPin className="h-5 w-5 mr-3 text-emerald-600" />
+                          <span>{listing.location}</span>
+                        </div>
+                        <div className="flex items-center text-emerald-600 font-bold text-xl">
+                          <span>{listing.price}</span>
+                        </div>
                       </div>
-                    </div>
-                    <Link to={listing.link}>
-                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-                        View Details
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+                      <Link to={listing.link}>
+                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                          View Details
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* Trainers Section */}
         <TrainersSection />
