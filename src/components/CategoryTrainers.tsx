@@ -6,7 +6,7 @@ import { MapPin, Star, Phone, Mail, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface CategoryTrainersProps {
-  category: "gym" | "spa" | "yoga";
+  category: "gym" | "spa" | "yoga" | "trainer";
 }
 
 const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
@@ -89,6 +89,32 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
       specializations: ["Swedish Massage", "Reflexology", "Facial"],
       image: "/placeholder.svg",
       bio: "Licensed therapist specializing in relaxation and wellness treatments for mind and body."
+    },
+    {
+      id: 7,
+      name: "Arjun Kumar",
+      category: "trainer",
+      rating: 4.9,
+      reviews: 142,
+      experience: 7,
+      hourlyRate: 1600,
+      location: "Chennai",
+      specializations: ["Personal Training", "Nutrition", "Weight Loss"],
+      image: "/placeholder.svg",
+      bio: "Certified personal trainer focused on holistic fitness and nutrition guidance."
+    },
+    {
+      id: 8,
+      name: "Neha Shah",
+      category: "trainer",
+      rating: 4.8,
+      reviews: 98,
+      experience: 5,
+      hourlyRate: 1400,
+      location: "Ahmedabad",
+      specializations: ["HIIT", "Cardio", "Strength Training"],
+      image: "/placeholder.svg",
+      bio: "Dynamic trainer specializing in high-intensity workouts and cardiovascular fitness."
     }
   ];
 
@@ -99,6 +125,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
       case "gym": return "Expert Gym Trainers";
       case "spa": return "Professional Spa Therapists";
       case "yoga": return "Certified Yoga Instructors";
+      case "trainer": return "Personal Trainers";
       default: return "Expert Trainers";
     }
   };
@@ -108,6 +135,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
       case "gym": return "Get personalized fitness training from certified gym professionals";
       case "spa": return "Experience healing and relaxation with our expert therapists";
       case "yoga": return "Find your inner peace with experienced yoga instructors";
+      case "trainer": return "Achieve your fitness goals with dedicated personal trainers";
       default: return "Connect with professional trainers";
     }
   };
