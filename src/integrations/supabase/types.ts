@@ -11,16 +11,52 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          booking_date: string | null
+          booking_time: string | null
+          business_id: string | null
+          business_type: string | null
           created_at: string
+          duration_minutes: number | null
           id: number
+          notes: string | null
+          payment_status: string | null
+          status: string | null
+          total_amount: number | null
+          trainer_id: string | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
+          booking_date?: string | null
+          booking_time?: string | null
+          business_id?: string | null
+          business_type?: string | null
           created_at?: string
+          duration_minutes?: number | null
           id?: number
+          notes?: string | null
+          payment_status?: string | null
+          status?: string | null
+          total_amount?: number | null
+          trainer_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
+          booking_date?: string | null
+          booking_time?: string | null
+          business_id?: string | null
+          business_type?: string | null
           created_at?: string
+          duration_minutes?: number | null
           id?: number
+          notes?: string | null
+          payment_status?: string | null
+          status?: string | null
+          total_amount?: number | null
+          trainer_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -71,16 +107,37 @@ export type Database = {
       }
       reviews: {
         Row: {
+          business_id: string | null
+          business_type: string | null
+          comment: string | null
           created_at: string
           id: number
+          rating: number | null
+          trainer_id: string | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
+          business_id?: string | null
+          business_type?: string | null
+          comment?: string | null
           created_at?: string
           id?: number
+          rating?: number | null
+          trainer_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
+          business_id?: string | null
+          business_type?: string | null
+          comment?: string | null
           created_at?: string
           id?: number
+          rating?: number | null
+          trainer_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -2,61 +2,59 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-export interface Gym {
+export interface Trainer {
   id: string;
+  user_id: string;
   name: string;
-  description: string | null;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
+  bio: string | null;
+  specializations: string[];
+  certifications: string[];
+  experience_years: number;
+  hourly_rate: number;
+  rating: number;
+  image_url: string | null;
   phone: string | null;
   email: string | null;
-  website: string | null;
-  image_url: string | null;
-  category: 'luxury' | 'premium' | 'budget';
-  price_per_month: number;
-  rating: number;
-  amenities: string[];
-  opening_hours: any;
+  location: string | null;
+  availability: any;
   is_verified: boolean;
   is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export const useGyms = () => {
-  const [gyms, setGyms] = useState<Gym[]>([]);
+export const useTrainers = () => {
+  const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchGyms = async () => {
+    const fetchTrainers = async () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('gyms')
+          .from('trainers')
           .select('*')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
         if (error) {
           setError(error.message);
-          console.error('Error fetching gyms:', error);
+          console.error('Error fetching trainers:', error);
           return;
         }
 
-        setGyms(data || []);
+        setTrainers(data || []);
       } catch (err) {
-        setError('Failed to fetch gyms');
-        console.error('Error fetching gyms:', err);
+        setError('Failed to fetch trainers');
+        console.error('Error fetching trainers:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchGyms();
+    fetchTrainers();
   }, []);
 
-  return { gyms, loading, error };
+  return { trainers, loading, error };
 };

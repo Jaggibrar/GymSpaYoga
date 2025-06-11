@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
-export interface Gym {
+export interface YogaStudio {
   id: string;
   name: string;
   description: string | null;
@@ -15,8 +15,9 @@ export interface Gym {
   website: string | null;
   image_url: string | null;
   category: 'luxury' | 'premium' | 'budget';
-  price_per_month: number;
+  price_per_session: number;
   rating: number;
+  yoga_styles: string[];
   amenities: string[];
   opening_hours: any;
   is_verified: boolean;
@@ -25,38 +26,38 @@ export interface Gym {
   updated_at: string;
 }
 
-export const useGyms = () => {
-  const [gyms, setGyms] = useState<Gym[]>([]);
+export const useYogaStudios = () => {
+  const [yogaStudios, setYogaStudios] = useState<YogaStudio[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchGyms = async () => {
+    const fetchYogaStudios = async () => {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('gyms')
+          .from('yoga_studios')
           .select('*')
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
         if (error) {
           setError(error.message);
-          console.error('Error fetching gyms:', error);
+          console.error('Error fetching yoga studios:', error);
           return;
         }
 
-        setGyms(data || []);
+        setYogaStudios(data || []);
       } catch (err) {
-        setError('Failed to fetch gyms');
-        console.error('Error fetching gyms:', err);
+        setError('Failed to fetch yoga studios');
+        console.error('Error fetching yoga studios:', err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchGyms();
+    fetchYogaStudios();
   }, []);
 
-  return { gyms, loading, error };
+  return { yogaStudios, loading, error };
 };
