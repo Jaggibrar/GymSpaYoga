@@ -14,17 +14,23 @@ const PageHero = ({ title, subtitle, description, backgroundImage }: PageHeroPro
         alt={`${title} background`}
         className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black/40"></div>
+      <div className="absolute inset-0 bg-black/50"></div>
       <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-10">
         <div className="text-center mb-8 md:mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2 md:mb-4 leading-tight">
-            {title}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 md:mb-4 leading-tight drop-shadow-2xl">
+            <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent animate-pulse">
+              {title}
+            </span>
           </h1>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-emerald-400 mb-4 md:mb-6">
-            {subtitle}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 md:mb-6 drop-shadow-2xl">
+            <span className="bg-gradient-to-r from-emerald-300 via-cyan-300 to-emerald-300 bg-clip-text text-transparent">
+              {subtitle}
+            </span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            {description}
+          <p className="text-base sm:text-lg md:text-xl font-semibold text-white/95 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
+            <span className="bg-gradient-to-r from-yellow-200 via-white to-yellow-200 bg-clip-text text-transparent">
+              {description}
+            </span>
           </p>
         </div>
       </div>
