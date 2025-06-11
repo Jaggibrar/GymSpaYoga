@@ -21,8 +21,8 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-        <div className="container mx-auto px-4 py-8 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-500"></div>
+        <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
+          <div className="animate-spin rounded-full h-16 w-16 md:h-32 md:w-32 border-b-2 border-emerald-500"></div>
         </div>
       </div>
     );
@@ -30,7 +30,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="mobile-container py-4 md:py-8">
         <EnhancedProfile />
       </div>
     </div>

@@ -15,7 +15,7 @@ const Calendar = () => {
         backgroundImage="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
       />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="mobile-container py-4 md:py-8">
         <CalendarView />
       </div>
     </div>
