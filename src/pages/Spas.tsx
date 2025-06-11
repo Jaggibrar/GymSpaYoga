@@ -11,6 +11,7 @@ import PageHero from "@/components/PageHero";
 import AppFooter from "@/components/AppFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { MapPin, Clock, Phone, Star } from "lucide-react";
 
 const Spas = () => {
   useScrollToTop();
@@ -67,24 +68,66 @@ const Spas = () => {
             <Card key={spa.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
               <div className="relative overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                  alt="Spa"
+                  src={spa.image_urls && spa.image_urls.length > 0 
+                    ? spa.image_urls[0] 
+                    : "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                  } 
+                  alt={spa.business_name}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
-                  Spa #{spa.id}
+                  {spa.category}
                 </Badge>
               </div>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
-                  Spa #{spa.id}
+                  {spa.business_name}
                 </CardTitle>
-                <p className="text-emerald-600 font-semibold text-sm md:text-base">Wellness Center</p>
+                <div className="flex items-center space-x-2 text-emerald-600 font-semibold text-sm md:text-base">
+                  <MapPin className="h-4 w-4" />
+                  <span>{spa.city}, {spa.state}</span>
+                </div>
               </CardHeader>
               <CardContent className="pt-0">
-                <p className="text-gray-600 text-sm">
-                  Created: {new Date(spa.created_at).toLocaleDateString()}
-                </p>
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                    <Clock className="h-4 w-4" />
+                    <span>{spa.opening_time} - {spa.closing_time}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                    <Phone className="h-4 w-4" />
+                    <span>{spa.phone}</span>
+                  </div>
+                  {spa.monthly_price && (
+                    <div className="text-emerald-600 font-bold">
+                      ₹{spa.monthly_price}/month
+                    </div>
+                  )}
+                  {spa.session_price && (
+                    <div className="text-emerald-600 font-bold">
+                      ₹{spa.session_price}/session
+                    </div>
+                  )}
+                  {spa.description && (
+                    <p className="text-gray-600 text-sm line-clamp-2">
+                      {spa.description}
+                    </p>
+                  )}
+                  {spa.amenities && spa.amenities.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {spa.amenities.slice(0, 3).map((amenity, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {amenity}
+                        </Badge>
+                      ))}
+                      {spa.amenities.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{spa.amenities.length - 3} more
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -92,7 +135,10 @@ const Spas = () => {
 
         {spas.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No spas found.</p>
+            <p className="text-gray-600 text-lg">No approved spas found.</p>
+            <p className="text-gray-500 text-sm mt-2">
+              Check back later or try registering your spa!
+            </p>
           </div>
         )}
       </div>
