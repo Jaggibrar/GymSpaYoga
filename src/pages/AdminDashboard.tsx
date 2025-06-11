@@ -95,7 +95,7 @@ const AdminDashboard = () => {
   };
 
   if (adminLoading || loading) {
-    return <LoadingScreen category="admin" onComplete={() => setLoading(false)} />;
+    return <LoadingScreen category="gym" onComplete={() => setLoading(false)} />;
   }
 
   if (!isAdmin) {
