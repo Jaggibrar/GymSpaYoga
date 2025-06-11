@@ -12,6 +12,10 @@ import { Search, MapPin, Filter, Star, Clock, Dumbbell } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageHero from "@/components/PageHero";
 import CategoryBusinesses from "@/components/CategoryBusinesses";
+import SmartFilters from "@/components/SmartFilters";
+import AdvancedSearchModal from "@/components/AdvancedSearchModal";
+import ChatWidget from "@/components/ChatWidget";
+import ReviewSystem from "@/components/ReviewSystem";
 
 const Gyms = () => {
   useScrollToTop();
@@ -20,9 +24,17 @@ const Gyms = () => {
   const [locationFilter, setLocationFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [priceFilter, setPriceFilter] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeSort, setActiveSort] = useState("popular");
+  const [advancedFilters, setAdvancedFilters] = useState<any>(null);
 
   // Filter only gym businesses
   const gymBusinesses = gyms.filter(business => business.business_type === 'gym');
+
+  // Get all available amenities
+  const availableAmenities = Array.from(
+    new Set(gymBusinesses.flatMap(gym => gym.amenities))
+  );
 
   const filteredGyms = gymBusinesses.filter(gym => {
     const matchesSearch = searchTerm === "" || 
@@ -32,14 +44,54 @@ const Gyms = () => {
     const matchesLocation = locationFilter === "" ||
       gym.city.toLowerCase().includes(locationFilter.toLowerCase());
 
-    const matchesCategory = categoryFilter === "" || categoryFilter === "all" || gym.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesCategory = categoryFilter === "" || categoryFilter === "all" || 
+      gym.category.toLowerCase() === categoryFilter.toLowerCase();
     
     const matchesPrice = priceFilter === "" || priceFilter === "all" || 
       (priceFilter === "budget" && gym.monthly_price && gym.monthly_price <= 2000) ||
       (priceFilter === "premium" && gym.monthly_price && gym.monthly_price > 2000 && gym.monthly_price <= 4000) ||
       (priceFilter === "luxury" && gym.monthly_price && gym.monthly_price > 4000);
 
-    return matchesSearch && matchesLocation && matchesCategory && matchesPrice;
+    // Smart filter matching
+    const matchesSmartFilter = activeFilter === "all" ||
+      (activeFilter === "luxury" && gym.category.toLowerCase() === "luxury") ||
+      (activeFilter === "premium" && gym.category.toLowerCase() === "premium") ||
+      (activeFilter === "budget" && gym.category.toLowerCase() === "budget");
+
+    // Advanced filter matching
+    let matchesAdvanced = true;
+    if (advancedFilters) {
+      if (advancedFilters.priceRange && gym.monthly_price) {
+        matchesAdvanced = matchesAdvanced && 
+          gym.monthly_price >= advancedFilters.priceRange.min && 
+          gym.monthly_price <= advancedFilters.priceRange.max;
+      }
+      if (advancedFilters.amenities && advancedFilters.amenities.length > 0) {
+        matchesAdvanced = matchesAdvanced && 
+          advancedFilters.amenities.some((amenity: string) => gym.amenities.includes(amenity));
+      }
+      if (advancedFilters.location) {
+        matchesAdvanced = matchesAdvanced && 
+          gym.city.toLowerCase().includes(advancedFilters.location.toLowerCase());
+      }
+    }
+
+    return matchesSearch && matchesLocation && matchesCategory && matchesPrice && matchesSmartFilter && matchesAdvanced;
+  });
+
+  // Apply sorting
+  const sortedGyms = [...filteredGyms].sort((a, b) => {
+    switch (activeSort) {
+      case 'price-low':
+        return (a.monthly_price || 0) - (b.monthly_price || 0);
+      case 'price-high':
+        return (b.monthly_price || 0) - (a.monthly_price || 0);
+      case 'rating':
+        return 4.8 - 4.8; // Placeholder rating
+      case 'popular':
+      default:
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    }
   });
 
   if (error) {
@@ -58,14 +110,22 @@ const Gyms = () => {
       <CategoryBusinesses category="gym" />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Smart Filters */}
+        <SmartFilters
+          onFilterChange={setActiveFilter}
+          onSortChange={setActiveSort}
+          activeFilter={activeFilter}
+          activeSort={activeSort}
+        />
+
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
           <div className="flex items-center gap-2 mb-4">
             <Filter className="h-5 w-5 text-gray-600" />
-            <h3 className="text-lg font-semibold text-gray-800">Filter Gyms</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Search & Filter Gyms</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end">
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
@@ -109,6 +169,12 @@ const Gyms = () => {
                 <SelectItem value="luxury">Above ₹4,000</SelectItem>
               </SelectContent>
             </Select>
+
+            <AdvancedSearchModal
+              businessType="gym"
+              onApplyFilters={setAdvancedFilters}
+              availableAmenities={availableAmenities}
+            />
           </div>
         </div>
 
@@ -120,7 +186,7 @@ const Gyms = () => {
             </h2>
           </div>
           <Badge className="mb-4 bg-red-500">
-            Showing {filteredGyms.length} results
+            Showing {sortedGyms.length} results
           </Badge>
         </div>
 
@@ -136,9 +202,9 @@ const Gyms = () => {
               </Card>
             ))}
           </div>
-        ) : filteredGyms.length > 0 ? (
+        ) : sortedGyms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredGyms.map((gym) => (
+            {sortedGyms.map((gym) => (
               <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden">
                 <div className="relative overflow-hidden">
                   <img 
@@ -195,6 +261,13 @@ const Gyms = () => {
                       )}
                     </div>
 
+                    {/* Reviews Section */}
+                    <ReviewSystem
+                      businessId={gym.id}
+                      businessType="gym"
+                      businessName={gym.business_name}
+                    />
+
                     <div className="flex gap-2">
                       <Link to={`/gyms/${gym.id}`} className="flex-1">
                         <Button className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600">
@@ -202,6 +275,12 @@ const Gyms = () => {
                         </Button>
                       </Link>
                     </div>
+
+                    {/* Chat Widget */}
+                    <ChatWidget
+                      businessId={gym.id}
+                      businessName={gym.business_name}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -212,7 +291,7 @@ const Gyms = () => {
             <div className="text-6xl mb-4">🏋️‍♂️</div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">No gyms found</h3>
             <p className="text-gray-600 mb-6">
-              {searchTerm || locationFilter || categoryFilter || priceFilter 
+              {searchTerm || locationFilter || categoryFilter || priceFilter || advancedFilters
                 ? "Try adjusting your filters or search criteria."
                 : "Be the first gym to join our platform!"
               }

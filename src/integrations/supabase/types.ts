@@ -212,6 +212,127 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_events: {
+        Row: {
+          booking_id: number | null
+          business_id: string | null
+          created_at: string
+          description: string | null
+          end_time: string
+          event_type: string | null
+          id: string
+          start_time: string
+          title: string
+          trainer_id: string | null
+          user_id: string
+        }
+        Insert: {
+          booking_id?: number | null
+          business_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time: string
+          event_type?: string | null
+          id?: string
+          start_time: string
+          title: string
+          trainer_id?: string | null
+          user_id: string
+        }
+        Update: {
+          booking_id?: number | null
+          business_id?: string | null
+          created_at?: string
+          description?: string | null
+          end_time?: string
+          event_type?: string | null
+          id?: string
+          start_time?: string
+          title?: string
+          trainer_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          chat_room_id: string
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string
+          message_type: string | null
+          sender_id: string
+        }
+        Insert: {
+          chat_room_id: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message: string
+          message_type?: string | null
+          sender_id: string
+        }
+        Update: {
+          chat_room_id?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          message_type?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_chat_room_id_fkey"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          business_id: string | null
+          created_at: string
+          id: string
+          room_type: string | null
+          status: string | null
+          trainer_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          room_type?: string | null
+          status?: string | null
+          trainer_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string
+          id?: string
+          room_type?: string | null
+          status?: string | null
+          trainer_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       gyms: {
         Row: {
           created_at: string
@@ -257,6 +378,39 @@ export type Database = {
           sms_bookings?: boolean | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          recipient_email: string
+          sent_at: string | null
+          status: string | null
+          subject: string
+          template: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          recipient_email: string
+          sent_at?: string | null
+          status?: string | null
+          subject: string
+          template: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          recipient_email?: string
+          sent_at?: string | null
+          status?: string | null
+          subject?: string
+          template?: string
         }
         Relationships: []
       }
@@ -380,6 +534,39 @@ export type Database = {
           trainer_id?: string | null
           updated_at?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      search_filters: {
+        Row: {
+          business_type: string | null
+          created_at: string
+          filter_name: string
+          filters: Json
+          id: string
+          is_default: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          business_type?: string | null
+          created_at?: string
+          filter_name: string
+          filters: Json
+          id?: string
+          is_default?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          business_type?: string | null
+          created_at?: string
+          filter_name?: string
+          filters?: Json
+          id?: string
+          is_default?: boolean | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

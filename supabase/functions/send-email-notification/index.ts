@@ -1,13 +1,13 @@
 
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface EmailRequest {
+interface EmailNotificationRequest {
   to: string;
   subject: string;
   template: 'booking-confirmation' | 'booking-request' | 'business-approved' | 'trainer-approved';
@@ -15,114 +15,124 @@ interface EmailRequest {
 }
 
 serve(async (req) => {
-  if (req.method === "OPTIONS") {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const supabaseClient = createClient(
-    Deno.env.get("SUPABASE_URL") ?? "",
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-    { auth: { persistSession: false } }
-  );
-
   try {
-    const { to, subject, template, data }: EmailRequest = await req.json();
+    const { to, subject, template, data }: EmailNotificationRequest = await req.json();
 
-    if (!to || !subject || !template) {
-      throw new Error("Missing required fields: to, subject, template");
-    }
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // In production, integrate with email service like Resend, SendGrid, etc.
-    // For now, we'll log the email details and store notification
-    console.log(`Email notification - Template: ${template}`);
-    console.log(`To: ${to}`);
-    console.log(`Subject: ${subject}`);
-    console.log(`Data:`, data);
-
-    // Store notification in database for tracking
-    const { error: notificationError } = await supabaseClient
+    // Store notification in database
+    const { error: dbError } = await supabase
       .from('notifications')
       .insert({
         recipient_email: to,
         subject,
         template,
         data,
-        status: 'sent',
-        sent_at: new Date().toISOString()
+        status: 'sent'
       });
 
-    if (notificationError) {
-      console.error('Error storing notification:', notificationError);
+    if (dbError) {
+      console.error('Database error:', dbError);
     }
 
-    // TODO: Replace with actual email service integration
-    // Example with Resend:
-    // const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    // if (resendApiKey) {
-    //   const response = await fetch("https://api.resend.com/emails", {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": `Bearer ${resendApiKey}`,
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       from: "notifications@gymspayoga.com",
-    //       to: [to],
-    //       subject,
-    //       html: generateEmailTemplate(template, data)
-    //     }),
-    //   });
-    // }
+    // Generate email content based on template
+    let emailContent = '';
+    
+    switch (template) {
+      case 'booking-confirmation':
+        emailContent = `
+          <h2>Booking Confirmed!</h2>
+          <p>Dear ${data.customerName},</p>
+          <p>Your booking has been confirmed with the following details:</p>
+          <ul>
+            <li><strong>Business:</strong> ${data.businessName}</li>
+            <li><strong>Date:</strong> ${data.bookingDate}</li>
+            <li><strong>Time:</strong> ${data.bookingTime}</li>
+            <li><strong>Amount:</strong> ₹${data.amount}</li>
+          </ul>
+          <p>Thank you for choosing our platform!</p>
+        `;
+        break;
+        
+      case 'booking-request':
+        emailContent = `
+          <h2>New Booking Request</h2>
+          <p>You have received a new booking request:</p>
+          <ul>
+            <li><strong>Customer:</strong> ${data.customerName}</li>
+            <li><strong>Date:</strong> ${data.bookingDate}</li>
+            <li><strong>Time:</strong> ${data.bookingTime}</li>
+            <li><strong>Amount:</strong> ₹${data.amount}</li>
+          </ul>
+          <p>Please log into your dashboard to respond to this request.</p>
+        `;
+        break;
+        
+      case 'business-approved':
+        emailContent = `
+          <h2>Business Application Approved!</h2>
+          <p>Congratulations! Your business "${data.businessName}" has been approved.</p>
+          <p>You can now start receiving bookings through our platform.</p>
+        `;
+        break;
+        
+      case 'trainer-approved':
+        emailContent = `
+          <h2>Trainer Application Approved!</h2>
+          <p>Congratulations! Your trainer profile has been approved.</p>
+          <p>You can now start receiving training requests through our platform.</p>
+        `;
+        break;
+        
+      default:
+        emailContent = `<p>${data.message || 'Thank you for using our platform!'}</p>`;
+    }
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      message: "Email notification sent successfully" 
-    }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 200,
-    });
+    // In a real implementation, you would send the email using a service like Resend
+    // For now, we'll just log it and mark as sent
+    console.log(`Email notification sent to ${to}:`);
+    console.log(`Subject: ${subject}`);
+    console.log(`Content: ${emailContent}`);
+
+    // Update notification status
+    await supabase
+      .from('notifications')
+      .update({ 
+        status: 'sent',
+        sent_at: new Date().toISOString()
+      })
+      .eq('recipient_email', to)
+      .eq('subject', subject);
+
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: 'Email notification processed successfully' 
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      }
+    );
 
   } catch (error) {
-    console.error('Error in send-email-notification:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 500,
-    });
+    console.error('Error in send-email-notification function:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: error.message || 'Internal server error' 
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      }
+    );
   }
 });
-
-// Helper function to generate email templates
-function generateEmailTemplate(template: string, data: any): string {
-  switch (template) {
-    case 'booking-confirmation':
-      return `
-        <h2>Booking Confirmed!</h2>
-        <p>Your booking has been confirmed.</p>
-        <p><strong>Date:</strong> ${data.date}</p>
-        <p><strong>Time:</strong> ${data.time}</p>
-        <p><strong>Service:</strong> ${data.service}</p>
-      `;
-    case 'booking-request':
-      return `
-        <h2>New Booking Request</h2>
-        <p>You have a new booking request.</p>
-        <p><strong>Customer:</strong> ${data.customerName}</p>
-        <p><strong>Date:</strong> ${data.date}</p>
-        <p><strong>Time:</strong> ${data.time}</p>
-      `;
-    case 'business-approved':
-      return `
-        <h2>Business Application Approved!</h2>
-        <p>Congratulations! Your business application has been approved.</p>
-        <p>You can now start receiving bookings on GymSpaYoga platform.</p>
-      `;
-    case 'trainer-approved':
-      return `
-        <h2>Trainer Application Approved!</h2>
-        <p>Congratulations! Your trainer application has been approved.</p>
-        <p>You can now start offering services on GymSpaYoga platform.</p>
-      `;
-    default:
-      return `<p>${data.message || 'Notification from GymSpaYoga'}</p>`;
-  }
-}
