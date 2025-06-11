@@ -1,429 +1,286 @@
 
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Clock, Phone, ArrowRight, Dumbbell, Waves, Heart, Users, CheckCircle, Calendar, Award } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
-import { useSpas } from "@/hooks/useSpas";
-import { useYogaStudios } from "@/hooks/useYogaStudios";
 import { useTrainers } from "@/hooks/useTrainers";
 import { toast } from "sonner";
-import TrainersSection from "@/components/TrainersSection";
-import LoadingScreen from "@/components/LoadingScreen";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  useScrollToTop();
   const { gyms, loading: gymsLoading } = useGyms();
-  const { spas, loading: spasLoading } = useSpas();
-  const { yogaStudios, loading: yogaLoading } = useYogaStudios();
   const { trainers, loading: trainersLoading } = useTrainers();
-  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoadingScreen(false);
-    }, 2000);
+  const allBusinesses = gyms;
+  const loading = gymsLoading || trainersLoading;
 
-    return () => clearTimeout(timer);
-  }, []);
+  // Filter businesses based on search and location
+  const filteredBusinesses = allBusinesses.filter(business => {
+    const matchesSearch = searchTerm === "" || 
+      business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      business.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesLocation = locationFilter === "" ||
+      business.city.toLowerCase().includes(locationFilter.toLowerCase());
 
-  const isLoading = gymsLoading || spasLoading || yogaLoading || trainersLoading;
+    return matchesSearch && matchesLocation;
+  });
 
-  // Sample data for demonstration when database is empty
-  const sampleGyms = [
-    {
-      id: "1",
-      business_name: "PowerFit Gym",
-      category: "Premium",
-      city: "Mumbai",
-      monthly_price: 2500,
-      image_urls: ["https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"],
-      amenities: ["Modern Equipment", "Personal Training", "Cardio Zone"]
-    },
-    {
-      id: "2", 
-      business_name: "Elite Fitness Center",
-      category: "Premium",
-      city: "Delhi",
-      monthly_price: 3000,
-      image_urls: ["https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"],
-      amenities: ["Swimming Pool", "Yoga Classes", "Nutrition Counseling"]
-    }
+  const handleBookNow = (businessName: string) => {
+    toast.success(`Booking ${businessName}. Please sign in to complete your booking!`);
+  };
+
+  const stats = [
+    { icon: Dumbbell, label: "Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "text-red-500" },
+    { icon: Waves, label: "Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "text-blue-500" },
+    { icon: Heart, label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "text-purple-500" },
+    { icon: Users, label: "Trainers", value: trainers.length, color: "text-emerald-500" }
   ];
-
-  const sampleSpas = [
-    {
-      id: "1",
-      business_name: "Serenity Spa & Wellness",
-      category: "Luxury",
-      city: "Bangalore",
-      session_price: 1500,
-      image_urls: ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"],
-      amenities: ["Aromatherapy", "Hot Stone Massage", "Facial Treatments"]
-    }
-  ];
-
-  const sampleYoga = [
-    {
-      id: "1",
-      business_name: "Peaceful Mind Yoga",
-      category: "Traditional",
-      city: "Pune",
-      session_price: 800,
-      image_urls: ["https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"],
-      amenities: ["Hatha Yoga", "Meditation", "Pranayama"]
-    }
-  ];
-
-  const displayGyms = gyms.length > 0 ? gyms.slice(0, 3) : sampleGyms;
-  const displaySpas = spas.length > 0 ? spas.slice(0, 3) : sampleSpas;
-  const displayYoga = yogaStudios.length > 0 ? yogaStudios.slice(0, 3) : sampleYoga;
-
-  if (showLoadingScreen) {
-    return <LoadingScreen category="gym" onComplete={() => setShowLoadingScreen(false)} />;
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/10 to-blue-600/10"></div>
-        <div className="container mx-auto text-center relative z-10">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-              Your Wellness Journey
-              <span className="block bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                Starts Here
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-              Discover the best gyms, spas, and yoga centers across India. 
-              Book sessions, find trainers, and transform your lifestyle.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-8 py-4"
-                onClick={() => navigate('/gyms')}
-              >
-                Find Gyms
-                <Dumbbell className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-lg px-8 py-4"
-                onClick={() => navigate('/spas')}
-              >
-                Explore Spas
-                <Waves className="ml-2 h-5 w-5" />
-              </Button>
-            </div>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-emerald-600">{displayGyms.length + 50}+</div>
-                <div className="text-gray-600">Gyms</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">{displaySpas.length + 30}+</div>
-                <div className="text-gray-600">Spas</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">{displayYoga.length + 40}+</div>
-                <div className="text-gray-600">Yoga Centers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600">{trainers.length + 100}+</div>
-                <div className="text-gray-600">Trainers</div>
+      <section className="relative py-20 lg:py-32 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/90 to-blue-600/90"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80')] bg-cover bg-center"></div>
+        
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            Find Your Perfect
+            <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+              Wellness Destination
+            </span>
+          </h1>
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
+            Discover premium gyms, luxurious spas, and peaceful yoga studios near you. Start your wellness journey today.
+          </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-2xl">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Search gyms, spas, yoga studios..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Input
+                    placeholder="Enter location..."
+                    value={locationFilter}
+                    onChange={(e) => setLocationFilter(e.target.value)}
+                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500"
+                  />
+                </div>
+                <Button className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold">
+                  Search
+                </Button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Featured Gyms */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Top Gyms
-            </h2>
-            <p className="text-lg text-gray-600">
-              Premium fitness centers with modern equipment and expert trainers
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {displayGyms.map((gym) => (
-              <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden">
-                <div className="relative">
-                  <img 
-                    src={gym.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
-                    alt={gym.business_name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <Badge className="absolute top-4 right-4 bg-emerald-500">
-                    {gym.category}
-                  </Badge>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
-                    {gym.business_name}
-                  </CardTitle>
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{gym.city}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-2xl font-bold text-emerald-600">
-                      ₹{gym.monthly_price}/month
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {gym.amenities?.slice(0, 2).map((amenity, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {amenity}
-                        </Badge>
-                      ))}
-                    </div>
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-white">
+                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-2`} />
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-sm opacity-90">{stat.label}</div>
+              </div>
             ))}
           </div>
-          
-          <div className="text-center">
-            <Link to="/gyms">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                View All Gyms
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* Featured Spas */}
-      <section className="py-16 px-4 bg-white/60 backdrop-blur-sm">
-        <div className="container mx-auto">
+      {/* Categories Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Luxury Spas
+              Explore Our Categories
             </h2>
-            <p className="text-lg text-gray-600">
-              Rejuvenate your mind and body with premium spa treatments
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Choose from our wide range of wellness destinations designed to fit your lifestyle
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {displaySpas.map((spa) => (
-              <Card key={spa.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden">
-                <div className="relative">
-                  <img 
-                    src={spa.image_urls?.[0] || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
-                    alt={spa.business_name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <Badge className="absolute top-4 right-4 bg-blue-500">
-                    {spa.category}
-                  </Badge>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                    {spa.business_name}
-                  </CardTitle>
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{spa.city}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-2xl font-bold text-blue-600">
-                      ₹{spa.session_price}/session
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {spa.amenities?.slice(0, 2).map((amenity, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {amenity}
-                        </Badge>
-                      ))}
-                    </div>
-                    <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
-                      Book Session
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="text-center">
-            <Link to="/spas">
-              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
-                View All Spas
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
 
-      {/* Featured Yoga */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Yoga Studios
-            </h2>
-            <p className="text-lg text-gray-600">
-              Find your inner peace with experienced yoga instructors
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-            {displayYoga.map((yoga) => (
-              <Card key={yoga.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden">
-                <div className="relative">
-                  <img 
-                    src={yoga.image_urls?.[0] || "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
-                    alt={yoga.business_name}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <Badge className="absolute top-4 right-4 bg-purple-500">
-                    {yoga.category}
-                  </Badge>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors">
-                    {yoga.business_name}
-                  </CardTitle>
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span>{yoga.city}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="text-2xl font-bold text-purple-600">
-                      ₹{yoga.session_price}/session
-                    </div>
-                    <div className="flex flex-wrap gap-1">
-                      {yoga.amenities?.slice(0, 2).map((amenity, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {amenity}
-                        </Badge>
-                      ))}
-                    </div>
-                    <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                      Join Classes
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          
-          <div className="text-center">
-            <Link to="/yoga">
-              <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                View All Yoga Studios
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Trainers Section */}
-      <TrainersSection />
-
-      {/* Why Choose Us */}
-      <section className="py-16 px-4 bg-white/60 backdrop-blur-sm">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Why Choose GymSpaYoga?
-            </h2>
-            <p className="text-lg text-gray-600">
-              Your trusted partner in wellness and fitness journey
-            </p>
-          </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Verified Partners</h3>
-              <p className="text-gray-600">All our partners are verified and certified for quality assurance.</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Easy Booking</h3>
-              <p className="text-gray-600">Book sessions instantly with our user-friendly platform.</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-2">Best Prices</h3>
-              <p className="text-gray-600">Get the best deals and competitive pricing across all services.</p>
-            </div>
+            {[
+              {
+                title: "Premium Gyms",
+                description: "State-of-the-art fitness centers with modern equipment",
+                image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                link: "/gyms",
+                icon: Dumbbell,
+                color: "from-red-500 to-orange-500"
+              },
+              {
+                title: "Luxury Spas",
+                description: "Rejuvenating treatments in serene environments",
+                image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                link: "/spas",
+                icon: Waves,
+                color: "from-blue-500 to-cyan-500"
+              },
+              {
+                title: "Yoga Studios",
+                description: "Find inner peace with expert yoga instructors",
+                image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                link: "/yoga",
+                icon: Heart,
+                color: "from-purple-500 to-pink-500"
+              }
+            ].map((category, index) => (
+              <Link key={index} to={category.link} className="group">
+                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={category.image} 
+                      alt={category.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60`}></div>
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <category.icon className="h-8 w-8 mb-2" />
+                      <h3 className="text-xl font-bold">{category.title}</h3>
+                    </div>
+                  </div>
+                  <CardContent className="p-6">
+                    <p className="text-gray-600">{category.description}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* Featured Businesses */}
+      <section className="py-16 bg-white/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Featured Destinations
+            </h2>
+            <p className="text-lg text-gray-600">
+              Discover top-rated wellness destinations in your area
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="animate-pulse">
+                  <div className="h-48 bg-gray-200"></div>
+                  <CardContent className="p-6">
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : filteredBusinesses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredBusinesses.slice(0, 6).map((business) => (
+                <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                  <div className="relative overflow-hidden h-48">
+                    <img 
+                      src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
+                      alt={business.business_name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
+                      {business.category}
+                    </Badge>
+                  </div>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg group-hover:text-emerald-600 transition-colors">
+                      {business.business_name}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      {business.city}, {business.state}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {business.description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium">4.8</span>
+                        <span className="text-sm text-gray-500">(124)</span>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        onClick={() => handleBookNow(business.business_name)}
+                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                      >
+                        Book Now
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">🏃‍♂️</div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">No businesses found</h3>
+              <p className="text-gray-600 mb-6">
+                Be the first! Register your business and start attracting customers.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Link to="/register-business">
+                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                    Register Your Business
+                  </Button>
+                </Link>
+                <Link to="/register-trainer">
+                  <Button variant="outline">
+                    Register as Trainer
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+      <section className="py-16 bg-gradient-to-r from-emerald-500 to-blue-500">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-3xl mx-auto text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ready to Start Your Wellness Journey?
             </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Join thousands of satisfied customers who have transformed their lives with our platform.
+            <p className="text-xl mb-8 opacity-90">
+              Join thousands of users who have found their perfect wellness destination
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {!user ? (
-                <>
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-8 py-4"
-                    onClick={() => navigate('/signup')}
-                  >
-                    Get Started Today
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-lg px-8 py-4"
-                    onClick={() => navigate('/login')}
-                  >
-                    Sign In
-                  </Button>
-                </>
-              ) : (
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-8 py-4"
-                  onClick={() => navigate('/profile')}
-                >
-                  View My Profile
+              <Link to="/signup">
+                <Button size="lg" className="bg-white text-emerald-500 hover:bg-gray-100 px-8 py-3">
+                  Sign Up Now
                 </Button>
-              )}
+              </Link>
+              <Link to="/register-business">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-500 px-8 py-3">
+                  List Your Business
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
