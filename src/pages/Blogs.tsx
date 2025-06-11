@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,23 +7,26 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Calendar, User, Search, Plus, Heart, MessageCircle, Share2, Dumbbell, MapPin, Phone, Facebook, Instagram, Linkedin, X } from "lucide-react";
+import { Calendar, User, Search, Plus, Heart, MessageCircle, Share2, Dumbbell } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import AppFooter from "@/components/AppFooter";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<any>(null);
+  const [isReadMoreOpen, setIsReadMoreOpen] = useState(false);
   const [blogPosts, setBlogPosts] = useState([
     {
       id: 1,
       title: "10 Essential Gym Exercises for Beginners",
       excerpt: "Starting your fitness journey? Here are the fundamental exercises every beginner should master for a strong foundation.",
-      content: "Embarking on a fitness journey can be overwhelming, especially when you step into a gym for the first time. This comprehensive guide will walk you through 10 essential exercises that form the foundation of any effective workout routine...",
+      content: "Embarking on a fitness journey can be overwhelming, especially when you step into a gym for the first time. This comprehensive guide will walk you through 10 essential exercises that form the foundation of any effective workout routine.\n\n1. Squats - The king of all exercises, squats work your entire lower body and core. Start with bodyweight squats and gradually add weight as you progress.\n\n2. Push-ups - A classic upper body exercise that targets your chest, shoulders, and triceps. Modify by doing them on your knees if needed.\n\n3. Deadlifts - One of the most effective full-body exercises. Focus on proper form before adding weight.\n\n4. Planks - Build core strength and stability with this isometric exercise. Start with 30 seconds and work your way up.\n\n5. Pull-ups/Assisted Pull-ups - Develop your back and biceps. Use assistance bands or machines if you can't do full pull-ups yet.\n\n6. Lunges - Great for leg strength and balance. Alternate legs and focus on controlled movements.\n\n7. Overhead Press - Build shoulder strength and stability. Start light and focus on form.\n\n8. Rows - Balance out your pushing exercises with pulling movements for your back.\n\n9. Hip Thrusts - Activate and strengthen your glutes, which are often underactive in beginners.\n\n10. Farmer's Walks - Improve grip strength and overall stability while working your entire body.\n\nRemember, consistency is key. Start with 2-3 workouts per week and gradually increase as your fitness improves.",
       author: "Dr. Priya Sharma",
       category: "Fitness",
       date: "2024-01-15",
@@ -152,6 +154,11 @@ const Blogs = () => {
       navigator.clipboard.writeText(`${blog.title} - ${window.location.href}`);
       toast.success("Blog link copied to clipboard!");
     }
+  };
+
+  const handleReadMore = (blog: any) => {
+    setSelectedBlog(blog);
+    setIsReadMoreOpen(true);
   };
 
   const handleSubmitBlog = (e: React.FormEvent) => {
@@ -387,7 +394,12 @@ const Blogs = () => {
                       <Share2 className="h-4 w-4" />
                     </button>
                   </div>
-                  <Button variant="outline" size="sm" className="group-hover:bg-emerald-500 group-hover:text-white">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="group-hover:bg-emerald-500 group-hover:text-white"
+                    onClick={() => handleReadMore(blog)}
+                  >
                     Read More
                   </Button>
                 </div>
@@ -447,101 +459,67 @@ const Blogs = () => {
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 sm:py-16 px-4">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12">
-            <div className="lg:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="h-12 w-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                  <Dumbbell className="h-6 w-6 text-white" />
+      {/* Read More Dialog */}
+      <Dialog open={isReadMoreOpen} onOpenChange={setIsReadMoreOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          {selectedBlog && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center justify-between mb-4">
+                  <Badge className="bg-emerald-500">{selectedBlog.category}</Badge>
+                  <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <Calendar className="h-4 w-4" />
+                    <span>{new Date(selectedBlog.date).toLocaleDateString()}</span>
+                  </div>
                 </div>
-                <h4 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">GymSpaYoga</h4>
+                <DialogTitle className="text-2xl font-bold text-left">
+                  {selectedBlog.title}
+                </DialogTitle>
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <User className="h-4 w-4" />
+                  <span>By {selectedBlog.author}</span>
+                </div>
+              </DialogHeader>
+              <div className="mt-6">
+                <img
+                  src={selectedBlog.image}
+                  alt={selectedBlog.title}
+                  className="w-full h-64 object-cover rounded-lg mb-6"
+                />
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {selectedBlog.content}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between mt-8 pt-6 border-t">
+                  <div className="flex items-center space-x-4 text-sm text-gray-500">
+                    <button 
+                      onClick={() => handleLike(selectedBlog.id)}
+                      className={`flex items-center space-x-1 hover:text-red-500 transition-colors ${selectedBlog.isLiked ? 'text-red-500' : ''}`}
+                    >
+                      <Heart className={`h-4 w-4 ${selectedBlog.isLiked ? 'fill-current' : ''}`} />
+                      <span>{selectedBlog.likes}</span>
+                    </button>
+                    <div className="flex items-center space-x-1">
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{selectedBlog.comments}</span>
+                    </div>
+                    <button 
+                      onClick={() => handleShare(selectedBlog)}
+                      className="flex items-center space-x-1 hover:text-blue-500 transition-colors"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      <span>Share</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Your wellness journey starts here. We connect fitness enthusiasts with the best gyms, spas, and yoga centers across India.
-              </p>
-              
-              {/* Social Media Icons */}
-              <div className="flex space-x-4 mb-6">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <Facebook className="h-5 w-5 text-white" />
-                </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 p-3 rounded-full transition-all duration-300 transform hover:scale-110">
-                  <Instagram className="h-5 w-5 text-white" />
-                </a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-black hover:bg-gray-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <X className="h-5 w-5 text-white" />
-                </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-blue-700 hover:bg-blue-800 p-3 rounded-full transition-colors duration-300 transform hover:scale-110">
-                  <Linkedin className="h-5 w-5 text-white" />
-                </a>
-              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
-              {/* Payment Methods */}
-              <div>
-                <h6 className="text-sm font-semibold text-gray-400 mb-3">We Accept</h6>
-                <div className="flex space-x-3">
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg" alt="American Express" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://logos-world.net/wp-content/uploads/2020/09/PayPal-Logo.png" alt="PayPal" className="h-6 w-10" />
-                  </div>
-                  <div className="bg-white rounded-lg p-2">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI" className="h-6 w-10" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h5 className="font-bold mb-6 text-xl text-emerald-400">For Users</h5>
-              <ul className="space-y-3 text-gray-300">
-                <li><Link to="/gyms" className="hover:text-emerald-400 transition-colors duration-300">Find Gyms</Link></li>
-                <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300">Find Spas</Link></li>
-                <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300">Find Yoga Centers</Link></li>
-                <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300">Find Trainers</Link></li>
-                <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300">About Us</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h5 className="font-bold mb-6 text-xl text-blue-400">For Business</h5>
-              <ul className="space-y-3 text-gray-300">
-                <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300">List Your Business</Link></li>
-                <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300">Become a Trainer</Link></li>
-                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300">Manage Bookings</Link></li>
-                <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300">Pricing Plans</Link></li>
-                <li><span className="hover:text-blue-400 transition-colors duration-300 cursor-pointer">Support</span></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h5 className="font-bold mb-6 text-xl text-purple-400">Contact</h5>
-              <div className="space-y-3 text-gray-300">
-                <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-purple-400" />
-                  <span>+91 98765 43210</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="h-5 w-5 mr-3 text-purple-400" />
-                  <span>Mumbai, India</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 GymSpaYoga. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 };
