@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
@@ -63,8 +62,31 @@ const Index = () => {
               Wellness Destination
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-6 md:mb-8 max-w-3xl mx-auto">
-            Discover premium gyms, luxurious spas, and peaceful yoga studios near you. Start your wellness journey today.
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed font-semibold">
+            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
+              Discover 
+            </span>
+            <span className="bg-gradient-to-r from-red-300 via-orange-300 to-red-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
+              premium gyms
+            </span>
+            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
+              , 
+            </span>
+            <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
+              luxurious spas
+            </span>
+            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
+              , and 
+            </span>
+            <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
+              peaceful yoga studios
+            </span>
+            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
+              near you.
+            </span>
+            <span className="block mt-2 bg-gradient-to-r from-yellow-200 via-white to-yellow-200 bg-clip-text text-transparent drop-shadow-lg font-bold">
+              Start your wellness journey today.
+            </span>
           </p>
           
           {/* Mobile-optimized Search Bar */}
