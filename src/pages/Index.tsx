@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
 import SEOHead from "@/components/SEOHead";
+import AppFooter from "@/components/AppFooter";
 
 const Index = () => {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -446,76 +448,8 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-              <div>
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="h-12 w-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center">
-                    <Dumbbell className="h-7 w-7 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold">GymSpaYoga</h3>
-                </div>
-                <p className="text-gray-400 leading-relaxed">
-                  Your ultimate destination for fitness, wellness, and mindfulness. 
-                  Discover the best gyms, spas, and yoga studios in your area.
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/gyms" className="text-gray-400 hover:text-white transition-colors">Find Gyms</Link></li>
-                  <li><Link to="/spas" className="text-gray-400 hover:text-white transition-colors">Find Spas</Link></li>
-                  <li><Link to="/yoga" className="text-gray-400 hover:text-white transition-colors">Find Yoga</Link></li>
-                  <li><Link to="/trainers" className="text-gray-400 hover:text-white transition-colors">Find Trainers</Link></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">For Business</h4>
-                <ul className="space-y-2">
-                  <li><Link to="/register-business" className="text-gray-400 hover:text-white transition-colors">List Your Business</Link></li>
-                  <li><Link to="/register-trainer" className="text-gray-400 hover:text-white transition-colors">Join as Trainer</Link></li>
-                  <li><Link to="/pricing" className="text-gray-400 hover:text-white transition-colors">Pricing</Link></li>
-                  <li><Link to="/manage-bookings" className="text-gray-400 hover:text-white transition-colors">Manage Bookings</Link></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <MapPin className="h-5 w-5 text-gray-400" />
-                    <span className="text-gray-400">Kolkata, West Bengal</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Phone className="h-5 w-5 text-gray-400" />
-                    <span className="text-gray-400">+91 98765 43210</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                    <span className="text-gray-400">info@gymspayoga.com</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="border-t border-gray-800 pt-8">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <p className="text-gray-400 mb-4 md:mb-0">
-                  © 2024 GymSpaYoga. All rights reserved.
-                </p>
-                <div className="flex space-x-6">
-                  <Link to="/about" className="text-gray-400 hover:text-white transition-colors">About</Link>
-                  <Link to="/blogs" className="text-gray-400 hover:text-white transition-colors">Blogs</Link>
-                  <Link to="/support" className="text-gray-400 hover:text-white transition-colors">Support</Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
+        {/* Use the consistent AppFooter component */}
+        <AppFooter />
 
         {/* Loading Screen */}
         {showLoadingScreen && (
