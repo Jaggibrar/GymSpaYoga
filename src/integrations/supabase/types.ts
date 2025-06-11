@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          id: string
+          permissions: string[] | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permissions?: string[] | null
+          role?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permissions?: string[] | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           booking_date: string | null
@@ -144,6 +168,63 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          amount: number
+          booking_date: string | null
+          booking_time: string | null
+          business_id: string | null
+          created_at: string
+          currency: string | null
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          payment_status: string | null
+          service_type: string | null
+          status: string | null
+          stripe_session_id: string | null
+          trainer_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          booking_date?: string | null
+          booking_time?: string | null
+          business_id?: string | null
+          created_at?: string
+          currency?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          service_type?: string | null
+          status?: string | null
+          stripe_session_id?: string | null
+          trainer_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          booking_date?: string | null
+          booking_time?: string | null
+          business_id?: string | null
+          created_at?: string
+          currency?: string | null
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          payment_status?: string | null
+          service_type?: string | null
+          status?: string | null
+          stripe_session_id?: string | null
+          trainer_id?: string | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
