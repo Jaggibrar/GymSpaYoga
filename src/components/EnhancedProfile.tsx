@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,17 +16,35 @@ export const EnhancedProfile = () => {
   const [saving, setSaving] = useState(false);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
-    full_name: profile?.full_name || '',
-    phone: profile?.phone || '',
-    date_of_birth: profile?.date_of_birth || '',
-    gender: profile?.gender || '',
-    address: profile?.address || '',
-    city: profile?.city || '',
-    state: profile?.state || '',
-    pin_code: profile?.pin_code || '',
-    emergency_contact_name: profile?.emergency_contact_name || '',
-    emergency_contact_phone: profile?.emergency_contact_phone || ''
+    full_name: '',
+    phone: '',
+    date_of_birth: '',
+    gender: '',
+    address: '',
+    city: '',
+    state: '',
+    pin_code: '',
+    emergency_contact_name: '',
+    emergency_contact_phone: ''
   });
+
+  // Update form data when profile loads
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || '',
+        phone: profile.phone || '',
+        date_of_birth: profile.date_of_birth || '',
+        gender: profile.gender || '',
+        address: profile.address || '',
+        city: profile.city || '',
+        state: profile.state || '',
+        pin_code: profile.pin_code || '',
+        emergency_contact_name: profile.emergency_contact_name || '',
+        emergency_contact_phone: profile.emergency_contact_phone || ''
+      });
+    }
+  }, [profile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

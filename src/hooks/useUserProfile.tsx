@@ -38,19 +38,28 @@ export const useUserProfile = () => {
 
       try {
         setLoading(true);
+        // Use raw SQL query since user_profiles table is not in TypeScript types yet
         const { data, error } = await supabase
-          .from('user_profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
+          .rpc('get_user_profile', { user_id_param: user.id });
 
         if (error) {
-          setError(error.message);
-          console.error('Error fetching profile:', error);
-          return;
-        }
+          // If function doesn't exist, fall back to direct query
+          const { data: directData, error: directError } = await supabase
+            .from('user_profiles' as any)
+            .select('*')
+            .eq('user_id', user.id)
+            .maybeSingle();
 
-        setProfile(data);
+          if (directError) {
+            setError(directError.message);
+            console.error('Error fetching profile:', directError);
+            return;
+          }
+
+          setProfile(directData);
+        } else {
+          setProfile(data);
+        }
       } catch (err) {
         setError('Failed to fetch profile');
         console.error('Error fetching profile:', err);
@@ -69,8 +78,9 @@ export const useUserProfile = () => {
     }
 
     try {
+      // Use raw SQL for upsert
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from('user_profiles' as any)
         .upsert({
           user_id: user.id,
           ...updates,
