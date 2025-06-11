@@ -1,12 +1,13 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import ErrorBoundary from "./components/ErrorBoundary";
+import MainNavigation from "./components/MainNavigation";
 
 // Pages
 import Index from "./pages/Index";
@@ -42,7 +43,7 @@ function App() {
           <Toaster />
           <BrowserRouter>
             <div className="flex flex-col min-h-screen">
-              <AppHeader />
+              <MainNavigation />
               <main className="flex-grow">
                 <Routes>
                   <Route path="/" element={<Index />} />
