@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Crown, Star, Zap } from "lucide-react";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
@@ -44,9 +43,15 @@ const RegisterBusiness = () => {
     description: ""
   });
 
-  // Redirect to login if not authenticated
+  // Fix: Move redirect logic to useEffect to avoid React Router warning
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user, navigate]);
+
+  // Don't render anything if user is not authenticated
   if (!user) {
-    navigate('/login');
     return null;
   }
 
@@ -145,11 +150,50 @@ const RegisterBusiness = () => {
     }
   };
 
+  // Add validation functions for each step
+  const validateBusinessType = () => {
+    return businessType.trim() !== "" && formData.businessName.trim() !== "";
+  };
+
+  const validateCategory = () => {
+    return selectedCategory !== "";
+  };
+
+  const validateContact = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[+]?[\d\s\-\(\)]{10,}$/;
+    return formData.email.trim() !== "" && 
+           formData.phone.trim() !== "" && 
+           emailRegex.test(formData.email) && 
+           phoneRegex.test(formData.phone);
+  };
+
+  const validateAddress = () => {
+    const pinRegex = /^\d{6}$/;
+    return formData.address.trim() !== "" && 
+           formData.city.trim() !== "" && 
+           formData.state.trim() !== "" && 
+           formData.pinCode.trim() !== "" && 
+           pinRegex.test(formData.pinCode);
+  };
+
+  const validateOperations = () => {
+    if (!formData.openingTime || !formData.closingTime) return false;
+    const opening = new Date(`2000-01-01T${formData.openingTime}`);
+    const closing = new Date(`2000-01-01T${formData.closingTime}`);
+    return opening < closing;
+  };
+
+  const validateDescription = () => {
+    return formData.description.trim().length >= 10;
+  };
+
   const steps = [
     {
       id: "business-type",
       title: "Business Type",
       description: "What type of business?",
+      validate: validateBusinessType,
       component: (
         <div className="space-y-6">
           <BusinessTypeSelector 
@@ -175,6 +219,7 @@ const RegisterBusiness = () => {
       id: "category",
       title: "Category & Tier",
       description: "Choose your category",
+      validate: validateCategory,
       component: (
         <CategoryTierSelector 
           categoryTiers={categoryTiers}
@@ -187,6 +232,7 @@ const RegisterBusiness = () => {
       id: "contact",
       title: "Contact Info",
       description: "How can customers reach you?",
+      validate: validateContact,
       component: (
         <ContactInfoForm 
           email={formData.email}
@@ -200,6 +246,7 @@ const RegisterBusiness = () => {
       id: "address",
       title: "Location",
       description: "Where is your business?",
+      validate: validateAddress,
       component: (
         <AddressForm 
           address={formData.address}
@@ -217,6 +264,7 @@ const RegisterBusiness = () => {
       id: "operations",
       title: "Operations",
       description: "Hours and pricing",
+      validate: validateOperations,
       component: (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <OperatingHoursForm 
@@ -238,15 +286,17 @@ const RegisterBusiness = () => {
       id: "description",
       title: "Description",
       description: "Tell us about your business",
+      validate: validateDescription,
       component: (
         <div className="space-y-3">
-          <Label className="text-lg font-medium text-gray-700">Business Description</Label>
+          <Label className="text-lg font-medium text-gray-700">Business Description *</Label>
           <Textarea 
-            placeholder="Describe your business, facilities, and what makes you special..."
+            placeholder="Describe your business, facilities, and what makes you special... (minimum 10 characters)"
             className="min-h-[120px] text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
             value={formData.description}
             onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
           />
+          <p className="text-sm text-gray-500">{formData.description.length}/10 characters minimum</p>
         </div>
       )
     },

@@ -1,3 +1,6 @@
-import { useToast, toast } from "@/hooks/use-toast";
 
-export { useToast, toast };
+// Re-export sonner toast for consistency
+import { toast } from "sonner";
+
+export { toast };
+export const useToast = () => ({ toast });

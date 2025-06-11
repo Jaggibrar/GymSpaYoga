@@ -11,7 +11,6 @@ interface Step {
   title: string;
   description: string;
   component: React.ReactNode;
-  isValid?: boolean;
   validate?: () => boolean;
 }
 
@@ -40,7 +39,7 @@ export const MultiStepForm = ({
     if (currentStepData.validate) {
       return currentStepData.validate();
     }
-    return currentStepData.isValid !== false;
+    return true; // If no validation function, consider it valid
   };
 
   const handleNext = () => {
@@ -63,7 +62,7 @@ export const MultiStepForm = ({
   };
 
   const handleStepClick = (stepIndex: number) => {
-    // Only allow clicking on completed steps or the next step
+    // Only allow clicking on completed steps or the next immediate step
     if (stepIndex <= currentStep || completedSteps.has(stepIndex - 1)) {
       setCurrentStep(stepIndex);
     } else {
@@ -107,7 +106,7 @@ export const MultiStepForm = ({
           </div>
 
           {/* Step Indicators */}
-          <div className="flex justify-between mb-8">
+          <div className="flex justify-between mb-8 overflow-x-auto">
             {steps.map((step, index) => {
               const isCompleted = completedSteps.has(index);
               const isCurrent = index === currentStep;
@@ -116,7 +115,7 @@ export const MultiStepForm = ({
               return (
                 <div
                   key={step.id}
-                  className={`flex flex-col items-center transition-all ${
+                  className={`flex flex-col items-center transition-all min-w-0 flex-1 ${
                     canAccess ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
                   } ${
                     isCompleted ? 'text-green-600' : 
@@ -138,8 +137,8 @@ export const MultiStepForm = ({
                     )}
                   </div>
                   <div className="text-center">
-                    <div className="text-sm font-medium">{step.title}</div>
-                    <div className="text-xs text-gray-500 max-w-24 hidden md:block">
+                    <div className="text-sm font-medium truncate max-w-24">{step.title}</div>
+                    <div className="text-xs text-gray-500 max-w-24 hidden md:block truncate">
                       {step.description}
                     </div>
                   </div>
@@ -166,7 +165,7 @@ export const MultiStepForm = ({
               </div>
 
               {/* Validation Message */}
-              {!canProceed && (
+              {!canProceed && steps[currentStep].validate && (
                 <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
                   <div className="flex items-center text-orange-800">
                     <AlertCircle className="h-5 w-5 mr-2" />
@@ -194,7 +193,7 @@ export const MultiStepForm = ({
                     <Button
                       type="button"
                       onClick={handleNext}
-                      disabled={!canProceed}
+                      disabled={!canProceed && steps[currentStep].validate}
                       className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next Step
@@ -203,7 +202,7 @@ export const MultiStepForm = ({
                     <Button
                       type="button"
                       onClick={handleSubmit}
-                      disabled={isSubmitting || !canProceed}
+                      disabled={isSubmitting || (!canProceed && steps[currentStep].validate)}
                       className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-12 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? "Submitting..." : "Complete Registration"}
