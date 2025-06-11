@@ -7,21 +7,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Calendar, User, Search, Plus, Heart, MessageCircle, Share2, Dumbbell, MapPin, Phone, Facebook, Instagram, Linkedin, X } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { toast } from "sonner";
+import SEOHead from "@/components/SEOHead";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [newBlog, setNewBlog] = useState({
-    title: "",
-    content: "",
-    category: "",
-    author: ""
-  });
-
-  const blogPosts = [
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [blogPosts, setBlogPosts] = useState([
     {
       id: 1,
       title: "10 Essential Gym Exercises for Beginners",
@@ -32,7 +30,8 @@ const Blogs = () => {
       date: "2024-01-15",
       image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 156,
-      comments: 23
+      comments: 23,
+      isLiked: false
     },
     {
       id: 2,
@@ -44,7 +43,8 @@ const Blogs = () => {
       date: "2024-01-12",
       image: "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 89,
-      comments: 12
+      comments: 12,
+      isLiked: false
     },
     {
       id: 3,
@@ -56,7 +56,8 @@ const Blogs = () => {
       date: "2024-01-10",
       image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 134,
-      comments: 18
+      comments: 18,
+      isLiked: false
     },
     {
       id: 4,
@@ -68,7 +69,8 @@ const Blogs = () => {
       date: "2024-01-08",
       image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 201,
-      comments: 35
+      comments: 35,
+      isLiked: false
     },
     {
       id: 5,
@@ -80,7 +82,8 @@ const Blogs = () => {
       date: "2024-01-05",
       image: "https://images.unsplash.com/photo-1563461717-96a5efe542c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 98,
-      comments: 14
+      comments: 14,
+      isLiked: false
     },
     {
       id: 6,
@@ -92,196 +95,107 @@ const Blogs = () => {
       date: "2024-01-03",
       image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       likes: 167,
-      comments: 29
-    },
-    {
-      id: 7,
-      title: "Nutrition for Gym Goers: Fueling Your Fitness Journey",
-      excerpt: "Learn how proper nutrition can amplify your gym results and accelerate your fitness goals.",
-      content: "Exercise is only half the equation when it comes to achieving your fitness goals. Proper nutrition plays a crucial role in performance, recovery, and results...",
-      author: "Nutritionist Rajesh Verma",
-      category: "Nutrition",
-      date: "2024-01-01",
-      image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 143,
-      comments: 21
-    },
-    {
-      id: 8,
-      title: "Meditation in Motion: Active Meditation Techniques",
-      excerpt: "Discover how to incorporate mindfulness into your daily activities and movement practices.",
-      content: "Traditional seated meditation isn't the only path to mindfulness. Active meditation techniques allow you to cultivate awareness while engaging in physical activities...",
-      author: "Mindfulness Coach Arjun Kapoor",
-      category: "Mindfulness",
-      date: "2023-12-28",
-      image: "https://images.unsplash.com/photo-1593811167562-9cef47bfc4d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 112,
-      comments: 16
-    },
-    {
-      id: 9,
-      title: "Hot Stone Massage: Benefits and What to Expect",
-      excerpt: "Everything you need to know about hot stone massage therapy and its incredible health benefits.",
-      content: "Hot stone massage combines the benefits of heat therapy with traditional massage techniques, creating a deeply relaxing and therapeutic experience...",
-      author: "Spa Therapist Neha Joshi",
-      category: "Wellness",
-      date: "2023-12-25",
-      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 87,
-      comments: 9
-    },
-    {
-      id: 10,
-      title: "CrossFit vs Traditional Gym Workouts: A Complete Comparison",
-      excerpt: "Weighing the pros and cons of CrossFit against traditional gym routines to help you make an informed choice.",
-      content: "The fitness world offers various training methodologies, with CrossFit and traditional gym workouts being two popular approaches. Each has distinct advantages and considerations...",
-      author: "Fitness Expert Vikram Rao",
-      category: "Fitness",
-      date: "2023-12-22",
-      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 189,
-      comments: 33
-    },
-    {
-      id: 11,
-      title: "Prenatal Yoga: Safe Practices for Expecting Mothers",
-      excerpt: "A comprehensive guide to practicing yoga safely during pregnancy, with modifications and benefits.",
-      content: "Pregnancy brings numerous physical and emotional changes, making it an ideal time to embrace the gentle, nurturing practice of prenatal yoga...",
-      author: "Prenatal Yoga Instructor Sunita Devi",
-      category: "Yoga",
-      date: "2023-12-20",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 156,
-      comments: 27
-    },
-    {
-      id: 12,
-      title: "The Ultimate Guide to Recovery: Rest Days and Active Recovery",
-      excerpt: "Learn why recovery is just as important as your workout and how to optimize your rest days.",
-      content: "In the pursuit of fitness goals, many people overlook one of the most crucial components of any training program: recovery. Understanding how to properly rest and recover...",
-      author: "Recovery Specialist Dr. Amit Sharma",
-      category: "Fitness",
-      date: "2023-12-18",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 178,
-      comments: 24
-    },
-    {
-      id: 13,
-      title: "Aromatherapy in Spa Treatments: Scents for Healing",
-      excerpt: "Explore how different essential oils and aromatherapy techniques enhance spa treatments and promote wellness.",
-      content: "Aromatherapy, the therapeutic use of essential oils, has been a cornerstone of spa treatments for centuries. The power of scent to influence mood, emotions, and physical well-being...",
-      author: "Aromatherapist Priyanka Mehta",
-      category: "Wellness",
-      date: "2023-12-15",
-      image: "https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 94,
-      comments: 11
-    },
-    {
-      id: 14,
-      title: "Functional Fitness: Training for Real-Life Movements",
-      excerpt: "Discover how functional fitness can improve your daily life and prevent injuries through natural movement patterns.",
-      content: "Functional fitness focuses on training your body for the activities you perform in daily life. Unlike traditional gym exercises that isolate specific muscles...",
-      author: "Functional Training Expert Rohit Kumar",
-      category: "Fitness",
-      date: "2023-12-12",
-      image: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 167,
-      comments: 31
-    },
-    {
-      id: 15,
-      title: "Chakra Balancing: Understanding Energy Centers in Yoga",
-      excerpt: "A beginner's guide to understanding and working with chakras in your yoga and meditation practice.",
-      content: "The concept of chakras, or energy centers, is fundamental to many yoga and meditation practices. Understanding these energy points can deepen your spiritual practice...",
-      author: "Spiritual Guide Guru Ananda",
-      category: "Yoga",
-      date: "2023-12-10",
-      image: "https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 123,
-      comments: 19
-    },
-    {
-      id: 16,
-      title: "High-Intensity Interval Training (HIIT): Maximum Results, Minimum Time",
-      excerpt: "Learn how HIIT can revolutionize your fitness routine with efficient, effective workouts that fit any schedule.",
-      content: "High-Intensity Interval Training (HIIT) has gained immense popularity for its efficiency and effectiveness. This training method alternates between high-intensity bursts and recovery periods...",
-      author: "HIIT Specialist Sarah Johnson",
-      category: "Fitness",
-      date: "2023-12-08",
-      image: "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 203,
-      comments: 38
-    },
-    {
-      id: 17,
-      title: "Deep Tissue Massage: Healing Beyond the Surface",
-      excerpt: "Understanding the benefits and techniques of deep tissue massage for chronic pain and muscle tension relief.",
-      content: "Deep tissue massage goes beyond relaxation to target chronic muscle tension and pain. This therapeutic technique uses firm pressure and slow strokes...",
-      author: "Licensed Massage Therapist Kiran Reddy",
-      category: "Wellness",
-      date: "2023-12-05",
-      image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 145,
-      comments: 22
-    },
-    {
-      id: 18,
-      title: "Restorative Yoga: The Art of Deep Relaxation",
-      excerpt: "Discover how restorative yoga can help reduce stress, improve sleep, and promote overall well-being.",
-      content: "In our fast-paced world, restorative yoga offers a sanctuary of calm and healing. This gentle practice uses props to support the body in relaxing poses...",
-      author: "Restorative Yoga Teacher Madhavi Iyer",
-      category: "Yoga",
-      date: "2023-12-03",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 134,
-      comments: 15
-    },
-    {
-      id: 19,
-      title: "Strength Training for Women: Myths vs. Reality",
-      excerpt: "Debunking common myths about women and weight training while highlighting the incredible benefits of strength training.",
-      content: "Despite growing awareness, myths about women and strength training persist. This comprehensive guide addresses common misconceptions and reveals the truth...",
-      author: "Women's Fitness Coach Sneha Patel",
-      category: "Fitness",
-      date: "2023-12-01",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 187,
-      comments: 29
-    },
-    {
-      id: 20,
-      title: "The Psychology of Wellness: Mind-Body Connection in Spa Therapy",
-      excerpt: "Exploring how spa treatments impact mental health and the science behind the mind-body connection.",
-      content: "The relationship between mental and physical well-being is complex and profound. Spa therapies work on multiple levels, addressing both physical symptoms and psychological states...",
-      author: "Wellness Psychologist Dr. Rajeev Malhotra",
-      category: "Wellness",
-      date: "2023-11-28",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      likes: 156,
-      comments: 21
+      comments: 29,
+      isLiked: false
     }
-  ];
+  ]);
+  
+  const [newBlog, setNewBlog] = useState({
+    title: "",
+    content: "",
+    category: "",
+    author: ""
+  });
 
+  const postsPerPage = 6;
   const categories = ["All", "Fitness", "Wellness", "Yoga", "Nutrition", "Mindfulness"];
 
-  const filteredBlogs = blogPosts.filter(blog => {
-    const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "" || selectedCategory === "All" || blog.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Filter and paginate blogs
+  const filteredBlogs = useMemo(() => {
+    return blogPosts.filter(blog => {
+      const matchesSearch = blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           blog.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           blog.author.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "" || selectedCategory === "All" || blog.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [blogPosts, searchTerm, selectedCategory]);
+
+  const totalPages = Math.ceil(filteredBlogs.length / postsPerPage);
+  const startIndex = (currentPage - 1) * postsPerPage;
+  const paginatedBlogs = filteredBlogs.slice(startIndex, startIndex + postsPerPage);
+
+  // Blog interactions
+  const handleLike = (blogId: number) => {
+    setBlogPosts(prevBlogs => 
+      prevBlogs.map(blog => 
+        blog.id === blogId 
+          ? { 
+              ...blog, 
+              likes: blog.isLiked ? blog.likes - 1 : blog.likes + 1,
+              isLiked: !blog.isLiked 
+            }
+          : blog
+      )
+    );
+    toast.success("Thanks for your reaction!");
+  };
+
+  const handleShare = (blog: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: blog.title,
+        text: blog.excerpt,
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(`${blog.title} - ${window.location.href}`);
+      toast.success("Blog link copied to clipboard!");
+    }
+  };
 
   const handleSubmitBlog = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("New blog submitted:", newBlog);
-    // Add blog submission logic here
+    
+    if (!newBlog.title || !newBlog.content || !newBlog.category || !newBlog.author) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    const newPost = {
+      id: blogPosts.length + 1,
+      title: newBlog.title,
+      excerpt: newBlog.content.substring(0, 150) + "...",
+      content: newBlog.content,
+      author: newBlog.author,
+      category: newBlog.category,
+      date: new Date().toISOString().split('T')[0],
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      likes: 0,
+      comments: 0,
+      isLiked: false
+    };
+
+    setBlogPosts(prevBlogs => [newPost, ...prevBlogs]);
     setNewBlog({ title: "", content: "", category: "", author: "" });
+    setIsDialogOpen(false);
+    toast.success("Blog published successfully!");
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
+      <SEOHead 
+        title="Wellness Blog - Expert Fitness, Yoga & Spa Tips | GymSpaYoga"
+        description="Read expert wellness blog posts about fitness, yoga, spa treatments, and healthy living. Get tips from certified trainers and wellness professionals."
+        keywords="wellness blog, fitness tips, yoga advice, spa treatments, health blog, wellness articles"
+        url="https://gymspayoga.com/blogs"
+      />
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -300,14 +214,14 @@ const Blogs = () => {
                   Find Trainers
                 </Button>
               </Link>
-              <Dialog>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs sm:text-sm">
                     <Plus className="h-4 w-4 mr-2" />
                     Write Blog
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl">
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Write a New Blog Post</DialogTitle>
                     <DialogDescription>
@@ -337,7 +251,7 @@ const Blogs = () => {
                     </div>
                     <div>
                       <Label htmlFor="category">Category</Label>
-                      <Select onValueChange={(value) => setNewBlog({...newBlog, category: value})}>
+                      <Select value={newBlog.category} onValueChange={(value) => setNewBlog({...newBlog, category: value})}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
                         </SelectTrigger>
@@ -397,7 +311,7 @@ const Blogs = () => {
                   />
                 </div>
               </div>
-              <Select onValueChange={setSelectedCategory}>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger className="w-full sm:w-48 h-12">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
@@ -411,11 +325,18 @@ const Blogs = () => {
               </Select>
             </div>
           </div>
+
+          {/* Results count */}
+          <p className="text-gray-600 mb-6">
+            {filteredBlogs.length} {filteredBlogs.length === 1 ? 'blog' : 'blogs'} found
+            {searchTerm && ` for "${searchTerm}"`}
+            {selectedCategory && selectedCategory !== "All" && ` in ${selectedCategory}`}
+          </p>
         </div>
 
         {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredBlogs.map((blog) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {paginatedBlogs.map((blog) => (
             <Card key={blog.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
               <div className="relative overflow-hidden">
                 <img
@@ -428,7 +349,7 @@ const Blogs = () => {
                 </Badge>
               </div>
               <CardHeader>
-                <CardTitle className="text-xl font-bold group-hover:text-emerald-600 transition-colors">
+                <CardTitle className="text-xl font-bold group-hover:text-emerald-600 transition-colors line-clamp-2">
                   {blog.title}
                 </CardTitle>
                 <CardDescription className="text-gray-600 line-clamp-3">
@@ -439,7 +360,7 @@ const Blogs = () => {
                 <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                   <div className="flex items-center space-x-2">
                     <User className="h-4 w-4" />
-                    <span>{blog.author}</span>
+                    <span className="truncate">{blog.author}</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Calendar className="h-4 w-4" />
@@ -448,14 +369,23 @@ const Blogs = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <Heart className="h-4 w-4" />
+                    <button 
+                      onClick={() => handleLike(blog.id)}
+                      className={`flex items-center space-x-1 hover:text-red-500 transition-colors ${blog.isLiked ? 'text-red-500' : ''}`}
+                    >
+                      <Heart className={`h-4 w-4 ${blog.isLiked ? 'fill-current' : ''}`} />
                       <span>{blog.likes}</span>
-                    </div>
+                    </button>
                     <div className="flex items-center space-x-1">
                       <MessageCircle className="h-4 w-4" />
                       <span>{blog.comments}</span>
                     </div>
+                    <button 
+                      onClick={() => handleShare(blog)}
+                      className="flex items-center space-x-1 hover:text-blue-500 transition-colors"
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </button>
                   </div>
                   <Button variant="outline" size="sm" className="group-hover:bg-emerald-500 group-hover:text-white">
                     Read More
@@ -466,9 +396,53 @@ const Blogs = () => {
           ))}
         </div>
 
+        {/* No results message */}
         {filteredBlogs.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">No blogs found matching your criteria.</p>
+            <p className="text-gray-500 text-lg mb-4">No blogs found matching your criteria.</p>
+            <Button 
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("");
+                setCurrentPage(1);
+              }}
+              variant="outline"
+            >
+              Clear Filters
+            </Button>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(page)}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         )}
       </div>
