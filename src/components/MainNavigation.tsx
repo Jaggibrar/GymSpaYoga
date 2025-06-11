@@ -11,7 +11,10 @@ import {
   LogOut,
   Settings,
   Heart,
-  Calendar
+  Calendar,
+  Waves,
+  Users,
+  Info
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -35,11 +38,11 @@ const MainNavigation = () => {
   };
 
   const navLinks = [
-    { to: "/gyms", label: "Gyms" },
-    { to: "/spas", label: "Spas" },
-    { to: "/yoga", label: "Yoga" },
-    { to: "/trainers", label: "Trainers" },
-    { to: "/about", label: "About" },
+    { to: "/gyms", label: "Gyms", icon: Dumbbell },
+    { to: "/spas", label: "Spas", icon: Waves },
+    { to: "/yoga", label: "Yoga", icon: Heart },
+    { to: "/trainers", label: "Trainers", icon: Users },
+    { to: "/about", label: "About", icon: Info },
   ];
 
   return (
@@ -62,9 +65,10 @@ const MainNavigation = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 relative group"
+                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 relative group flex items-center space-x-2"
               >
-                {link.label}
+                <link.icon className="h-4 w-4" />
+                <span>{link.label}</span>
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 group-hover:w-full transition-all duration-200"></span>
               </Link>
             ))}
@@ -138,10 +142,11 @@ const MainNavigation = () => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="text-gray-700 hover:text-emerald-600 font-medium py-2"
+                  className="text-gray-700 hover:text-emerald-600 font-medium py-2 flex items-center space-x-2"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  {link.label}
+                  <link.icon className="h-4 w-4" />
+                  <span>{link.label}</span>
                 </Link>
               ))}
               <div className="border-t border-gray-200 pt-3 mt-3">
