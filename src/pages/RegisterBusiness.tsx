@@ -146,6 +146,8 @@ const RegisterBusiness = () => {
     }
   };
 
+  const SelectedCategoryIcon = getSelectedCategoryDetails()?.icon;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Modern Header */}
@@ -203,7 +205,7 @@ const RegisterBusiness = () => {
             {selectedCategory && (
               <div className={`bg-gradient-to-r ${getSelectedCategoryDetails()?.color} text-white p-8 rounded-2xl inline-block mb-8 shadow-lg`}>
                 <div className="flex items-center justify-center space-x-3">
-                  <getSelectedCategoryDetails()?.icon className="h-8 w-8" />
+                  {SelectedCategoryIcon && <SelectedCategoryIcon className="h-8 w-8" />}
                   <span className="text-3xl font-bold">Registration Fee: {getSelectedCategoryDetails()?.price}</span>
                 </div>
                 <p className="text-white/90 mt-2 text-lg">One-time payment • Lifetime listing</p>
