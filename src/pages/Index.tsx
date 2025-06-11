@@ -9,7 +9,6 @@ import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import TrainersSection from "@/components/TrainersSection";
 import LoadingScreen from "@/components/LoadingScreen";
 import SEOHead from "@/components/SEOHead";
-import AppFooter from "@/components/AppFooter";
 import { useGyms } from "@/hooks/useGyms";
 import { useSpas } from "@/hooks/useSpas";
 import { useYogaStudios } from "@/hooks/useYogaStudios";
