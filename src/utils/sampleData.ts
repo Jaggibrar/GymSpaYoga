@@ -3,9 +3,13 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const insertSampleBusinesses = async () => {
   try {
+    // Use a dummy user_id for sample data
+    const dummyUserId = '00000000-0000-0000-0000-000000000000';
+    
     // Sample gym data
     const sampleGyms = [
       {
+        user_id: dummyUserId,
         business_name: 'PowerFit Gym',
         business_type: 'gym',
         category: 'Premium',
@@ -25,6 +29,7 @@ export const insertSampleBusinesses = async () => {
         status: 'approved'
       },
       {
+        user_id: dummyUserId,
         business_name: 'Elite Fitness Center',
         business_type: 'gym', 
         category: 'Premium',
@@ -48,6 +53,7 @@ export const insertSampleBusinesses = async () => {
     // Sample spa data
     const sampleSpas = [
       {
+        user_id: dummyUserId,
         business_name: 'Serenity Spa & Wellness',
         business_type: 'spa',
         category: 'Luxury',
@@ -70,6 +76,7 @@ export const insertSampleBusinesses = async () => {
     // Sample yoga data
     const sampleYoga = [
       {
+        user_id: dummyUserId,
         business_name: 'Peaceful Mind Yoga',
         business_type: 'yoga',
         category: 'Traditional',
@@ -114,8 +121,12 @@ export const insertSampleBusinesses = async () => {
 
 export const insertSampleTrainers = async () => {
   try {
+    // Use a dummy user_id for sample data
+    const dummyUserId = '00000000-0000-0000-0000-000000000000';
+    
     const sampleTrainers = [
       {
+        user_id: dummyUserId,
         name: 'Rahul Sharma',
         email: 'rahul@example.com',
         phone: '+91 9876543210',
@@ -131,6 +142,7 @@ export const insertSampleTrainers = async () => {
         status: 'approved'
       },
       {
+        user_id: dummyUserId,
         name: 'Priya Patel',
         email: 'priya@example.com',
         phone: '+91 9876543211',
