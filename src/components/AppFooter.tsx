@@ -88,7 +88,7 @@ const AppFooter = () => {
               </div>
               <div className="flex items-center">
                 <MapPin className="h-5 w-5 mr-3 text-purple-400" />
-                <span>Kolkata, West Bengal</span>
+                <span>Mumbai, India</span>
               </div>
               <div className="flex items-center">
                 <Mail className="h-5 w-5 mr-3 text-purple-400" />

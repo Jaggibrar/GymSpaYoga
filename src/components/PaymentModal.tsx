@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, CreditCard } from "lucide-react";
+import { CalendarIcon, CreditCard, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useOrders } from "@/hooks/useOrders";
 import { useAuth } from "@/hooks/useAuth";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -79,8 +80,8 @@ const PaymentModal = ({
         throw error;
       }
 
+      // TODO: Integrate with Stripe for actual payment processing
       // For now, simulate payment processing
-      // In a real implementation, you would integrate with Stripe here
       setTimeout(() => {
         toast.success("Booking confirmed! Payment processed successfully.");
         onClose();
@@ -96,7 +97,7 @@ const PaymentModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <CreditCard className="h-5 w-5" />
@@ -104,17 +105,29 @@ const PaymentModal = ({
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="price">Price</Label>
-              <Input 
-                id="price" 
-                value={`₹${price}/${priceType}`} 
-                readOnly 
-                className="bg-gray-50"
-              />
+        <Alert className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Payment integration is currently in development. This is a demo booking system.
+          </AlertDescription>
+        </Alert>
+        
+        <div className="space-y-6">
+          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-4 rounded-lg">
+            <h3 className="font-semibold text-gray-800 mb-2">Booking Summary</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-gray-600">Service:</span>
+                <p className="font-medium">{serviceName}</p>
+              </div>
+              <div>
+                <span className="text-gray-600">Price:</span>
+                <p className="font-medium text-emerald-600">₹{price}/{priceType}</p>
+              </div>
             </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="duration">Duration (minutes)</Label>
               <Input 
@@ -124,7 +137,14 @@ const PaymentModal = ({
                 onChange={(e) => setDuration(parseInt(e.target.value))}
                 min="30"
                 max="180"
+                className="mt-1"
               />
+            </div>
+            <div>
+              <Label>Total Amount</Label>
+              <div className="mt-1 p-2 bg-gray-50 rounded-md border">
+                <span className="text-lg font-semibold text-emerald-600">₹{price}</span>
+              </div>
             </div>
           </div>
 
@@ -135,7 +155,7 @@ const PaymentModal = ({
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full justify-start text-left font-normal mt-1",
                     !bookingDate && "text-muted-foreground"
                   )}
                 >
@@ -162,6 +182,7 @@ const PaymentModal = ({
               type="time" 
               value={bookingTime} 
               onChange={(e) => setBookingTime(e.target.value)}
+              className="mt-1"
             />
           </div>
 
@@ -173,10 +194,11 @@ const PaymentModal = ({
               value={notes} 
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
+              className="mt-1"
             />
           </div>
 
-          <div className="flex space-x-2 pt-4">
+          <div className="flex space-x-3 pt-4">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
             </Button>
@@ -187,6 +209,10 @@ const PaymentModal = ({
             >
               {isProcessing ? "Processing..." : `Pay ₹${price}`}
             </Button>
+          </div>
+
+          <div className="text-center text-sm text-gray-500">
+            <p>🔒 Secure payment powered by Stripe (Coming Soon)</p>
           </div>
         </div>
       </DialogContent>

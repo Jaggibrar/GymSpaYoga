@@ -30,9 +30,20 @@ export const useOrders = () => {
     const fetchOrders = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from('orders')
           .select('*')
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false });
 
         if (error) {
@@ -57,7 +68,11 @@ export const useOrders = () => {
     try {
       const { data, error } = await supabase
         .from('orders')
-        .insert([orderData])
+        .insert([{
+          ...orderData,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }])
         .select()
         .single();
 
@@ -73,5 +88,44 @@ export const useOrders = () => {
     }
   };
 
-  return { orders, loading, error, createOrder };
+  const updateOrderStatus = async (orderId: string, status: string, paymentStatus?: string) => {
+    try {
+      const updateData: any = {
+        status,
+        updated_at: new Date().toISOString()
+      };
+
+      if (paymentStatus) {
+        updateData.payment_status = paymentStatus;
+      }
+
+      const { data, error } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId)
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      setOrders(prev => prev.map(order => 
+        order.id === orderId ? data : order
+      ));
+
+      return { data, error: null };
+    } catch (err) {
+      console.error('Error updating order:', err);
+      return { data: null, error: err };
+    }
+  };
+
+  return { 
+    orders, 
+    loading, 
+    error, 
+    createOrder, 
+    updateOrderStatus 
+  };
 };
