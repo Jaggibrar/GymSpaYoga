@@ -37,6 +37,12 @@ const Index = () => {
     toast.success(`Booking ${businessName}. Please sign in to complete your booking!`);
   };
 
+  const handleSearch = () => {
+    if (searchTerm || locationFilter) {
+      toast.info("Searching for businesses...");
+    }
+  };
+
   const stats = [
     { icon: Dumbbell, label: "Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "text-red-500" },
     { icon: Waves, label: "Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "text-blue-500" },
@@ -84,7 +90,10 @@ const Index = () => {
                     className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
-                <Button className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold">
+                <Button 
+                  onClick={handleSearch}
+                  className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold"
+                >
                   Search
                 </Button>
               </div>
@@ -241,9 +250,12 @@ const Index = () => {
               <div className="text-6xl mb-4">🏃‍♂️</div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">No businesses found</h3>
               <p className="text-gray-600 mb-6">
-                Be the first! Register your business and start attracting customers.
+                {searchTerm || locationFilter 
+                  ? "Try adjusting your search criteria or explore our categories below."
+                  : "Be the first! Register your business and start attracting customers."
+                }
               </p>
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-4 justify-center flex-wrap">
                 <Link to="/register-business">
                   <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
                     Register Your Business

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Filter, Star, Clock, Users, Dumbbell } from "lucide-react";
+import { Search, MapPin, Filter, Star, Clock, Dumbbell } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageHero from "@/components/PageHero";
 import CategoryBusinesses from "@/components/CategoryBusinesses";
@@ -32,9 +32,9 @@ const Gyms = () => {
     const matchesLocation = locationFilter === "" ||
       gym.city.toLowerCase().includes(locationFilter.toLowerCase());
 
-    const matchesCategory = categoryFilter === "" || gym.category.toLowerCase() === categoryFilter.toLowerCase();
+    const matchesCategory = categoryFilter === "" || categoryFilter === "all" || gym.category.toLowerCase() === categoryFilter.toLowerCase();
     
-    const matchesPrice = priceFilter === "" || 
+    const matchesPrice = priceFilter === "" || priceFilter === "all" || 
       (priceFilter === "budget" && gym.monthly_price && gym.monthly_price <= 2000) ||
       (priceFilter === "premium" && gym.monthly_price && gym.monthly_price > 2000 && gym.monthly_price <= 4000) ||
       (priceFilter === "luxury" && gym.monthly_price && gym.monthly_price > 4000);
@@ -91,7 +91,7 @@ const Gyms = () => {
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="luxury">Luxury</SelectItem>
                 <SelectItem value="premium">Premium</SelectItem>
                 <SelectItem value="budget">Budget Friendly</SelectItem>
@@ -103,7 +103,7 @@ const Gyms = () => {
                 <SelectValue placeholder="Price Range" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Prices</SelectItem>
+                <SelectItem value="all">All Prices</SelectItem>
                 <SelectItem value="budget">Under ₹2,000</SelectItem>
                 <SelectItem value="premium">₹2,000 - ₹4,000</SelectItem>
                 <SelectItem value="luxury">Above ₹4,000</SelectItem>
@@ -195,12 +195,13 @@ const Gyms = () => {
                       )}
                     </div>
 
-                    <Button 
-                      className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600"
-                      onClick={() => toast.success(`Booking ${gym.business_name}. Please sign in to complete your booking!`)}
-                    >
-                      Book Now
-                    </Button>
+                    <div className="flex gap-2">
+                      <Link to={`/gyms/${gym.id}`} className="flex-1">
+                        <Button className="w-full bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600">
+                          View Details
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

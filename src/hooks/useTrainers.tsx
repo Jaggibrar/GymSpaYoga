@@ -41,13 +41,24 @@ export const useTrainers = () => {
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Supabase error:', error);
         setError(error.message);
-        console.error('Error fetching trainers:', error);
         return;
       }
 
       console.log('Fetched trainers:', data?.length || 0);
-      setTrainers(data || []);
+      
+      // Ensure specializations is an array
+      const processedData = (data || []).map(trainer => ({
+        ...trainer,
+        specializations: Array.isArray(trainer.specializations) ? trainer.specializations : []
+      }));
+      
+      setTrainers(processedData);
+      
+      if (!data || data.length === 0) {
+        console.info('No trainers found in database');
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch trainers';
       setError(errorMessage);

@@ -32,9 +32,9 @@ const Trainers = () => {
     const matchesLocation = locationFilter === "" ||
       trainer.location.toLowerCase().includes(locationFilter.toLowerCase());
 
-    const matchesCategory = categoryFilter === "" || trainer.category === categoryFilter;
+    const matchesCategory = categoryFilter === "" || categoryFilter === "all" || trainer.category === categoryFilter;
     
-    const matchesTier = tierFilter === "" || trainer.trainer_tier === tierFilter;
+    const matchesTier = tierFilter === "" || tierFilter === "all" || trainer.trainer_tier === tierFilter;
 
     return matchesSearch && matchesLocation && matchesCategory && matchesTier;
   });
@@ -92,7 +92,7 @@ const Trainers = () => {
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="gym">Gym Trainer</SelectItem>
                 <SelectItem value="yoga">Yoga Instructor</SelectItem>
                 <SelectItem value="spa">Spa Therapist</SelectItem>
@@ -104,7 +104,7 @@ const Trainers = () => {
                 <SelectValue placeholder="Tier" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Tiers</SelectItem>
+                <SelectItem value="all">All Tiers</SelectItem>
                 <SelectItem value="elite">Elite</SelectItem>
                 <SelectItem value="pro">Pro</SelectItem>
                 <SelectItem value="intermediate">Intermediate</SelectItem>

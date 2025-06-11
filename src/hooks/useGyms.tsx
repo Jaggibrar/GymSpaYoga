@@ -44,13 +44,21 @@ export const useGyms = () => {
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Supabase error:', error);
         setError(error.message);
-        console.error('Error fetching gyms:', error);
         return;
       }
 
       console.log('Fetched gyms:', data?.length || 0);
-      setGyms(data || []);
+      
+      // Ensure amenities and image_urls are arrays
+      const processedData = (data || []).map(gym => ({
+        ...gym,
+        amenities: Array.isArray(gym.amenities) ? gym.amenities : [],
+        image_urls: Array.isArray(gym.image_urls) ? gym.image_urls : []
+      }));
+      
+      setGyms(processedData);
       
       if (!data || data.length === 0) {
         console.info('No gyms found in database');
