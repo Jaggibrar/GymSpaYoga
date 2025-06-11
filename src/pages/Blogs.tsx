@@ -203,103 +203,83 @@ const Blogs = () => {
         url="https://gymspayoga.com/blogs"
       />
 
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Dumbbell className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <Link to="/trainers">
-                <Button variant="outline" className="text-xs sm:text-sm">
-                  Find Trainers
-                </Button>
-              </Link>
-              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs sm:text-sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Write Blog
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Write a New Blog Post</DialogTitle>
-                    <DialogDescription>
-                      Share your wellness knowledge with our community
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleSubmitBlog} className="space-y-4">
-                    <div>
-                      <Label htmlFor="author">Author Name</Label>
-                      <Input
-                        id="author"
-                        value={newBlog.author}
-                        onChange={(e) => setNewBlog({...newBlog, author: e.target.value})}
-                        placeholder="Your name"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="title">Blog Title</Label>
-                      <Input
-                        id="title"
-                        value={newBlog.title}
-                        onChange={(e) => setNewBlog({...newBlog, title: e.target.value})}
-                        placeholder="Enter your blog title"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="category">Category</Label>
-                      <Select value={newBlog.category} onValueChange={(value) => setNewBlog({...newBlog, category: value})}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Fitness">Fitness</SelectItem>
-                          <SelectItem value="Wellness">Wellness</SelectItem>
-                          <SelectItem value="Yoga">Yoga</SelectItem>
-                          <SelectItem value="Nutrition">Nutrition</SelectItem>
-                          <SelectItem value="Mindfulness">Mindfulness</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="content">Content</Label>
-                      <Textarea
-                        id="content"
-                        value={newBlog.content}
-                        onChange={(e) => setNewBlog({...newBlog, content: e.target.value})}
-                        placeholder="Write your blog content here..."
-                        className="min-h-[200px]"
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full bg-gradient-to-r from-emerald-500 to-blue-500">
-                      Publish Blog
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        {/* Hero Section */}
+        {/* Hero Section with Write Blog Button */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
-            Wellness
-            <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"> Blog </span>
-          </h2>
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-4xl sm:text-5xl font-bold text-gray-800">
+              Wellness
+              <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"> Blog </span>
+            </h2>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Write Blog
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Write a New Blog Post</DialogTitle>
+                  <DialogDescription>
+                    Share your wellness knowledge with our community
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmitBlog} className="space-y-4">
+                  <div>
+                    <Label htmlFor="author">Author Name</Label>
+                    <Input
+                      id="author"
+                      value={newBlog.author}
+                      onChange={(e) => setNewBlog({...newBlog, author: e.target.value})}
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="title">Blog Title</Label>
+                    <Input
+                      id="title"
+                      value={newBlog.title}
+                      onChange={(e) => setNewBlog({...newBlog, title: e.target.value})}
+                      placeholder="Enter your blog title"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="category">Category</Label>
+                    <Select value={newBlog.category} onValueChange={(value) => setNewBlog({...newBlog, category: value})}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Fitness">Fitness</SelectItem>
+                        <SelectItem value="Wellness">Wellness</SelectItem>
+                        <SelectItem value="Yoga">Yoga</SelectItem>
+                        <SelectItem value="Nutrition">Nutrition</SelectItem>
+                        <SelectItem value="Mindfulness">Mindfulness</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="content">Content</Label>
+                    <Textarea
+                      id="content"
+                      value={newBlog.content}
+                      onChange={(e) => setNewBlog({...newBlog, content: e.target.value})}
+                      placeholder="Write your blog content here..."
+                      className="min-h-[200px]"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full bg-gradient-to-r from-emerald-500 to-blue-500">
+                    Publish Blog
+                  </Button>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
+          
           <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Discover expert insights, tips, and inspiration for your fitness and wellness journey
           </p>
