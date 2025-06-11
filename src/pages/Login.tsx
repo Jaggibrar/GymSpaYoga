@@ -19,7 +19,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
+
+  // Redirect if already logged in
+  if (user) {
+    navigate('/');
+    return null;
+  }
 
   const handleInputChange = (field: keyof LoginFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -58,9 +64,15 @@ const Login = () => {
     setLoading(false);
 
     if (error) {
-      toast.error(error.message || "Failed to sign in");
+      if (error.message.includes('Invalid login credentials')) {
+        toast.error("Invalid email or password. Please try again.");
+      } else if (error.message.includes('Email not confirmed')) {
+        toast.error("Please check your email and click the confirmation link before logging in.");
+      } else {
+        toast.error(error.message || "Failed to sign in");
+      }
     } else {
-      toast.success("Logged in successfully!");
+      toast.success("Successfully signed in!");
       navigate('/');
     }
   };

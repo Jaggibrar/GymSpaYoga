@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 export interface Spa {
   id: string;
@@ -33,6 +34,8 @@ export const useSpas = () => {
     const fetchSpas = async () => {
       try {
         setLoading(true);
+        setError(null);
+        
         const { data, error } = await supabase
           .from('business_profiles')
           .select('*')
@@ -41,15 +44,22 @@ export const useSpas = () => {
           .order('created_at', { ascending: false });
 
         if (error) {
-          setError(error.message);
-          console.error('Error fetching spas:', error);
+          console.error('Supabase error fetching spas:', error);
+          setError(`Failed to fetch spas: ${error.message}`);
+          toast.error('Failed to load spas. Please try again.');
           return;
         }
 
+        console.log('Fetched spas:', data?.length || 0);
         setSpas(data || []);
+        
+        if (data && data.length === 0) {
+          console.log('No spas found in database');
+        }
       } catch (err) {
-        setError('Failed to fetch spas');
         console.error('Error fetching spas:', err);
+        setError('Failed to fetch spas');
+        toast.error('An unexpected error occurred while loading spas.');
       } finally {
         setLoading(false);
       }
@@ -58,5 +68,5 @@ export const useSpas = () => {
     fetchSpas();
   }, []);
 
-  return { spas, loading, error };
+  return { spas, loading, error, refetch: () => window.location.reload() };
 };
