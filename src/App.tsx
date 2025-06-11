@@ -3,130 +3,87 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
-import ProtectedRoute from "./components/ProtectedRoute";
-import ErrorBoundary from "./components/ErrorBoundary";
-import ScrollToTopButton from "./components/ScrollToTopButton";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import { HelmetProvider } from 'react-helmet-async';
 import Index from "./pages/Index";
-import Profile from "./pages/Profile";
 import Gyms from "./pages/Gyms";
 import Spas from "./pages/Spas";
 import Yoga from "./pages/Yoga";
 import Trainers from "./pages/Trainers";
-import GymDetails from "./pages/GymDetails";
-import SpaDetails from "./pages/SpaDetails";
-import YogaDetails from "./pages/YogaDetails";
+import About from "./pages/About";
+import Blogs from "./pages/Blogs";
+import Support from "./pages/Support";
+import Pricing from "./pages/Pricing";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
 import RegisterBusiness from "./pages/RegisterBusiness";
 import RegisterTrainer from "./pages/RegisterTrainer";
 import ManageBookings from "./pages/ManageBookings";
-import About from "./pages/About";
-import Blogs from "./pages/Blogs";
-import Pricing from "./pages/Pricing";
-import Support from "./pages/Support";
+import AdminDashboard from "./pages/AdminDashboard";
+import GymDetails from "./pages/GymDetails";
+import SpaDetails from "./pages/SpaDetails";
+import YogaDetails from "./pages/YogaDetails";
 import NotFound from "./pages/NotFound";
+import ErrorBoundary from "./components/ErrorBoundary";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <AuthProvider>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
             <Toaster />
             <BrowserRouter>
               <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/gyms" element={<Gyms />} />
+                <Route path="/spas" element={<Spas />} />
+                <Route path="/yoga" element={<Yoga />} />
+                <Route path="/trainers" element={<Trainers />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/blogs" element={<Blogs />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/pricing" element={<Pricing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={
-                  <ProtectedRoute>
-                    <Index />
-                  </ProtectedRoute>
-                } />
-                <Route path="/profile" element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } />
-                <Route path="/gyms" element={
-                  <ProtectedRoute>
-                    <Gyms />
-                  </ProtectedRoute>
-                } />
-                <Route path="/spas" element={
-                  <ProtectedRoute>
-                    <Spas />
-                  </ProtectedRoute>
-                } />
-                <Route path="/yoga" element={
-                  <ProtectedRoute>
-                    <Yoga />
-                  </ProtectedRoute>
-                } />
-                <Route path="/trainers" element={
-                  <ProtectedRoute>
-                    <Trainers />
-                  </ProtectedRoute>
-                } />
-                <Route path="/gym/:id" element={
-                  <ProtectedRoute>
-                    <GymDetails />
-                  </ProtectedRoute>
-                } />
-                <Route path="/spa/:id" element={
-                  <ProtectedRoute>
-                    <SpaDetails />
-                  </ProtectedRoute>
-                } />
-                <Route path="/yoga/:id" element={
-                  <ProtectedRoute>
-                    <YogaDetails />
-                  </ProtectedRoute>
-                } />
-                <Route path="/register-business" element={
-                  <ProtectedRoute>
-                    <RegisterBusiness />
-                  </ProtectedRoute>
-                } />
-                <Route path="/register-trainer" element={
-                  <ProtectedRoute>
-                    <RegisterTrainer />
-                  </ProtectedRoute>
-                } />
-                <Route path="/manage-bookings" element={
-                  <ProtectedRoute>
-                    <ManageBookings />
-                  </ProtectedRoute>
-                } />
-                <Route path="/about" element={
-                  <ProtectedRoute>
-                    <About />
-                  </ProtectedRoute>
-                } />
-                <Route path="/blogs" element={
-                  <ProtectedRoute>
-                    <Blogs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/pricing" element={
-                  <ProtectedRoute>
-                    <Pricing />
-                  </ProtectedRoute>
-                } />
-                <Route path="/support" element={
-                  <ProtectedRoute>
-                    <Support />
-                  </ProtectedRoute>
-                } />
+                <Route 
+                  path="/profile" 
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="/register-business" element={<RegisterBusiness />} />
+                <Route path="/register-trainer" element={<RegisterTrainer />} />
+                <Route 
+                  path="/manage-bookings" 
+                  element={
+                    <ProtectedRoute>
+                      <ManageBookings />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route path="/gym/:id" element={<GymDetails />} />
+                <Route path="/spa/:id" element={<SpaDetails />} />
+                <Route path="/yoga/:id" element={<YogaDetails />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-              <ScrollToTopButton />
             </BrowserRouter>
-          </AuthProvider>
-        </TooltipProvider>
-      </QueryClientProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }
