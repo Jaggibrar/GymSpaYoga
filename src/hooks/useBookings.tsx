@@ -6,15 +6,15 @@ import { useAuth } from '@/hooks/useAuth';
 export interface Booking {
   id: number;
   user_id: string | null;
-  business_type: 'gym' | 'spa' | 'yoga' | 'trainer' | null;
+  business_type: string | null;
   business_id: string | null;
   trainer_id: string | null;
   booking_date: string | null;
   booking_time: string | null;
   duration_minutes: number | null;
   total_amount: number | null;
-  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | null;
-  payment_status: 'pending' | 'paid' | 'failed' | 'refunded' | null;
+  status: string | null;
+  payment_status: string | null;
   notes: string | null;
   created_at: string;
   updated_at: string | null;

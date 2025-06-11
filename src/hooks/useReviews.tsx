@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 export interface Review {
   id: number;
   user_id: string | null;
-  business_type: 'gym' | 'spa' | 'yoga' | 'trainer' | null;
+  business_type: string | null;
   business_id: string | null;
   trainer_id: string | null;
   rating: number | null;
