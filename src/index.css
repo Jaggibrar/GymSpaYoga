@@ -101,7 +101,7 @@
   }
 }
 
-/* Custom CSS for Mobile Optimization */
+/* Enhanced Mobile Horizontal Scrolling */
 @layer components {
   /* Hide scrollbars while maintaining functionality */
   .scrollbar-hide {
@@ -134,11 +134,12 @@
     }
   }
 
-  /* Improved horizontal scrolling for mobile */
+  /* Enhanced horizontal scrolling for mobile with better UX */
   .horizontal-scroll {
     @apply overflow-x-auto overflow-y-hidden;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
   }
 
   .horizontal-scroll > * {
@@ -153,6 +154,43 @@
 
   .mobile-nav > * {
     @apply flex-shrink-0;
+  }
+
+  /* Mobile horizontal card layout */
+  .mobile-horizontal-cards {
+    @apply flex gap-4 overflow-x-auto pb-4 scrollbar-hide;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  .mobile-horizontal-cards > * {
+    @apply flex-shrink-0;
+    scroll-snap-align: start;
+  }
+
+  /* Mobile card sizing */
+  .mobile-card {
+    @apply min-w-[280px] max-w-[320px];
+  }
+
+  .mobile-card-sm {
+    @apply min-w-[240px] max-w-[260px];
+  }
+
+  /* Text truncation utilities */
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
 
@@ -172,6 +210,18 @@
   .smooth-scroll {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
+  }
+
+  /* Enhanced mobile horizontal scroll indicators */
+  .scroll-indicator::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
+    pointer-events: none;
   }
 }
 
@@ -195,5 +245,32 @@
 @media (pointer: coarse) {
   .focus\:outline-mobile:focus {
     @apply outline-2 outline-blue-500 outline-offset-2;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 768px) {
+  /* Ensure proper spacing for horizontal scrolling sections */
+  .mobile-section {
+    @apply px-4 py-6;
+  }
+
+  /* Optimize touch targets for mobile */
+  button, .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Mobile typography adjustments */
+  h1 {
+    @apply text-2xl leading-tight;
+  }
+
+  h2 {
+    @apply text-xl leading-tight;
+  }
+
+  /* Mobile card optimizations */
+  .mobile-optimized-card {
+    @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
   }
 }

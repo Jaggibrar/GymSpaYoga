@@ -1,11 +1,9 @@
-
 import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Dumbbell, Waves, Heart, Users, Search, Shield, Award, Clock, User, LogOut, CheckCircle, Phone, Mail } from "lucide-react";
+import { MapPin, Star, Dumbbell, Waves, Heart, Users, Shield, Award, Clock, CheckCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import TrainersSection from "@/components/TrainersSection";
@@ -137,19 +135,136 @@ const Index = () => {
           <AnimatedHeroGrid />
         </div>
 
-        {/* Category Cards */}
-        <section className="py-16 md:py-24 px-4">
+        {/* Category Cards - Mobile Horizontal Layout */}
+        <section className="py-8 md:py-16 px-4">
           <div className="container mx-auto">
-            <div className="text-center mb-12 md:mb-16">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4 md:mb-6">
+            <div className="text-center mb-8 md:mb-12">
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
                 Explore Our Categories
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 Discover the perfect fitness and wellness experience tailored to your needs
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {/* Mobile: Horizontal Scroll, Desktop: Grid */}
+            <div className="md:hidden">
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <Card 
+                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  onClick={() => handleCategoryClick('gym', '/gyms')}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                      alt="Modern gym with state-of-the-art equipment"
+                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <Badge className="absolute top-2 right-2 bg-emerald-500 text-xs">
+                      {gyms.length} Available
+                    </Badge>
+                  </div>
+                  <CardHeader className="p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Dumbbell className="h-6 w-6 text-emerald-600" />
+                      <CardTitle className="text-lg font-bold text-gray-800">Gyms</CardTitle>
+                    </div>
+                    <CardDescription className="text-sm text-gray-600">
+                      Modern fitness centers with expert trainers
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-emerald-600 font-bold">From ₹1,000/month</span>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold">4.5+</span>
+                      </div>
+                    </div>
+                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-sm">
+                      Explore Gyms
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  onClick={() => handleCategoryClick('spa', '/spas')}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                      alt="Luxury spa with relaxing ambiance"
+                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <Badge className="absolute top-2 right-2 bg-purple-500 text-xs">
+                      {spas.length} Available
+                    </Badge>
+                  </div>
+                  <CardHeader className="p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Waves className="h-6 w-6 text-purple-600" />
+                      <CardTitle className="text-lg font-bold text-gray-800">Spas</CardTitle>
+                    </div>
+                    <CardDescription className="text-sm text-gray-600">
+                      Premium wellness centers for relaxation
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-purple-600 font-bold">From ₹2,500/session</span>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold">4.7+</span>
+                      </div>
+                    </div>
+                    <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-sm">
+                      Explore Spas
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                <Card 
+                  className="min-w-[280px] group hover:shadow-xl transition-all duration-300 cursor-pointer flex-shrink-0"
+                  onClick={() => handleCategoryClick('yoga', '/yoga')}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                      alt="Peaceful yoga studio"
+                      className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <Badge className="absolute top-2 right-2 bg-green-500 text-xs">
+                      {yogaStudios.length} Available
+                    </Badge>
+                  </div>
+                  <CardHeader className="p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <Heart className="h-6 w-6 text-green-600" />
+                      <CardTitle className="text-lg font-bold text-gray-800">Yoga</CardTitle>
+                    </div>
+                    <CardDescription className="text-sm text-gray-600">
+                      Serene studios for mindfulness practice
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="p-4 pt-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-green-600 font-bold">From ₹1,500/month</span>
+                      <div className="flex items-center space-x-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        <span className="text-sm font-semibold">4.6+</span>
+                      </div>
+                    </div>
+                    <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-sm">
+                      Explore Yoga
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+
+            {/* Desktop Grid Layout */}
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               <Card 
                 className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 cursor-pointer"
                 onClick={() => handleCategoryClick('gym', '/gyms')}
@@ -291,19 +406,55 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-12 md:py-16 px-4 bg-gray-50">
+        {/* Features Section - Mobile Horizontal Scroll */}
+        <section className="py-8 md:py-12 px-4 bg-gray-50">
           <div className="container mx-auto">
-            <div className="text-center mb-10 md:mb-14">
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 md:mb-5">
+            <div className="text-center mb-6 md:mb-10">
+              <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3">
                 Why Choose GymSpaYoga?
               </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 We provide the best platform to discover and book your ideal fitness and wellness experiences.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+            {/* Mobile: Horizontal Scroll */}
+            <div className="md:hidden">
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Shield className="h-5 w-5 text-emerald-600" />
+                    <h3 className="text-base font-semibold text-gray-800">Verified Listings</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    All listings are thoroughly verified for quality and authenticity.
+                  </p>
+                </Card>
+                
+                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Award className="h-5 w-5 text-blue-600" />
+                    <h3 className="text-base font-semibold text-gray-800">Top-Rated</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Discover the highest-rated gyms, spas, and yoga centers in your city.
+                  </p>
+                </Card>
+                
+                <Card className="min-w-[240px] p-4 bg-white/90 backdrop-blur-sm shadow-lg border border-gray-100 flex-shrink-0">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <Clock className="h-5 w-5 text-purple-600" />
+                    <h3 className="text-base font-semibold text-gray-800">Easy Booking</h3>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Book your sessions with just a few clicks and enjoy hassle-free scheduling.
+                  </p>
+                </Card>
+              </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
               <Card className="p-6 bg-white/90 backdrop-blur-sm shadow-xl border border-gray-100 hover:shadow-2xl transition-shadow duration-300">
                 <div className="flex items-center space-x-4 mb-4">
                   <Shield className="h-6 w-6 text-emerald-600" />
@@ -337,20 +488,68 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Featured Listings - Show real data when available */}
+        {/* Featured Listings - Mobile Horizontal Scroll */}
         {featuredListings.length > 0 && (
-          <section className="py-12 md:py-16 px-4">
+          <section className="py-8 md:py-12 px-4">
             <div className="container mx-auto">
-              <div className="text-center mb-10 md:mb-14">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3 md:mb-5">
+              <div className="text-center mb-6 md:mb-10">
+                <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-gray-800 mb-3">
                   Featured Listings
                 </h2>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   Explore some of our top-rated and most popular fitness and wellness destinations.
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+              {/* Mobile: Horizontal Scroll */}
+              <div className="md:hidden">
+                <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                  {featuredListings.map((listing) => (
+                    <Card key={listing.id} className="min-w-[280px] group hover:shadow-xl transition-all duration-300 overflow-hidden flex-shrink-0">
+                      <div className="relative overflow-hidden">
+                        <img 
+                          src={listing.image} 
+                          alt={listing.name}
+                          className="w-full h-40 object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <Badge className="absolute top-2 right-2 bg-emerald-500 text-xs">
+                          {listing.category}
+                        </Badge>
+                      </div>
+                      <CardHeader className="p-4">
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-base font-bold text-gray-800 line-clamp-1">
+                            {listing.name}
+                          </CardTitle>
+                          <div className="flex items-center space-x-1">
+                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                            <span className="text-sm font-semibold">{listing.rating}</span>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-4 pt-0">
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-gray-600 text-sm">
+                            <MapPin className="h-4 w-4 mr-2 text-emerald-600" />
+                            <span className="line-clamp-1">{listing.location}</span>
+                          </div>
+                          <div className="text-emerald-600 font-bold text-sm">
+                            {listing.price}
+                          </div>
+                        </div>
+                        <Link to={listing.link}>
+                          <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 text-sm">
+                            View Details
+                          </Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop Grid */}
+              <div className="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
                 {featuredListings.map((listing) => (
                   <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
                     <div className="relative overflow-hidden">
@@ -403,19 +602,50 @@ const Index = () => {
         {/* Trainers Section */}
         <TrainersSection />
 
-        {/* Testimonials Section */}
-        <section className="py-24 bg-white">
+        {/* Testimonials Section - Mobile Horizontal Scroll */}
+        <section className="py-12 md:py-24 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+            <div className="text-center mb-8 md:mb-16">
+              <h2 className="text-2xl md:text-4xl md:text-5xl font-bold text-gray-800 mb-4 md:mb-6">
                 Success Stories
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-base md:text-xl text-gray-600 max-w-3xl mx-auto">
                 Hear from our community members who have transformed their lives with GymSpaYoga.
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Mobile: Horizontal Scroll */}
+            <div className="md:hidden">
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+                {testimonials.map((testimonial, index) => (
+                  <Card key={index} className="min-w-[280px] p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-gray-50 flex-shrink-0">
+                    <div className="mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <span className="text-white font-bold text-lg">
+                          {testimonial.name.charAt(0)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-center mb-2">
+                        <h4 className="text-base font-bold text-gray-800">{testimonial.name}</h4>
+                        {testimonial.verified && (
+                          <Badge className="ml-2 bg-green-500 hover:bg-green-600 text-white text-xs">
+                            <CheckCircle className="h-2 w-2 mr-1" />
+                            Verified
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-gray-500 font-medium text-sm">{testimonial.role}</p>
+                    </div>
+                    <blockquote className="text-gray-600 italic leading-relaxed text-sm">
+                      "{testimonial.content}"
+                    </blockquote>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {testimonials.map((testimonial, index) => (
                 <Card key={index} className="p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-white to-gray-50">
                   <div className="mb-6">
