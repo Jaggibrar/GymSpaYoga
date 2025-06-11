@@ -146,7 +146,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
               {
                 title: "Premium Gyms",
@@ -171,6 +171,14 @@ const Index = () => {
                 link: "/yoga",
                 icon: Heart,
                 color: "from-purple-500 to-pink-500"
+              },
+              {
+                title: "Expert Trainers",
+                description: "Connect with certified fitness professionals",
+                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                link: "/trainers",
+                icon: Users,
+                color: "from-emerald-500 to-blue-500"
               }
             ].map((category, index) => (
               <Link key={index} to={category.link} className="group">

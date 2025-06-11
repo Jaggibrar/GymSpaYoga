@@ -15,6 +15,8 @@ import SpaDetails from "./pages/SpaDetails";
 import Yoga from "./pages/Yoga";
 import YogaDetails from "./pages/YogaDetails";
 import Trainers from "./pages/Trainers";
+import UserBookings from "./pages/UserBookings";
+import BusinessBookings from "./pages/BusinessBookings";
 import RegisterBusiness from "./pages/RegisterBusiness";
 import RegisterTrainer from "./pages/RegisterTrainer";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -67,6 +69,22 @@ function App() {
                     element={
                       <ProtectedRoute>
                         <Profile />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/user-bookings" 
+                    element={
+                      <ProtectedRoute>
+                        <UserBookings />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/business-bookings" 
+                    element={
+                      <ProtectedRoute>
+                        <BusinessBookings />
                       </ProtectedRoute>
                     } 
                   />
