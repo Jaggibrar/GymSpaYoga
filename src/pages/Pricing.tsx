@@ -2,10 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Users, TrendingUp, Shield, Zap, Crown, Dumbbell, Sparkles, ArrowRight, Gift } from "lucide-react";
+import { Check, Star, Users, TrendingUp, Shield, Zap, Crown, Sparkles, ArrowRight, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
-import AppFooter from "@/components/AppFooter";
 
 const Pricing = () => {
   const pricingPlans = [
@@ -127,34 +126,6 @@ const Pricing = () => {
         keywords="gym pricing, spa pricing, yoga studio pricing, business listing, wellness business growth"
         url="https://gymspayoga.com/pricing"
       />
-
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Dumbbell className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-            <div className="flex items-center space-x-2 sm:space-x-4">
-              <Link to="/blogs">
-                <Button variant="outline" className="text-xs sm:text-sm">
-                  Blogs
-                </Button>
-              </Link>
-              <Link to="/register-business">
-                <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs sm:text-sm">
-                  Get Started
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 py-8 sm:py-12">
         {/* Hero Section */}
@@ -342,8 +313,6 @@ const Pricing = () => {
           </div>
         </div>
       </div>
-
-      <AppFooter />
     </div>
   );
 };
