@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Gyms from "./pages/Gyms";
 import Spas from "./pages/Spas";
@@ -35,52 +36,54 @@ function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
-            <Toaster />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/gyms" element={<Gyms />} />
-                <Route path="/spas" element={<Spas />} />
-                <Route path="/yoga" element={<Yoga />} />
-                <Route path="/trainers" element={<Trainers />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/blogs" element={<Blogs />} />
-                <Route path="/support" element={<Support />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="/register-business" element={<RegisterBusiness />} />
-                <Route path="/register-trainer" element={<RegisterTrainer />} />
-                <Route 
-                  path="/manage-bookings" 
-                  element={
-                    <ProtectedRoute>
-                      <ManageBookings />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route path="/gym/:id" element={<GymDetails />} />
-                <Route path="/spa/:id" element={<SpaDetails />} />
-                <Route path="/yoga/:id" element={<YogaDetails />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
+            <AuthProvider>
+              <Toaster />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/gyms" element={<Gyms />} />
+                  <Route path="/spas" element={<Spas />} />
+                  <Route path="/yoga" element={<Yoga />} />
+                  <Route path="/trainers" element={<Trainers />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/blogs" element={<Blogs />} />
+                  <Route path="/support" element={<Support />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route path="/register-business" element={<RegisterBusiness />} />
+                  <Route path="/register-trainer" element={<RegisterTrainer />} />
+                  <Route 
+                    path="/manage-bookings" 
+                    element={
+                      <ProtectedRoute>
+                        <ManageBookings />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/admin" 
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route path="/gym/:id" element={<GymDetails />} />
+                  <Route path="/spa/:id" element={<SpaDetails />} />
+                  <Route path="/yoga/:id" element={<YogaDetails />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </AuthProvider>
           </TooltipProvider>
         </QueryClientProvider>
       </HelmetProvider>
