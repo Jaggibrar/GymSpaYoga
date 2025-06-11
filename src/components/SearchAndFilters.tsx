@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, MapPin, Filter, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface SearchAndFiltersProps {
   onSearchChange: (search: string) => void;
@@ -43,7 +44,20 @@ const SearchAndFilters = ({
   const handlePriceRangeSubmit = () => {
     const min = priceRange.min ? parseInt(priceRange.min) : 0;
     const max = priceRange.max ? parseInt(priceRange.max) : 999999;
+    
+    // Validate price range
+    if (priceRange.min && priceRange.max && min > max) {
+      toast.error("Minimum price cannot be greater than maximum price");
+      return;
+    }
+    
+    if (min < 0 || max < 0) {
+      toast.error("Price cannot be negative");
+      return;
+    }
+    
     onPriceRangeChange(min, max);
+    toast.success("Price range applied successfully");
   };
 
   const clearFilters = () => {
@@ -54,6 +68,7 @@ const SearchAndFilters = ({
     onLocationChange("");
     onPriceRangeChange(0, 999999);
     selectedAmenities.forEach(amenity => onAmenityToggle(amenity));
+    toast.info("All filters cleared");
   };
 
   const getPlaceholder = () => {
@@ -74,22 +89,24 @@ const SearchAndFilters = ({
       {/* Main Search Bar */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
           <Input
             placeholder={getPlaceholder()}
             value={searchTerm}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10 h-12 text-lg"
+            aria-label={`Search ${businessType}s`}
           />
         </div>
         
         <div className="relative flex-1">
-          <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" aria-hidden="true" />
           <Input
             placeholder="Enter city or area..."
             value={location}
             onChange={(e) => handleLocationChange(e.target.value)}
             className="pl-10 h-12 text-lg"
+            aria-label="Search by location"
           />
         </div>
 
@@ -97,6 +114,8 @@ const SearchAndFilters = ({
           onClick={() => setShowFilters(!showFilters)}
           variant="outline"
           className="h-12 px-6 border-2"
+          aria-expanded={showFilters}
+          aria-controls="advanced-filters"
         >
           <Filter className="h-4 w-4 mr-2" />
           Filters
@@ -105,7 +124,7 @@ const SearchAndFilters = ({
 
       {/* Advanced Filters */}
       {showFilters && (
-        <Card className="border-2 border-gray-100">
+        <Card className="border-2 border-gray-100" id="advanced-filters">
           <CardContent className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Price Range */}
@@ -119,12 +138,16 @@ const SearchAndFilters = ({
                     value={priceRange.min}
                     onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
                     type="number"
+                    min="0"
+                    aria-label="Minimum price"
                   />
                   <Input
                     placeholder="Max"
                     value={priceRange.max}
                     onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
                     type="number"
+                    min="0"
+                    aria-label="Maximum price"
                   />
                   <Button onClick={handlePriceRangeSubmit} size="sm">
                     Apply
@@ -137,17 +160,26 @@ const SearchAndFilters = ({
                 <label className="text-sm font-semibold text-gray-700 mb-2 block">
                   Amenities & Features
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="Available amenities">
                   {availableAmenities.slice(0, 8).map((amenity) => (
                     <Badge
                       key={amenity}
                       variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
                       className="cursor-pointer hover:bg-emerald-500 hover:text-white transition-colors"
                       onClick={() => onAmenityToggle(amenity)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onAmenityToggle(amenity);
+                        }
+                      }}
+                      aria-pressed={selectedAmenities.includes(amenity)}
                     >
                       {amenity}
                       {selectedAmenities.includes(amenity) && (
-                        <X className="h-3 w-3 ml-1" />
+                        <X className="h-3 w-3 ml-1" aria-hidden="true" />
                       )}
                     </Badge>
                   ))}

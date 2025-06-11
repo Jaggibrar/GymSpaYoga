@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -30,11 +30,21 @@ const MainNavigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
 
   const handleSignOut = async () => {
-    await signOut();
-    toast.success("Successfully signed out!");
-    navigate("/");
+    try {
+      await signOut();
+      toast.success("Successfully signed out!");
+      navigate("/");
+    } catch (error) {
+      toast.error("Error signing out. Please try again.");
+    }
   };
 
   const navLinks = [
@@ -45,12 +55,14 @@ const MainNavigation = () => {
     { to: "/about", label: "About", icon: Info },
   ];
 
+  const isActiveLink = (path: string) => location.pathname === path;
+
   return (
-    <nav className="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-100 sticky top-0 z-50" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-3" aria-label="GymSpaYoga Home">
             <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
               <Dumbbell className="h-6 w-6 text-white" />
             </div>
@@ -65,11 +77,16 @@ const MainNavigation = () => {
               <Link
                 key={link.to}
                 to={link.to}
-                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 relative group flex items-center space-x-2"
+                className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 relative group flex items-center space-x-2 ${
+                  isActiveLink(link.to) ? 'text-emerald-600' : ''
+                }`}
+                aria-current={isActiveLink(link.to) ? 'page' : undefined}
               >
                 <link.icon className="h-4 w-4" />
                 <span>{link.label}</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 group-hover:w-full transition-all duration-200"></span>
+                <span className={`absolute -bottom-1 left-0 h-0.5 bg-emerald-600 transition-all duration-200 ${
+                  isActiveLink(link.to) ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></span>
               </Link>
             ))}
           </div>
@@ -79,7 +96,7 @@ const MainNavigation = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
+                  <Button variant="ghost" className="flex items-center space-x-2" aria-label="User menu">
                     <div className="h-8 w-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
                       <User className="h-4 w-4 text-white" />
                     </div>
@@ -124,6 +141,9 @@ const MainNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -136,14 +156,17 @@ const MainNavigation = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="md:hidden py-4 border-t border-gray-200" id="mobile-menu">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="text-gray-700 hover:text-emerald-600 font-medium py-2 flex items-center space-x-2"
+                  className={`text-gray-700 hover:text-emerald-600 font-medium py-2 flex items-center space-x-2 ${
+                    isActiveLink(link.to) ? 'text-emerald-600' : ''
+                  }`}
                   onClick={() => setIsMobileMenuOpen(false)}
+                  aria-current={isActiveLink(link.to) ? 'page' : undefined}
                 >
                   <link.icon className="h-4 w-4" />
                   <span>{link.label}</span>

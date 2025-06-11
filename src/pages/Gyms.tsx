@@ -12,12 +12,14 @@ import AdvancedSearchFilters from "@/components/AdvancedSearchFilters";
 import EnhancedBusinessCard from "@/components/EnhancedBusinessCard";
 import PageHero from "@/components/PageHero";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 const Gyms = () => {
   useScrollToTop();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { gyms, loading: gymsLoading, error } = useGyms();
+  const { gyms, loading: gymsLoading, error, refetch } = useGyms();
   const [isLoading, setIsLoading] = useState(true);
 
   const {
@@ -38,12 +40,38 @@ const Gyms = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (error) {
-    toast.error(error);
-  }
+  useEffect(() => {
+    if (error) {
+      toast.error(`Failed to load gyms: ${error}`);
+    }
+  }, [error]);
+
+  const handleRetry = () => {
+    if (refetch) {
+      refetch();
+      toast.info("Refreshing gym listings...");
+    } else {
+      window.location.reload();
+    }
+  };
 
   if (isLoading || gymsLoading) {
     return <LoadingScreen category="gym" onComplete={() => setIsLoading(false)} />;
+  }
+
+  if (error && !gyms.length) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Unable to Load Gyms</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <Button onClick={handleRetry} className="flex items-center gap-2">
+            <RefreshCw className="h-4 w-4" />
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -78,9 +106,22 @@ const Gyms = () => {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
             Available Gyms
           </h2>
-          <Badge className="mb-4 bg-emerald-500">
-            Showing {filteredBusinesses.length} results
+          <Badge className="mb-4 bg-emerald-500" variant="default">
+            Showing {filteredBusinesses.length} of {gyms.length} results
           </Badge>
+          {error && gyms.length > 0 && (
+            <div className="mt-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetry}
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-3 w-3" />
+                Refresh
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -93,11 +134,26 @@ const Gyms = () => {
           ))}
         </div>
 
-        {filteredBusinesses.length === 0 && (
+        {filteredBusinesses.length === 0 && gyms.length > 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No gyms found matching your criteria.</p>
-            <p className="text-gray-500 text-sm mt-2">
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No gyms match your search</h3>
+            <p className="text-gray-600 text-lg mb-4">
+              No gyms found matching your criteria.
+            </p>
+            <p className="text-gray-500 text-sm">
               Try adjusting your search filters or check back later!
+            </p>
+          </div>
+        )}
+
+        {gyms.length === 0 && !error && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">No gyms available</h3>
+            <p className="text-gray-600 text-lg mb-4">
+              There are currently no gyms listed in our system.
+            </p>
+            <p className="text-gray-500 text-sm">
+              Please check back later for new listings!
             </p>
           </div>
         )}
