@@ -18,9 +18,9 @@ const MainNavigation = () => {
     { name: "Spas", path: "/spas" },
     { name: "Yoga", path: "/yoga" },
     { name: "Trainers", path: "/trainers" },
+    { name: "Blog", path: "/blogs" },
     { name: "About", path: "/about" },
     { name: "Pricing", path: "/pricing" },
-    { name: "Blogs", path: "/blogs" },
     { name: "Support", path: "/support" }
   ];
 

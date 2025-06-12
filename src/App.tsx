@@ -24,10 +24,15 @@ import ManageBookings from "./pages/ManageBookings";
 import Calendar from "./pages/Calendar";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
-import Blogs from "./pages/Blogs";
 import Support from "./pages/Support";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
+import BlogList from "./pages/BlogList";
+import BlogPost from "./pages/BlogPost";
+import PasswordReset from "./components/auth/PasswordReset";
+import ResetPassword from "./pages/ResetPassword";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MainNavigation from "./components/MainNavigation";
 import AppFooter from "./components/AppFooter";
@@ -50,6 +55,8 @@ function App() {
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<Signup />} />
+                  <Route path="/password-reset" element={<PasswordReset />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/gyms" element={<Gyms />} />
                   <Route path="/gyms/:id" element={<GymDetails />} />
                   <Route path="/spas" element={<Spas />} />
@@ -57,11 +64,14 @@ function App() {
                   <Route path="/yoga" element={<Yoga />} />
                   <Route path="/yoga/:id" element={<YogaDetails />} />
                   <Route path="/trainers" element={<Trainers />} />
+                  <Route path="/blogs" element={<BlogList />} />
+                  <Route path="/blogs/:slug" element={<BlogPost />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
                   <Route path="/register-business" element={<RegisterBusiness />} />
                   <Route path="/register-trainer" element={<RegisterTrainer />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/blogs" element={<Blogs />} />
                   <Route path="/support" element={<Support />} />
                   <Route path="/payment-success" element={<PaymentSuccess />} />
                   <Route 
