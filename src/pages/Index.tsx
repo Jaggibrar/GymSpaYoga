@@ -182,8 +182,8 @@ const Index = () => {
               }
             ].map((category, index) => (
               <Link key={index} to={category.link} className="group">
-                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                  <div className="relative h-40 sm:h-48 overflow-hidden">
+                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                  <div className="relative h-48 sm:h-56 overflow-hidden flex-shrink-0">
                     <img 
                       src={category.image} 
                       alt={category.title}
@@ -195,8 +195,8 @@ const Index = () => {
                       <h3 className="text-lg md:text-xl font-bold">{category.title}</h3>
                     </div>
                   </div>
-                  <CardContent className="p-4 md:p-6">
-                    <p className="text-gray-600 mobile-text">{category.description}</p>
+                  <CardContent className="p-4 md:p-6 flex-1 flex items-center">
+                    <p className="text-gray-600 mobile-text text-center">{category.description}</p>
                   </CardContent>
                 </Card>
               </Link>
