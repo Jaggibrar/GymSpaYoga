@@ -1,75 +1,33 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Eye, Heart, ArrowLeft, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import SEOHead from '@/components/SEOHead';
-import { Blog } from '@/hooks/useBlogs';
+import { useBlogs, Blog } from '@/hooks/useBlogs';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
+  const { blogs, likeBlog } = useBlogs();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
-    const fetchBlog = async () => {
-      if (!slug) return;
+    if (!slug) return;
 
-      try {
-        // Fetch blog with author info
-        const { data, error } = await supabase
-          .from('blogs')
-          .select(`
-            *,
-            user_profiles!inner(full_name, avatar_url)
-          `)
-          .eq('slug', slug)
-          .eq('status', 'published')
-          .single();
-
-        if (error) throw error;
-
-        const blogWithAuthor = {
-          ...data,
-          author: data.user_profiles
-        };
-
-        setBlog(blogWithAuthor);
-
-        // Check if user has liked this blog
-        if (user) {
-          const { data: likeData } = await supabase
-            .from('blog_likes')
-            .select('id')
-            .eq('blog_id', data.id)
-            .eq('user_id', user.id)
-            .single();
-
-          setIsLiked(!!likeData);
-        }
-
-        // Increment view count
-        await supabase
-          .from('blogs')
-          .update({ views_count: data.views_count + 1 })
-          .eq('id', data.id);
-
-      } catch (error) {
-        console.error('Error fetching blog:', error);
-        toast.error('Blog not found');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlog();
-  }, [slug, user]);
+    // Find blog by slug in mock data
+    const foundBlog = blogs.find(b => b.slug === slug);
+    if (foundBlog) {
+      setBlog(foundBlog);
+      // Simulate view count increment
+      console.log(`Incremented view count for blog: ${foundBlog.title}`);
+    }
+    setLoading(false);
+  }, [slug, blogs]);
 
   const handleLike = async () => {
     if (!user || !blog) {
@@ -78,37 +36,13 @@ const BlogPost = () => {
     }
 
     try {
-      if (isLiked) {
-        // Unlike
-        await supabase
-          .from('blog_likes')
-          .delete()
-          .eq('blog_id', blog.id)
-          .eq('user_id', user.id);
-
-        await supabase
-          .from('blogs')
-          .update({ likes_count: blog.likes_count - 1 })
-          .eq('id', blog.id);
-
-        setBlog(prev => prev ? { ...prev, likes_count: prev.likes_count - 1 } : null);
-        setIsLiked(false);
-      } else {
-        // Like
-        await supabase
-          .from('blog_likes')
-          .insert([{ blog_id: blog.id, user_id: user.id }]);
-
-        await supabase
-          .from('blogs')
-          .update({ likes_count: blog.likes_count + 1 })
-          .eq('id', blog.id);
-
-        setBlog(prev => prev ? { ...prev, likes_count: prev.likes_count + 1 } : null);
-        setIsLiked(true);
+      await likeBlog(blog.id);
+      // Update local state to reflect the change
+      const updatedBlogs = blogs.find(b => b.id === blog.id);
+      if (updatedBlogs) {
+        setBlog(updatedBlogs);
       }
-
-      toast.success(isLiked ? 'Removed from favorites' : 'Added to favorites');
+      toast.success(blog.is_liked ? 'Removed from favorites' : 'Added to favorites');
     } catch (error) {
       console.error('Error toggling like:', error);
       toast.error('Failed to update like');
@@ -218,9 +152,9 @@ const BlogPost = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleLike}
-                    className={`flex items-center gap-2 ${isLiked ? 'text-red-500 border-red-200' : ''}`}
+                    className={`flex items-center gap-2 ${blog.is_liked ? 'text-red-500 border-red-200' : ''}`}
                   >
-                    <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
+                    <Heart className={`h-4 w-4 ${blog.is_liked ? 'fill-current' : ''}`} />
                     <span>{blog.likes_count}</span>
                   </Button>
 
@@ -272,12 +206,12 @@ const BlogPost = () => {
 
             <div className="flex items-center gap-2">
               <Button
-                variant={isLiked ? "default" : "outline"}
+                variant={blog.is_liked ? "default" : "outline"}
                 onClick={handleLike}
                 className="flex items-center gap-2"
               >
-                <Heart className={`h-4 w-4 ${isLiked ? 'fill-current' : ''}`} />
-                {isLiked ? 'Liked' : 'Like'}
+                <Heart className={`h-4 w-4 ${blog.is_liked ? 'fill-current' : ''}`} />
+                {blog.is_liked ? 'Liked' : 'Like'}
               </Button>
 
               <Button variant="outline" onClick={handleShare}>
