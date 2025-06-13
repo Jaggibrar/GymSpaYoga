@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
@@ -10,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
   useScrollToTop();
@@ -43,77 +43,92 @@ const Index = () => {
   };
 
   const stats = [
-    { icon: Dumbbell, label: "Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "text-red-500" },
-    { icon: Waves, label: "Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "text-blue-500" },
-    { icon: Heart, label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "text-purple-500" },
-    { icon: Users, label: "Trainers", value: trainers.length, color: "text-emerald-500" }
+    { icon: Dumbbell, label: "Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "text-red-400" },
+    { icon: Waves, label: "Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "text-blue-400" },
+    { icon: Heart, label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "text-purple-400" },
+    { icon: Users, label: "Trainers", value: trainers.length, color: "text-emerald-400" }
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GymSpaYoga",
+    "description": "Find and book the best gyms, spas, and yoga studios in Mumbai, Delhi, Bangalore. Your wellness journey starts here!",
+    "url": "https://gymspayoga.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://gymspayoga.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 w-full">
-      {/* Hero Section without background image - full width */}
-      <section className="relative py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden w-full">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-600"></div>
+    <div className="min-h-screen w-full">
+      <SEOHead
+        title="GymSpaYoga - Find Best Gyms, Spas & Yoga Studios | Book Online"
+        description="Discover and book the best gyms, spas, and yoga studios in Mumbai, Delhi, Bangalore. Find certified trainers, premium facilities, and start your wellness journey today!"
+        keywords="gym, spa, yoga, fitness, wellness, Mumbai, Delhi, Bangalore, booking, trainers, meditation, massage, therapy"
+        url="https://gymspayoga.com"
+        structuredData={structuredData}
+      />
+
+      {/* Modern Hero Section with Gradient */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-blue-500 to-purple-600"></div>
         
-        <div className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 md:mb-6 leading-tight">
-            Find Your Perfect
-            <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              Wellness Destination
-            </span>
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto leading-relaxed font-semibold">
-            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
-              Discover 
-            </span>
-            <span className="bg-gradient-to-r from-red-300 via-orange-300 to-red-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
-              premium gyms
-            </span>
-            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
-              , 
-            </span>
-            <span className="bg-gradient-to-r from-blue-300 via-cyan-300 to-blue-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
-              luxurious spas
-            </span>
-            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
-              , and 
-            </span>
-            <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 bg-clip-text text-transparent drop-shadow-lg mx-2">
-              peaceful yoga studios
-            </span>
-            <span className="bg-gradient-to-r from-cyan-200 via-white to-cyan-200 bg-clip-text text-transparent drop-shadow-lg">
-              near you.
-            </span>
-            <span className="block mt-2 bg-gradient-to-r from-yellow-200 via-white to-yellow-200 bg-clip-text text-transparent drop-shadow-lg font-bold">
-              Start your wellness journey today.
-            </span>
-          </p>
-          
-          {/* Mobile-optimized Search Bar - full width */}
-          <div className="w-full max-w-4xl mx-auto mb-6 md:mb-8">
-            <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 md:p-4 shadow-2xl">
-              <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-40 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
+          {/* Main Heading */}
+          <div className="mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
+              <span className="block">Find Your Perfect</span>
+              <span className="block bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
+                Wellness Destination
+              </span>
+            </h1>
+            
+            <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto font-medium leading-relaxed">
+              Discover <span className="text-red-300 font-bold">premium gyms</span>, 
+              <span className="text-blue-300 font-bold"> luxurious spas</span>, and 
+              <span className="text-purple-300 font-bold"> peaceful yoga studios</span> near you.
+              <span className="block mt-2 text-yellow-300 font-bold">Start your wellness journey today.</span>
+            </p>
+          </div>
+
+          {/* Enhanced Search Bar */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
+              <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <Input
                     placeholder="Search gyms, spas, yoga studios..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-emerald-500"
+                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500 rounded-2xl bg-gray-50"
+                    aria-label="Search for wellness destinations"
                   />
                 </div>
                 <div className="relative flex-1">
-                  <MapPin className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
+                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <Input
                     placeholder="Enter location..."
                     value={locationFilter}
                     onChange={(e) => setLocationFilter(e.target.value)}
-                    className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-emerald-500"
+                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500 rounded-2xl bg-gray-50"
+                    aria-label="Enter your location"
                   />
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="h-12 md:h-14 px-6 md:px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold touch-target"
+                  className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Search
                 </Button>
@@ -121,16 +136,26 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Mobile-optimized Quick Stats - full width */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 w-full max-w-4xl mx-auto">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {stats.map((stat, index) => (
-              <div key={index} className="bg-white/20 backdrop-blur-sm rounded-xl p-3 md:p-4 text-white">
-                <stat.icon className={`h-6 w-6 md:h-8 md:w-8 ${stat.color} mx-auto mb-1 md:mb-2`} />
-                <div className="text-xl md:text-2xl font-bold">{stat.value}</div>
-                <div className="text-xs md:text-sm opacity-90">{stat.label}</div>
+              <div 
+                key={index} 
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+              >
+                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-3`} />
+                <div className="text-3xl font-bold mb-1">{stat.value}</div>
+                <div className="text-sm opacity-90 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 

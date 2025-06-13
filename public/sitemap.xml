@@ -4,377 +4,198 @@
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" 
         xmlns:xhtml="http://www.w3.org/1999/xhtml" 
         xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" 
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
 <!-- Homepage -->
 <url>
-<loc>https://gymspayoga.com/</loc>
-<changefreq>daily</changefreq>
-<priority>1.0</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-<image:image>
-<image:loc>https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80</image:loc>
-<image:caption>GymSpaYoga - Find Best Gyms, Spas &amp; Yoga Studios</image:caption>
-<image:title>GymSpaYoga Homepage</image:title>
-</image:image>
+  <loc>https://gymspayoga.com/</loc>
+  <changefreq>daily</changefreq>
+  <priority>1.0</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <!-- Main Service Pages -->
 <url>
-<loc>https://gymspayoga.com/gyms</loc>
-<changefreq>daily</changefreq>
-<priority>0.9</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-<image:image>
-<image:loc>https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80</image:loc>
-<image:caption>Find Best Gyms Near You</image:caption>
-</image:image>
+  <loc>https://gymspayoga.com/gyms</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/spas</loc>
-<changefreq>daily</changefreq>
-<priority>0.9</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-<image:image>
-<image:loc>https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80</image:loc>
-<image:caption>Luxury Spa Treatments</image:caption>
-</image:image>
+  <loc>https://gymspayoga.com/spas</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/yoga</loc>
-<changefreq>daily</changefreq>
-<priority>0.9</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-<image:image>
-<image:loc>https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80</image:loc>
-<image:caption>Yoga Classes and Studios</image:caption>
-</image:image>
+  <loc>https://gymspayoga.com/yoga</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/trainers</loc>
-<changefreq>daily</changefreq>
-<priority>0.9</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/trainers</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
-<!-- Business & Registration Pages -->
+<!-- Business Registration Pages -->
 <url>
-<loc>https://gymspayoga.com/register-business</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/register-trainer</loc>
-<changefreq>weekly</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/register-business</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/pricing</loc>
-<changefreq>weekly</changefreq>
-<priority>0.9</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/register-trainer</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
-<!-- Content & Information Pages -->
+<!-- Information Pages -->
 <url>
-<loc>https://gymspayoga.com/blogs</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/about</loc>
-<changefreq>monthly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/about</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.7</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/support</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/pricing</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/payment-success</loc>
-<changefreq>weekly</changefreq>
-<priority>0.4</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/support</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.6</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
-<!-- Legal & Policy Pages -->
+<!-- Blog Pages -->
 <url>
-<loc>https://gymspayoga.com/privacy-policy</loc>
-<changefreq>monthly</changefreq>
-<priority>0.3</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/blogs</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
+<!-- Legal Pages -->
 <url>
-<loc>https://gymspayoga.com/terms-of-service</loc>
-<changefreq>monthly</changefreq>
-<priority>0.3</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<!-- Location-Based Landing Pages for Local SEO -->
-<url>
-<loc>https://gymspayoga.com/gyms/mumbai</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/privacy-policy</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.3</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/gyms/delhi</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/terms-of-service</loc>
+  <changefreq>monthly</changefreq>
+  <priority>0.3</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
+</url>
+
+<!-- Payment Success Page -->
+<url>
+  <loc>https://gymspayoga.com/payment-success</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.4</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
+</url>
+
+<!-- Location-Based Landing Pages -->
+<url>
+  <loc>https://gymspayoga.com/gyms/mumbai</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/gyms/bangalore</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/gyms/delhi</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/gyms/pune</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/gyms/bangalore</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/gyms/hyderabad</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/spas/mumbai</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/gyms/chennai</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/spas/delhi</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/spas/mumbai</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/spas/bangalore</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/spas/delhi</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/yoga/mumbai</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/spas/bangalore</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/yoga/delhi</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 <url>
-<loc>https://gymspayoga.com/spas/pune</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/yoga/mumbai</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/yoga/delhi</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/yoga/bangalore</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/yoga/pune</loc>
-<changefreq>daily</changefreq>
-<priority>0.8</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<!-- Blog Posts - SEO Optimized Sample URLs -->
-<url>
-<loc>https://gymspayoga.com/blogs/best-gyms-mumbai-2025</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-<news:news>
-<news:publication>
-<news:name>GymSpaYoga Blog</news:name>
-<news:language>en</news:language>
-</news:publication>
-<news:publication_date>2025-06-13T00:00:00+00:00</news:publication_date>
-<news:title>Best Gyms in Mumbai 2025 - Complete Guide</news:title>
-</news:news>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/luxury-spa-treatments-delhi</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/yoga-benefits-beginners-guide</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/fitness-trends-2025-india</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/wellness-journey-complete-guide</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/home-workout-equipment-guide</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/meditation-stress-relief-techniques</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/blogs/nutrition-fitness-meal-planning</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<!-- Trainer and Business Detail Pages (Sample) -->
-<url>
-<loc>https://gymspayoga.com/trainers/certified-personal-trainer-mumbai</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/trainers/yoga-instructor-delhi</loc>
-<changefreq>weekly</changefreq>
-<priority>0.6</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<!-- Service Category Pages -->
-<url>
-<loc>https://gymspayoga.com/services/personal-training</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/services/group-fitness-classes</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/services/spa-massage-therapy</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
-</url>
-
-<url>
-<loc>https://gymspayoga.com/services/yoga-meditation-classes</loc>
-<changefreq>weekly</changefreq>
-<priority>0.7</priority>
-<lastmod>2025-06-13T00:00:00+00:00</lastmod>
-<mobile:mobile/>
+  <loc>https://gymspayoga.com/yoga/bangalore</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2025-06-13T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
 </url>
 
 </urlset>
