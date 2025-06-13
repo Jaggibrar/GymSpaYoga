@@ -4,11 +4,12 @@
 
 User-agent: *
 Allow: /
+Crawl-delay: 1
 
 # Allow specific search engine bots with optimized crawl delays
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 1
+Crawl-delay: 0.5
 
 User-agent: Bingbot
 Allow: /
@@ -51,8 +52,14 @@ Allow: /
 User-agent: AppleBot
 Allow: /
 
+User-agent: PinterestBot
+Allow: /
+
+User-agent: InstagramBot
+Allow: /
+
 # Disallow admin, API, and private areas
-Disallow: /admin
+Disallow: /admin/
 Disallow: /api/
 Disallow: /private/
 Disallow: /_next/
@@ -62,8 +69,12 @@ Disallow: /business-bookings/
 Disallow: /profile/
 Disallow: /manage-bookings/
 Disallow: /calendar/
+Disallow: /login
+Disallow: /signup
+Disallow: /password-reset
+Disallow: /reset-password
 
-# Disallow tracking parameters
+# Disallow tracking parameters and duplicate content
 Disallow: /*?*utm_source=
 Disallow: /*?*utm_medium=
 Disallow: /*?*utm_campaign=
@@ -73,8 +84,6 @@ Disallow: /*?*fbclid=
 Disallow: /*?*gclid=
 Disallow: /*?*ref=
 Disallow: /*?*source=
-
-# Disallow duplicate content
 Disallow: /*?sort=
 Disallow: /*?filter=
 Disallow: /*?page=
@@ -89,13 +98,26 @@ Allow: /sitemap.xml
 Allow: /robots.txt
 Allow: /favicon.ico
 Allow: /site.webmanifest
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.webp$
 
-# Important files
+# Important files and sitemaps
 Sitemap: https://gymspayoga.com/sitemap.xml
+Sitemap: https://gymspayoga.com/sitemap-blogs.xml
+Sitemap: https://gymspayoga.com/sitemap-businesses.xml
 
-# Crawl-delay for general bots
-Crawl-delay: 1
+# General crawl-delay for unknown bots
+Crawl-delay: 2
 
-# Additional instructions for better SEO
-# Host: https://gymspayoga.com
+# Host declaration
+Host: https://gymspayoga.com
+
+# Contact information
 # Contact: gymspayoga@gmail.com
+# Website: https://gymspayoga.com
