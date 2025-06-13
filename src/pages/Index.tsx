@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
@@ -73,109 +72,101 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Compact Hero Section with Blue/Mint Theme */}
-      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        {/* Blue to Mint Gradient Background */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)" }}></div>
+      {/* Hero Section with Background Image */}
+      <section className="relative h-[70vh] min-h-[500px] max-h-[600px] flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Spa wellness background"
+            className="w-full h-full object-cover"
+          />
+        </div>
         
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 text-center">
-          {/* Compact Typography */}
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 leading-tight">
+        {/* Blue to Mint Gradient Overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.85 }}></div>
+        
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
+          {/* Hero Content - Properly Constrained */}
+          <div className="max-w-4xl mx-auto">
+            {/* Main Heading */}
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
               <span className="block drop-shadow-lg">
-                Discover Your
+                Discover the
               </span>
               <span className="block text-[#0FFCBE] drop-shadow-lg">
-                Wellness Haven
+                Wonder
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-white/95 mb-6 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-sm">
-              Transform your life with premium fitness centers, luxurious wellness spas, and peaceful yoga sanctuaries
+            {/* Subtitle */}
+            <p className="text-base sm:text-lg lg:text-xl text-white/95 mb-8 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-sm">
+              Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
             </p>
-          </div>
 
-          {/* Search Bar with Blur Background */}
-          <div className="max-w-3xl mx-auto mb-6">
-            <div className="relative">
-              <div className="relative bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 shadow-xl">
-                <div className="flex flex-col gap-3 md:flex-row md:gap-4">
-                  <div className="relative flex-1">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                      <Input
-                        placeholder="Search gyms, spas, yoga studios..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 h-11 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                        aria-label="Search for wellness destinations"
-                      />
+            {/* Search Bar with Enhanced Blur Background */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="relative">
+                <div className="relative bg-white/10 backdrop-blur-2xl rounded-2xl p-4 border border-white/20 shadow-2xl">
+                  <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+                    <div className="relative flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+                        <Input
+                          placeholder="Search gyms, spas, yoga studios..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 h-12 text-base border-0 bg-white/15 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                          aria-label="Search for wellness destinations"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="relative flex-1">
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                      <Input
-                        placeholder="Enter your location..."
-                        value={locationFilter}
-                        onChange={(e) => setLocationFilter(e.target.value)}
-                        className="pl-10 h-11 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                        aria-label="Enter your location"
-                      />
+                    
+                    <div className="relative flex-1">
+                      <div className="relative">
+                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+                        <Input
+                          placeholder="Enter your location..."
+                          value={locationFilter}
+                          onChange={(e) => setLocationFilter(e.target.value)}
+                          className="pl-10 h-12 text-base border-0 bg-white/15 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                          aria-label="Enter your location"
+                        />
+                      </div>
                     </div>
+                    
+                    <Button 
+                      onClick={handleSearch}
+                      className="h-12 px-8 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                    >
+                      <Search className="h-4 w-4 mr-2" />
+                      Explore
+                    </Button>
                   </div>
-                  
-                  <Button 
-                    onClick={handleSearch}
-                    className="h-11 px-6 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
-                  >
-                    <Search className="h-4 w-4 mr-2" />
-                    Explore
-                  </Button>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Stats Cards without Icons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto mb-6">
-            {stats.map((stat, index) => (
-              <div 
-                key={index} 
-                className="group relative overflow-hidden rounded-xl transition-all duration-500 hover:scale-105"
-              >
-                <div className="relative bg-white/20 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:bg-white/25 transition-all duration-300">
-                  <div className="text-xl md:text-2xl font-bold mb-1 text-white">
-                    {stat.value}+
-                  </div>
-                  <div className="text-xs text-white/90 font-medium">
-                    {stat.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link to="/signup">
-              <Button 
-                size="lg" 
-                className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                Start Your Journey
-              </Button>
-            </Link>
-            <Link to="/pricing">
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                View Pricing
-              </Button>
-            </Link>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/signup">
+                <Button 
+                  size="lg" 
+                  className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  Start Your Journey
+                </Button>
+              </Link>
+              <Link to="/pricing">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  View Pricing
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
