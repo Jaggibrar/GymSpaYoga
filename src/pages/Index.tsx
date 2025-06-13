@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
@@ -10,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEOHead from "@/components/SEOHead";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Index = () => {
   useScrollToTop();
@@ -73,13 +75,15 @@ const Index = () => {
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden" role="banner">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <img 
+          <OptimizedImage 
             src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-            alt="Spa wellness background"
+            alt="Spa wellness background showing serene wellness environment"
             className="w-full h-full object-cover"
+            priority={true}
+            sizes="100vw"
           />
         </div>
         
@@ -89,7 +93,7 @@ const Index = () => {
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8 md:space-y-12">
             {/* Main Heading */}
-            <div>
+            <header>
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 md:mb-6 leading-tight">
                 <span className="block drop-shadow-lg">
                   Discover the
@@ -103,14 +107,14 @@ const Index = () => {
               <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 md:mb-12 font-light leading-relaxed drop-shadow-sm max-w-3xl mx-auto">
                 Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
               </p>
-            </div>
+            </header>
 
             {/* Search Bar */}
             <div className="space-y-6 md:space-y-8">
               <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-4xl mx-auto">
                 <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                   <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" aria-hidden="true" />
                     <Input
                       placeholder="Search gyms, spas, yoga studios..."
                       value={searchTerm}
@@ -121,7 +125,7 @@ const Index = () => {
                   </div>
                   
                   <div className="relative flex-1">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" aria-hidden="true" />
                     <Input
                       placeholder="Enter your location..."
                       value={locationFilter}
@@ -134,8 +138,9 @@ const Index = () => {
                   <Button 
                     onClick={handleSearch}
                     className="h-14 px-8 md:px-12 bg-[#106EBE] hover:bg-[#106EBE]/90 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg"
+                    aria-label="Search for wellness destinations"
                   >
-                    <Search className="h-5 w-5 mr-2" />
+                    <Search className="h-5 w-5 mr-2" aria-hidden="true" />
                     Explore
                   </Button>
                 </div>
@@ -167,10 +172,10 @@ const Index = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white" aria-labelledby="categories-heading">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
+            <h2 id="categories-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Explore Our Categories
             </h2>
             <p className="mobile-text md:text-lg text-gray-600 max-w-2xl mx-auto">
@@ -216,14 +221,17 @@ const Index = () => {
               <Link key={index} to={category.link} className="group">
                 <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
                   <div className="relative h-48 sm:h-56 overflow-hidden flex-shrink-0">
-                    <img 
+                    <OptimizedImage 
                       src={category.image} 
-                      alt={category.title}
+                      alt={`${category.title} - ${category.description}`}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      width={500}
+                      height={300}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
                     <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60`}></div>
                     <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-white">
-                      <category.icon className="h-6 w-6 md:h-8 md:w-8 mb-1 md:mb-2" />
+                      <category.icon className="h-6 w-6 md:h-8 md:w-8 mb-1 md:mb-2" aria-hidden="true" />
                       <h3 className="text-lg md:text-xl font-bold">{category.title}</h3>
                     </div>
                   </div>
@@ -238,10 +246,10 @@ const Index = () => {
       </section>
 
       {/* Featured Businesses */}
-      <section className="py-16 md:py-20 bg-white w-full">
+      <section className="py-16 md:py-20 bg-white w-full" aria-labelledby="featured-heading">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
+            <h2 id="featured-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
               Featured Destinations
             </h2>
             <p className="mobile-text md:text-lg text-gray-600">
@@ -250,7 +258,7 @@ const Index = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" role="status" aria-label="Loading featured destinations">
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="animate-pulse">
                   <div className="h-40 md:h-48 bg-gray-200"></div>
@@ -266,10 +274,13 @@ const Index = () => {
               {filteredBusinesses.slice(0, 6).map((business) => (
                 <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                   <div className="relative overflow-hidden h-40 md:h-48">
-                    <img 
+                    <OptimizedImage 
                       src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
-                      alt={business.business_name}
+                      alt={`${business.business_name} - ${business.category} in ${business.city}`}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      width={500}
+                      height={300}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     <Badge className="absolute top-3 md:top-4 right-3 md:right-4 bg-emerald-500 hover:bg-emerald-600">
                       {business.category}
@@ -280,7 +291,7 @@ const Index = () => {
                       {business.business_name}
                     </CardTitle>
                     <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-                      <MapPin className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
+                      <MapPin className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" aria-hidden="true" />
                       <span className="truncate">{business.city}, {business.state}</span>
                     </div>
                   </CardHeader>
@@ -290,7 +301,7 @@ const Index = () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-400 fill-current" />
+                        <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-400 fill-current" aria-hidden="true" />
                         <span className="text-xs md:text-sm font-medium">4.8</span>
                         <span className="text-xs md:text-sm text-gray-500">(124)</span>
                       </div>
@@ -298,6 +309,7 @@ const Index = () => {
                         size="sm" 
                         onClick={() => handleBookNow(business.business_name)}
                         className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-xs md:text-sm"
+                        aria-label={`Book now at ${business.business_name}`}
                       >
                         Book Now
                       </Button>
@@ -308,7 +320,7 @@ const Index = () => {
             </div>
           ) : (
             <div className="text-center py-8 md:py-12">
-              <div className="text-4xl md:text-6xl mb-3 md:mb-4">🏃‍♂️</div>
+              <div className="text-4xl md:text-6xl mb-3 md:mb-4" role="img" aria-label="Running person emoji">🏃‍♂️</div>
               <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No businesses found</h3>
               <p className="text-gray-600 mb-4 md:mb-6 mobile-text md:text-base">
                 {searchTerm || locationFilter 
@@ -334,7 +346,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden">
+      <section className="py-16 md:py-20 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="cta-heading">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -343,7 +355,7 @@ const Index = () => {
         
         <div className="relative w-full px-4 md:px-8 mx-auto max-w-7xl text-center">
           <div className="max-w-4xl mx-auto text-white">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
+            <h2 id="cta-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
               Ready to Transform Your
               <span className="block text-[#0FFCBE] drop-shadow-2xl">
                 Wellness Journey?

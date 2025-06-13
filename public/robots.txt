@@ -61,7 +61,6 @@ Allow: /
 # Disallow admin, API, and private areas
 Disallow: /admin/
 Disallow: /api/
-Disallow: /private/
 Disallow: /_next/
 Disallow: /dashboard/
 Disallow: /user-bookings/

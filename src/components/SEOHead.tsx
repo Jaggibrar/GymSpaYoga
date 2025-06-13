@@ -358,6 +358,11 @@ const SEOHead = ({
       <link rel="dns-prefetch" href="//images.unsplash.com" />
       <link rel="dns-prefetch" href="//api.gymspayoga.com" />
       
+      {/* Preload LCP Image */}
+      <link rel="preload" as="image" href={image} />
+      
+      {/* Critical CSS preload would go here if you had external CSS */}
+      
       {/* Structured Data */}
       <script type="application/ld+json">
         {JSON.stringify(finalStructuredData)}
