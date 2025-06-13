@@ -11,6 +11,7 @@ import { Search, MapPin, Star, Clock, Waves } from "lucide-react";
 import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
 import SEOHead from "@/components/SEOHead";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const Spas = () => {
   useScrollToTop();
@@ -49,11 +50,6 @@ const Spas = () => {
         "addressLocality": spa.city,
         "addressRegion": spa.state,
         "addressCountry": "IN"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": spa.latitude || 0,
-        "longitude": spa.longitude || 0
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
@@ -187,13 +183,13 @@ const Spas = () => {
             {filteredSpas.map((spa) => (
               <Card key={spa.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative overflow-hidden h-40 md:h-48">
-                  <img 
+                  <OptimizedImage 
                     src={spa.image_urls?.[0] || "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
                     alt={`${spa.business_name} - Luxury spa treatments and wellness services`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                    width="500"
-                    height="300"
+                    width={500}
+                    height={300}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                   <Badge className="absolute top-3 md:top-4 right-3 md:right-4 bg-blue-500 hover:bg-blue-600">
                     {spa.category}
