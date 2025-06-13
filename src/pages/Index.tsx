@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
+import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart, Sparkles } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
 import { useTrainers } from "@/hooks/useTrainers";
@@ -43,10 +43,10 @@ const Index = () => {
   };
 
   const stats = [
-    { icon: Dumbbell, label: "Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "text-red-400" },
-    { icon: Waves, label: "Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "text-blue-400" },
-    { icon: Heart, label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "text-purple-400" },
-    { icon: Users, label: "Trainers", value: trainers.length, color: "text-emerald-400" }
+    { icon: "🏋️", label: "Premium Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "from-red-400 to-orange-400" },
+    { icon: "🧘", label: "Luxury Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "from-blue-400 to-cyan-400" },
+    { icon: "🕉️", label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "from-purple-400 to-pink-400" },
+    { icon: "💪", label: "Expert Trainers", value: trainers.length, color: "from-emerald-400 to-teal-400" }
   ];
 
   const structuredData = {
@@ -72,95 +72,160 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Modern Hero Section with Gradient */}
+      {/* Enhanced Hero Section with Glassmorphism */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 via-blue-500 to-purple-600"></div>
+        {/* Deep Gradient Background with Blur Effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
         
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-white rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-          <div className="absolute -bottom-8 left-40 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+        {/* Animated Background Blobs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
+          <div className="absolute top-40 -right-40 w-96 h-96 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
+          <div className="absolute -bottom-40 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-r from-emerald-400/30 to-teal-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
         </div>
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
-          {/* Main Heading */}
-          <div className="mb-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
-              <span className="block">Find Your Perfect</span>
-              <span className="block bg-gradient-to-r from-yellow-300 via-orange-300 to-yellow-300 bg-clip-text text-transparent">
-                Wellness Destination
-              </span>
-            </h1>
+        {/* Floating Sparkles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <Sparkles
+              key={i}
+              className={`absolute text-white/20 animate-pulse`}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+                fontSize: `${Math.random() * 8 + 8}px`
+              }}
+            />
+          ))}
+        </div>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center">
+          {/* Elegant Typography with Soft Shadows */}
+          <div className="mb-12">
+            <div className="mb-6">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-4 leading-tight">
+                <span className="block bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent drop-shadow-2xl">
+                  Discover Your
+                </span>
+                <span className="block bg-gradient-to-r from-emerald-300 via-cyan-300 to-purple-300 bg-clip-text text-transparent drop-shadow-2xl animate-pulse">
+                  Wellness Haven
+                </span>
+              </h1>
+            </div>
             
-            <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-4xl mx-auto font-medium leading-relaxed">
-              Discover <span className="text-red-300 font-bold">premium gyms</span>, 
-              <span className="text-blue-300 font-bold"> luxurious spas</span>, and 
-              <span className="text-purple-300 font-bold"> peaceful yoga studios</span> near you.
-              <span className="block mt-2 text-yellow-300 font-bold">Start your wellness journey today.</span>
+            <p className="text-xl sm:text-2xl md:text-3xl text-white/95 mb-8 max-w-5xl mx-auto font-light leading-relaxed drop-shadow-lg">
+              Transform your life with 
+              <span className="font-semibold text-red-300"> premium fitness centers</span>, 
+              <span className="font-semibold text-blue-300"> luxurious wellness spas</span>, and 
+              <span className="font-semibold text-purple-300"> peaceful yoga sanctuaries</span>
             </p>
           </div>
 
-          {/* Enhanced Search Bar */}
-          <div className="max-w-4xl mx-auto mb-8">
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
-              <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-                <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <Input
-                    placeholder="Search gyms, spas, yoga studios..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500 rounded-2xl bg-gray-50"
-                    aria-label="Search for wellness destinations"
-                  />
+          {/* Glassmorphism Search Bar */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="relative">
+              {/* Glowing border effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/50 via-purple-400/50 to-pink-400/50 rounded-3xl blur-sm"></div>
+              
+              <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+                <div className="flex flex-col gap-6 md:flex-row md:gap-8">
+                  <div className="relative flex-1 group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-2xl blur-sm group-focus-within:blur-none transition-all duration-300"></div>
+                    <div className="relative">
+                      <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white/70 h-6 w-6 group-focus-within:text-white transition-colors" />
+                      <Input
+                        placeholder="Search gyms, spas, yoga studios..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-14 h-16 text-lg border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-white/30 rounded-2xl font-medium"
+                        aria-label="Search for wellness destinations"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="relative flex-1 group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl blur-sm group-focus-within:blur-none transition-all duration-300"></div>
+                    <div className="relative">
+                      <MapPin className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white/70 h-6 w-6 group-focus-within:text-white transition-colors" />
+                      <Input
+                        placeholder="Enter your location..."
+                        value={locationFilter}
+                        onChange={(e) => setLocationFilter(e.target.value)}
+                        className="pl-14 h-16 text-lg border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-white/30 rounded-2xl font-medium"
+                        aria-label="Enter your location"
+                      />
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleSearch}
+                    className="h-16 px-10 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                  >
+                    <Search className="h-5 w-5 mr-2" />
+                    Explore
+                  </Button>
                 </div>
-                <div className="relative flex-1">
-                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                  <Input
-                    placeholder="Enter location..."
-                    value={locationFilter}
-                    onChange={(e) => setLocationFilter(e.target.value)}
-                    className="pl-12 h-14 text-lg border-0 focus:ring-2 focus:ring-emerald-500 rounded-2xl bg-gray-50"
-                    aria-label="Enter your location"
-                  />
-                </div>
-                <Button 
-                  onClick={handleSearch}
-                  className="h-14 px-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Search
-                </Button>
               </div>
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {/* Enhanced Glassmorphism Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {stats.map((stat, index) => (
               <div 
                 key={index} 
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-white border border-white/20 hover:bg-white/20 transition-all duration-300 hover:scale-105"
+                className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:scale-110"
               >
-                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-3`} />
-                <div className="text-3xl font-bold mb-1">{stat.value}</div>
-                <div className="text-sm opacity-90 font-medium">{stat.label}</div>
+                {/* Gradient border */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} opacity-60 rounded-3xl`}></div>
+                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-6 m-[1px] border border-white/20 hover:bg-white/20 transition-all duration-300">
+                  <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
+                    {stat.value}+
+                  </div>
+                  <div className="text-sm md:text-base text-white/90 font-medium">
+                    {stat.label}
+                  </div>
+                </div>
               </div>
             ))}
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/signup">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white font-bold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+              >
+                Start Your Journey
+              </Button>
+            </Link>
+            <Link to="/pricing">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+              >
+                View Pricing
+              </Button>
+            </Link>
           </div>
         </div>
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </div>
       </section>
 
       {/* Mobile-optimized Categories Section - full width */}
-      <section className="py-12 md:py-16 w-full">
+      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
@@ -231,7 +296,7 @@ const Index = () => {
       </section>
 
       {/* Mobile-optimized Featured Businesses - full width */}
-      <section className="py-12 md:py-16 bg-white/50 w-full">
+      <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
@@ -326,24 +391,41 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Mobile-optimized CTA Section - full width */}
-      <section className="py-12 md:py-16 bg-gradient-to-r from-emerald-500 to-blue-500 w-full">
-        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl text-center">
-          <div className="max-w-3xl mx-auto text-white">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4">
-              Ready to Start Your Wellness Journey?
+      {/* Enhanced CTA Section - full width */}
+      <section className="py-16 md:py-20 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 w-full relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative w-full px-4 md:px-8 mx-auto max-w-7xl text-center">
+          <div className="max-w-4xl mx-auto text-white">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
+              Ready to Transform Your
+              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                Wellness Journey?
+              </span>
             </h2>
-            <p className="text-base md:text-xl mb-6 md:mb-8 opacity-90">
-              Join thousands of users who have found their perfect wellness destination
+            <p className="text-xl md:text-2xl mb-10 opacity-90 leading-relaxed">
+              Join thousands who have discovered their perfect wellness destination
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/signup">
-                <Button size="lg" className="bg-white text-emerald-500 hover:bg-gray-100 px-6 md:px-8 py-3 touch-target w-full sm:w-auto">
-                  Sign Up Now
+                <Button 
+                  size="lg" 
+                  className="bg-white text-purple-600 hover:bg-gray-100 font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                >
+                  Get Started Free
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-500 px-6 md:px-8 py-3 touch-target w-full sm:w-auto">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                >
                   List Your Business
                 </Button>
               </Link>

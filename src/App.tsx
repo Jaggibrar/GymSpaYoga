@@ -35,7 +35,7 @@ import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import ProtectedRoute from "./components/ProtectedRoute";
-import MainNavigation from "./components/MainNavigation";
+import EnhancedNavigation from "./components/EnhancedNavigation";
 import AppFooter from "./components/AppFooter";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
@@ -51,7 +51,7 @@ function App() {
             <Toaster />
             <BrowserRouter>
               <div className="min-h-screen flex flex-col">
-                <MainNavigation />
+                <EnhancedNavigation />
                 <main className="flex-grow">
                   <Routes>
                     <Route path="/" element={<Index />} />
