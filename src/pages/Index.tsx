@@ -1,6 +1,7 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart, Sparkles } from "lucide-react";
+import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
 import { useTrainers } from "@/hooks/useTrainers";
@@ -43,10 +44,10 @@ const Index = () => {
   };
 
   const stats = [
-    { icon: "🏋️", label: "Premium Gyms", value: gyms.filter(g => g.business_type === 'gym').length, color: "from-red-400 to-orange-400" },
-    { icon: "🧘", label: "Luxury Spas", value: gyms.filter(g => g.business_type === 'spa').length, color: "from-blue-400 to-cyan-400" },
-    { icon: "🕉️", label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length, color: "from-purple-400 to-pink-400" },
-    { icon: "💪", label: "Expert Trainers", value: trainers.length, color: "from-emerald-400 to-teal-400" }
+    { label: "Premium Gyms", value: gyms.filter(g => g.business_type === 'gym').length },
+    { label: "Luxury Spas", value: gyms.filter(g => g.business_type === 'spa').length },
+    { label: "Yoga Studios", value: gyms.filter(g => g.business_type === 'yoga').length },
+    { label: "Expert Trainers", value: trainers.length }
   ];
 
   const structuredData = {
@@ -73,78 +74,53 @@ const Index = () => {
       />
 
       {/* Compact Hero Section with Blue/Mint Theme */}
-      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         {/* Blue to Mint Gradient Background */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)" }}></div>
         
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -left-20 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
-          <div className="absolute top-20 -right-20 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
-          <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
-        </div>
-
-        {/* Floating Sparkles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(15)].map((_, i) => (
-            <Sparkles
-              key={i}
-              className={`absolute text-white/20 animate-pulse`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                fontSize: `${Math.random() * 6 + 6}px`
-              }}
-            />
-          ))}
-        </div>
-
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 text-center">
           {/* Compact Typography */}
-          <div className="mb-8">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-4 leading-tight">
-              <span className="block drop-shadow-2xl">
+          <div className="mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 leading-tight">
+              <span className="block drop-shadow-lg">
                 Discover Your
               </span>
-              <span className="block text-[#0FFCBE] drop-shadow-2xl animate-pulse">
+              <span className="block text-[#0FFCBE] drop-shadow-lg">
                 Wellness Haven
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 max-w-4xl mx-auto font-light leading-relaxed drop-shadow-lg">
+            <p className="text-lg sm:text-xl text-white/95 mb-6 max-w-3xl mx-auto font-light leading-relaxed drop-shadow-sm">
               Transform your life with premium fitness centers, luxurious wellness spas, and peaceful yoga sanctuaries
             </p>
           </div>
 
-          {/* Compact Search Bar */}
-          <div className="max-w-4xl mx-auto mb-8">
+          {/* Search Bar with Blur Background */}
+          <div className="max-w-3xl mx-auto mb-6">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0FFCBE]/30 to-white/30 rounded-2xl blur-sm"></div>
-              
-              <div className="relative bg-white/15 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-2xl">
-                <div className="flex flex-col gap-4 md:flex-row md:gap-6">
-                  <div className="relative flex-1 group">
+              <div className="relative bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 shadow-xl">
+                <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+                  <div className="relative flex-1">
                     <div className="relative">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 h-5 w-5 group-focus-within:text-white transition-colors" />
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
                       <Input
                         placeholder="Search gyms, spas, yoga studios..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-12 h-12 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                        className="pl-10 h-11 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
                         aria-label="Search for wellness destinations"
                       />
                     </div>
                   </div>
                   
-                  <div className="relative flex-1 group">
+                  <div className="relative flex-1">
                     <div className="relative">
-                      <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 h-5 w-5 group-focus-within:text-white transition-colors" />
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
                       <Input
                         placeholder="Enter your location..."
                         value={locationFilter}
                         onChange={(e) => setLocationFilter(e.target.value)}
-                        className="pl-12 h-12 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                        className="pl-10 h-11 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
                         aria-label="Enter your location"
                       />
                     </div>
@@ -152,7 +128,7 @@ const Index = () => {
                   
                   <Button 
                     onClick={handleSearch}
-                    className="h-12 px-8 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                    className="h-11 px-6 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
                   >
                     <Search className="h-4 w-4 mr-2" />
                     Explore
@@ -162,21 +138,18 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Compact Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {/* Stats Cards without Icons */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto mb-6">
             {stats.map((stat, index) => (
               <div 
                 key={index} 
-                className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-105"
+                className="group relative overflow-hidden rounded-xl transition-all duration-500 hover:scale-105"
               >
-                <div className="relative bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/20 hover:bg-white/25 transition-all duration-300">
-                  <div className="text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">
-                    {stat.icon}
-                  </div>
-                  <div className="text-2xl md:text-3xl font-bold mb-1 text-white">
+                <div className="relative bg-white/20 backdrop-blur-xl rounded-xl p-3 border border-white/20 hover:bg-white/25 transition-all duration-300">
+                  <div className="text-xl md:text-2xl font-bold mb-1 text-white">
                     {stat.value}+
                   </div>
-                  <div className="text-sm text-white/90 font-medium">
+                  <div className="text-xs text-white/90 font-medium">
                     {stat.label}
                   </div>
                 </div>
@@ -185,11 +158,11 @@ const Index = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/signup">
               <Button 
                 size="lg" 
-                className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 Start Your Journey
               </Button>
@@ -198,7 +171,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
               >
                 View Pricing
               </Button>
