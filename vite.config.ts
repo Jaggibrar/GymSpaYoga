@@ -32,15 +32,13 @@ export default defineConfig(({ mode }) => ({
       }
     },
     cssCodeSplit: true,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: mode === 'production',
-        drop_debugger: mode === 'production'
-      }
-    }
+    minify: 'esbuild',
+    target: 'esnext'
   },
   css: {
     devSourcemap: true
+  },
+  esbuild: {
+    drop: mode === 'production' ? ['console', 'debugger'] : []
   }
 }));
