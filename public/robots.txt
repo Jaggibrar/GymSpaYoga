@@ -1,8 +1,11 @@
 
+# Robots.txt for GymSpaYoga.com
+# Updated: 2025-06-13
+
 User-agent: *
 Allow: /
 
-# Allow specific search engine bots
+# Allow specific search engine bots with optimized crawl delays
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
@@ -39,16 +42,60 @@ Allow: /
 User-agent: WhatsApp
 Allow: /
 
-# Disallow admin and private areas
+User-agent: TelegramBot
+Allow: /
+
+User-agent: SkypeUriPreview
+Allow: /
+
+User-agent: AppleBot
+Allow: /
+
+# Disallow admin, API, and private areas
 Disallow: /admin
 Disallow: /api/
 Disallow: /private/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /user-bookings/
+Disallow: /business-bookings/
+Disallow: /profile/
+Disallow: /manage-bookings/
+Disallow: /calendar/
+
+# Disallow tracking parameters
 Disallow: /*?*utm_source=
 Disallow: /*?*utm_medium=
 Disallow: /*?*utm_campaign=
+Disallow: /*?*utm_term=
+Disallow: /*?*utm_content=
+Disallow: /*?*fbclid=
+Disallow: /*?*gclid=
+Disallow: /*?*ref=
+Disallow: /*?*source=
+
+# Disallow duplicate content
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+Disallow: /search?*
+
+# Allow important files and directories
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: /assets/
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /favicon.ico
+Allow: /site.webmanifest
 
 # Important files
 Sitemap: https://gymspayoga.com/sitemap.xml
 
 # Crawl-delay for general bots
 Crawl-delay: 1
+
+# Additional instructions for better SEO
+# Host: https://gymspayoga.com
+# Contact: gymspayoga@gmail.com

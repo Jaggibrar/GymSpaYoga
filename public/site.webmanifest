@@ -2,7 +2,7 @@
 {
   "name": "GymSpaYoga - Find Gyms, Spas & Yoga Studios",
   "short_name": "GymSpaYoga",
-  "description": "Discover and book the best gyms, spas, and yoga studios near you",
+  "description": "Discover and book the best gyms, spas, and yoga studios in Mumbai, Delhi, Bangalore. Your wellness journey starts here!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,7 +10,25 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en-IN",
-  "categories": ["fitness", "wellness", "health", "lifestyle"],
+  "dir": "ltr",
+  "categories": ["fitness", "wellness", "health", "lifestyle", "sports", "medical"],
+  "keywords": "gym, spa, yoga, fitness, wellness, health, Mumbai, Delhi, Bangalore, booking, trainers",
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80",
+      "sizes": "1200x800",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "GymSpaYoga Homepage - Find gyms, spas and yoga studios"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=800&q=80",
+      "sizes": "400x800",
+      "type": "image/jpeg",
+      "form_factor": "narrow",
+      "label": "GymSpaYoga Mobile App - Book fitness sessions"
+    }
+  ],
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%2310b981'/><text y='.9em' font-size='60' text-anchor='middle' x='50' fill='white'>🏋️</text></svg>",
@@ -23,14 +41,67 @@
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ],
-  "screenshots": [
+  "shortcuts": [
     {
-      "src": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800&q=80",
-      "sizes": "1200x800",
-      "type": "image/jpeg",
-      "form_factor": "wide"
+      "name": "Find Gyms",
+      "short_name": "Gyms",
+      "description": "Find and book gym memberships",
+      "url": "/gyms",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23059669'/><text y='.9em' font-size='60' text-anchor='middle' x='50' fill='white'>💪</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Find Spas",
+      "short_name": "Spas",
+      "description": "Book luxury spa treatments",
+      "url": "/spas",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%236366f1'/><text y='.9em' font-size='60' text-anchor='middle' x='50' fill='white'>🧘</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Yoga Classes",
+      "short_name": "Yoga",
+      "description": "Join yoga classes and sessions",
+      "url": "/yoga",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23a855f7'/><text y='.9em' font-size='60' text-anchor='middle' x='50' fill='white'>🕉️</text></svg>",
+          "sizes": "96x96"
+        }
+      ]
     }
-  ]
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
