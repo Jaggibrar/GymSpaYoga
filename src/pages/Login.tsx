@@ -21,10 +21,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { error } = await signIn({
-        email: email,
-        password: password,
-      });
+      const { error } = await signIn(email, password);
 
       if (error) throw error;
 
