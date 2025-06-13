@@ -72,21 +72,21 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Enhanced Hero Section with Glassmorphism */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Deep Gradient Background with Blur Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900"></div>
+      {/* Compact Hero Section with Blue/Mint Theme */}
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        {/* Blue to Mint Gradient Background */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)" }}></div>
         
-        {/* Animated Background Blobs */}
+        {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-r from-cyan-400/30 to-blue-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
-          <div className="absolute top-40 -right-40 w-96 h-96 bg-gradient-to-r from-purple-400/30 to-pink-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
-          <div className="absolute -bottom-40 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-gradient-to-r from-emerald-400/30 to-teal-400/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
+          <div className="absolute top-20 -right-20 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-2000"></div>
+          <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-64 h-64 bg-white/10 rounded-full mix-blend-multiply filter blur-3xl animate-pulse animation-delay-4000"></div>
         </div>
 
         {/* Floating Sparkles */}
         <div className="absolute inset-0 pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(15)].map((_, i) => (
             <Sparkles
               key={i}
               className={`absolute text-white/20 animate-pulse`}
@@ -94,65 +94,57 @@ const Index = () => {
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 3}s`,
-                fontSize: `${Math.random() * 8 + 8}px`
+                fontSize: `${Math.random() * 6 + 6}px`
               }}
             />
           ))}
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 text-center">
-          {/* Elegant Typography with Soft Shadows */}
-          <div className="mb-12">
-            <div className="mb-6">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-4 leading-tight">
-                <span className="block bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent drop-shadow-2xl">
-                  Discover Your
-                </span>
-                <span className="block bg-gradient-to-r from-emerald-300 via-cyan-300 to-purple-300 bg-clip-text text-transparent drop-shadow-2xl animate-pulse">
-                  Wellness Haven
-                </span>
-              </h1>
-            </div>
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
+          {/* Compact Typography */}
+          <div className="mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-4 leading-tight">
+              <span className="block drop-shadow-2xl">
+                Discover Your
+              </span>
+              <span className="block text-[#0FFCBE] drop-shadow-2xl animate-pulse">
+                Wellness Haven
+              </span>
+            </h1>
             
-            <p className="text-xl sm:text-2xl md:text-3xl text-white/95 mb-8 max-w-5xl mx-auto font-light leading-relaxed drop-shadow-lg">
-              Transform your life with 
-              <span className="font-semibold text-red-300"> premium fitness centers</span>, 
-              <span className="font-semibold text-blue-300"> luxurious wellness spas</span>, and 
-              <span className="font-semibold text-purple-300"> peaceful yoga sanctuaries</span>
+            <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 max-w-4xl mx-auto font-light leading-relaxed drop-shadow-lg">
+              Transform your life with premium fitness centers, luxurious wellness spas, and peaceful yoga sanctuaries
             </p>
           </div>
 
-          {/* Glassmorphism Search Bar */}
-          <div className="max-w-5xl mx-auto mb-12">
+          {/* Compact Search Bar */}
+          <div className="max-w-4xl mx-auto mb-8">
             <div className="relative">
-              {/* Glowing border effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/50 via-purple-400/50 to-pink-400/50 rounded-3xl blur-sm"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-[#0FFCBE]/30 to-white/30 rounded-2xl blur-sm"></div>
               
-              <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
-                <div className="flex flex-col gap-6 md:flex-row md:gap-8">
+              <div className="relative bg-white/15 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-2xl">
+                <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                   <div className="relative flex-1 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-2xl blur-sm group-focus-within:blur-none transition-all duration-300"></div>
                     <div className="relative">
-                      <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white/70 h-6 w-6 group-focus-within:text-white transition-colors" />
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 h-5 w-5 group-focus-within:text-white transition-colors" />
                       <Input
                         placeholder="Search gyms, spas, yoga studios..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-14 h-16 text-lg border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-white/30 rounded-2xl font-medium"
+                        className="pl-12 h-12 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
                         aria-label="Search for wellness destinations"
                       />
                     </div>
                   </div>
                   
                   <div className="relative flex-1 group">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-2xl blur-sm group-focus-within:blur-none transition-all duration-300"></div>
                     <div className="relative">
-                      <MapPin className="absolute left-5 top-1/2 transform -translate-y-1/2 text-white/70 h-6 w-6 group-focus-within:text-white transition-colors" />
+                      <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/70 h-5 w-5 group-focus-within:text-white transition-colors" />
                       <Input
                         placeholder="Enter your location..."
                         value={locationFilter}
                         onChange={(e) => setLocationFilter(e.target.value)}
-                        className="pl-14 h-16 text-lg border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-white/30 rounded-2xl font-medium"
+                        className="pl-12 h-12 text-base border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
                         aria-label="Enter your location"
                       />
                     </div>
@@ -160,9 +152,9 @@ const Index = () => {
                   
                   <Button 
                     onClick={handleSearch}
-                    className="h-16 px-10 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                    className="h-12 px-8 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
                   >
-                    <Search className="h-5 w-5 mr-2" />
+                    <Search className="h-4 w-4 mr-2" />
                     Explore
                   </Button>
                 </div>
@@ -170,23 +162,21 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Enhanced Glassmorphism Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+          {/* Compact Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {stats.map((stat, index) => (
               <div 
                 key={index} 
-                className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:scale-110"
+                className="group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-105"
               >
-                {/* Gradient border */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${stat.color} opacity-60 rounded-3xl`}></div>
-                <div className="relative bg-white/10 backdrop-blur-xl rounded-3xl p-6 m-[1px] border border-white/20 hover:bg-white/20 transition-all duration-300">
-                  <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-300">
+                <div className="relative bg-white/15 backdrop-blur-xl rounded-2xl p-4 border border-white/20 hover:bg-white/25 transition-all duration-300">
+                  <div className="text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">
                     {stat.icon}
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold mb-2 text-white">
+                  <div className="text-2xl md:text-3xl font-bold mb-1 text-white">
                     {stat.value}+
                   </div>
-                  <div className="text-sm md:text-base text-white/90 font-medium">
+                  <div className="text-sm text-white/90 font-medium">
                     {stat.label}
                   </div>
                 </div>
@@ -195,11 +185,11 @@ const Index = () => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/signup">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white font-bold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
               >
                 Start Your Journey
               </Button>
@@ -208,23 +198,16 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
               >
                 View Pricing
               </Button>
             </Link>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 animate-bounce">
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
       </section>
 
-      {/* Mobile-optimized Categories Section - full width */}
+      {/* Categories Section */}
       <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
@@ -244,7 +227,7 @@ const Index = () => {
                 image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/gyms",
                 icon: Dumbbell,
-                color: "from-red-500 to-orange-500"
+                color: "from-[#B4121B] to-black"
               },
               {
                 title: "Luxury Spas",
@@ -252,7 +235,7 @@ const Index = () => {
                 image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/spas",
                 icon: Waves,
-                color: "from-blue-500 to-cyan-500"
+                color: "from-[#96C2DB] to-[#E5EDF1]"
               },
               {
                 title: "Yoga Studios",
@@ -260,7 +243,7 @@ const Index = () => {
                 image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/yoga",
                 icon: Heart,
-                color: "from-purple-500 to-pink-500"
+                color: "from-[#009B4D] to-[#FFCC00]"
               },
               {
                 title: "Expert Trainers",
@@ -268,7 +251,7 @@ const Index = () => {
                 image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/trainers",
                 icon: Users,
-                color: "from-emerald-500 to-blue-500"
+                color: "from-[#E9F1FA] to-[#00ABE4]"
               }
             ].map((category, index) => (
               <Link key={index} to={category.link} className="group">
@@ -295,7 +278,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Mobile-optimized Featured Businesses - full width */}
+      {/* Featured Businesses */}
       <section className="py-16 md:py-20 bg-white w-full">
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
@@ -355,7 +338,7 @@ const Index = () => {
                       <Button 
                         size="sm" 
                         onClick={() => handleBookNow(business.business_name)}
-                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 touch-target text-xs md:text-sm"
+                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-xs md:text-sm"
                       >
                         Book Now
                       </Button>
@@ -391,9 +374,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced CTA Section - full width */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 w-full relative overflow-hidden">
-        {/* Background Effects */}
+      {/* CTA Section */}
+      <section className="py-16 md:py-20 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -404,7 +386,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-white">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
               Ready to Transform Your
-              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+              <span className="block text-[#0FFCBE] drop-shadow-2xl">
                 Wellness Journey?
               </span>
             </h2>
@@ -415,7 +397,7 @@ const Index = () => {
               <Link to="/signup">
                 <Button 
                   size="lg" 
-                  className="bg-white text-purple-600 hover:bg-gray-100 font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-white text-[#106EBE] hover:bg-gray-100 font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
                 >
                   Get Started Free
                 </Button>
