@@ -9,7 +9,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
@@ -63,27 +62,6 @@ const Index = () => {
     }
   };
 
-  const heroImages = [
-    {
-      src: "https://img.freepik.com/free-photo/close-up-woman-doing-crossfit-workout_23-2149153072.jpg",
-      alt: "Woman doing crossfit workout",
-      title: "Premium Gyms",
-      category: "Fitness"
-    },
-    {
-      src: "https://img.freepik.com/free-photo/woman-relaxing-spa_23-2148827906.jpg", 
-      alt: "Woman relaxing at spa",
-      title: "Luxury Spas",
-      category: "Wellness"
-    },
-    {
-      src: "https://img.freepik.com/free-photo/woman-digital-disconnecting-home-by-doing-yoga_23-2151067825.jpg",
-      alt: "Woman doing yoga at home",
-      title: "Yoga Studios", 
-      category: "Mindfulness"
-    }
-  ];
-
   return (
     <div className="min-h-screen w-full">
       <SEOHead
@@ -95,7 +73,7 @@ const Index = () => {
       />
 
       {/* Hero Section */}
-      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
@@ -108,119 +86,80 @@ const Index = () => {
         {/* Blue to Mint Gradient Overlay */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.85 }}></div>
         
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            {/* Left side - Hero Content */}
-            <div className="space-y-6">
-              {/* Main Heading */}
-              <div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
-                  <span className="block drop-shadow-lg">
-                    Discover the
-                  </span>
-                  <span className="block text-[#0FFCBE] drop-shadow-lg">
-                    Wonder
-                  </span>
-                </h1>
-                
-                {/* Subtitle */}
-                <p className="text-lg text-white/95 mb-6 font-light leading-relaxed drop-shadow-sm max-w-lg">
-                  Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
-                </p>
-              </div>
-
-              {/* Search Bar */}
-              <div className="space-y-4">
-                <div className="relative bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 shadow-2xl">
-                  <div className="flex flex-col gap-3 md:flex-row md:gap-4">
-                    <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                      <Input
-                        placeholder="Search gyms, spas, yoga studios..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 h-12 border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/70 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                        aria-label="Search for wellness destinations"
-                      />
-                    </div>
-                    
-                    <div className="relative flex-1">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                      <Input
-                        placeholder="Enter your location..."
-                        value={locationFilter}
-                        onChange={(e) => setLocationFilter(e.target.value)}
-                        className="pl-10 h-12 border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/70 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                        aria-label="Enter your location"
-                      />
-                    </div>
-                    
-                    <Button 
-                      onClick={handleSearch}
-                      className="h-12 px-8 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
-                    >
-                      <Search className="h-4 w-4 mr-2" />
-                      Explore
-                    </Button>
-                  </div>
-                </div>
-
-                {/* CTA Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 justify-start">
-                  <Link to="/signup">
-                    <Button 
-                      size="lg" 
-                      className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                    >
-                      Start Your Journey
-                    </Button>
-                  </Link>
-                  <Link to="/pricing">
-                    <Button 
-                      size="lg" 
-                      variant="outline" 
-                      className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                    >
-                      View Pricing
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-8 md:space-y-12">
+            {/* Main Heading */}
+            <div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 md:mb-6 leading-tight">
+                <span className="block drop-shadow-lg">
+                  Discover the
+                </span>
+                <span className="block text-[#0FFCBE] drop-shadow-lg">
+                  Wonder
+                </span>
+              </h1>
+              
+              {/* Subtitle */}
+              <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 md:mb-12 font-light leading-relaxed drop-shadow-sm max-w-3xl mx-auto">
+                Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
+              </p>
             </div>
 
-            {/* Right side - Image Slider */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="w-full max-w-sm">
-                <Carousel className="w-full" opts={{ align: "start", loop: true }}>
-                  <CarouselContent>
-                    {heroImages.map((image, index) => (
-                      <CarouselItem key={index}>
-                        <Card className="border-0 bg-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
-                          <CardContent className="p-0">
-                            <div className="aspect-square relative">
-                              <img
-                                src={image.src}
-                                alt={image.alt}
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                              <div className="absolute bottom-4 left-4 text-white">
-                                <Badge className="mb-2 bg-[#0FFCBE]/20 text-[#0FFCBE] border-[#0FFCBE]/30">
-                                  {image.category}
-                                </Badge>
-                                <h3 className="text-lg font-bold drop-shadow-lg">
-                                  {image.title}
-                                </h3>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious className="left-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-                  <CarouselNext className="right-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-                </Carousel>
+            {/* Search Bar */}
+            <div className="space-y-6 md:space-y-8">
+              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-4xl mx-auto">
+                <div className="flex flex-col gap-4 md:flex-row md:gap-6">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Input
+                      placeholder="Search gyms, spas, yoga studios..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white"
+                      aria-label="Search for wellness destinations"
+                    />
+                  </div>
+                  
+                  <div className="relative flex-1">
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                    <Input
+                      placeholder="Enter your location..."
+                      value={locationFilter}
+                      onChange={(e) => setLocationFilter(e.target.value)}
+                      className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white"
+                      aria-label="Enter your location"
+                    />
+                  </div>
+                  
+                  <Button 
+                    onClick={handleSearch}
+                    className="h-14 px-8 md:px-12 bg-[#106EBE] hover:bg-[#106EBE]/90 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg"
+                  >
+                    <Search className="h-5 w-5 mr-2" />
+                    Explore
+                  </Button>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/signup">
+                  <Button 
+                    size="lg" 
+                    className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg w-full sm:w-auto"
+                  >
+                    Start Your Journey
+                  </Button>
+                </Link>
+                <Link to="/pricing">
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg w-full sm:w-auto"
+                  >
+                    View Pricing
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
