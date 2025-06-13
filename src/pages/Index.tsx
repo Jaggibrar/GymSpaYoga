@@ -95,8 +95,8 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Hero Section with Image Slider */}
-      <section className="relative h-[65vh] min-h-[400px] max-h-[500px] flex items-center justify-center overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative h-[500px] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
@@ -109,121 +109,121 @@ const Index = () => {
         {/* Blue to Mint Gradient Overlay */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.85 }}></div>
         
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 flex items-center">
-          {/* Left side - Hero Content */}
-          <div className="flex-1 max-w-2xl">
-            {/* Main Heading */}
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white mb-3 leading-tight">
-              <span className="block drop-shadow-lg">
-                Discover the
-              </span>
-              <span className="block text-[#0FFCBE] drop-shadow-lg">
-                Wonder
-              </span>
-            </h1>
-            
-            {/* Subtitle */}
-            <p className="text-sm sm:text-base lg:text-lg text-white/95 mb-6 font-light leading-relaxed drop-shadow-sm">
-              Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
-            </p>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            {/* Left side - Hero Content */}
+            <div className="space-y-6">
+              {/* Main Heading */}
+              <div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white mb-4 leading-tight">
+                  <span className="block drop-shadow-lg">
+                    Discover the
+                  </span>
+                  <span className="block text-[#0FFCBE] drop-shadow-lg">
+                    Wonder
+                  </span>
+                </h1>
+                
+                {/* Subtitle */}
+                <p className="text-lg text-white/95 mb-6 font-light leading-relaxed drop-shadow-sm max-w-lg">
+                  Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
+                </p>
+              </div>
 
-            {/* Search Bar with Enhanced Blur Background */}
-            <div className="mb-6">
-              <div className="relative">
-                <div className="relative bg-white/10 backdrop-blur-2xl rounded-2xl p-3 border border-white/20 shadow-2xl">
+              {/* Search Bar */}
+              <div className="space-y-4">
+                <div className="relative bg-white/20 backdrop-blur-xl rounded-2xl p-4 border border-white/30 shadow-2xl">
                   <div className="flex flex-col gap-3 md:flex-row md:gap-4">
                     <div className="relative flex-1">
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                        <Input
-                          placeholder="Search gyms, spas, yoga studios..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                          className="pl-10 h-10 text-sm border-0 bg-white/15 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                          aria-label="Search for wellness destinations"
-                        />
-                      </div>
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+                      <Input
+                        placeholder="Search gyms, spas, yoga studios..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 h-12 border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/70 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                        aria-label="Search for wellness destinations"
+                      />
                     </div>
                     
                     <div className="relative flex-1">
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
-                        <Input
-                          placeholder="Enter your location..."
-                          value={locationFilter}
-                          onChange={(e) => setLocationFilter(e.target.value)}
-                          className="pl-10 h-10 text-sm border-0 bg-white/15 backdrop-blur-sm text-white placeholder:text-white/60 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
-                          aria-label="Enter your location"
-                        />
-                      </div>
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/70 h-4 w-4" />
+                      <Input
+                        placeholder="Enter your location..."
+                        value={locationFilter}
+                        onChange={(e) => setLocationFilter(e.target.value)}
+                        className="pl-10 h-12 border-0 bg-white/20 backdrop-blur-sm text-white placeholder:text-white/70 focus:ring-2 focus:ring-[#0FFCBE]/50 rounded-xl font-medium"
+                        aria-label="Enter your location"
+                      />
                     </div>
                     
                     <Button 
                       onClick={handleSearch}
-                      className="h-10 px-6 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
+                      className="h-12 px-8 bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 border border-white/20"
                     >
                       <Search className="h-4 w-4 mr-2" />
                       Explore
                     </Button>
                   </div>
                 </div>
+
+                {/* CTA Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 justify-start">
+                  <Link to="/signup">
+                    <Button 
+                      size="lg" 
+                      className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      Start Your Journey
+                    </Button>
+                  </Link>
+                  <Link to="/pricing">
+                    <Button 
+                      size="lg" 
+                      variant="outline" 
+                      className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      View Pricing
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-start">
-              <Link to="/signup">
-                <Button 
-                  size="sm" 
-                  className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  Start Your Journey
-                </Button>
-              </Link>
-              <Link to="/pricing">
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-6 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  View Pricing
-                </Button>
-              </Link>
+            {/* Right side - Image Slider */}
+            <div className="flex justify-center lg:justify-end">
+              <div className="w-full max-w-sm">
+                <Carousel className="w-full" opts={{ align: "start", loop: true }}>
+                  <CarouselContent>
+                    {heroImages.map((image, index) => (
+                      <CarouselItem key={index}>
+                        <Card className="border-0 bg-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
+                          <CardContent className="p-0">
+                            <div className="aspect-square relative">
+                              <img
+                                src={image.src}
+                                alt={image.alt}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                              <div className="absolute bottom-4 left-4 text-white">
+                                <Badge className="mb-2 bg-[#0FFCBE]/20 text-[#0FFCBE] border-[#0FFCBE]/30">
+                                  {image.category}
+                                </Badge>
+                                <h3 className="text-lg font-bold drop-shadow-lg">
+                                  {image.title}
+                                </h3>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
+                  <CarouselNext className="right-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
+                </Carousel>
+              </div>
             </div>
-          </div>
-
-          {/* Right side - Image Slider */}
-          <div className="flex-1 max-w-md ml-8 hidden lg:block">
-            <Carousel className="w-full max-w-sm mx-auto">
-              <CarouselContent>
-                {heroImages.map((image, index) => (
-                  <CarouselItem key={index}>
-                    <Card className="border-0 bg-white/10 backdrop-blur-sm shadow-2xl overflow-hidden">
-                      <CardContent className="p-0">
-                        <div className="aspect-square relative">
-                          <img
-                            src={image.src}
-                            alt={image.alt}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                          <div className="absolute bottom-4 left-4 text-white">
-                            <Badge className="mb-2 bg-[#0FFCBE]/20 text-[#0FFCBE] border-[#0FFCBE]/30">
-                              {image.category}
-                            </Badge>
-                            <h3 className="text-lg font-bold drop-shadow-lg">
-                              {image.title}
-                            </h3>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-              <CarouselNext className="right-2 bg-white/20 border-white/30 text-white hover:bg-white/30" />
-            </Carousel>
           </div>
         </div>
       </section>
