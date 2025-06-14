@@ -75,9 +75,9 @@ const PricingTransparency = () => {
   ];
 
   return (
-    <section className="py-8 md:py-12 bg-white" aria-labelledby="pricing-heading">
+    <section className="py-6 md:py-8 bg-white" aria-labelledby="pricing-heading">
       <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <h2 id="pricing-heading" className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
             Transparent Pricing
           </h2>
@@ -87,7 +87,7 @@ const PricingTransparency = () => {
         </div>
 
         {/* Membership Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {plans.map((plan, index) => (
             <Card key={index} className={`relative hover:shadow-xl transition-shadow duration-300 ${index === 1 ? 'border-2 border-blue-500' : ''}`}>
               {plan.badge && (
