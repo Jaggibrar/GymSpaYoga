@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Star, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Target, CheckCircle, ArrowRight, Play, UserPlus, Building2 } from "lucide-react";
+import { Search, MapPin, Star, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Target, CheckCircle, ArrowRight, Play, UserPlus, Building2, Diamond, IndianRupee, Crown } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
 import { useTrainers } from "@/hooks/useTrainers";
@@ -12,12 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEOHead from "@/components/SEOHead";
 import OptimizedImage from "@/components/OptimizedImage";
-import TestimonialsSection from "@/components/TestimonialsSection";
 import GuestBookingModal from "@/components/GuestBookingModal";
-import PricingTransparency from "@/components/PricingTransparency";
-import FAQSection from "@/components/FAQSection";
-import TrustSignals from "@/components/TrustSignals";
-import ReviewsSystem from "@/components/ReviewsSystem";
 
 const Index = () => {
   useScrollToTop();
@@ -25,6 +20,8 @@ const Index = () => {
   const { trainers, loading: trainersLoading } = useTrainers();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [selectedTier, setSelectedTier] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [guestBookingModal, setGuestBookingModal] = useState<{
     isOpen: boolean;
     businessName: string;
@@ -48,7 +45,9 @@ const Index = () => {
     const matchesLocation = locationFilter === "" ||
       business.city.toLowerCase().includes(locationFilter.toLowerCase());
 
-    return matchesSearch && matchesLocation;
+    const matchesTier = selectedTier === "" || business.category_tier === selectedTier;
+
+    return matchesSearch && matchesLocation && matchesTier;
   });
 
   const handleBookNow = (business: any) => {
@@ -62,15 +61,91 @@ const Index = () => {
 
   const handleSearch = () => {
     if (searchTerm || locationFilter) {
-      toast.info("Searching for businesses...");
+      toast.info("Searching for wellness centers...");
     }
   };
+
+  const detectLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // In a real app, you'd reverse geocode this
+          setLocationFilter("Current Location");
+          toast.success("Location detected!");
+        },
+        () => {
+          toast.error("Unable to detect location");
+        }
+      );
+    } else {
+      toast.error("Geolocation not supported");
+    }
+  };
+
+  const tiers = [
+    {
+      id: 'luxury',
+      label: 'Luxury',
+      icon: <Crown className="h-8 w-8" />,
+      color: 'from-yellow-500 to-yellow-600',
+      description: 'Premium experiences'
+    },
+    {
+      id: 'premium',
+      label: 'Premium',
+      icon: <Diamond className="h-8 w-8" />,
+      color: 'from-blue-500 to-blue-600',
+      description: 'Quality services'
+    },
+    {
+      id: 'budget',
+      label: 'Budget-friendly',
+      icon: <IndianRupee className="h-8 w-8" />,
+      color: 'from-green-500 to-green-600',
+      description: 'Affordable options'
+    }
+  ];
+
+  const categories = [
+    {
+      id: 'gym',
+      name: 'Gyms',
+      icon: <Dumbbell className="h-12 w-12" />,
+      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      color: 'from-red-500 to-red-600',
+      link: '/gyms'
+    },
+    {
+      id: 'spa',
+      name: 'Spas',
+      icon: <Waves className="h-12 w-12" />,
+      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      color: 'from-blue-500 to-blue-600',
+      link: '/spas'
+    },
+    {
+      id: 'yoga',
+      name: 'Yoga Studios',
+      icon: <Heart className="h-12 w-12" />,
+      image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      color: 'from-green-500 to-emerald-600',
+      link: '/yoga'
+    },
+    {
+      id: 'trainer',
+      name: 'Personal Trainers',
+      icon: <Users className="h-12 w-12" />,
+      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+      color: 'from-purple-500 to-indigo-600',
+      link: '/trainers'
+    }
+  ];
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "GymSpaYoga",
-    "description": "Find and book the best gyms, spas, and yoga studios in Mumbai, Delhi, Bangalore. Your wellness journey starts here!",
+    "description": "Discover and book the best gyms, spas, yoga studios, and personal trainers near you. Your wellness journey starts here!",
     "url": "https://gymspayoga.com",
     "potentialAction": {
       "@type": "SearchAction",
@@ -80,266 +155,223 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full bg-white">
       <SEOHead
-        title="GymSpaYoga - Find Your Perfect Fitness Partner | Coming Soon"
-        description="India's next big fitness platform launching soon! Join our beta program as a user or partner business. Revolutionary wellness discovery awaits."
-        keywords="gym, spa, yoga, fitness, wellness, beta launch, Mumbai, Delhi, Bangalore, booking, trainers"
+        title="GymSpaYoga - Discover Wellness Centers Near You"
+        description="Find and book the best gyms, spas, yoga studios, and personal trainers in your area. Discover luxury, premium, and budget-friendly wellness options."
+        keywords="gym, spa, yoga, fitness, wellness, trainers, Mumbai, Delhi, Bangalore, booking, health"
         url="https://gymspayoga.com"
         structuredData={structuredData}
       />
 
-      {/* Clean Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-emerald-50">
+      {/* Hero Search Section */}
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-emerald-50">
         <div className="absolute inset-0">
           <OptimizedImage 
-            src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-            alt="Transform your life with premium wellness destinations"
-            className="w-full h-full object-cover opacity-20"
+            src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+            alt="Wellness and health discovery platform"
+            className="w-full h-full object-cover opacity-30"
             priority={true}
             sizes="100vw"
           />
         </div>
         
         <div className="relative z-10 w-full max-w-6xl mx-auto px-4 text-center">
-          {/* Beta Badge */}
-          <Badge className="bg-orange-500 text-white px-6 py-2 text-lg font-bold mb-8 animate-pulse">
-            🚀 Coming Soon - Beta Access Available
-          </Badge>
-
           {/* Main Headline */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-gray-900 mb-6 leading-tight">
-            India's Next Big
+            Discover Your Perfect
             <span className="block text-transparent bg-gradient-to-r from-blue-600 to-emerald-500 bg-clip-text">
-              Fitness Platform
+              Wellness Destination
             </span>
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-3xl mx-auto font-medium">
-            We're building something amazing for fitness enthusiasts and businesses. 
-            <span className="block text-emerald-600 font-bold mt-2">Be part of the revolution!</span>
+            Find gyms, spas, yoga studios, and personal trainers near you
           </p>
 
-          {/* Dual CTA Section */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
-            {/* For Users */}
-            <Card className="p-8 border-2 border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-xl">
-              <div className="text-center">
-                <UserPlus className="h-16 w-16 mx-auto mb-4 text-blue-600" />
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">For Fitness Enthusiasts</h3>
-                <p className="text-gray-600 mb-6">
-                  Get early access to discover premium gyms, spas, and yoga studios near you.
-                </p>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Beta access to premium locations</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Special launch pricing</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>First to experience new features</span>
-                  </div>
-                </div>
-                <Link to="/signup">
-                  <Button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 font-bold py-3 text-lg">
-                    Join Beta Waitlist
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-
-            {/* For Businesses */}
-            <Card className="p-8 border-2 border-emerald-200 hover:border-emerald-400 transition-all duration-300 hover:shadow-xl">
-              <div className="text-center">
-                <Building2 className="h-16 w-16 mx-auto mb-4 text-emerald-600" />
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">For Business Owners</h3>
-                <p className="text-gray-600 mb-6">
-                  Partner with us and be among the first businesses on our platform.
-                </p>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Only ₹20 per qualified lead</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>No setup fees during beta</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    <span>Founding partner benefits</span>
-                  </div>
-                </div>
-                <Link to="/business">
-                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 font-bold py-3 text-lg">
-                    Become a Partner
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          </div>
-
-          {/* Search Preview */}
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl max-w-4xl mx-auto border border-gray-200">
-            <h3 className="text-lg font-bold text-gray-800 mb-4">Get a preview of what's coming</h3>
-            <div className="flex flex-col md:flex-row gap-4">
+          {/* Main Search Bar */}
+          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl max-w-5xl mx-auto border border-gray-200 mb-8">
+            <div className="flex flex-col lg:flex-row gap-4 mb-6">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" />
                 <Input
-                  placeholder="Search gyms, spas, yoga studios..."
+                  placeholder="Search gyms, spas, yoga, or trainers near you..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-lg"
+                  className="pl-14 h-16 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl"
                 />
               </div>
               
               <div className="relative flex-1">
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" />
                 <Input
-                  placeholder="Mumbai, Delhi, Bangalore..."
+                  placeholder="Enter your location..."
                   value={locationFilter}
                   onChange={(e) => setLocationFilter(e.target.value)}
-                  className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-lg"
+                  className="pl-14 h-16 text-lg border-2 border-gray-200 focus:border-blue-500 rounded-xl"
                 />
+                <Button
+                  onClick={detectLocation}
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-700"
+                >
+                  Detect
+                </Button>
               </div>
               
               <Button 
                 onClick={handleSearch}
-                className="h-14 px-8 bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 font-bold text-lg"
+                className="h-16 px-12 bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 font-bold text-lg rounded-xl"
               >
-                <Search className="h-5 w-5 mr-2" />
+                <Search className="h-6 w-6 mr-2" />
                 Search
               </Button>
+            </div>
+
+            {/* Category Filters */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  className={`h-16 flex flex-col items-center justify-center gap-2 ${
+                    selectedCategory === category.id 
+                      ? `bg-gradient-to-r ${category.color} text-white` 
+                      : 'hover:bg-gray-50'
+                  }`}
+                >
+                  {category.icon}
+                  <span className="text-sm font-medium">{category.name}</span>
+                </Button>
+              ))}
+            </div>
+
+            {/* Tier Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {tiers.map((tier) => (
+                <Button
+                  key={tier.id}
+                  onClick={() => setSelectedTier(selectedTier === tier.id ? "" : tier.id)}
+                  variant={selectedTier === tier.id ? "default" : "outline"}
+                  className={`h-20 flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
+                    selectedTier === tier.id 
+                      ? `bg-gradient-to-r ${tier.color} text-white shadow-lg scale-105` 
+                      : 'hover:bg-gray-50 hover:scale-102'
+                  }`}
+                >
+                  {tier.icon}
+                  <div className="text-center">
+                    <div className="font-bold">{tier.label}</div>
+                    <div className="text-xs opacity-90">{tier.description}</div>
+                  </div>
+                </Button>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* What We're Building Section */}
+      {/* Browse by Category Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-black text-gray-800 mb-4">What We're Building</h2>
+            <h2 className="text-4xl font-black text-gray-800 mb-4">Browse by Category</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A revolutionary platform that connects fitness enthusiasts with premium wellness destinations
+              Explore different wellness categories to find exactly what you're looking for
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {categories.map((category, index) => (
+              <Link key={category.id} to={category.link}>
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group cursor-pointer">
+                  <div className="relative h-48 overflow-hidden">
+                    <OptimizedImage 
+                      src={category.image} 
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      width={500}
+                      height={300}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-80`}></div>
+                    
+                    <div className="absolute bottom-4 left-4 text-white">
+                      {category.icon}
+                      <h3 className="text-xl font-bold mt-2">{category.name}</h3>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-6 text-center">
+                    <Button className="w-full" variant="outline">
+                      Explore {category.name}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Use GymSpaYoga Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-gray-800 mb-4">Why Choose GymSpaYoga?</h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                title: "Premium Gyms",
-                description: "State-of-the-art fitness centers with cutting-edge equipment",
-                image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                icon: Dumbbell,
-                color: "from-red-500 to-red-600"
+                title: "Easy Search",
+                description: "Find wellness centers near you with our powerful search and filters",
+                icon: <Search className="h-12 w-12 text-blue-600" />
               },
               {
-                title: "Luxury Spas",
-                description: "Rejuvenating treatments in serene environments",
-                image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                icon: Waves,
-                color: "from-blue-500 to-blue-600"
+                title: "Verified Listings",
+                description: "All businesses are verified to ensure quality and authenticity",
+                icon: <Shield className="h-12 w-12 text-green-600" />
               },
               {
-                title: "Yoga Studios",
-                description: "Find inner peace with certified instructors",
-                image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                icon: Heart,
-                color: "from-green-500 to-emerald-600"
-              },
-              {
-                title: "Expert Trainers",
-                description: "Certified professionals for personalized coaching",
-                image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                icon: Users,
-                color: "from-purple-500 to-indigo-600"
+                title: "Direct Contact",
+                description: "Connect directly with businesses - no middleman, no extra fees",
+                icon: <Zap className="h-12 w-12 text-purple-600" />
               }
-            ].map((category, index) => (
-              <Card key={index} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group">
-                <div className="relative h-48 overflow-hidden">
-                  <OptimizedImage 
-                    src={category.image} 
-                    alt={category.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    width={500}
-                    height={300}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-80`}></div>
-                  
-                  <div className="absolute bottom-4 left-4 text-white">
-                    <category.icon className="h-8 w-8 mb-2" />
-                    <h3 className="text-xl font-bold">{category.title}</h3>
-                  </div>
+            ].map((feature, index) => (
+              <Card key={index} className="text-center p-8 hover:shadow-lg transition-shadow">
+                <div className="flex justify-center mb-4">
+                  {feature.icon}
                 </div>
-                
-                <CardContent className="p-6">
-                  <p className="text-gray-600">{category.description}</p>
-                  <Badge className="mt-3 bg-gray-100 text-gray-700">Coming Soon</Badge>
-                </CardContent>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{feature.title}</h3>
+                <p className="text-gray-600">{feature.description}</p>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust Signals and Reviews */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid lg:grid-cols-3 gap-8 items-start">
-            <div className="lg:col-span-2">
-              <ReviewsSystem />
-            </div>
-            <div className="lg:sticky lg:top-8">
-              <TrustSignals />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-black text-gray-800 mb-4">What People Are Saying</h2>
-            <p className="text-xl text-gray-600">Early feedback from our beta community</p>
-          </div>
-          <TestimonialsSection />
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
-        <FAQSection />
-      </section>
-
-      {/* Pricing Transparency */}
-      <PricingTransparency />
-
-      {/* Final CTA */}
+      {/* Call to Action for Business Owners */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-emerald-600 text-white">
         <div className="max-w-4xl mx-auto text-center px-4">
-          <h2 className="text-4xl md:text-5xl font-black mb-6">Ready to Join the Revolution?</h2>
+          <Building2 className="h-16 w-16 mx-auto mb-6" />
+          <h2 className="text-4xl md:text-5xl font-black mb-6">Own a Wellness Business?</h2>
           <p className="text-xl mb-8 opacity-90">
-            Be part of India's next big fitness platform from day one
+            Join thousands of gyms, spas, yoga studios, and trainers already on our platform
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/signup">
+            <Link to="/register-business">
               <Button size="xl" className="bg-white text-blue-600 hover:bg-gray-100 font-black px-12 py-4 text-xl">
-                Join as User
+                List Your Business
               </Button>
             </Link>
             <Link to="/business">
               <Button size="xl" variant="outline" className="border-2 border-white text-white hover:bg-white/20 font-black px-12 py-4 text-xl">
-                Become a Partner
+                Learn More
               </Button>
             </Link>
           </div>
