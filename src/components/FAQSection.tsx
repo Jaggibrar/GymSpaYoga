@@ -83,7 +83,7 @@ const FAQSection = () => {
   const popularFAQs = faqs.filter(faq => faq.popular);
 
   return (
-    <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden" aria-labelledby="faq-heading">
+    <section className="py-12 md:py-16 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden" aria-labelledby="faq-heading">
       {/* Background Elements */}
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
       <div className="absolute top-20 right-10 w-64 h-64 bg-gradient-to-br from-emerald-100/30 to-blue-100/30 rounded-full blur-3xl"></div>
@@ -91,28 +91,28 @@ const FAQSection = () => {
 
       <div className="relative w-full px-4 md:px-8 mx-auto max-w-6xl">
         {/* Enhanced Header */}
-        <div className="text-center mb-16">
-          <div className="mb-6">
+        <div className="text-center mb-12">
+          <div className="mb-4">
             <Badge className="bg-emerald-100 text-emerald-700 px-6 py-3 text-lg font-bold">
               💡 Your Questions, Answered Instantly
             </Badge>
           </div>
-          <h2 id="faq-heading" className="text-4xl md:text-6xl font-black text-gray-800 mb-6">
+          <h2 id="faq-heading" className="text-3xl md:text-5xl font-black text-gray-800 mb-4">
             Everything You Need to Know
-            <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text text-3xl md:text-5xl mt-3">
+            <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text text-2xl md:text-4xl mt-2">
               About Your Transformation
             </span>
           </h2>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
             Join 25,000+ members who found their answers and transformed their lives.
-            <span className="block text-emerald-600 font-bold mt-2">Still have questions? We're here 24/7!</span>
+            <span className="block text-emerald-600 font-bold mt-1">Still have questions? We're here 24/7!</span>
           </p>
         </div>
 
         {/* Popular Questions Highlight */}
-        <div className="mb-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl md:text-3xl font-black text-gray-800 mb-4">
+        <div className="mb-10">
+          <div className="text-center mb-6">
+            <h3 className="text-xl md:text-2xl font-black text-gray-800 mb-3">
               🔥 Most Asked Questions
             </h3>
             <p className="text-gray-600 font-medium">
@@ -120,19 +120,19 @@ const FAQSection = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {popularFAQs.slice(0, 4).map((faq, index) => (
               <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-[#0FFCBE] bg-white">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
-                    <h4 className="font-bold text-lg text-gray-800 group-hover:text-emerald-600 transition-colors">
+                    <h4 className="font-bold text-base text-gray-800 group-hover:text-emerald-600 transition-colors">
                       {faq.question}
                     </h4>
                   </div>
-                  <p className="text-gray-600 leading-relaxed font-medium">
+                  <p className="text-gray-600 leading-relaxed font-medium text-sm">
                     {faq.answer}
                   </p>
                 </CardContent>
@@ -142,14 +142,14 @@ const FAQSection = () => {
         </div>
 
         {/* Category Filters */}
-        <div className="mb-12">
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
+        <div className="mb-8">
+          <div className="flex flex-wrap justify-center gap-2 mb-6">
             {categories.map((category) => (
               <Button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
                 variant={selectedCategory === category.id ? "default" : "outline"}
-                className={`px-6 py-3 font-bold transition-all duration-300 ${
+                className={`px-4 py-2 font-bold transition-all duration-300 text-sm ${
                   selectedCategory === category.id
                     ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg"
                     : "hover:border-emerald-500 hover:text-emerald-600"
@@ -164,28 +164,28 @@ const FAQSection = () => {
 
         {/* FAQ Accordion */}
         <div className="max-w-4xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
+          <Accordion type="single" collapsible className="space-y-3">
             {filteredFAQs.map((faq, index) => (
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
                 className="border-2 border-gray-200 hover:border-[#0FFCBE] rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300"
               >
-                <AccordionTrigger className="px-6 py-6 text-left hover:no-underline group">
-                  <div className="flex items-center gap-4">
+                <AccordionTrigger className="px-5 py-4 text-left hover:no-underline group">
+                  <div className="flex items-center gap-3">
                     {faq.popular && (
                       <Badge className="bg-red-100 text-red-600 px-2 py-1 text-xs animate-pulse">
                         🔥 Popular
                       </Badge>
                     )}
-                    <h3 className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
+                    <h3 className="text-base md:text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors">
                       {faq.question}
                     </h3>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent className="px-6 pb-6">
+                <AccordionContent className="px-5 pb-4">
                   <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-4 border-l-4 border-emerald-500">
-                    <p className="text-gray-700 leading-relaxed font-medium text-lg">
+                    <p className="text-gray-700 leading-relaxed font-medium">
                       {faq.answer}
                     </p>
                   </div>
@@ -196,7 +196,7 @@ const FAQSection = () => {
         </div>
 
         {/* Enhanced Contact Section */}
-        <div className="mt-16 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-2xl p-8 md:p-12 text-white relative overflow-hidden">
+        <div className="mt-12 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
@@ -204,46 +204,39 @@ const FAQSection = () => {
           </div>
           
           <div className="relative z-10">
-            <div className="text-center mb-8">
-              <h3 className="text-3xl md:text-4xl font-black mb-4">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl md:text-3xl font-black mb-3">
                 Still Have Questions?
               </h3>
-              <p className="text-xl opacity-90 font-medium max-w-2xl mx-auto">
+              <p className="text-lg opacity-90 font-medium max-w-2xl mx-auto">
                 Our wellness experts are available 24/7 to help you start your transformation journey
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <a
                 href="tel:+917596958097"
-                className="flex flex-col items-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
+                className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
               >
-                <Phone className="h-8 w-8 mb-3 group-hover:scale-110 transition-transform" />
-                <h4 className="font-bold text-lg mb-2">Call Us Now</h4>
+                <Phone className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                <h4 className="font-bold text-base mb-1">Call Us Now</h4>
                 <p className="text-sm opacity-90">+91 75969 58097</p>
                 <p className="text-xs opacity-75 mt-1">Available 24/7</p>
               </a>
               
               <a
                 href="mailto:support@gymspayoga.com"
-                className="flex flex-col items-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
+                className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
               >
-                <Mail className="h-8 w-8 mb-3 group-hover:scale-110 transition-transform" />
-                <h4 className="font-bold text-lg mb-2">Email Support</h4>
+                <Mail className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                <h4 className="font-bold text-base mb-1">Email Support</h4>
                 <p className="text-sm opacity-90">support@gymspayoga.com</p>
                 <p className="text-xs opacity-75 mt-1">Response in 2 hours</p>
               </a>
-              
-              <div className="flex flex-col items-center p-6 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group cursor-pointer">
-                <MessageCircle className="h-8 w-8 mb-3 group-hover:scale-110 transition-transform" />
-                <h4 className="font-bold text-lg mb-2">Live Chat</h4>
-                <p className="text-sm opacity-90">Instant answers</p>
-                <p className="text-xs opacity-75 mt-1">Click to start</p>
-              </div>
             </div>
             
-            <div className="text-center mt-8">
-              <div className="flex items-center justify-center gap-6 text-sm opacity-90">
+            <div className="text-center mt-6">
+              <div className="flex items-center justify-center gap-4 text-sm opacity-90">
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   <span>100% Secure Support</span>
