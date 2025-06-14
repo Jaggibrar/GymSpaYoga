@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -50,8 +51,8 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
-            <AnalyticsTracker />
             <BrowserRouter>
+              <AnalyticsTracker />
               <div className="min-h-screen flex flex-col">
                 <EnhancedNavigation />
                 <main className="flex-grow">
