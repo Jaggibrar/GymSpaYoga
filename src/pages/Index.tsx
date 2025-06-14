@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Clock3 } from "lucide-react";
+import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Clock3, TrendingUp, Target, CheckCircle, ArrowRight, Play } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
 import { useTrainers } from "@/hooks/useTrainers";
@@ -86,132 +86,174 @@ const Index = () => {
   return (
     <div className="min-h-screen w-full">
       <SEOHead
-        title="GymSpaYoga - Find Best Gyms, Spas & Yoga Studios | Book Online"
-        description="Discover and book the best gyms, spas, and yoga studios in Mumbai, Delhi, Bangalore. Find certified trainers, premium facilities, and start your wellness journey today!"
-        keywords="gym, spa, yoga, fitness, wellness, Mumbai, Delhi, Bangalore, booking, trainers, meditation, massage, therapy"
+        title="GymSpaYoga - Transform Your Life in 30 Days | Premium Wellness Platform"
+        description="Join 25,000+ success stories! Find verified gyms, luxury spas & expert trainers in Mumbai, Delhi, Bangalore. Start your free trial today and transform your life."
+        keywords="gym, spa, yoga, fitness, wellness, transformation, Mumbai, Delhi, Bangalore, booking, trainers, weight loss, muscle gain"
         url="https://gymspayoga.com"
         structuredData={structuredData}
       />
 
-      {/* Hero Section - Enhanced with emotional appeal and urgency */}
-      <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden" role="banner">
-        {/* Background Image */}
+      {/* Enhanced Hero Section with Emotional Connection */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" role="banner">
+        {/* Background Image with better contrast */}
         <div className="absolute inset-0">
           <OptimizedImage 
             src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-            alt="Spa wellness background showing serene wellness environment"
+            alt="Transform your life with premium wellness destinations"
             className="w-full h-full object-cover"
             priority={true}
             sizes="100vw"
           />
         </div>
         
-        {/* Enhanced Gradient Overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.9 }}></div>
+        {/* Enhanced Gradient Overlay for better readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-[#106EBE]/70 to-[#0FFCBE]/60"></div>
         
-        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8 md:space-y-12">
-            {/* Enhanced Main Heading with emotional appeal */}
+            {/* Trust Indicators */}
             <header>
-              <div className="mb-4 flex items-center justify-center gap-2 text-white/90">
-                <Shield className="h-5 w-5" />
-                <span className="text-sm font-medium">Trusted by 10,000+ Happy Members</span>
+              <div className="mb-6 flex flex-wrap items-center justify-center gap-4 text-white/90">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                  <Shield className="h-5 w-5 text-emerald-400" />
+                  <span className="text-sm font-bold">25,000+ Success Stories</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                  <span className="text-sm font-bold">4.9/5 Rating</span>
+                </div>
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                  <TrendingUp className="h-5 w-5 text-blue-400" />
+                  <span className="text-sm font-bold">99% Goal Achievement</span>
+                </div>
               </div>
               
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white mb-6 md:mb-8 leading-tight">
-                <span className="block drop-shadow-lg">
-                  Transform Your Life
+              {/* Main Headline - More Benefit-Focused */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 leading-tight">
+                <span className="block drop-shadow-xl animate-fade-in">
+                  Stop Dreaming.
                 </span>
-                <span className="block text-[#0FFCBE] drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-2">
+                <span className="block text-[#0FFCBE] drop-shadow-xl text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-3 animate-fade-in animation-delay-500">
+                  Start Transforming.
+                </span>
+                <span className="block text-xl sm:text-2xl md:text-3xl text-white/90 mt-4 font-semibold animate-fade-in animation-delay-1000">
                   In Just 30 Days
                 </span>
               </h1>
               
-              {/* Enhanced Subtitle with benefits */}
-              <p className="text-xl sm:text-2xl md:text-3xl text-white/95 mb-6 md:mb-8 font-semibold leading-relaxed drop-shadow-sm max-w-4xl mx-auto">
-                Find premium gyms, luxury spas & expert trainers near you. 
-                <span className="block text-[#0FFCBE] mt-2">Book instantly. Start today.</span>
-              </p>
+              {/* Enhanced Subtitle with Clear Benefits */}
+              <div className="space-y-4 mb-8">
+                <p className="text-xl sm:text-2xl md:text-3xl text-white/95 font-bold leading-relaxed drop-shadow-sm max-w-4xl mx-auto">
+                  India's #1 Platform for Premium Gyms, Luxury Spas & Expert Trainers
+                </p>
+                
+                {/* Key Benefits */}
+                <div className="flex flex-wrap items-center justify-center gap-6 text-white/90">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    <span className="font-semibold">Instant Booking</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    <span className="font-semibold">Verified Partners</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-emerald-400" />
+                    <span className="font-semibold">Money-Back Guarantee</span>
+                  </div>
+                </div>
+              </div>
 
-              {/* Urgency Badge */}
-              <div className="mb-8 flex items-center justify-center">
-                <div className="bg-red-500 text-white px-4 py-2 rounded-full flex items-center gap-2 animate-pulse">
-                  <Clock3 className="h-4 w-4" />
-                  <span className="text-sm font-bold">Limited spots available this week!</span>
+              {/* Urgency Element */}
+              <div className="mb-8 flex items-center justify-center animate-pulse">
+                <div className="bg-red-500 text-white px-6 py-3 rounded-full flex items-center gap-2 font-black text-lg shadow-2xl">
+                  <Clock3 className="h-5 w-5" />
+                  <span>⚡ FREE Trial Ends in 48 Hours!</span>
                 </div>
               </div>
             </header>
 
-            {/* Enhanced Search Bar with urgency */}
+            {/* Enhanced Search Bar */}
             <div className="space-y-6 md:space-y-8">
-              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-4xl mx-auto border-2 border-[#0FFCBE]">
+              <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl max-w-5xl mx-auto border-2 border-[#0FFCBE]/50">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl md:text-3xl font-black text-gray-800 mb-2">
+                    Find Your Perfect Wellness Match
+                  </h2>
+                  <p className="text-gray-600 font-medium">
+                    Join 25K+ members who found their ideal fitness destination
+                  </p>
+                </div>
+                
                 <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                   <div className="relative flex-1">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" aria-hidden="true" />
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" aria-hidden="true" />
                     <Input
                       placeholder="Search gyms, spas, yoga studios..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium"
+                      className="pl-14 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-4 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium shadow-sm"
                       aria-label="Search for wellness destinations"
                     />
                   </div>
                   
                   <div className="relative flex-1">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" aria-hidden="true" />
+                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" aria-hidden="true" />
                     <Input
-                      placeholder="Enter your location..."
+                      placeholder="Mumbai, Delhi, Bangalore..."
                       value={locationFilter}
                       onChange={(e) => setLocationFilter(e.target.value)}
-                      className="pl-12 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium"
+                      className="pl-14 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-4 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium shadow-sm"
                       aria-label="Enter your location"
                     />
                   </div>
                   
                   <Button 
                     onClick={handleSearch}
-                    className="h-16 px-8 md:px-12 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] hover:from-[#106EBE]/90 hover:to-[#0FFCBE]/90 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg"
+                    size="lg"
+                    className="h-16 px-10 md:px-12 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] hover:from-[#106EBE]/90 hover:to-[#0FFCBE]/90 text-white font-black rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-lg"
                     aria-label="Search for wellness destinations"
                   >
-                    <Search className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Find My Perfect Match
+                    <Search className="h-6 w-6 mr-3" aria-hidden="true" />
+                    Find My Match
                   </Button>
                 </div>
                 
-                {/* Trust indicators */}
-                <div className="mt-4 flex items-center justify-center gap-6 text-sm text-gray-600">
-                  <div className="flex items-center gap-1">
-                    <Shield className="h-4 w-4 text-green-500" />
-                    <span>Verified Locations</span>
+                {/* Enhanced Trust Indicators */}
+                <div className="mt-6 flex items-center justify-center gap-8 text-sm text-gray-600">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-500" />
+                    <span className="font-semibold">100% Verified</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Zap className="h-4 w-4 text-yellow-500" />
-                    <span>Instant Booking</span>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-yellow-500" />
+                    <span className="font-semibold">Instant Booking</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Award className="h-4 w-4 text-blue-500" />
-                    <span>Premium Quality</span>
+                  <div className="flex items-center gap-2">
+                    <Award className="h-5 w-5 text-blue-500" />
+                    <span className="font-semibold">Premium Quality</span>
                   </div>
                 </div>
               </div>
 
-              {/* Enhanced CTA Buttons with urgency */}
+              {/* Enhanced CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/signup">
                   <Button 
-                    size="lg" 
-                    className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-black px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto border-2 border-white"
+                    size="xl" 
+                    className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-black px-12 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto border-4 border-white/50"
                   >
-                    🚀 Start Free Trial Today
+                    🚀 Start FREE Trial - 50% OFF
                   </Button>
                 </Link>
                 <Link to="/pricing">
                   <Button 
-                    size="lg" 
+                    size="xl" 
                     variant="outline" 
-                    className="border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-sm font-bold px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto"
+                    className="border-3 border-white/70 text-white hover:bg-white/20 backdrop-blur-sm font-black px-12 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto bg-white/10"
                   >
-                    View Pricing Plans
+                    <Play className="h-6 w-6 mr-3" />
+                    Watch Success Stories
                   </Button>
                 </Link>
               </div>
@@ -220,79 +262,110 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Categories Section with stronger visual hierarchy */}
-      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="categories-heading">
-        {/* Visual anchor elements */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
+      {/* Enhanced Categories Section */}
+      <section className="py-20 md:py-24 w-full bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="categories-heading">
+        {/* Visual Anchor */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
         
-        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 id="categories-heading" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-800 mb-4 md:mb-6">
-              Choose Your Path to
-              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text">
-                Wellness Success
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-8 mx-auto max-w-7xl">
+          <div className="text-center mb-16 md:mb-20">
+            <div className="mb-6">
+              <Badge className="bg-emerald-100 text-emerald-700 px-6 py-3 text-lg font-bold">
+                🎯 Choose Your Transformation Path
+              </Badge>
+            </div>
+            <h2 id="categories-heading" className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-800 mb-6">
+              Your Journey to
+              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text mt-2">
+                Extraordinary Results
               </span>
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
-              Join thousands who transformed their lives with our premium wellness destinations
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
+              Join 25,000+ success stories across India's premium wellness destinations. 
+              <span className="block text-emerald-600 font-bold mt-2">Your transformation starts with one click.</span>
             </p>
           </div>
 
-          {/* ... keep existing code (categories grid) the same ... */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 md:gap-8">
             {[
               {
                 title: "Premium Gyms",
-                description: "State-of-the-art fitness centers with modern equipment",
+                description: "State-of-the-art fitness centers with cutting-edge equipment and expert guidance",
                 image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/gyms",
                 icon: Dumbbell,
-                color: "from-[#B4121B] to-black"
+                color: "from-red-600 to-red-800",
+                stats: "200+ Locations",
+                benefit: "Build Strength & Muscle"
               },
               {
                 title: "Luxury Spas",
-                description: "Rejuvenating treatments in serene environments",
+                description: "Rejuvenating treatments in serene environments for complete wellness",
                 image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/spas",
                 icon: Waves,
-                color: "from-[#96C2DB] to-[#E5EDF1]"
+                color: "from-blue-400 to-blue-600",
+                stats: "150+ Spas",
+                benefit: "Stress Relief & Relaxation"
               },
               {
                 title: "Yoga Studios",
-                description: "Find inner peace with expert yoga instructors",
+                description: "Find inner peace and flexibility with certified yoga instructors",
                 image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/yoga",
                 icon: Heart,
-                color: "from-[#009B4D] to-[#FFCC00]"
+                color: "from-green-500 to-emerald-600",
+                stats: "300+ Studios",
+                benefit: "Mind-Body Balance"
               },
               {
                 title: "Expert Trainers",
-                description: "Connect with certified fitness professionals",
+                description: "Certified fitness professionals for personalized transformation journeys",
                 image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
                 link: "/trainers",
                 icon: Users,
-                color: "from-[#E9F1FA] to-[#00ABE4]"
+                color: "from-purple-500 to-indigo-600",
+                stats: "500+ Trainers",
+                benefit: "Personal Coaching"
               }
             ].map((category, index) => (
               <Link key={index} to={category.link} className="group">
-                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full flex flex-col border-2 hover:border-[#0FFCBE]">
-                  <div className="relative h-48 sm:h-56 overflow-hidden flex-shrink-0">
+                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 h-full flex flex-col border-2 hover:border-[#0FFCBE] relative bg-white group-hover:bg-gray-50">
+                  {/* Image Section */}
+                  <div className="relative h-56 sm:h-64 overflow-hidden flex-shrink-0">
                     <OptimizedImage 
                       src={category.image} 
                       alt={`${category.title} - ${category.description}`}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       width={500}
                       height={300}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-80 transition-opacity`}></div>
-                    <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-white">
-                      <category.icon className="h-8 w-8 md:h-10 md:w-10 mb-2 md:mb-3" aria-hidden="true" />
-                      <h3 className="text-xl md:text-2xl font-black">{category.title}</h3>
+                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-80 group-hover:opacity-90 transition-opacity`}></div>
+                    
+                    {/* Category Badge */}
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-white/90 text-gray-800 font-bold px-3 py-1">
+                        {category.stats}
+                      </Badge>
+                    </div>
+                    
+                    {/* Icon and Title Overlay */}
+                    <div className="absolute bottom-4 left-4 text-white">
+                      <category.icon className="h-10 w-10 md:h-12 md:w-12 mb-3 group-hover:scale-110 transition-transform" aria-hidden="true" />
+                      <h3 className="text-2xl md:text-3xl font-black">{category.title}</h3>
+                      <p className="text-lg font-bold opacity-90">{category.benefit}</p>
                     </div>
                   </div>
-                  <CardContent className="p-6 md:p-8 flex-1 flex items-center">
-                    <p className="text-gray-600 text-lg text-center font-medium">{category.description}</p>
+                  
+                  {/* Content Section */}
+                  <CardContent className="p-6 md:p-8 flex-1 flex flex-col justify-between">
+                    <p className="text-gray-600 text-lg font-medium leading-relaxed mb-4">{category.description}</p>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-emerald-600 font-bold text-lg">Explore Options</span>
+                      <ArrowRight className="h-5 w-5 text-emerald-600 group-hover:translate-x-2 transition-transform" />
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
@@ -301,91 +374,107 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Featured Businesses with urgency elements */}
-      <section className="py-16 md:py-20 bg-white w-full relative" aria-labelledby="featured-heading">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
+      {/* Enhanced Featured Businesses Section */}
+      <section className="py-20 md:py-24 bg-white w-full relative" aria-labelledby="featured-heading">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
         
-        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
-          <div className="text-center mb-8 md:mb-12">
-            <div className="mb-4 flex items-center justify-center">
-              <Badge className="bg-red-100 text-red-600 px-4 py-2 text-lg font-bold animate-pulse">
-                🔥 Trending Now
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-8 mx-auto max-w-7xl">
+          <div className="text-center mb-12 md:mb-16">
+            <div className="mb-6 flex items-center justify-center">
+              <Badge className="bg-red-100 text-red-600 px-6 py-3 text-xl font-bold animate-pulse">
+                🔥 Trending Now - Limited Spots!
               </Badge>
             </div>
-            <h2 id="featured-heading" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-800 mb-4 md:mb-6">
-              Featured Destinations
-              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text text-2xl sm:text-3xl md:text-4xl mt-2">
+            <h2 id="featured-heading" className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-800 mb-6">
+              Most Booked This Week
+              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text text-3xl sm:text-4xl md:text-5xl mt-3">
                 Book Before They're Full!
               </span>
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600 font-medium">
-              Discover top-rated wellness destinations with limited availability
+            <p className="text-xl md:text-2xl text-gray-600 font-medium max-w-3xl mx-auto">
+              These premium destinations are in high demand. Secure your spot today with our 
+              <span className="text-emerald-600 font-bold"> risk-free booking guarantee.</span>
             </p>
           </div>
 
           {loading ? (
-            // ... keep existing code (loading state) the same ...
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" role="status" aria-label="Loading featured destinations">
-              {[1, 2, 3].map((i) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8" role="status" aria-label="Loading featured destinations">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
                 <Card key={i} className="animate-pulse">
-                  <div className="h-40 md:h-48 bg-gray-200"></div>
-                  <CardContent className="p-4 md:p-6">
-                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  <div className="h-48 md:h-56 bg-gray-200 rounded-t-lg"></div>
+                  <CardContent className="p-6 md:p-8">
+                    <div className="h-5 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3 mb-4"></div>
+                    <div className="h-10 bg-gray-200 rounded"></div>
                   </CardContent>
                 </Card>
               ))}
             </div>
           ) : filteredBusinesses.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {filteredBusinesses.slice(0, 6).map((business, index) => (
-                <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border-2 hover:border-[#0FFCBE]">
-                  <div className="relative overflow-hidden h-40 md:h-48">
+                <Card key={business.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-4 border-2 hover:border-[#0FFCBE] bg-white">
+                  <div className="relative overflow-hidden h-48 md:h-56">
                     <OptimizedImage 
                       src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
                       alt={`${business.business_name} - ${business.category} in ${business.city}`}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       width={500}
                       height={300}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <div className="absolute top-3 right-3 flex flex-col gap-2">
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
                       <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold">
                         {business.category}
                       </Badge>
-                      {index < 2 && (
+                    </div>
+                    <div className="absolute top-4 right-4 flex flex-col gap-2">
+                      {index < 3 && (
                         <Badge className="bg-red-500 text-white font-bold animate-pulse">
-                          Only 3 slots left!
+                          Only {3 - index} slots left!
                         </Badge>
                       )}
                     </div>
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                            <span className="text-sm font-bold">4.8</span>
+                          </div>
+                          <span className="text-xs text-gray-600 font-medium">124 reviews</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <CardHeader className="pb-2 md:pb-3 p-4 md:p-6">
-                    <CardTitle className="text-lg md:text-xl group-hover:text-emerald-600 transition-colors line-clamp-1 font-bold">
+                  
+                  <CardHeader className="pb-3 p-6 md:p-8">
+                    <CardTitle className="text-xl md:text-2xl group-hover:text-emerald-600 transition-colors line-clamp-1 font-black">
                       {business.business_name}
                     </CardTitle>
-                    <div className="flex items-center gap-2 text-sm md:text-base text-gray-600">
-                      <MapPin className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" aria-hidden="true" />
-                      <span className="truncate font-medium">{business.city}, {business.state}</span>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <MapPin className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                      <span className="truncate font-semibold">{business.city}, {business.state}</span>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-0 p-4 md:p-6">
-                    <p className="text-gray-600 text-base mb-4 md:mb-6 line-clamp-2 font-medium">
+                  
+                  <CardContent className="pt-0 p-6 md:p-8">
+                    <p className="text-gray-600 text-base mb-6 line-clamp-2 font-medium leading-relaxed">
                       {business.description}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400 fill-current" aria-hidden="true" />
-                        <span className="text-sm md:text-base font-bold">4.8</span>
-                        <span className="text-sm md:text-base text-gray-500 font-medium">(124)</span>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-gray-800">Starting from</span>
+                        <span className="text-2xl font-black text-emerald-600">₹999/mo</span>
                       </div>
+                      
                       <Button 
-                        size="sm" 
                         onClick={() => handleBookNow(business)}
-                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-sm md:text-base font-bold px-6 py-2"
+                        className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
                         aria-label={`Book now at ${business.business_name}`}
                       >
-                        Book Now - Free Trial
+                        Book FREE Trial - Save 50%
                       </Button>
                     </div>
                   </CardContent>
@@ -394,23 +483,23 @@ const Index = () => {
             </div>
           ) : (
             // ... keep existing code (no businesses found state) the same ...
-            <div className="text-center py-8 md:py-12">
-              <div className="text-4xl md:text-6xl mb-3 md:mb-4" role="img" aria-label="Running person emoji">🏃‍♂️</div>
-              <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No businesses found</h3>
-              <p className="text-gray-600 mb-4 md:mb-6 mobile-text md:text-base">
+            <div className="text-center py-12 md:py-16">
+              <div className="text-6xl md:text-8xl mb-4" role="img" aria-label="Running person emoji">🏃‍♂️</div>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">No businesses found</h3>
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
                 {searchTerm || locationFilter 
-                  ? "Try adjusting your search criteria or explore our categories below."
-                  : "Be the first! Register your business and start attracting customers."
+                  ? "Try adjusting your search criteria or explore our categories above."
+                  : "Be the first! Register your business and start attracting customers today."
                 }
               </p>
-              <div className="flex gap-3 md:gap-4 justify-center flex-col sm:flex-row">
+              <div className="flex gap-4 justify-center flex-col sm:flex-row">
                 <Link to="/register-business">
-                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 touch-target w-full sm:w-auto">
+                  <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 font-bold w-full sm:w-auto">
                     Register Your Business
                   </Button>
                 </Link>
                 <Link to="/register-trainer">
-                  <Button variant="outline" className="touch-target w-full sm:w-auto">
+                  <Button variant="outline" size="lg" className="font-bold w-full sm:w-auto">
                     Register as Trainer
                   </Button>
                 </Link>
@@ -420,100 +509,116 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Testimonials Section - Now more prominent */}
-      <section className="py-20 md:py-24 bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="testimonials-heading">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
+      {/* Enhanced Testimonials Section */}
+      <section className="py-24 md:py-28 bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="testimonials-heading">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
         
         <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
-          <div className="text-center mb-16">
-            <div className="mb-6 flex items-center justify-center">
-              <Badge className="bg-green-100 text-green-600 px-6 py-3 text-xl font-bold">
-                ⭐ 10,000+ Success Stories
+          <div className="text-center mb-20">
+            <div className="mb-8 flex items-center justify-center">
+              <Badge className="bg-green-100 text-green-700 px-8 py-4 text-2xl font-black">
+                ⭐ 25,000+ Life Transformations
               </Badge>
             </div>
-            <h2 id="testimonials-heading" className="text-4xl md:text-6xl font-black text-gray-800 mb-6">
-              Real People,
+            <h2 id="testimonials-heading" className="text-5xl md:text-7xl font-black text-gray-800 mb-8">
+              Real Stories,
               <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text">
                 Real Results
               </span>
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
-              See how our platform transformed lives across India's top cities
+            <p className="text-2xl md:text-3xl text-gray-600 max-w-4xl mx-auto font-semibold leading-relaxed">
+              See how our platform transformed lives across India's top cities. 
+              <span className="block text-emerald-600 mt-2">Your success story starts today.</span>
             </p>
           </div>
           <TestimonialsSection />
         </div>
       </section>
 
-      {/* FAQ Section with enhanced styling */}
-      <section className="py-20 md:py-24 bg-white relative">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
+      {/* FAQ Section */}
+      <section className="py-24 md:py-28 bg-white relative">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
         <FAQSection />
       </section>
 
       {/* Pricing Transparency Section */}
       <PricingTransparency />
 
-      {/* Enhanced CTA Section with stronger urgency */}
-      <section className="py-20 md:py-24 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="cta-heading">
+      {/* Enhanced Final CTA Section */}
+      <section className="py-24 md:py-28 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="final-cta-heading">
+        {/* Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/10 to-transparent"></div>
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/20 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-white/15 rounded-full blur-3xl animate-float animation-delay-2000"></div>
         </div>
         
         <div className="relative w-full px-4 md:px-8 mx-auto max-w-7xl text-center">
-          <div className="max-w-5xl mx-auto text-white">
-            {/* Urgency badge */}
+          <div className="max-w-6xl mx-auto text-white">
+            {/* Super Urgency */}
             <div className="mb-8 flex items-center justify-center">
-              <div className="bg-red-500 text-white px-6 py-3 rounded-full flex items-center gap-2 animate-pulse text-lg font-bold">
-                <Clock3 className="h-5 w-5" />
-                <span>Limited time: Free trial ending soon!</span>
+              <div className="bg-red-500 text-white px-8 py-4 rounded-full flex items-center gap-3 animate-urgent text-xl font-black shadow-2xl">
+                <Clock3 className="h-6 w-6" />
+                <span>⚡ Last 48 Hours: FREE Trial + 50% OFF!</span>
               </div>
             </div>
             
-            <h2 id="cta-heading" className="text-4xl sm:text-5xl md:text-7xl font-black mb-8 drop-shadow-lg">
-              Don't Wait Another Day
-              <span className="block text-[#0FFCBE] drop-shadow-2xl text-3xl sm:text-4xl md:text-6xl mt-4">
-                Your Best Self Awaits
+            <h2 id="final-cta-heading" className="text-5xl sm:text-6xl md:text-8xl font-black mb-8 drop-shadow-2xl">
+              Stop Waiting.
+              <span className="block text-[#0FFCBE] drop-shadow-2xl text-4xl sm:text-5xl md:text-7xl mt-4">
+                Start Living.
               </span>
             </h2>
-            <p className="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed font-semibold">
-              Join thousands who started their transformation today
+            
+            <p className="text-2xl md:text-4xl mb-12 opacity-95 leading-relaxed font-bold max-w-4xl mx-auto">
+              Join the 25,000+ people who chose transformation over regret.
+              <span className="block text-[#0FFCBE] mt-2">Your future self will thank you.</span>
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-10">
               <Link to="/signup">
                 <Button 
-                  size="lg" 
-                  className="bg-white text-[#106EBE] hover:bg-gray-100 font-black px-12 py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl"
+                  size="xl" 
+                  className="bg-white text-[#106EBE] hover:bg-gray-100 font-black px-16 py-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 text-2xl border-4 border-white/20"
                 >
-                  🚀 Start Your Free Trial Now
+                  🚀 Claim Your FREE Trial Now
+                  <Badge className="ml-3 bg-red-500 text-white px-3 py-1 text-base animate-pulse">
+                    50% OFF
+                  </Badge>
                 </Button>
               </Link>
               <Link to="/register-business">
                 <Button 
-                  size="lg" 
+                  size="xl" 
                   variant="outline" 
-                  className="border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-sm font-black px-12 py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl"
+                  className="border-4 border-white/70 text-white hover:bg-white/20 backdrop-blur-sm font-black px-16 py-8 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105 text-2xl bg-white/10"
                 >
-                  List Your Business Today
+                  Partner with Us Today
                 </Button>
               </Link>
             </div>
             
-            {/* Trust indicators */}
-            <div className="flex items-center justify-center gap-8 text-white/80">
-              <div className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
-                <span className="font-medium">100% Secure</span>
+            {/* Enhanced Trust Indicators */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-white/90 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center gap-2">
+                <Shield className="h-8 w-8" />
+                <span className="font-bold text-lg">100% Secure</span>
+                <span className="text-sm opacity-80">SSL Protected</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="h-5 w-5" />
-                <span className="font-medium">Instant Access</span>
+              <div className="flex flex-col items-center gap-2">
+                <Zap className="h-8 w-8" />
+                <span className="font-bold text-lg">Instant Access</span>
+                <span className="text-sm opacity-80">Start Today</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Award className="h-5 w-5" />
-                <span className="font-medium">Premium Quality</span>
+              <div className="flex flex-col items-center gap-2">
+                <Award className="h-8 w-8" />
+                <span className="font-bold text-lg">Premium Quality</span>
+                <span className="text-sm opacity-80">Verified Partners</span>
+              </div>
+              <div className="flex flex-col items-center gap-2">
+                <Target className="h-8 w-8" />
+                <span className="font-bold text-lg">Results Guaranteed</span>
+                <span className="text-sm opacity-80">Money Back</span>
               </div>
             </div>
           </div>
