@@ -39,7 +39,6 @@ import EnhancedNavigation from "./components/EnhancedNavigation";
 import AppFooter from "./components/AppFooter";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
-import LiveChatWidget from "./components/LiveChatWidget";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 
 const queryClient = new QueryClient();
@@ -132,7 +131,6 @@ function App() {
                 </main>
                 <AppFooter />
                 <ScrollToTopButton />
-                <LiveChatWidget />
               </div>
             </BrowserRouter>
           </TooltipProvider>
