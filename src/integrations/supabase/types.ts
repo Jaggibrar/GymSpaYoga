@@ -140,6 +140,44 @@ export type Database = {
         }
         Relationships: []
       }
+      business_documents: {
+        Row: {
+          business_id: string | null
+          document_type: string
+          document_url: string
+          id: string
+          status: string | null
+          uploaded_at: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          document_type: string
+          document_url: string
+          id?: string
+          status?: string | null
+          uploaded_at?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          document_type?: string
+          document_url?: string
+          id?: string
+          status?: string | null
+          uploaded_at?: string | null
+          verified_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_documents_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_profiles: {
         Row: {
           address: string
@@ -211,6 +249,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      business_stats: {
+        Row: {
+          business_id: string | null
+          created_at: string | null
+          id: string
+          leads_received: number | null
+          leads_this_month: number | null
+          monthly_revenue: number | null
+          profile_visits: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          leads_received?: number | null
+          leads_this_month?: number | null
+          monthly_revenue?: number | null
+          profile_visits?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          leads_received?: number | null
+          leads_this_month?: number | null
+          monthly_revenue?: number | null
+          profile_visits?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_stats_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       calendar_events: {
         Row: {
@@ -332,6 +411,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      customer_inquiries: {
+        Row: {
+          business_id: string | null
+          created_at: string | null
+          email: string | null
+          id: string
+          message: string
+          phone: string | null
+          responded_at: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message: string
+          phone?: string | null
+          responded_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          message?: string
+          phone?: string | null
+          responded_at?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_inquiries_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       gyms: {
         Row: {
@@ -675,6 +798,7 @@ export type Database = {
           phone: string | null
           pin_code: string | null
           preferences: Json | null
+          role: Database["public"]["Enums"]["user_role"] | null
           state: string | null
           updated_at: string
           user_id: string
@@ -693,6 +817,7 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null
+          role?: Database["public"]["Enums"]["user_role"] | null
           state?: string | null
           updated_at?: string
           user_id: string
@@ -711,11 +836,41 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null
+          role?: Database["public"]["Enums"]["user_role"] | null
           state?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: []
+      }
+      user_wishlist: {
+        Row: {
+          business_id: string | null
+          created_at: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_wishlist_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       yoga_studios: {
         Row: {
@@ -746,9 +901,13 @@ export type Database = {
         }
         Returns: undefined
       }
+      update_business_profile_visit: {
+        Args: { business_profile_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "business_owner" | "end_user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -863,6 +1022,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["business_owner", "end_user"],
+    },
   },
 } as const

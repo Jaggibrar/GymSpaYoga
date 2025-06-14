@@ -10,6 +10,8 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
+import BusinessDashboard from "./pages/BusinessDashboard";
+import UserDashboard from "./pages/UserDashboard";
 import Gyms from "./pages/Gyms";
 import GymDetails from "./pages/GymDetails";
 import Spas from "./pages/Spas";
@@ -42,6 +44,7 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import BusinessLanding from "@/pages/BusinessLanding";
+import RoleBasedRedirect from "./components/RoleBasedRedirect";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +85,34 @@ function App() {
                       <Route path="/pricing" element={<Pricing />} />
                       <Route path="/support" element={<Support />} />
                       <Route path="/payment-success" element={<PaymentSuccess />} />
+                      
+                      {/* Role-based dashboards */}
+                      <Route 
+                        path="/dashboard" 
+                        element={
+                          <ProtectedRoute>
+                            <RoleBasedRedirect />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      <Route 
+                        path="/dashboard/business" 
+                        element={
+                          <ProtectedRoute>
+                            <BusinessDashboard />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      <Route 
+                        path="/dashboard/user" 
+                        element={
+                          <ProtectedRoute>
+                            <UserDashboard />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      
+                      {/* Legacy routes */}
                       <Route 
                         path="/profile" 
                         element={
