@@ -195,8 +195,8 @@ const FAQSection = () => {
           </Accordion>
         </div>
 
-        {/* Enhanced Contact Section */}
-        <div className="mt-12 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+        {/* Enhanced Contact Section - Reduced spacing */}
+        <div className="mt-8 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-2xl p-4 md:p-6 text-white relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
@@ -204,49 +204,49 @@ const FAQSection = () => {
           </div>
           
           <div className="relative z-10">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl md:text-3xl font-black mb-3">
+            <div className="text-center mb-4">
+              <h3 className="text-xl md:text-2xl font-black mb-2">
                 Still Have Questions?
               </h3>
-              <p className="text-lg opacity-90 font-medium max-w-2xl mx-auto">
+              <p className="text-base md:text-lg opacity-90 font-medium max-w-2xl mx-auto">
                 Our wellness experts are available 24/7 to help you start your transformation journey
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <a
                 href="tel:+917596958097"
-                className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
+                className="flex flex-col items-center p-3 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
               >
-                <Phone className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
-                <h4 className="font-bold text-base mb-1">Call Us Now</h4>
+                <Phone className="h-5 w-5 mb-2 group-hover:scale-110 transition-transform" />
+                <h4 className="font-bold text-sm mb-1">Call Us Now</h4>
                 <p className="text-sm opacity-90">+91 75969 58097</p>
                 <p className="text-xs opacity-75 mt-1">Available 24/7</p>
               </a>
               
               <a
                 href="mailto:support@gymspayoga.com"
-                className="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
+                className="flex flex-col items-center p-3 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 group"
               >
-                <Mail className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
-                <h4 className="font-bold text-base mb-1">Email Support</h4>
+                <Mail className="h-5 w-5 mb-2 group-hover:scale-110 transition-transform" />
+                <h4 className="font-bold text-sm mb-1">Email Support</h4>
                 <p className="text-sm opacity-90">support@gymspayoga.com</p>
                 <p className="text-xs opacity-75 mt-1">Response in 2 hours</p>
               </a>
             </div>
             
-            <div className="text-center mt-6">
-              <div className="flex items-center justify-center gap-4 text-sm opacity-90">
+            <div className="text-center mt-4">
+              <div className="flex items-center justify-center gap-4 text-xs opacity-90">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
+                  <Shield className="h-3 w-3" />
                   <span>100% Secure Support</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-yellow-300" />
+                  <Star className="h-3 w-3 text-yellow-300" />
                   <span>5-Star Rated Service</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Zap className="h-4 w-4" />
+                  <Zap className="h-3 w-3" />
                   <span>Instant Solutions</span>
                 </div>
               </div>
