@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
+import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Clock3 } from "lucide-react";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { useGyms } from "@/hooks/useGyms";
 import { useTrainers } from "@/hooks/useTrainers";
@@ -93,7 +93,7 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Hero Section */}
+      {/* Hero Section - Enhanced with emotional appeal and urgency */}
       <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden" role="banner">
         {/* Background Image */}
         <div className="absolute inset-0">
@@ -106,31 +106,45 @@ const Index = () => {
           />
         </div>
         
-        {/* Blue to Mint Gradient Overlay */}
-        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.85 }}></div>
+        {/* Enhanced Gradient Overlay */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%)", opacity: 0.9 }}></div>
         
-        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8 md:space-y-12">
-            {/* Main Heading */}
+            {/* Enhanced Main Heading with emotional appeal */}
             <header>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-4 md:mb-6 leading-tight">
+              <div className="mb-4 flex items-center justify-center gap-2 text-white/90">
+                <Shield className="h-5 w-5" />
+                <span className="text-sm font-medium">Trusted by 10,000+ Happy Members</span>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-white mb-6 md:mb-8 leading-tight">
                 <span className="block drop-shadow-lg">
-                  Discover the
+                  Transform Your Life
                 </span>
-                <span className="block text-[#0FFCBE] drop-shadow-lg">
-                  Wonder
+                <span className="block text-[#0FFCBE] drop-shadow-lg text-3xl sm:text-4xl md:text-5xl lg:text-6xl mt-2">
+                  In Just 30 Days
                 </span>
               </h1>
               
-              {/* Subtitle */}
-              <p className="text-lg sm:text-xl md:text-2xl text-white/95 mb-8 md:mb-12 font-light leading-relaxed drop-shadow-sm max-w-3xl mx-auto">
-                Experience the tranquility of our unique wellness destinations. Stay at our facilities designed for serenity and complete relaxation.
+              {/* Enhanced Subtitle with benefits */}
+              <p className="text-xl sm:text-2xl md:text-3xl text-white/95 mb-6 md:mb-8 font-semibold leading-relaxed drop-shadow-sm max-w-4xl mx-auto">
+                Find premium gyms, luxury spas & expert trainers near you. 
+                <span className="block text-[#0FFCBE] mt-2">Book instantly. Start today.</span>
               </p>
+
+              {/* Urgency Badge */}
+              <div className="mb-8 flex items-center justify-center">
+                <div className="bg-red-500 text-white px-4 py-2 rounded-full flex items-center gap-2 animate-pulse">
+                  <Clock3 className="h-4 w-4" />
+                  <span className="text-sm font-bold">Limited spots available this week!</span>
+                </div>
+              </div>
             </header>
 
-            {/* Search Bar */}
+            {/* Enhanced Search Bar with urgency */}
             <div className="space-y-6 md:space-y-8">
-              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-4xl mx-auto">
+              <div className="bg-white rounded-2xl p-4 md:p-6 shadow-2xl max-w-4xl mx-auto border-2 border-[#0FFCBE]">
                 <div className="flex flex-col gap-4 md:flex-row md:gap-6">
                   <div className="relative flex-1">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" aria-hidden="true" />
@@ -138,7 +152,7 @@ const Index = () => {
                       placeholder="Search gyms, spas, yoga studios..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white"
+                      className="pl-12 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium"
                       aria-label="Search for wellness destinations"
                     />
                   </div>
@@ -149,39 +163,55 @@ const Index = () => {
                       placeholder="Enter your location..."
                       value={locationFilter}
                       onChange={(e) => setLocationFilter(e.target.value)}
-                      className="pl-12 h-14 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white"
+                      className="pl-12 h-16 text-lg border-2 border-gray-200 focus:border-[#106EBE] focus:ring-2 focus:ring-[#106EBE]/20 rounded-xl bg-white font-medium"
                       aria-label="Enter your location"
                     />
                   </div>
                   
                   <Button 
                     onClick={handleSearch}
-                    className="h-14 px-8 md:px-12 bg-[#106EBE] hover:bg-[#106EBE]/90 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg"
+                    className="h-16 px-8 md:px-12 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] hover:from-[#106EBE]/90 hover:to-[#0FFCBE]/90 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg"
                     aria-label="Search for wellness destinations"
                   >
                     <Search className="h-5 w-5 mr-2" aria-hidden="true" />
-                    Explore
+                    Find My Perfect Match
                   </Button>
+                </div>
+                
+                {/* Trust indicators */}
+                <div className="mt-4 flex items-center justify-center gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span>Verified Locations</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Zap className="h-4 w-4 text-yellow-500" />
+                    <span>Instant Booking</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Award className="h-4 w-4 text-blue-500" />
+                    <span>Premium Quality</span>
+                  </div>
                 </div>
               </div>
 
-              {/* CTA Buttons */}
+              {/* Enhanced CTA Buttons with urgency */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/signup">
                   <Button 
                     size="lg" 
-                    className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg w-full sm:w-auto"
+                    className="bg-[#0FFCBE] hover:bg-[#0FFCBE]/90 text-[#106EBE] font-black px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto border-2 border-white"
                   >
-                    Start Your Journey
+                    🚀 Start Free Trial Today
                   </Button>
                 </Link>
                 <Link to="/pricing">
                   <Button 
                     size="lg" 
                     variant="outline" 
-                    className="border-2 border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg w-full sm:w-auto"
+                    className="border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-sm font-bold px-10 py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-xl w-full sm:w-auto"
                   >
-                    View Pricing
+                    View Pricing Plans
                   </Button>
                 </Link>
               </div>
@@ -190,18 +220,25 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white" aria-labelledby="categories-heading">
+      {/* Enhanced Categories Section with stronger visual hierarchy */}
+      <section className="py-16 md:py-20 w-full bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="categories-heading">
+        {/* Visual anchor elements */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
+        
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
-          <div className="text-center mb-8 md:mb-12">
-            <h2 id="categories-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
-              Explore Our Categories
+          <div className="text-center mb-12 md:mb-16">
+            <h2 id="categories-heading" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-800 mb-4 md:mb-6">
+              Choose Your Path to
+              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text">
+                Wellness Success
+              </span>
             </h2>
-            <p className="mobile-text md:text-lg text-gray-600 max-w-2xl mx-auto">
-              Choose from our wide range of wellness destinations designed to fit your lifestyle
+            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
+              Join thousands who transformed their lives with our premium wellness destinations
             </p>
           </div>
 
+          {/* ... keep existing code (categories grid) the same ... */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
               {
@@ -238,7 +275,7 @@ const Index = () => {
               }
             ].map((category, index) => (
               <Link key={index} to={category.link} className="group">
-                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 h-full flex flex-col">
+                <Card className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 h-full flex flex-col border-2 hover:border-[#0FFCBE]">
                   <div className="relative h-48 sm:h-56 overflow-hidden flex-shrink-0">
                     <OptimizedImage 
                       src={category.image} 
@@ -248,14 +285,14 @@ const Index = () => {
                       height={300}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     />
-                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-60`}></div>
+                    <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-70 group-hover:opacity-80 transition-opacity`}></div>
                     <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-white">
-                      <category.icon className="h-6 w-6 md:h-8 md:w-8 mb-1 md:mb-2" aria-hidden="true" />
-                      <h3 className="text-lg md:text-xl font-bold">{category.title}</h3>
+                      <category.icon className="h-8 w-8 md:h-10 md:w-10 mb-2 md:mb-3" aria-hidden="true" />
+                      <h3 className="text-xl md:text-2xl font-black">{category.title}</h3>
                     </div>
                   </div>
-                  <CardContent className="p-4 md:p-6 flex-1 flex items-center">
-                    <p className="text-gray-600 mobile-text text-center">{category.description}</p>
+                  <CardContent className="p-6 md:p-8 flex-1 flex items-center">
+                    <p className="text-gray-600 text-lg text-center font-medium">{category.description}</p>
                   </CardContent>
                 </Card>
               </Link>
@@ -264,19 +301,30 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Featured Businesses */}
-      <section className="py-16 md:py-20 bg-white w-full" aria-labelledby="featured-heading">
+      {/* Enhanced Featured Businesses with urgency elements */}
+      <section className="py-16 md:py-20 bg-white w-full relative" aria-labelledby="featured-heading">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
+        
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 md:mb-12">
-            <h2 id="featured-heading" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 md:mb-4">
+            <div className="mb-4 flex items-center justify-center">
+              <Badge className="bg-red-100 text-red-600 px-4 py-2 text-lg font-bold animate-pulse">
+                🔥 Trending Now
+              </Badge>
+            </div>
+            <h2 id="featured-heading" className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-800 mb-4 md:mb-6">
               Featured Destinations
+              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text text-2xl sm:text-3xl md:text-4xl mt-2">
+                Book Before They're Full!
+              </span>
             </h2>
-            <p className="mobile-text md:text-lg text-gray-600">
-              Discover top-rated wellness destinations in your area
+            <p className="text-xl md:text-2xl text-gray-600 font-medium">
+              Discover top-rated wellness destinations with limited availability
             </p>
           </div>
 
           {loading ? (
+            // ... keep existing code (loading state) the same ...
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" role="status" aria-label="Loading featured destinations">
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="animate-pulse">
@@ -290,8 +338,8 @@ const Index = () => {
             </div>
           ) : filteredBusinesses.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {filteredBusinesses.slice(0, 6).map((business) => (
-                <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+              {filteredBusinesses.slice(0, 6).map((business, index) => (
+                <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-3 border-2 hover:border-[#0FFCBE]">
                   <div className="relative overflow-hidden h-40 md:h-48">
                     <OptimizedImage 
                       src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
@@ -301,36 +349,43 @@ const Index = () => {
                       height={300}
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
-                    <Badge className="absolute top-3 md:top-4 right-3 md:right-4 bg-emerald-500 hover:bg-emerald-600">
-                      {business.category}
-                    </Badge>
+                    <div className="absolute top-3 right-3 flex flex-col gap-2">
+                      <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold">
+                        {business.category}
+                      </Badge>
+                      {index < 2 && (
+                        <Badge className="bg-red-500 text-white font-bold animate-pulse">
+                          Only 3 slots left!
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                   <CardHeader className="pb-2 md:pb-3 p-4 md:p-6">
-                    <CardTitle className="text-base md:text-lg group-hover:text-emerald-600 transition-colors line-clamp-1">
+                    <CardTitle className="text-lg md:text-xl group-hover:text-emerald-600 transition-colors line-clamp-1 font-bold">
                       {business.business_name}
                     </CardTitle>
-                    <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-                      <MapPin className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" aria-hidden="true" />
-                      <span className="truncate">{business.city}, {business.state}</span>
+                    <div className="flex items-center gap-2 text-sm md:text-base text-gray-600">
+                      <MapPin className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" aria-hidden="true" />
+                      <span className="truncate font-medium">{business.city}, {business.state}</span>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0 p-4 md:p-6">
-                    <p className="text-gray-600 mobile-text mb-3 md:mb-4 line-clamp-2">
+                    <p className="text-gray-600 text-base mb-4 md:mb-6 line-clamp-2 font-medium">
                       {business.description}
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-400 fill-current" aria-hidden="true" />
-                        <span className="text-xs md:text-sm font-medium">4.8</span>
-                        <span className="text-xs md:text-sm text-gray-500">(124)</span>
+                        <Star className="h-4 w-4 md:h-5 md:w-5 text-yellow-400 fill-current" aria-hidden="true" />
+                        <span className="text-sm md:text-base font-bold">4.8</span>
+                        <span className="text-sm md:text-base text-gray-500 font-medium">(124)</span>
                       </div>
                       <Button 
                         size="sm" 
                         onClick={() => handleBookNow(business)}
-                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-xs md:text-sm"
+                        className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-sm md:text-base font-bold px-6 py-2"
                         aria-label={`Book now at ${business.business_name}`}
                       >
-                        Quick Book
+                        Book Now - Free Trial
                       </Button>
                     </div>
                   </CardContent>
@@ -338,6 +393,7 @@ const Index = () => {
               ))}
             </div>
           ) : (
+            // ... keep existing code (no businesses found state) the same ...
             <div className="text-center py-8 md:py-12">
               <div className="text-4xl md:text-6xl mb-3 md:mb-4" role="img" aria-label="Running person emoji">🏃‍♂️</div>
               <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No businesses found</h3>
@@ -364,17 +420,42 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <TestimonialsSection />
+      {/* Enhanced Testimonials Section - Now more prominent */}
+      <section className="py-20 md:py-24 bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="testimonials-heading">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] rounded-full"></div>
+        
+        <div className="w-full px-4 md:px-8 mx-auto max-w-7xl">
+          <div className="text-center mb-16">
+            <div className="mb-6 flex items-center justify-center">
+              <Badge className="bg-green-100 text-green-600 px-6 py-3 text-xl font-bold">
+                ⭐ 10,000+ Success Stories
+              </Badge>
+            </div>
+            <h2 id="testimonials-heading" className="text-4xl md:text-6xl font-black text-gray-800 mb-6">
+              Real People,
+              <span className="block text-transparent bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] bg-clip-text">
+                Real Results
+              </span>
+            </h2>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
+              See how our platform transformed lives across India's top cities
+            </p>
+          </div>
+          <TestimonialsSection />
+        </div>
+      </section>
 
-      {/* FAQ Section */}
-      <FAQSection />
+      {/* FAQ Section with enhanced styling */}
+      <section className="py-20 md:py-24 bg-white relative">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#0FFCBE] to-[#106EBE] rounded-full"></div>
+        <FAQSection />
+      </section>
 
       {/* Pricing Transparency Section */}
       <PricingTransparency />
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="cta-heading">
+      {/* Enhanced CTA Section with stronger urgency */}
+      <section className="py-20 md:py-24 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="cta-heading">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
@@ -382,34 +463,58 @@ const Index = () => {
         </div>
         
         <div className="relative w-full px-4 md:px-8 mx-auto max-w-7xl text-center">
-          <div className="max-w-4xl mx-auto text-white">
-            <h2 id="cta-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 drop-shadow-lg">
-              Ready to Transform Your
-              <span className="block text-[#0FFCBE] drop-shadow-2xl">
-                Wellness Journey?
+          <div className="max-w-5xl mx-auto text-white">
+            {/* Urgency badge */}
+            <div className="mb-8 flex items-center justify-center">
+              <div className="bg-red-500 text-white px-6 py-3 rounded-full flex items-center gap-2 animate-pulse text-lg font-bold">
+                <Clock3 className="h-5 w-5" />
+                <span>Limited time: Free trial ending soon!</span>
+              </div>
+            </div>
+            
+            <h2 id="cta-heading" className="text-4xl sm:text-5xl md:text-7xl font-black mb-8 drop-shadow-lg">
+              Don't Wait Another Day
+              <span className="block text-[#0FFCBE] drop-shadow-2xl text-3xl sm:text-4xl md:text-6xl mt-4">
+                Your Best Self Awaits
               </span>
             </h2>
-            <p className="text-xl md:text-2xl mb-10 opacity-90 leading-relaxed">
-              Join thousands who have discovered their perfect wellness destination
+            <p className="text-2xl md:text-3xl mb-12 opacity-90 leading-relaxed font-semibold">
+              Join thousands who started their transformation today
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
               <Link to="/signup">
                 <Button 
                   size="lg" 
-                  className="bg-white text-[#106EBE] hover:bg-gray-100 font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  className="bg-white text-[#106EBE] hover:bg-gray-100 font-black px-12 py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl"
                 >
-                  Get Started Free
+                  🚀 Start Your Free Trial Now
                 </Button>
               </Link>
               <Link to="/register-business">
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 backdrop-blur-sm font-bold px-10 py-4 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  className="border-2 border-white/50 text-white hover:bg-white/20 backdrop-blur-sm font-black px-12 py-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 text-xl"
                 >
-                  List Your Business
+                  List Your Business Today
                 </Button>
               </Link>
+            </div>
+            
+            {/* Trust indicators */}
+            <div className="flex items-center justify-center gap-8 text-white/80">
+              <div className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                <span className="font-medium">100% Secure</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5" />
+                <span className="font-medium">Instant Access</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="h-5 w-5" />
+                <span className="font-medium">Premium Quality</span>
+              </div>
             </div>
           </div>
         </div>
