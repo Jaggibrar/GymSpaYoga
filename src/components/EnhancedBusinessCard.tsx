@@ -1,189 +1,154 @@
-
-import { useState } from "react";
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MapPin, Clock, Phone, Star, Heart, Share2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import PaymentModal from "./PaymentModal";
-import { toast } from "sonner";
-
-interface Business {
-  id: string;
-  business_name: string;
-  city: string;
-  state: string;
-  category: string;
-  opening_time: string;
-  closing_time: string;
-  phone: string;
-  monthly_price?: number;
-  session_price?: number;
-  description?: string;
-  amenities?: string[];
-  image_urls?: string[];
-  business_type: string;
-}
+import { MapPin, Phone, MessageCircle, Star, Shield } from "lucide-react";
+import OptimizedImage from "@/components/OptimizedImage";
+import { Badge } from "@/components/ui/badge";
+import { Verified, Award, TrendingUp } from "lucide-react";
 
 interface EnhancedBusinessCardProps {
-  business: Business;
-  serviceType: 'gym' | 'spa' | 'yoga';
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  category: string;
+  location: string;
+  price: string;
+  onBookNow: () => void;
+  verified?: boolean;
+  trending?: boolean;
+  featured?: boolean;
 }
 
-const EnhancedBusinessCard = ({ business, serviceType }: EnhancedBusinessCardProps) => {
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  const handleBookNow = () => {
-    setIsPaymentModalOpen(true);
-  };
-
-  const handleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    toast.success(isFavorite ? "Removed from favorites" : "Added to favorites");
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.share({
-        title: business.business_name,
-        text: `Check out ${business.business_name} in ${business.city}`,
-        url: window.location.href
-      });
-    } catch (err) {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
-    }
-  };
-
-  const price = business.monthly_price || business.session_price || 0;
-  const priceType = business.monthly_price ? 'monthly' : 'session';
-
-  const gradientMap = {
-    gym: 'from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600',
-    spa: 'from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600',
-    yoga: 'from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600'
-  };
-
+const EnhancedBusinessCard = ({ 
+  id,
+  name,
+  description,
+  image,
+  category,
+  location,
+  price,
+  onBookNow,
+  verified = true,
+  trending = false,
+  featured = false
+}: EnhancedBusinessCardProps) => {
   return (
-    <>
-      <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
-        <div className="relative overflow-hidden">
-          <img 
-            src={business.image_urls && business.image_urls.length > 0 
-              ? business.image_urls[0] 
-              : `https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80`
-            } 
-            alt={business.business_name}
-            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
-            {business.category}
+    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#0FFCBE] bg-white relative overflow-hidden">
+      <div className="relative overflow-hidden h-48 md:h-56">
+        <OptimizedImage 
+          src={image} 
+          alt={`${name} - ${description}`}
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        
+        {/* Enhanced Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs">
+            {category}
           </Badge>
-          <div className="absolute top-4 left-4 flex space-x-2">
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 w-8 p-0 bg-white/80 hover:bg-white"
-              onClick={handleFavorite}
-            >
-              <Heart className={`h-4 w-4 ${isFavorite ? 'fill-red-500 text-red-500' : ''}`} />
+          {verified && (
+            <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1">
+              <Verified className="h-3 w-3" />
+              Verified
+            </Badge>
+          )}
+          {featured && (
+            <Badge className="bg-purple-500 text-white font-bold text-xs flex items-center gap-1">
+              <Award className="h-3 w-3" />
+              Featured
+            </Badge>
+          )}
+        </div>
+        
+        <div className="absolute top-3 right-3 flex flex-col gap-2">
+          {trending && (
+            <Badge className="bg-red-500 text-white font-bold animate-pulse text-xs flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" />
+              Trending
+            </Badge>
+          )}
+          <Badge className="bg-orange-500 text-white font-bold text-xs">
+            Hot Deal!
+          </Badge>
+        </div>
+        
+        {/* Enhanced Rating Display */}
+        <div className="absolute bottom-3 left-3 right-3">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                <span className="text-sm font-bold">4.8</span>
+                <span className="text-xs text-gray-600">(124 reviews)</span>
+              </div>
+              <Badge className="bg-green-100 text-green-700 text-xs">
+                95% recommended
+              </Badge>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6 md:p-8">
+        <CardTitle className="text-lg sm:text-xl md:text-2xl group-hover:text-emerald-600 transition-colors line-clamp-1 font-black">
+          {name}
+        </CardTitle>
+        <div className="flex items-center gap-2 text-gray-600">
+          <MapPin className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" aria-hidden="true" />
+          <span className="truncate font-semibold text-sm sm:text-base">{location}</span>
+        </div>
+      </CardHeader>
+      
+      <CardContent className="pt-0 p-6">
+        <p className="text-gray-600 text-sm sm:text-base mb-4 sm:mb-6 line-clamp-2 font-medium leading-relaxed">
+          {description}
+        </p>
+        
+        <div className="space-y-4">
+          {/* Enhanced Trust Indicators */}
+          <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center gap-2 text-gray-600">
+              <Verified className="h-4 w-4 text-blue-500" />
+              <span>Background Verified</span>
+            </div>
+            <div className="flex items-center gap-2 text-gray-600">
+              <Shield className="h-4 w-4 text-green-500" />
+              <span>Insurance Covered</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <span className="text-base font-bold text-gray-800">Starting from</span>
+            <div className="text-right">
+              <span className="text-2xl font-black text-emerald-600">₹999/mo</span>
+              <div className="text-xs text-gray-500 line-through">₹1499</div>
+            </div>
+          </div>
+          
+          <Button 
+            onClick={onBookNow}
+            className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
+          >
+            Book FREE Trial - Save 50%
+          </Button>
+          
+          {/* Quick Contact Options */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="outline" size="sm" className="text-xs">
+              <Phone className="h-3 w-3 mr-1" />
+              Quick Call
             </Button>
-            <Button
-              size="sm"
-              variant="secondary"
-              className="h-8 w-8 p-0 bg-white/80 hover:bg-white"
-              onClick={handleShare}
-            >
-              <Share2 className="h-4 w-4" />
+            <Button variant="outline" size="sm" className="text-xs">
+              <MessageCircle className="h-3 w-3 mr-1" />
+              Chat Now
             </Button>
           </div>
         </div>
-        
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
-            {business.business_name}
-          </CardTitle>
-          <div className="flex items-center space-x-2 text-emerald-600 font-semibold text-sm md:text-base">
-            <MapPin className="h-4 w-4" />
-            <span>{business.city}, {business.state}</span>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="pt-0">
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2 text-gray-600 text-sm">
-              <Clock className="h-4 w-4" />
-              <span>{business.opening_time} - {business.closing_time}</span>
-            </div>
-            <div className="flex items-center space-x-2 text-gray-600 text-sm">
-              <Phone className="h-4 w-4" />
-              <span>{business.phone}</span>
-            </div>
-            
-            {business.monthly_price && (
-              <div className="text-emerald-600 font-bold">
-                ₹{business.monthly_price}/month
-              </div>
-            )}
-            {business.session_price && (
-              <div className="text-emerald-600 font-bold">
-                ₹{business.session_price}/session
-              </div>
-            )}
-            
-            {business.description && (
-              <p className="text-gray-600 text-sm line-clamp-2">
-                {business.description}
-              </p>
-            )}
-            
-            {business.amenities && business.amenities.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {business.amenities.slice(0, 3).map((amenity, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {amenity}
-                  </Badge>
-                ))}
-                {business.amenities.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{business.amenities.length - 3} more
-                  </Badge>
-                )}
-              </div>
-            )}
-            
-            <div className="flex space-x-2 mt-4">
-              <Link to={`/${serviceType}/${business.id}`} className="flex-1">
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                >
-                  View Details
-                </Button>
-              </Link>
-              <Button 
-                onClick={handleBookNow}
-                className={`flex-1 bg-gradient-to-r ${gradientMap[serviceType]}`}
-              >
-                Book Now
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      <PaymentModal
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-        businessId={business.id}
-        serviceType={serviceType}
-        serviceName={business.business_name}
-        price={price}
-        priceType={priceType}
-      />
-    </>
+      </CardContent>
+    </Card>
   );
 };
 

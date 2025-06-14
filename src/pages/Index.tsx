@@ -15,6 +15,8 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import GuestBookingModal from "@/components/GuestBookingModal";
 import PricingTransparency from "@/components/PricingTransparency";
 import FAQSection from "@/components/FAQSection";
+import TrustSignals from "@/components/TrustSignals";
+import ReviewsSystem from "@/components/ReviewsSystem";
 
 const Index = () => {
   useScrollToTop();
@@ -93,7 +95,7 @@ const Index = () => {
         structuredData={structuredData}
       />
 
-      {/* Enhanced Hero Section with Better Mobile Responsiveness */}
+      {/* Enhanced Hero Section with Better Trust Signals */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden" role="banner">
         {/* Background Image with better contrast */}
         <div className="absolute inset-0">
@@ -111,7 +113,7 @@ const Index = () => {
         
         <div className="relative z-10 w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center space-y-6 sm:space-y-8 md:space-y-12">
-            {/* Trust Indicators - Mobile Optimized */}
+            {/* Enhanced Trust Indicators - Mobile Optimized */}
             <header>
               <div className="mb-4 sm:mb-6 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-white/90">
                 <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
@@ -124,30 +126,45 @@ const Index = () => {
                 </div>
                 <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
                   <TrendingUp className="h-3 w-3 sm:h-5 sm:w-5 text-blue-400" />
+                  <span className="text-xs sm:text-sm font-bold">800+ Partners</span>
+                </div>
+                <div className="flex items-center gap-1 sm:gap-2 bg-white/10 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2">
+                  <Target className="h-3 w-3 sm:h-5 sm:w-5 text-purple-400" />
                   <span className="text-xs sm:text-sm font-bold">99% Goal Achievement</span>
                 </div>
               </div>
               
-              {/* Main Headline - Mobile Responsive */}
+              {/* Enhanced Main Headline */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-4 sm:mb-6 leading-tight">
                 <span className="block drop-shadow-xl animate-fade-in">
-                  Stop Dreaming.
+                  Find Your Perfect
                 </span>
                 <span className="block text-[#0FFCBE] drop-shadow-xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl mt-2 sm:mt-3 animate-fade-in animation-delay-500">
-                  Start Transforming.
+                  Wellness Destination
                 </span>
                 <span className="block text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 mt-3 sm:mt-4 font-semibold animate-fade-in animation-delay-1000">
-                  In Just 30 Days
+                  Transform Your Life Today
                 </span>
               </h1>
               
-              {/* Enhanced Subtitle with Clear Benefits - Mobile Optimized */}
+              {/* Enhanced Subtitle with Clear Benefits */}
               <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                 <p className="text-lg sm:text-xl md:text-2xl text-white/95 font-bold leading-relaxed drop-shadow-sm max-w-4xl mx-auto px-2">
                   India's #1 Platform for Premium Gyms, Luxury Spas & Expert Trainers
                 </p>
                 
-                {/* Key Benefits - Mobile Stack */}
+                {/* Business Owner CTA Addition */}
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 max-w-3xl mx-auto">
+                  <p className="text-white/90 font-semibold mb-4">
+                    <span className="text-[#0FFCBE]">Business Owner?</span> Join 800+ successful partners
+                  </p>
+                  <Link to="/business" className="inline-flex items-center bg-gradient-to-r from-emerald-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                    List Your Business - ₹20/Lead Only
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </div>
+                
+                {/* Key Benefits */}
                 <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-6 text-white/90 px-2">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
@@ -173,7 +190,7 @@ const Index = () => {
               </div>
             </header>
 
-            {/* Enhanced Search Bar - Mobile First */}
+            {/* Enhanced Search Bar with Trust Signals */}
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
               <div className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 shadow-2xl max-w-5xl mx-auto border-2 border-[#0FFCBE]/50 mx-3 sm:mx-auto">
                 <div className="text-center mb-4 sm:mb-6">
@@ -220,11 +237,11 @@ const Index = () => {
                   </Button>
                 </div>
                 
-                {/* Enhanced Trust Indicators - Mobile Stack */}
+                {/* Enhanced Trust Indicators with Real Numbers */}
                 <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8 text-xs sm:text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
-                    <span className="font-semibold">100% Verified</span>
+                    <span className="font-semibold">800+ Verified Partners</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-500" />
@@ -232,7 +249,11 @@ const Index = () => {
                   </div>
                   <div className="flex items-center gap-2">
                     <Award className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
-                    <span className="font-semibold">Premium Quality</span>
+                    <span className="font-semibold">4.9★ Average Rating</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
+                    <span className="font-semibold">25K+ Happy Users</span>
                   </div>
                 </div>
               </div>
@@ -264,6 +285,28 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Add Trust Signals Section */}
+      <section className="py-16 sm:py-20 bg-gradient-to-b from-white to-gray-50">
+        <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
+          <div className="grid lg:grid-cols-3 gap-8 items-start">
+            <div className="lg:col-span-2">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl sm:text-4xl font-black text-gray-800 mb-4">
+                  What Our Community Says
+                </h2>
+                <p className="text-lg text-gray-600">
+                  Real reviews from real users who transformed their lives
+                </p>
+              </div>
+              <ReviewsSystem />
+            </div>
+            <div className="lg:sticky lg:top-8">
+              <TrustSignals />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Enhanced Categories Section */}
       <section className="py-16 sm:py-20 md:py-24 w-full bg-gradient-to-b from-gray-50 to-white relative" aria-labelledby="categories-heading">
         {/* Visual Anchor */}
@@ -284,7 +327,7 @@ const Index = () => {
             </h2>
             <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed px-2">
               Join 25,000+ success stories across India's premium wellness destinations. 
-              <span className="block text-emerald-600 font-bold mt-2">Your transformation starts with one click.</span>
+              <span className="block text-emerald-600 font-bold">Your transformation starts with one click.</span>
             </p>
           </div>
 
@@ -381,7 +424,7 @@ const Index = () => {
         <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
           <div className="text-center mb-8 sm:mb-12 md:mb-16">
             <div className="mb-4 sm:mb-6 flex items-center justify-center">
-              <Badge className="bg-red-100 text-red-600 px-4 sm:px-6 py-2 sm:py-3 text-lg sm:text-xl font-bold animate-pulse">
+              <Badge className="bg-red-100 text-red-600 px-6 sm:px-8 py-3 sm:py-4 text-xl sm:text-2xl font-black animate-pulse">
                 🔥 Trending Now - Limited Spots!
               </Badge>
             </div>
