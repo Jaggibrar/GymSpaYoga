@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -39,6 +38,8 @@ import EnhancedNavigation from "./components/EnhancedNavigation";
 import AppFooter from "./components/AppFooter";
 import ScrollToTopButton from "./components/ScrollToTopButton";
 import "./App.css";
+import LiveChatWidget from "./components/LiveChatWidget";
+import AnalyticsTracker from "./components/AnalyticsTracker";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ function App() {
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
+            <AnalyticsTracker />
             <BrowserRouter>
               <div className="min-h-screen flex flex-col">
                 <EnhancedNavigation />
@@ -129,6 +131,7 @@ function App() {
                 </main>
                 <AppFooter />
                 <ScrollToTopButton />
+                <LiveChatWidget />
               </div>
             </BrowserRouter>
           </TooltipProvider>

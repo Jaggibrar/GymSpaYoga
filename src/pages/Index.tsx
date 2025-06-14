@@ -14,6 +14,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import GuestBookingModal from "@/components/GuestBookingModal";
 import PricingTransparency from "@/components/PricingTransparency";
+import FAQSection from "@/components/FAQSection";
 
 const Index = () => {
   useScrollToTop();
@@ -365,6 +366,9 @@ const Index = () => {
 
       {/* Testimonials Section */}
       <TestimonialsSection />
+
+      {/* FAQ Section */}
+      <FAQSection />
 
       {/* Pricing Transparency Section */}
       <PricingTransparency />

@@ -37,7 +37,7 @@ const SEOHead = ({
   
   const finalCanonical = canonical || url;
   
-  // Generate comprehensive structured data
+  // Generate comprehensive structured data with FAQ schema
   const defaultStructuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -248,6 +248,35 @@ const SEOHead = ({
             }
           ]
         }
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How do I book a gym session near me?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Simply search for gyms in your area using our location filter, browse available options, and click 'Quick Book' to schedule your session. You can book as a guest or create an account for faster future bookings."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What types of spa treatments are available?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Our partner spas offer a wide range of treatments including Swedish massage, deep tissue massage, aromatherapy, facials, body wraps, hot stone therapy, and specialized wellness treatments."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are the yoga instructors certified?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, all yoga instructors on our platform are certified professionals with verified credentials. We display their certifications, experience levels, and specializations."
+            }
+          }
+        ]
       }
     ]
   };
@@ -350,6 +379,8 @@ const SEOHead = ({
       <link rel="preconnect" href="https://images.unsplash.com" />
       <link rel="preconnect" href="https://www.google-analytics.com" />
       <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <link rel="preconnect" href="https://api.gymspayoga.com" />
+      <link rel="preconnect" href="https://pihmoaogjjiicfnkmpbe.supabase.co" />
       
       {/* DNS Prefetch */}
       <link rel="dns-prefetch" href="//www.google-analytics.com" />
@@ -357,11 +388,26 @@ const SEOHead = ({
       <link rel="dns-prefetch" href="//fonts.googleapis.com" />
       <link rel="dns-prefetch" href="//images.unsplash.com" />
       <link rel="dns-prefetch" href="//api.gymspayoga.com" />
+      <link rel="dns-prefetch" href="//pihmoaogjjiicfnkmpbe.supabase.co" />
       
       {/* Preload LCP Image */}
       <link rel="preload" as="image" href={image} />
       
-      {/* Critical CSS preload would go here if you had external CSS */}
+      {/* Service Worker Registration */}
+      <script dangerouslySetInnerHTML={{
+        __html: `
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                  console.log('SW registered: ', registration);
+                }, function(registrationError) {
+                  console.log('SW registration failed: ', registrationError);
+                });
+            });
+          }
+        `
+      }} />
       
       {/* Structured Data */}
       <script type="application/ld+json">
@@ -377,7 +423,8 @@ const SEOHead = ({
       <meta name="generator" content="React 18, Vite" />
       <meta name="referrer" content="origin-when-cross-origin" />
       
-      {/* Security Headers */}
+      {/* Security Headers - Enhanced CSP */}
+      <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://pihmoaogjjiicfnkmpbe.supabase.co https://www.google-analytics.com; frame-src 'none';" />
       <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
       <meta httpEquiv="X-Frame-Options" content="DENY" />
       <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
