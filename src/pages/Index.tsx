@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Clock, Users, Award, Dumbbell, Waves, Heart } from "lucide-react";
@@ -12,6 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEOHead from "@/components/SEOHead";
 import OptimizedImage from "@/components/OptimizedImage";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import GuestBookingModal from "@/components/GuestBookingModal";
+import PricingTransparency from "@/components/PricingTransparency";
 
 const Index = () => {
   useScrollToTop();
@@ -19,6 +21,17 @@ const Index = () => {
   const { trainers, loading: trainersLoading } = useTrainers();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [guestBookingModal, setGuestBookingModal] = useState<{
+    isOpen: boolean;
+    businessName: string;
+    businessType: string;
+    location: string;
+  }>({
+    isOpen: false,
+    businessName: "",
+    businessType: "",
+    location: ""
+  });
 
   const allBusinesses = gyms;
   const loading = gymsLoading || trainersLoading;
@@ -34,8 +47,13 @@ const Index = () => {
     return matchesSearch && matchesLocation;
   });
 
-  const handleBookNow = (businessName: string) => {
-    toast.success(`Booking ${businessName}. Please sign in to complete your booking!`);
+  const handleBookNow = (business: any) => {
+    setGuestBookingModal({
+      isOpen: true,
+      businessName: business.business_name,
+      businessType: business.business_type,
+      location: `${business.city}, ${business.state}`
+    });
   };
 
   const handleSearch = () => {
@@ -307,11 +325,11 @@ const Index = () => {
                       </div>
                       <Button 
                         size="sm" 
-                        onClick={() => handleBookNow(business.business_name)}
+                        onClick={() => handleBookNow(business)}
                         className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 touch-target text-xs md:text-sm"
                         aria-label={`Book now at ${business.business_name}`}
                       >
-                        Book Now
+                        Quick Book
                       </Button>
                     </div>
                   </CardContent>
@@ -344,6 +362,12 @@ const Index = () => {
           )}
         </div>
       </section>
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
+
+      {/* Pricing Transparency Section */}
+      <PricingTransparency />
 
       {/* CTA Section */}
       <section className="py-16 md:py-20 bg-gradient-to-r from-[#106EBE] to-[#0FFCBE] w-full relative overflow-hidden" aria-labelledby="cta-heading">
@@ -386,6 +410,15 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Guest Booking Modal */}
+      <GuestBookingModal
+        isOpen={guestBookingModal.isOpen}
+        onClose={() => setGuestBookingModal({ ...guestBookingModal, isOpen: false })}
+        businessName={guestBookingModal.businessName}
+        businessType={guestBookingModal.businessType}
+        location={guestBookingModal.location}
+      />
     </div>
   );
 };
