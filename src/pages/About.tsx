@@ -173,8 +173,9 @@ const About = () => {
             <div className="relative">
               <div className="absolute -inset-8 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-[3rem] transform rotate-3 blur-lg"></div>
               <div className="absolute -inset-4 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-[2.5rem] transform -rotate-2"></div>
+              {/* Updated image to use Supabase website media bucket */}
               <img 
-                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                src="https://pihmoaogjjiicfnkmpbe.supabase.co/storage/v1/object/public/website-media/site-assets/pexels-photo-16963635.jpeg"
                 alt="Modern wellness center" 
                 className="relative rounded-[2rem] shadow-3xl w-full h-[600px] object-cover" 
               />
