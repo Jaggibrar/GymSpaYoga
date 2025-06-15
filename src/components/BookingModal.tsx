@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { CalendarIcon, CheckCircle, AlertCircle } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useBookings } from '@/hooks/useBookings';
@@ -107,6 +108,17 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
       return;
     }
 
+    // Validate required fields
+    if (!bookingData.date || !bookingData.time || !bookingData.service || !bookingData.duration) {
+      toast.error("Please fill in all required booking details");
+      return;
+    }
+
+    if (!bookingData.name || !bookingData.phone || !bookingData.email) {
+      toast.error("Please fill in all contact information");
+      return;
+    }
+
     setSubmissionStatus('submitting');
     
     const normalizedBusinessType = normalizeBusinessType(businessType);
@@ -114,9 +126,9 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     const booking = await submitBooking({
       user_id: user.id,
       business_id: businessId,
-      business_type: normalizedBusinessType, // Use normalized type
+      business_type: normalizedBusinessType,
       trainer_id: null,
-      booking_date: bookingData.date ? format(bookingData.date, 'yyyy-MM-dd') : null,
+      booking_date: format(bookingData.date, 'yyyy-MM-dd'),
       booking_time: bookingData.time,
       duration_minutes: parseInt(bookingData.duration),
       total_amount: price ? parseInt(price.replace(/[^\d]/g, '')) : null,
@@ -128,6 +140,10 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     if (booking) {
       setSubmissionStatus('submitted');
       toast.success("Booking request submitted successfully!");
+      // Close modal after a delay
+      setTimeout(() => {
+        handleOpenChange(false);
+      }, 2000);
     } else {
       setSubmissionStatus('idle');
     }
@@ -139,7 +155,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="service">Select Service</Label>
+              <Label htmlFor="service">Select Service *</Label>
               <Select value={bookingData.service} onValueChange={(value) => setBookingData({...bookingData, service: value})}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Choose a service" />
@@ -155,7 +171,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
             </div>
             
             <div>
-              <Label>Select Date</Label>
+              <Label>Select Date *</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="outline" className="w-full justify-start text-left">
@@ -169,6 +185,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
                     selected={bookingData.date}
                     onSelect={(date) => setBookingData({...bookingData, date})}
                     initialFocus
+                    disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                   />
                 </PopoverContent>
               </Popover>
@@ -176,7 +193,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label>Time Slot</Label>
+                <Label>Time Slot *</Label>
                 <Select value={bookingData.time} onValueChange={(value) => setBookingData({...bookingData, time: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select time" />
@@ -192,7 +209,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
               </div>
               
               <div>
-                <Label>Duration</Label>
+                <Label>Duration *</Label>
                 <Select value={bookingData.duration} onValueChange={(value) => setBookingData({...bookingData, duration: value})}>
                   <SelectTrigger>
                     <SelectValue placeholder="Duration" />
@@ -213,33 +230,36 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
         return (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">Full Name *</Label>
               <Input
                 id="name"
                 value={bookingData.name}
                 onChange={(e) => setBookingData({...bookingData, name: e.target.value})}
                 placeholder="Enter your full name"
+                required
               />
             </div>
             
             <div>
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">Phone Number *</Label>
               <Input
                 id="phone"
                 value={bookingData.phone}
                 onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
                 placeholder="+91 98765 43210"
+                required
               />
             </div>
             
             <div>
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">Email Address *</Label>
               <Input
                 id="email"
                 type="email"
                 value={bookingData.email}
                 onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
                 placeholder="your.email@example.com"
+                required
               />
             </div>
             
@@ -295,6 +315,79 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     }
   };
 
+  const isStep1Valid = bookingData.service && bookingData.date && bookingData.time && bookingData.duration;
+  const isStep2Valid = bookingData.name && bookingData.phone && bookingData.email;
+
+  const modalContent = (
+    <DialogContent className="sm:max-w-[500px] bg-white">
+      <DialogHeader>
+        <DialogTitle className="flex items-center space-x-2">
+          <span>Book at {businessName}</span>
+          <Badge variant="outline">{businessType}</Badge>
+        </DialogTitle>
+      </DialogHeader>
+      
+      <div className="space-y-6">
+        {/* Progress Steps */}
+        <div className="flex items-center justify-center space-x-4">
+          {[1, 2, 3].map((stepNum) => (
+            <div key={stepNum} className="flex items-center">
+              <div className={`
+                w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                ${step >= stepNum 
+                  ? 'bg-emerald-500 text-white' 
+                  : 'bg-gray-200 text-gray-600'
+                }
+              `}>
+                {stepNum}
+              </div>
+              {stepNum < 3 && (
+                <div className={`
+                  w-12 h-1 mx-2
+                  ${step > stepNum ? 'bg-emerald-500' : 'bg-gray-200'}
+                `} />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {renderStepContent()}
+
+        <div className="flex justify-between">
+          {step > 1 && submissionStatus === 'idle' && (
+            <Button 
+              variant="outline" 
+              onClick={() => setStep(step - 1)}
+            >
+              Previous
+            </Button>
+          )}
+          
+          {step < 3 ? (
+            <Button 
+              onClick={() => setStep(step + 1)}
+              className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+              disabled={
+                (step === 1 && !isStep1Valid) ||
+                (step === 2 && !isStep2Valid)
+              }
+            >
+              Next
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleSubmit}
+              className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+              disabled={submissionStatus !== 'idle'}
+            >
+              {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
+            </Button>
+          )}
+        </div>
+      </div>
+    </DialogContent>
+  );
+
   // If trigger is provided, use DialogTrigger pattern
   if (trigger) {
     return (
@@ -302,147 +395,15 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
         <DialogTrigger asChild>
           {trigger}
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[500px] bg-white">
-          <DialogHeader>
-            <DialogTitle className="flex items-center space-x-2">
-              <span>Book at {businessName}</span>
-              <Badge variant="outline">{businessType}</Badge>
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-6">
-            {/* Progress Steps */}
-            <div className="flex items-center justify-center space-x-4">
-              {[1, 2, 3].map((stepNum) => (
-                <div key={stepNum} className="flex items-center">
-                  <div className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
-                    ${step >= stepNum 
-                      ? 'bg-emerald-500 text-white' 
-                      : 'bg-gray-200 text-gray-600'
-                    }
-                  `}>
-                    {stepNum}
-                  </div>
-                  {stepNum < 3 && (
-                    <div className={`
-                      w-12 h-1 mx-2
-                      ${step > stepNum ? 'bg-emerald-500' : 'bg-gray-200'}
-                    `} />
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {renderStepContent()}
-
-            <div className="flex justify-between">
-              {step > 1 && submissionStatus === 'idle' && (
-                <Button 
-                  variant="outline" 
-                  onClick={() => setStep(step - 1)}
-                >
-                  Previous
-                </Button>
-              )}
-              
-              {step < 3 ? (
-                <Button 
-                  onClick={() => setStep(step + 1)}
-                  className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                  disabled={
-                    (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.duration)) ||
-                    (step === 2 && (!bookingData.name || !bookingData.phone || !bookingData.email))
-                  }
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button 
-                  onClick={handleSubmit}
-                  className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                  disabled={submissionStatus !== 'idle'}
-                >
-                  {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
-                </Button>
-              )}
-            </div>
-          </div>
-        </DialogContent>
+        {modalContent}
       </Dialog>
     );
   }
 
-  // If no trigger, use controlled dialog pattern (for backward compatibility)
+  // If no trigger, use controlled dialog pattern
   return (
     <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-white">
-        <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
-            <span>Book at {businessName}</span>
-            <Badge variant="outline">{businessType}</Badge>
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-6">
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center space-x-4">
-            {[1, 2, 3].map((stepNum) => (
-              <div key={stepNum} className="flex items-center">
-                <div className={`
-                  w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
-                  ${step >= stepNum 
-                    ? 'bg-emerald-500 text-white' 
-                    : 'bg-gray-200 text-gray-600'
-                  }
-                `}>
-                  {stepNum}
-                </div>
-                {stepNum < 3 && (
-                  <div className={`
-                    w-12 h-1 mx-2
-                    ${step > stepNum ? 'bg-emerald-500' : 'bg-gray-200'}
-                  `} />
-                )}
-              </div>
-            ))}
-          </div>
-
-          {renderStepContent()}
-
-          <div className="flex justify-between">
-            {step > 1 && submissionStatus === 'idle' && (
-              <Button 
-                variant="outline" 
-                onClick={() => setStep(step - 1)}
-              >
-                Previous
-              </Button>
-            )}
-            
-            {step < 3 ? (
-              <Button 
-                onClick={() => setStep(step + 1)}
-                className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                disabled={
-                  (step === 1 && (!bookingData.service || !bookingData.date || !bookingData.time || !bookingData.duration)) ||
-                  (step === 2 && (!bookingData.name || !bookingData.phone || !bookingData.email))
-                }
-              >
-                Next
-              </Button>
-            ) : (
-              <Button 
-                onClick={handleSubmit}
-                className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                disabled={submissionStatus !== 'idle'}
-              >
-                {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
-              </Button>
-            )}
-          </div>
-        </div>
-      </DialogContent>
+      {modalContent}
     </Dialog>
   );
 };
