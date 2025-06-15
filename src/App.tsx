@@ -47,8 +47,6 @@ import "./App.css";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import BusinessLanding from "@/pages/BusinessLanding";
 import RoleBasedRedirect from "./components/RoleBasedRedirect";
-
-// Import monitoring utilities
 import { errorTracker } from "@/utils/errorTracking";
 import { performanceMonitor } from "@/utils/performanceMonitor";
 
@@ -56,7 +54,6 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: (failureCount, error) => {
-        // Enhanced retry logic with error tracking
         errorTracker.logError(
           `Query failed (attempt ${failureCount + 1}): ${error}`,
           'medium',
@@ -64,8 +61,8 @@ const queryClient = new QueryClient({
         );
         return failureCount < 2;
       },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
     },
     mutations: {
       retry: false,
@@ -80,7 +77,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Create a separate component for the app layout that uses auth context
 const AppLayout = () => {
   return (
     <div className="min-h-screen flex flex-col bg-white">
@@ -112,7 +108,6 @@ const AppLayout = () => {
             <Route path="/support" element={<Support />} />
             <Route path="/payment-success" element={<PaymentSuccess />} />
             
-            {/* Role-based dashboards */}
             <Route 
               path="/dashboard" 
               element={
@@ -138,7 +133,6 @@ const AppLayout = () => {
               } 
             />
             
-            {/* Booking routes */}
             <Route 
               path="/bookings" 
               element={
@@ -164,7 +158,6 @@ const AppLayout = () => {
               } 
             />
             
-            {/* Legacy routes */}
             <Route 
               path="/profile" 
               element={
@@ -208,11 +201,9 @@ const AppLayout = () => {
 };
 
 function App() {
-  // Initialize performance monitoring
   React.useEffect(() => {
     performanceMonitor.recordMetric('app_initialized', 1, 'counter');
     
-    // Monitor Core Web Vitals
     if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {

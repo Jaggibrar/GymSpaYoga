@@ -23,7 +23,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let mounted = true;
-    let retryTimeout: NodeJS.Timeout | null = null;
 
     const fetchUserProfile = async (userId: string) => {
       try {
@@ -76,32 +75,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (mounted) {
             setLoading(false);
           }
-          return;
+          return subscription;
         }
 
         if (mounted) {
           await handleAuthChange('INITIAL_SESSION', session);
         }
 
-        return () => {
-          mounted = false;
-          subscription.unsubscribe();
-          if (retryTimeout) {
-            clearTimeout(retryTimeout);
-          }
-        };
+        return subscription;
       } catch (error) {
         console.error('Auth initialization error:', error);
         if (mounted) {
           setLoading(false);
         }
+        return null;
       }
     };
 
-    const cleanup = initializeAuth();
+    let subscription: any = null;
+    
+    initializeAuth().then((sub) => {
+      subscription = sub;
+    });
     
     return () => {
-      cleanup.then(cleanupFn => cleanupFn?.());
+      mounted = false;
+      if (subscription) {
+        subscription.unsubscribe();
+      }
     };
   }, []);
 

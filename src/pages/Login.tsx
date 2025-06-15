@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -23,10 +24,13 @@ const Login = () => {
     try {
       const { error } = await signIn(email, password);
 
-      if (error) throw error;
+      if (error) {
+        toast.error(error.message || "Failed to sign in");
+        return;
+      }
 
       toast.success("Signed in successfully!");
-      navigate("/profile");
+      navigate("/");
     } catch (error: any) {
       console.error("Error:", error);
       toast.error(error.message || "Failed to sign in");
