@@ -1,65 +1,49 @@
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React from 'react';
 
 interface TrainerPersonalInfoProps {
-  name: string;
-  email: string;
-  phone: string;
-  onNameChange: (name: string) => void;
-  onEmailChange: (email: string) => void;
-  onPhoneChange: (phone: string) => void;
+  formData: any;
+  setFormData: (updater: (prev: any) => any) => void;
 }
 
-export const TrainerPersonalInfo = ({
-  name,
-  email,
-  phone,
-  onNameChange,
-  onEmailChange,
-  onPhoneChange
-}: TrainerPersonalInfoProps) => {
-  return (
-    <div className="space-y-6">
-      <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
-        Personal Information
-      </h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="space-y-3">
-          <Label htmlFor="name" className="text-lg font-medium text-gray-700">Full Name *</Label>
-          <Input
-            id="name"
-            value={name}
-            onChange={(e) => onNameChange(e.target.value)}
-            required
-            className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-            placeholder="Enter your full name"
-          />
-        </div>
-        <div className="space-y-3">
-          <Label htmlFor="email" className="text-lg font-medium text-gray-700">Email Address *</Label>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => onEmailChange(e.target.value)}
-            required
-            className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-            placeholder="your@email.com"
-          />
-        </div>
-        <div className="space-y-3">
-          <Label htmlFor="phone" className="text-lg font-medium text-gray-700">Phone Number *</Label>
-          <Input
-            id="phone"
-            value={phone}
-            onChange={(e) => onPhoneChange(e.target.value)}
-            required
-            className="h-14 text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
-            placeholder="+91 98765 43210"
-          />
-        </div>
-      </div>
+const TrainerPersonalInfo: React.FC<TrainerPersonalInfoProps> = ({ formData, setFormData }) => (
+  <div>
+    <div className="mb-2">
+      <label className="block font-medium mb-1">Name</label>
+      <input className="input w-full"
+        value={formData.name}
+        onChange={e => setFormData((prev: any) => ({ ...prev, name: e.target.value }))}
+      />
     </div>
-  );
-};
+    <div className="mb-2">
+      <label className="block font-medium mb-1">Phone</label>
+      <input className="input w-full"
+        value={formData.phone}
+        onChange={e => setFormData((prev: any) => ({ ...prev, phone: e.target.value }))}
+      />
+    </div>
+    <div className="mb-2">
+      <label className="block font-medium mb-1">Email</label>
+      <input className="input w-full"
+        value={formData.email}
+        onChange={e => setFormData((prev: any) => ({ ...prev, email: e.target.value }))}
+      />
+    </div>
+    <div className="mb-2">
+      <label className="block font-medium mb-1">City</label>
+      <input className="input w-full"
+        value={formData.city}
+        onChange={e => setFormData((prev: any) => ({ ...prev, city: e.target.value }))}
+      />
+    </div>
+    <div className="mb-2">
+      <label className="block font-medium mb-1">Location</label>
+      <input className="input w-full"
+        value={formData.location}
+        onChange={e => setFormData((prev: any) => ({ ...prev, location: e.target.value }))}
+      />
+    </div>
+  </div>
+);
+
+export default TrainerPersonalInfo;
