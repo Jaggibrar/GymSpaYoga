@@ -76,7 +76,7 @@ const PaymentModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2 text-foreground">
+          <DialogTitle className="flex items-center space-x-2 text-gray-900">
             <CreditCard className="h-5 w-5" />
             <span>Book {serviceName}</span>
           </DialogTitle>
@@ -95,7 +95,7 @@ const PaymentModal = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="date" className="flex items-center space-x-2 text-foreground">
+              <Label htmlFor="date" className="flex items-center space-x-2 text-gray-900">
                 <Calendar className="h-4 w-4" />
                 <span>Date</span>
               </Label>
@@ -106,11 +106,12 @@ const PaymentModal = ({
                 onChange={(e) => setBookingData({ ...bookingData, date: e.target.value })}
                 min={new Date().toISOString().split('T')[0]}
                 required
+                className="text-gray-900"
               />
             </div>
             
             <div>
-              <Label htmlFor="time" className="flex items-center space-x-2 text-foreground">
+              <Label htmlFor="time" className="flex items-center space-x-2 text-gray-900">
                 <Clock className="h-4 w-4" />
                 <span>Time</span>
               </Label>
@@ -120,12 +121,13 @@ const PaymentModal = ({
                 value={bookingData.time}
                 onChange={(e) => setBookingData({ ...bookingData, time: e.target.value })}
                 required
+                className="text-gray-900"
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="duration" className="text-foreground">Duration (minutes)</Label>
+            <Label htmlFor="duration" className="text-gray-900">Duration (minutes)</Label>
             <Input
               id="duration"
               type="number"
@@ -134,17 +136,19 @@ const PaymentModal = ({
               min="30"
               max="180"
               step="15"
+              className="text-gray-900"
             />
           </div>
 
           <div>
-            <Label htmlFor="notes" className="text-foreground">Special Requests (Optional)</Label>
+            <Label htmlFor="notes" className="text-gray-900">Special Requests (Optional)</Label>
             <Textarea
               id="notes"
               value={bookingData.notes}
               onChange={(e) => setBookingData({ ...bookingData, notes: e.target.value })}
               placeholder="Any special requirements or preferences..."
               rows={3}
+              className="text-gray-900"
             />
           </div>
 
@@ -153,7 +157,7 @@ const PaymentModal = ({
               type="button" 
               variant="outline" 
               onClick={onClose} 
-              className="flex-1 text-gray-900 border-gray-300 hover:bg-gray-50"
+              className="flex-1"
             >
               Cancel
             </Button>

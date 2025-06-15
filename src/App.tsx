@@ -37,6 +37,7 @@ import PasswordReset from "./components/auth/PasswordReset";
 import ResetPassword from "./pages/ResetPassword";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import SiteAudit from "./pages/SiteAudit";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EnhancedNavigation from "./components/EnhancedNavigation";
 import AppFooter from "./components/AppFooter";
