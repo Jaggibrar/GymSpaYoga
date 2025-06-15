@@ -313,9 +313,6 @@ const ManageBookings = () => {
                             <p className="font-semibold text-green-600">
                               {booking.total_amount ? formatCurrency(booking.total_amount) : 'Amount not set'}
                             </p>
-                            <p className="text-xs text-gray-500">
-                              Payment: {booking.payment_status || 'pending'}
-                            </p>
                           </TableCell>
                           <TableCell>
                             <Badge className={`${getStatusColor(booking.status || 'pending')} text-white`}>
