@@ -80,6 +80,133 @@ const queryClient = new QueryClient({
   },
 });
 
+// Create a separate component for the app layout that uses auth context
+const AppLayout = () => {
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <ErrorBoundary>
+        <EnhancedNavigation />
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/business" element={<BusinessLanding />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/password-reset" element={<PasswordReset />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/gyms" element={<Gyms />} />
+            <Route path="/gyms/:id" element={<GymDetails />} />
+            <Route path="/spas" element={<Spas />} />
+            <Route path="/spas/:id" element={<SpaDetails />} />
+            <Route path="/yoga" element={<Yoga />} />
+            <Route path="/yoga/:id" element={<YogaDetails />} />
+            <Route path="/trainers" element={<Trainers />} />
+            <Route path="/blogs" element={<BlogList />} />
+            <Route path="/blogs/:slug" element={<BlogPost />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/register-business" element={<RegisterBusiness />} />
+            <Route path="/register-trainer" element={<RegisterTrainer />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
+            
+            {/* Role-based dashboards */}
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <RoleBasedRedirect />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/business" 
+              element={
+                <ProtectedRoute>
+                  <BusinessDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/user" 
+              element={
+                <ProtectedRoute>
+                  <UserDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Booking routes */}
+            <Route 
+              path="/bookings" 
+              element={
+                <ProtectedRoute>
+                  <UserBookings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/user-bookings" 
+              element={
+                <ProtectedRoute>
+                  <UserBookings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/business-bookings" 
+              element={
+                <ProtectedRoute>
+                  <BusinessBookings />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Legacy routes */}
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/manage-bookings" 
+              element={
+                <ProtectedRoute>
+                  <ManageBookings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/calendar" 
+              element={
+                <ProtectedRoute>
+                  <Calendar />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+        <AppFooter />
+      </ErrorBoundary>
+      <ScrollToTopButton />
+    </div>
+  );
+};
+
 function App() {
   // Initialize performance monitoring
   React.useEffect(() => {
@@ -110,135 +237,15 @@ function App() {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router>
-              <AnalyticsTracker />
-              <div className="min-h-screen flex flex-col bg-white">
-                <ErrorBoundary>
-                  <EnhancedNavigation />
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/business" element={<BusinessLanding />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/signup" element={<Signup />} />
-                      <Route path="/password-reset" element={<PasswordReset />} />
-                      <Route path="/reset-password" element={<ResetPassword />} />
-                      <Route path="/gyms" element={<Gyms />} />
-                      <Route path="/gyms/:id" element={<GymDetails />} />
-                      <Route path="/spas" element={<Spas />} />
-                      <Route path="/spas/:id" element={<SpaDetails />} />
-                      <Route path="/yoga" element={<Yoga />} />
-                      <Route path="/yoga/:id" element={<YogaDetails />} />
-                      <Route path="/trainers" element={<Trainers />} />
-                      <Route path="/blogs" element={<BlogList />} />
-                      <Route path="/blogs/:slug" element={<BlogPost />} />
-                      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                      <Route path="/terms-of-service" element={<TermsOfService />} />
-                      <Route path="/register-business" element={<RegisterBusiness />} />
-                      <Route path="/register-trainer" element={<RegisterTrainer />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/support" element={<Support />} />
-                      <Route path="/payment-success" element={<PaymentSuccess />} />
-                      
-                      {/* Role-based dashboards */}
-                      <Route 
-                        path="/dashboard" 
-                        element={
-                          <ProtectedRoute>
-                            <RoleBasedRedirect />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/dashboard/business" 
-                        element={
-                          <ProtectedRoute>
-                            <BusinessDashboard />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/dashboard/user" 
-                        element={
-                          <ProtectedRoute>
-                            <UserDashboard />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      
-                      {/* Booking routes */}
-                      <Route 
-                        path="/bookings" 
-                        element={
-                          <ProtectedRoute>
-                            <UserBookings />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/user-bookings" 
-                        element={
-                          <ProtectedRoute>
-                            <UserBookings />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/business-bookings" 
-                        element={
-                          <ProtectedRoute>
-                            <BusinessBookings />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      
-                      {/* Legacy routes */}
-                      <Route 
-                        path="/profile" 
-                        element={
-                          <ProtectedRoute>
-                            <Profile />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/admin" 
-                        element={
-                          <ProtectedRoute>
-                            <AdminDashboard />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/manage-bookings" 
-                        element={
-                          <ProtectedRoute>
-                            <ManageBookings />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route 
-                        path="/calendar" 
-                        element={
-                          <ProtectedRoute>
-                            <Calendar />
-                          </ProtectedRoute>
-                        } 
-                      />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                  <AppFooter />
-                </ErrorBoundary>
-                <ScrollToTopButton />
-              </div>
-            </Router>
-          </TooltipProvider>
-        </AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router>
+            <AnalyticsTracker />
+            <AuthProvider>
+              <AppLayout />
+            </AuthProvider>
+          </Router>
+        </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
   );
