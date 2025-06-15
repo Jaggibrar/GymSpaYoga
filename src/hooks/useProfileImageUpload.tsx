@@ -40,10 +40,10 @@ export const useProfileImageUpload = () => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile.${fileExt}`;
       
-      console.log(`Uploading profile image to: profile-images/${fileName}`);
+      console.log(`Uploading profile image to: trainer-images/${fileName}`);
       
       const { error: uploadError } = await supabase.storage
-        .from('profile-images')
+        .from('trainer-images')
         .upload(fileName, file, { 
           upsert: true,
           cacheControl: '3600'
@@ -56,7 +56,7 @@ export const useProfileImageUpload = () => {
       }
       
       const { data } = supabase.storage
-        .from('profile-images')
+        .from('trainer-images')
         .getPublicUrl(fileName);
       
       toast.success('Profile image uploaded successfully!');
