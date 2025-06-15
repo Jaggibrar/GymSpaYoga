@@ -10,18 +10,28 @@ import { toast } from 'sonner';
 
 interface BookingsListProps {
   showBusinessActions?: boolean;
+  businessOwnersView?: boolean;
 }
 
-export const BookingsList = ({ showBusinessActions = false }: BookingsListProps) => {
+export const BookingsList = ({ 
+  showBusinessActions = false,
+  businessOwnersView = false 
+}: BookingsListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const { bookings, loading, updateBookingStatus } = useRealTimeBookings();
+  const { bookings, loading, updateBookingStatus } = useRealTimeBookings(businessOwnersView);
 
   const filteredBookings = bookings.filter(booking => {
+    const searchableText = `${booking.business_type} ${booking.notes || ''} ${booking.id}`.toLowerCase();
+    const userSearchableText = businessOwnersView && booking.user_profile ? 
+      booking.user_profile.full_name.toLowerCase() : '';
+    const businessSearchableText = !businessOwnersView && booking.business_profile ? 
+      booking.business_profile.business_name.toLowerCase() : '';
+    
     const matchesSearch = 
-      booking.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.id.toString().includes(searchTerm);
+      searchableText.includes(searchTerm.toLowerCase()) ||
+      userSearchableText.includes(searchTerm.toLowerCase()) ||
+      businessSearchableText.includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || booking.status === statusFilter;
     
@@ -32,8 +42,6 @@ export const BookingsList = ({ showBusinessActions = false }: BookingsListProps)
     const success = await updateBookingStatus(bookingId, 'confirmed', 'Booking confirmed by business');
     if (success) {
       toast.success('Booking confirmed successfully');
-    } else {
-      toast.error('Failed to confirm booking');
     }
   };
 
@@ -41,8 +49,6 @@ export const BookingsList = ({ showBusinessActions = false }: BookingsListProps)
     const success = await updateBookingStatus(bookingId, 'rejected', 'Booking rejected by business');
     if (success) {
       toast.success('Booking rejected');
-    } else {
-      toast.error('Failed to reject booking');
     }
   };
 
@@ -74,7 +80,7 @@ export const BookingsList = ({ showBusinessActions = false }: BookingsListProps)
             <div className="relative">
               <Search className="h-4 w-4 absolute left-3 top-3 text-gray-400" />
               <Input
-                placeholder="Search by ID, type, or notes..."
+                placeholder={businessOwnersView ? "Search by customer, service..." : "Search by business, service..."}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-9"
@@ -102,7 +108,7 @@ export const BookingsList = ({ showBusinessActions = false }: BookingsListProps)
           <CardContent className="text-center py-8">
             <p className="text-gray-500">
               {bookings.length === 0 
-                ? "No bookings found" 
+                ? (businessOwnersView ? "No booking requests found" : "No bookings found")
                 : "No bookings match your current filters"}
             </p>
           </CardContent>
@@ -114,6 +120,8 @@ export const BookingsList = ({ showBusinessActions = false }: BookingsListProps)
               key={booking.id}
               booking={booking}
               showActions={showBusinessActions}
+              showUserInfo={businessOwnersView}
+              showBusinessInfo={!businessOwnersView}
               onConfirm={handleConfirm}
               onReject={handleReject}
               onViewDetails={handleViewDetails}

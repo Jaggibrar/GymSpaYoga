@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Clock, User, Phone, CreditCard } from 'lucide-react';
+import { Calendar, MapPin, Clock, User, Phone, CreditCard, Building } from 'lucide-react';
 import { BookingStatusBadge } from './BookingStatusBadge';
 
 interface BookingCardProps {
@@ -17,8 +17,17 @@ interface BookingCardProps {
     notes?: string;
     confirmed_at?: string;
     created_at: string;
+    user_profile?: {
+      full_name: string;
+      phone?: string;
+    };
+    business_profile?: {
+      business_name: string;
+    };
   };
   showActions?: boolean;
+  showBusinessInfo?: boolean;
+  showUserInfo?: boolean;
   onConfirm?: (bookingId: number) => void;
   onReject?: (bookingId: number) => void;
   onViewDetails?: (bookingId: number) => void;
@@ -26,7 +35,9 @@ interface BookingCardProps {
 
 export const BookingCard = ({ 
   booking, 
-  showActions = false, 
+  showActions = false,
+  showBusinessInfo = false,
+  showUserInfo = false,
   onConfirm, 
   onReject, 
   onViewDetails 
@@ -47,6 +58,8 @@ export const BookingCard = ({
     });
   };
 
+  const canConfirmOrReject = showActions && booking.status === 'pending';
+
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300">
       <CardHeader className="pb-3">
@@ -60,6 +73,33 @@ export const BookingCard = ({
       </CardHeader>
       
       <CardContent className="space-y-4">
+        {/* User Information (for business owners) */}
+        {showUserInfo && booking.user_profile && (
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <h4 className="font-semibold text-sm mb-2 flex items-center">
+              <User className="h-4 w-4 mr-1 text-blue-600" />
+              Customer Details
+            </h4>
+            <div className="space-y-1">
+              <p className="text-sm"><strong>Name:</strong> {booking.user_profile.full_name}</p>
+              {booking.user_profile.phone && (
+                <p className="text-sm"><strong>Phone:</strong> {booking.user_profile.phone}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Business Information (for users) */}
+        {showBusinessInfo && booking.business_profile && (
+          <div className="bg-green-50 p-3 rounded-lg">
+            <h4 className="font-semibold text-sm mb-2 flex items-center">
+              <Building className="h-4 w-4 mr-1 text-green-600" />
+              Business Details
+            </h4>
+            <p className="text-sm"><strong>Business:</strong> {booking.business_profile.business_name}</p>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-blue-500" />
@@ -121,7 +161,7 @@ export const BookingCard = ({
 
         {showActions && (
           <div className="flex gap-2 pt-4 border-t">
-            {booking.status === 'pending' && (
+            {canConfirmOrReject && (
               <>
                 <Button
                   size="sm"
