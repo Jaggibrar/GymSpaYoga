@@ -18,6 +18,9 @@ interface BusinessData {
   status: string;
   created_at: string;
   tier?: string;
+  amenities: string[];
+  phone: string;
+  email: string;
 }
 
 export const useBusinessData = (businessType?: string, searchTerm?: string, locationFilter?: string, tierFilter?: string) => {
