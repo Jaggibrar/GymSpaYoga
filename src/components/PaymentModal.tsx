@@ -36,38 +36,29 @@ const PaymentModal = ({
     duration: 60,
     notes: ''
   });
+  const [confirmation, setConfirmation] = useState<{id: number}|null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   console.log('PaymentModal - Auth state:', { user: user?.id, authLoading, isOpen });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    console.log('PaymentModal - handleSubmit called:', { 
-      user: user?.id, 
-      authLoading, 
-      bookingData 
-    });
-    
-    // Wait for auth loading to complete
+    setErrorMsg(null);
+
     if (authLoading) {
-      console.log('PaymentModal - Auth still loading, showing error');
       toast.error("Please wait while we verify your login status");
       return;
     }
     
     if (!user) {
-      console.log('PaymentModal - No user found, showing login error');
       toast.error("Please login to book a session");
       return;
     }
 
     if (!bookingData.date || !bookingData.time) {
-      console.log('PaymentModal - Missing date/time');
       toast.error("Please select date and time");
       return;
     }
-
-    console.log('PaymentModal - Submitting booking with user:', user.id);
 
     const booking = await submitBooking({
       user_id: user.id,
@@ -84,24 +75,46 @@ const PaymentModal = ({
     });
 
     if (booking) {
-      console.log('PaymentModal - Booking successful:', booking.id);
       toast.success("Booking request submitted successfully! Payment will be made at the counter.");
-      onClose();
+      setConfirmation({id: booking.id});
       setBookingData({ date: '', time: '', duration: 60, notes: '' });
     } else {
-      console.log('PaymentModal - Booking failed');
+      setErrorMsg("Booking submission failed. Please try again.");
     }
   };
 
+  if (!isOpen) return null;
+
   // Show loading while auth is being determined
   if (authLoading) {
-    console.log('PaymentModal - Showing auth loading state');
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md">
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
             <span className="ml-3">Verifying login status...</span>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Show a clear booking confirmation page after successful booking
+  if (confirmation) {
+    return (
+      <Dialog open={isOpen} onOpenChange={() => { setConfirmation(null); onClose(); }}>
+        <DialogContent className="sm:max-w-md">
+          <div className="text-center py-10">
+            <div className="flex justify-center mb-4">
+              <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                <span className="text-4xl text-emerald-600">✔️</span>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-2 text-emerald-800">Booking Submitted!</h2>
+            <p className="mb-4 text-emerald-800">Your booking ID is <span className="font-bold">#{confirmation.id}</span>. You will be notified when the business responds.</p>
+            <Button onClick={() => { setConfirmation(null); onClose(); }} className="bg-emerald-500 hover:bg-emerald-600 w-full">
+              Done
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -118,6 +131,10 @@ const PaymentModal = ({
           </DialogTitle>
         </DialogHeader>
         
+        {errorMsg && (
+          <div className="bg-red-100 p-3 rounded text-red-700 mb-2 text-sm text-center">{errorMsg}</div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center space-x-2 mb-2">

@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -45,8 +44,9 @@ const UserBookings = () => {
           </div>
           <p className="text-gray-600 text-lg">Track and manage all your fitness bookings</p>
         </div>
-
         <BookingsList showBusinessActions={false} />
+        {/* Add a message if no bookings visible */}
+        {/* You may handle this in <BookingsList> if prop available. */}
       </div>
     </div>
   );

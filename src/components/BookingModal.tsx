@@ -38,6 +38,8 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     specialRequests: ''
   });
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
+  const [confirmation, setConfirmation] = useState<{id: number} | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   
   const { submitBooking } = useBookings();
   const { user, loading: authLoading } = useAuth();
@@ -125,7 +127,8 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     }
 
     setSubmissionStatus('submitting');
-    
+    setErrorMsg(null);
+
     const normalizedBusinessType = normalizeBusinessType(businessType);
     
     console.log('Submitting booking with user:', user.id);
@@ -146,12 +149,15 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
 
     if (booking) {
       setSubmissionStatus('submitted');
-      toast.success("Booking request submitted successfully! Payment will be made at the counter.");
+      setConfirmation({ id: booking.id });
+      toast.success("Booking request submitted successfully!");
       // Close modal after a delay
       setTimeout(() => {
+        setConfirmation(null);
         handleOpenChange(false);
-      }, 2000);
+      }, 2500);
     } else {
+      setErrorMsg("Booking failed! Please try again.");
       setSubmissionStatus('idle');
     }
   };
@@ -361,6 +367,54 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     return (
       <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
         {loadingContent}
+      </Dialog>
+    );
+  }
+
+  // Show confirmation page on booking success
+  if (confirmation) {
+    return (
+      <Dialog open={modalOpen} onOpenChange={() => { setConfirmation(null); handleOpenChange(false); }}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <div className="text-center py-10">
+            <div className="flex justify-center mb-4">
+              <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                <span className="text-4xl text-emerald-600">✔️</span>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-2 text-emerald-800">Booking Submitted!</h2>
+            <p className="mb-4 text-emerald-800">
+              Your booking ID is <span className="font-bold">#{confirmation.id}</span>. You'll be notified when the business responds.
+            </p>
+            <Button onClick={() => { setConfirmation(null); handleOpenChange(false); }} className="bg-emerald-500 hover:bg-emerald-600 w-full">
+              Done
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Show error message if any
+  if (errorMsg) {
+    return (
+      <Dialog open={modalOpen} onOpenChange={() => { setConfirmation(null); handleOpenChange(false); }}>
+        <DialogContent className="sm:max-w-[500px] bg-white">
+          <div className="text-center py-10">
+            <div className="flex justify-center mb-4">
+              <div className="bg-red-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                <span className="text-4xl text-red-600">❌</span>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold mb-2 text-red-800">Booking Failed!</h2>
+            <p className="mb-4 text-red-800">
+              {errorMsg}
+            </p>
+            <Button onClick={() => { setConfirmation(null); handleOpenChange(false); }} className="bg-red-500 hover:bg-red-600 w-full">
+              Done
+            </Button>
+          </div>
+        </DialogContent>
       </Dialog>
     );
   }
