@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -23,13 +22,20 @@ export const useBookingConfirmation = () => {
   const { user } = useAuth();
 
   const createBooking = async (bookingData: BookingData) => {
+    console.log('useBookingConfirmation - createBooking called:', { 
+      user: user?.id, 
+      bookingData 
+    });
+
     if (!user) {
+      console.log('useBookingConfirmation - No user, showing error');
       toast.error('Please login to create a booking');
       return null;
     }
 
     setLoading(true);
     try {
+      console.log('useBookingConfirmation - Inserting booking into database');
       // Insert booking into database
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
@@ -50,10 +56,12 @@ export const useBookingConfirmation = () => {
         .single();
 
       if (bookingError) {
-        console.error('Error creating booking:', bookingError);
+        console.error('useBookingConfirmation - Error creating booking:', bookingError);
         toast.error('Failed to create booking');
         return null;
       }
+
+      console.log('useBookingConfirmation - Booking created successfully:', booking.id);
 
       // Get business details for notification
       const { data: business, error: businessError } = await supabase
@@ -100,7 +108,7 @@ export const useBookingConfirmation = () => {
       toast.success('Booking created successfully!');
       return booking;
     } catch (error) {
-      console.error('Error in booking creation:', error);
+      console.error('useBookingConfirmation - Error in booking creation:', error);
       toast.error('Failed to create booking');
       return null;
     } finally {

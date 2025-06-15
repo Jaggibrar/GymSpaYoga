@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -38,26 +37,37 @@ const PaymentModal = ({
     notes: ''
   });
 
+  console.log('PaymentModal - Auth state:', { user: user?.id, authLoading, isOpen });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('PaymentModal - handleSubmit called:', { 
+      user: user?.id, 
+      authLoading, 
+      bookingData 
+    });
+    
     // Wait for auth loading to complete
     if (authLoading) {
+      console.log('PaymentModal - Auth still loading, showing error');
       toast.error("Please wait while we verify your login status");
       return;
     }
     
     if (!user) {
+      console.log('PaymentModal - No user found, showing login error');
       toast.error("Please login to book a session");
       return;
     }
 
     if (!bookingData.date || !bookingData.time) {
+      console.log('PaymentModal - Missing date/time');
       toast.error("Please select date and time");
       return;
     }
 
-    console.log('Submitting booking with user:', user.id);
+    console.log('PaymentModal - Submitting booking with user:', user.id);
 
     const booking = await submitBooking({
       user_id: user.id,
@@ -74,14 +84,18 @@ const PaymentModal = ({
     });
 
     if (booking) {
+      console.log('PaymentModal - Booking successful:', booking.id);
       toast.success("Booking request submitted successfully! Payment will be made at the counter.");
       onClose();
       setBookingData({ date: '', time: '', duration: 60, notes: '' });
+    } else {
+      console.log('PaymentModal - Booking failed');
     }
   };
 
   // Show loading while auth is being determined
   if (authLoading) {
+    console.log('PaymentModal - Showing auth loading state');
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-md">
