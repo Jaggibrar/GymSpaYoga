@@ -150,7 +150,7 @@ const RegisterBusiness = () => {
     }
   };
 
-  // Add validation functions for each step
+  // Fixed validation functions for each step
   const validateBusinessType = () => {
     return businessType.trim() !== "" && formData.businessName.trim() !== "";
   };
@@ -186,6 +186,11 @@ const RegisterBusiness = () => {
 
   const validateDescription = () => {
     return formData.description.trim().length >= 10;
+  };
+
+  // Fixed: Add validation for images step
+  const validateImages = () => {
+    return businessImages.length >= 1;
   };
 
   const steps = [
@@ -316,6 +321,7 @@ const RegisterBusiness = () => {
       id: "images",
       title: "Images",
       description: "Showcase your business",
+      validate: validateImages,
       component: <ImageUpload onFileChange={handleFileChange} />
     }
   ];

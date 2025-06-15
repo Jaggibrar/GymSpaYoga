@@ -90,14 +90,6 @@ const RegisterTrainer = () => {
   };
 
   const handleSubmit = async () => {
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.phone || !formData.category || 
-        !formData.trainerTier || !formData.experience || !formData.hourlyRate || 
-        !formData.location || !formData.bio) {
-      alert("Please fill in all required fields");
-      return;
-    }
-
     const success = await registerTrainer(formData);
     if (success) {
       setFormData({
@@ -132,11 +124,45 @@ const RegisterTrainer = () => {
     setFormData(prev => ({ ...prev, profileImage: file }));
   };
 
+  // Fixed validation functions
+  const validatePersonalInfo = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[+]?[\d\s\-\(\)]{10,}$/;
+    return formData.name.trim() !== "" && 
+           formData.email.trim() !== "" && 
+           formData.phone.trim() !== "" &&
+           emailRegex.test(formData.email) && 
+           phoneRegex.test(formData.phone);
+  };
+
+  const validateCategoryAndTier = () => {
+    return formData.category !== "" && formData.trainerTier !== "";
+  };
+
+  const validateProfessionalDetails = () => {
+    const experience = parseInt(formData.experience);
+    const hourlyRate = parseInt(formData.hourlyRate);
+    return formData.experience !== "" && 
+           formData.hourlyRate !== "" && 
+           formData.location.trim() !== "" &&
+           !isNaN(experience) && experience >= 0 &&
+           !isNaN(hourlyRate) && hourlyRate > 0;
+  };
+
+  const validateBio = () => {
+    return formData.bio.trim().length >= 10;
+  };
+
+  const validateProfileImage = () => {
+    return formData.profileImage !== null;
+  };
+
   const steps = [
     {
       id: "personal",
       title: "Personal Info",
       description: "Basic information",
+      validate: validatePersonalInfo,
       component: (
         <TrainerPersonalInfo
           name={formData.name}
@@ -152,6 +178,7 @@ const RegisterTrainer = () => {
       id: "category",
       title: "Category & Tier",
       description: "Choose your expertise",
+      validate: validateCategoryAndTier,
       component: (
         <div className="space-y-8">
           <TrainerCategorySelector
@@ -171,6 +198,7 @@ const RegisterTrainer = () => {
       id: "professional",
       title: "Professional Details",
       description: "Experience and rates",
+      validate: validateProfessionalDetails,
       component: (
         <TrainerProfessionalDetails
           experience={formData.experience}
@@ -186,6 +214,7 @@ const RegisterTrainer = () => {
       id: "bio",
       title: "Bio & Certifications",
       description: "Tell us about yourself",
+      validate: validateBio,
       component: (
         <TrainerBioAndCertifications
           bio={formData.bio}
@@ -212,6 +241,7 @@ const RegisterTrainer = () => {
       id: "profile",
       title: "Profile Image",
       description: "Upload your photo",
+      validate: validateProfileImage,
       component: <TrainerProfileImageUpload onFileChange={handleFileChange} />
     },
     {
