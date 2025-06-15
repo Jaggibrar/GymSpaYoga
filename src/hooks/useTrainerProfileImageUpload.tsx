@@ -37,28 +37,12 @@ export const useTrainerProfileImageUpload = () => {
 
     setUploading(true);
     try {
-      // First, let's check if the bucket exists
-      console.log('Checking if trainer-images bucket exists...');
-      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
-      
-      if (bucketsError) {
-        console.error('Error listing buckets:', bucketsError);
-        toast.error('Failed to check storage availability');
-        return null;
-      }
-      
-      const trainerBucket = buckets?.find(bucket => bucket.id === 'trainer-images');
-      if (!trainerBucket) {
-        console.error('trainer-images bucket not found. Available buckets:', buckets?.map(b => b.id));
-        toast.error('Trainer images storage bucket not found. Please contact support.');
-        return null;
-      }
-
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile.${fileExt}`;
       
       console.log(`Uploading trainer profile image to: trainer-images/${fileName}`);
       
+      // Try to upload directly without checking buckets first
       const { error: uploadError } = await supabase.storage
         .from('trainer-images')
         .upload(fileName, file, { 
@@ -68,7 +52,13 @@ export const useTrainerProfileImageUpload = () => {
       
       if (uploadError) {
         console.error('Trainer profile image upload error:', uploadError);
-        toast.error(`Upload failed: ${uploadError.message}`);
+        
+        // If bucket doesn't exist, provide a more helpful error
+        if (uploadError.message?.includes('not found') || uploadError.message?.includes('does not exist')) {
+          toast.error('Storage bucket configuration issue. Please refresh the page and try again.');
+        } else {
+          toast.error(`Upload failed: ${uploadError.message}`);
+        }
         return null;
       }
       
@@ -81,7 +71,7 @@ export const useTrainerProfileImageUpload = () => {
       return data.publicUrl;
     } catch (err) {
       console.error('Error uploading trainer profile image:', err);
-      toast.error('Failed to upload trainer profile image');
+      toast.error('Failed to upload trainer profile image. Please refresh the page and try again.');
       return null;
     } finally {
       setUploading(false);
