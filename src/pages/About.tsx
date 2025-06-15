@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -143,10 +142,19 @@ const About = () => {
                 </h2>
                 <div className="space-y-8 text-2xl text-gray-600 leading-relaxed font-light">
                   <p>
-                    Born from a vision to democratize wellness, GymSpaYoga emerged as India's most innovative wellness discovery platform. We saw a world where finding the perfect fitness destination was complicated, time-consuming, and often disappointing.
+                    Born from a sacred vision to awaken holistic well-being, GymSpaYoga is more than just a platform — it's a path to inner balance and outer vitality.
                   </p>
                   <p>
-                    Today, we've transformed that experience into something magical. Our AI-powered platform doesn't just connect people with wellness providers – it creates perfect matches that inspire lasting lifestyle transformations.
+                    In a world where the search for true wellness often feels overwhelming and disconnected, we dreamed of something deeper — a way to bring harmony back into the journey of self-care. What began as a simple idea has blossomed into India’s most soul-aligned wellness discovery platform.
+                  </p>
+                  <p>
+                    At GymSpaYoga, we believe every individual is divinely guided toward their own unique path of healing and transformation. Our intuitive, AI-empowered system doesn’t merely list fitness centers, spas, or yoga studios — it gently aligns seekers with spaces and practitioners that resonate with their energy, needs, and spiritual growth.
+                  </p>
+                  <p>
+                    This is not just about finding a place to exercise — it’s about finding your sanctuary. Your sacred space. A community where your body, mind, and spirit are nurtured together.
+                  </p>
+                  <p>
+                    Welcome to GymSpaYoga — where wellness isn’t searched for, it’s found within.
                   </p>
                 </div>
               </div>
