@@ -45,8 +45,13 @@ const EnhancedNavigation = () => {
     try {
       console.log('Sign out button clicked');
       closeMobileMenu();
-      toast.success("Signing out...");
+      
       await signOut();
+      
+      // Navigate to home page after successful sign out
+      navigate('/');
+      toast.success("Signed out successfully");
+      
     } catch (error) {
       console.error('Error during sign out:', error);
       toast.error("Error signing out");
