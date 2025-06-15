@@ -16,16 +16,14 @@ import {
 } from "@/components/ui/table";
 import { Calendar, MapPin, Star, Clock, Phone, User, CreditCard, TrendingUp, BarChart3, Activity, Users, DollarSign, Target, ArrowLeft, Dumbbell, Download, Filter, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useBookings } from "@/hooks/useBookings";
-import { useBookingConfirmation } from "@/hooks/useBookingConfirmation";
+import { useRealTimeBookings } from "@/hooks/useRealTimeBookings";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 
 const ManageBookings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const { bookings, loading, error } = useBookings();
-  const { confirmBooking, rejectBooking, loading: actionLoading } = useBookingConfirmation();
+  const { bookings, loading, updateBookingStatus } = useRealTimeBookings(true); // Business owners view
   const { user } = useAuth();
 
   // Filter bookings based on search and status
@@ -53,14 +51,14 @@ const ManageBookings = () => {
   };
 
   const handleConfirm = async (bookingId: number) => {
-    const success = await confirmBooking(bookingId, "Booking confirmed by business");
+    const success = await updateBookingStatus(bookingId, 'confirmed', "Booking confirmed by business");
     if (success) {
       toast.success("Booking confirmed successfully");
     }
   };
 
   const handleReject = async (bookingId: number) => {
-    const success = await rejectBooking(bookingId, "Booking rejected by business");
+    const success = await updateBookingStatus(bookingId, 'rejected', "Booking rejected by business");
     if (success) {
       toast.success("Booking rejected");
     }
@@ -103,17 +101,6 @@ const ManageBookings = () => {
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto"></div>
           <p className="mt-4 text-lg">Loading your bookings...</p>
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex items-center justify-center">
-        <Card className="p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4 text-red-600">Error Loading Bookings</h2>
-          <p className="text-gray-600">{error}</p>
-        </Card>
       </div>
     );
   }
@@ -280,6 +267,7 @@ const ManageBookings = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Booking Details</TableHead>
+                        <TableHead>Customer</TableHead>
                         <TableHead>Date & Time</TableHead>
                         <TableHead>Amount</TableHead>
                         <TableHead>Status</TableHead>
@@ -299,6 +287,16 @@ const ManageBookings = () => {
                               <p className="text-xs text-gray-400">
                                 Duration: {booking.duration_minutes || 60} minutes
                               </p>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium">
+                                {booking.user_profile?.full_name || 'Unknown Customer'}
+                              </p>
+                              {booking.user_profile?.phone && (
+                                <p className="text-sm text-gray-600">{booking.user_profile.phone}</p>
+                              )}
                             </div>
                           </TableCell>
                           <TableCell>
@@ -337,7 +335,7 @@ const ManageBookings = () => {
                                     size="sm" 
                                     className="bg-green-500 hover:bg-green-600"
                                     onClick={() => handleConfirm(booking.id)}
-                                    disabled={actionLoading}
+                                    disabled={loading}
                                   >
                                     <CheckCircle className="h-4 w-4 mr-1" />
                                     Confirm
@@ -346,7 +344,7 @@ const ManageBookings = () => {
                                     size="sm" 
                                     variant="destructive"
                                     onClick={() => handleReject(booking.id)}
-                                    disabled={actionLoading}
+                                    disabled={loading}
                                   >
                                     <XCircle className="h-4 w-4 mr-1" />
                                     Reject

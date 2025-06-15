@@ -50,54 +50,89 @@ export const useRealTimeBookings = (businessOwnersOnly: boolean = false) => {
   const fetchBookings = async () => {
     try {
       if (businessOwnersOnly) {
-        // Get bookings for businesses owned by current user
-        const { data, error } = await supabase
-          .from('bookings')
-          .select(`
-            *,
-            user_profiles!bookings_user_id_fkey(full_name, phone)
-          `)
-          .eq('business_profiles.user_id', user?.id)
-          .order('created_at', { ascending: false });
+        // First get businesses owned by current user
+        const { data: businesses, error: businessError } = await supabase
+          .from('business_profiles')
+          .select('id')
+          .eq('user_id', user?.id);
 
-        if (error) {
-          console.error('Error fetching business bookings:', error);
+        if (businessError) {
+          console.error('Error fetching business profiles:', businessError);
           return;
         }
 
-        const formattedData = data?.map(booking => ({
-          ...booking,
-          user_profile: booking.user_profiles ? {
-            full_name: booking.user_profiles.full_name || 'Unknown User',
-            phone: booking.user_profiles.phone
-          } : undefined
-        })) || [];
+        if (!businesses || businesses.length === 0) {
+          setBookings([]);
+          setLoading(false);
+          return;
+        }
 
-        setBookings(formattedData);
+        const businessIds = businesses.map(b => b.id);
+
+        // Get bookings for these businesses with user info
+        const { data: bookingsData, error: bookingsError } = await supabase
+          .from('bookings')
+          .select('*')
+          .in('business_id', businessIds)
+          .order('created_at', { ascending: false });
+
+        if (bookingsError) {
+          console.error('Error fetching business bookings:', bookingsError);
+          return;
+        }
+
+        // Fetch user profiles for each booking
+        const bookingsWithUserInfo = await Promise.all(
+          (bookingsData || []).map(async (booking) => {
+            const { data: userProfile } = await supabase
+              .from('user_profiles')
+              .select('full_name, phone')
+              .eq('user_id', booking.user_id)
+              .single();
+
+            return {
+              ...booking,
+              user_profile: userProfile ? {
+                full_name: userProfile.full_name || 'Unknown User',
+                phone: userProfile.phone
+              } : undefined
+            };
+          })
+        );
+
+        setBookings(bookingsWithUserInfo);
       } else {
         // Get bookings for current user
-        const { data, error } = await supabase
+        const { data: bookingsData, error: bookingsError } = await supabase
           .from('bookings')
-          .select(`
-            *,
-            business_profiles!bookings_business_id_fkey(business_name)
-          `)
+          .select('*')
           .eq('user_id', user?.id)
           .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error('Error fetching user bookings:', error);
+        if (bookingsError) {
+          console.error('Error fetching user bookings:', bookingsError);
           return;
         }
 
-        const formattedData = data?.map(booking => ({
-          ...booking,
-          business_profile: booking.business_profiles ? {
-            business_name: booking.business_profiles.business_name || 'Unknown Business'
-          } : undefined
-        })) || [];
+        // Fetch business profiles for each booking
+        const bookingsWithBusinessInfo = await Promise.all(
+          (bookingsData || []).map(async (booking) => {
+            const { data: businessProfile } = await supabase
+              .from('business_profiles')
+              .select('business_name')
+              .eq('id', booking.business_id)
+              .single();
 
-        setBookings(formattedData);
+            return {
+              ...booking,
+              business_profile: businessProfile ? {
+                business_name: businessProfile.business_name || 'Unknown Business'
+              } : undefined
+            };
+          })
+        );
+
+        setBookings(bookingsWithBusinessInfo);
       }
     } catch (error) {
       console.error('Error fetching bookings:', error);

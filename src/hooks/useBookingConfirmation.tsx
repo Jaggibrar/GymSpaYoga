@@ -108,8 +108,62 @@ export const useBookingConfirmation = () => {
     }
   };
 
+  const confirmBooking = async (bookingId: number, notes?: string) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.rpc('update_booking_status', {
+        booking_id_param: bookingId,
+        new_status_param: 'confirmed',
+        notes_param: notes
+      });
+
+      if (error) {
+        console.error('Error confirming booking:', error);
+        toast.error('Failed to confirm booking');
+        return false;
+      }
+
+      toast.success('Booking confirmed successfully');
+      return true;
+    } catch (error) {
+      console.error('Error confirming booking:', error);
+      toast.error('Failed to confirm booking');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const rejectBooking = async (bookingId: number, reason?: string) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.rpc('update_booking_status', {
+        booking_id_param: bookingId,
+        new_status_param: 'rejected',
+        notes_param: reason
+      });
+
+      if (error) {
+        console.error('Error rejecting booking:', error);
+        toast.error('Failed to reject booking');
+        return false;
+      }
+
+      toast.success('Booking rejected');
+      return true;
+    } catch (error) {
+      console.error('Error rejecting booking:', error);
+      toast.error('Failed to reject booking');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     createBooking,
+    confirmBooking,
+    rejectBooking,
     loading
   };
 };
