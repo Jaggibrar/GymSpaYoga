@@ -798,7 +798,7 @@ export type Database = {
           phone: string | null
           pin_code: string | null
           preferences: Json | null
-          role: Database["public"]["Enums"]["user_role"] | null
+          role: Database["public"]["Enums"]["user_role"]
           state: string | null
           updated_at: string
           user_id: string
@@ -817,7 +817,7 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role"]
           state?: string | null
           updated_at?: string
           user_id: string
@@ -836,7 +836,7 @@ export type Database = {
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role"]
           state?: string | null
           updated_at?: string
           user_id?: string
@@ -892,6 +892,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_pricing_tier: {
+        Args: { monthly_price: number; session_price: number }
+        Returns: string
+      }
       update_booking_status: {
         Args: {
           booking_id_param: number

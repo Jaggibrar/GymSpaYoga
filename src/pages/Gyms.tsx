@@ -2,31 +2,40 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
-import { useGyms } from "@/hooks/useGyms";
+import { useBusinessData } from "@/hooks/useBusinessData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, Star, Clock, Dumbbell } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, MapPin, Star, Clock, Dumbbell, IndianRupee, Crown, Diamond } from "lucide-react";
 import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
+import SEOHead from "@/components/SEOHead";
 
 const Gyms = () => {
   useScrollToTop();
-  const { gyms, loading, error } = useGyms();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [tierFilter, setTierFilter] = useState("all");
+  
+  const { businesses: gyms, loading, error } = useBusinessData('gym', searchTerm, locationFilter, tierFilter);
 
-  const filteredGyms = gyms.filter(gym => {
-    const matchesSearch = searchTerm === "" || 
-      gym.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      gym.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = locationFilter === "" ||
-      gym.city.toLowerCase().includes(locationFilter.toLowerCase());
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return <Crown className="h-4 w-4" />;
+      case 'premium': return <Diamond className="h-4 w-4" />;
+      default: return <IndianRupee className="h-4 w-4" />;
+    }
+  };
 
-    return matchesSearch && matchesLocation;
-  });
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return "from-yellow-500 to-yellow-600";
+      case 'premium': return "from-blue-500 to-blue-600";
+      default: return "from-green-500 to-green-600";
+    }
+  };
 
   const handleBookNow = (gymName: string) => {
     toast.success(`Booking ${gymName}. Please sign in to complete your booking!`);
@@ -35,6 +44,10 @@ const Gyms = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+        <SEOHead
+          title="Gyms - GymSpaYoga"
+          description="Find the best gyms and fitness centers near you"
+        />
         <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Error loading gyms</h2>
@@ -50,6 +63,11 @@ const Gyms = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+      <SEOHead
+        title="Premium Gyms - GymSpaYoga"
+        description="Discover state-of-the-art fitness centers with modern equipment and expert trainers. Find luxury, premium, and budget-friendly gyms near you."
+      />
+      
       <PageHero
         title="Premium Gyms"
         subtitle="Fitness & Strength"
@@ -79,6 +97,17 @@ const Gyms = () => {
                 className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-red-500"
               />
             </div>
+            <Select value={tierFilter} onValueChange={setTierFilter}>
+              <SelectTrigger className="h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-red-500">
+                <SelectValue placeholder="Filter by tier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tiers</SelectItem>
+                <SelectItem value="luxury">Luxury</SelectItem>
+                <SelectItem value="premium">Premium</SelectItem>
+                <SelectItem value="budget">Budget Friendly</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -95,9 +124,9 @@ const Gyms = () => {
               </Card>
             ))}
           </div>
-        ) : filteredGyms.length > 0 ? (
+        ) : gyms.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredGyms.map((gym) => (
+            {gyms.map((gym) => (
               <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative overflow-hidden h-40 md:h-48">
                   <img 
@@ -105,8 +134,9 @@ const Gyms = () => {
                     alt={gym.business_name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <Badge className="absolute top-3 md:top-4 right-3 md:right-4 bg-red-500 hover:bg-red-600">
-                    {gym.category}
+                  <Badge className={`absolute top-3 md:top-4 right-3 md:right-4 bg-gradient-to-r ${getTierColor(gym.tier!)} text-white`}>
+                    {getTierIcon(gym.tier!)}
+                    <span className="ml-1 capitalize">{gym.tier}</span>
                   </Badge>
                 </div>
                 <CardHeader className="pb-2 md:pb-3 p-4 md:p-6">
@@ -159,7 +189,7 @@ const Gyms = () => {
             </div>
             <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No gyms found</h3>
             <p className="text-gray-600 mb-4 md:mb-6 mobile-text md:text-base">
-              {searchTerm || locationFilter 
+              {searchTerm || locationFilter || tierFilter !== 'all'
                 ? "Try adjusting your search criteria or explore other locations."
                 : "Be the first! Register your gym and start attracting members."
               }

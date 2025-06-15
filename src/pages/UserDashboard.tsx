@@ -1,12 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useBusinessData } from "@/hooks/useBusinessData";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Search, 
   Heart, 
@@ -17,7 +18,10 @@ import {
   Filter,
   Bookmark,
   User,
-  Camera
+  Camera,
+  Crown,
+  Diamond,
+  IndianRupee
 } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
@@ -29,10 +33,28 @@ const UserDashboard = () => {
   const [userProfile, setUserProfile] = useState<any>(null);
   const [wishlist, setWishlist] = useState<any[]>([]);
   const [visitHistory, setVisitHistory] = useState<any[]>([]);
-  const [nearbyBusinesses, setNearbyBusinesses] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [tierFilter, setTierFilter] = useState("all");
   const [loading, setLoading] = useState(true);
+
+  const { businesses: nearbyBusinesses } = useBusinessData(undefined, searchTerm, locationFilter, tierFilter === 'all' ? undefined : tierFilter);
+
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return <Crown className="h-3 w-3" />;
+      case 'premium': return <Diamond className="h-3 w-3" />;
+      default: return <IndianRupee className="h-3 w-3" />;
+    }
+  };
+
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return "from-yellow-500 to-yellow-600";
+      case 'premium': return "from-blue-500 to-blue-600";
+      default: return "from-green-500 to-green-600";
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -65,6 +87,7 @@ const UserDashboard = () => {
             state,
             image_urls,
             monthly_price,
+            session_price,
             category,
             status
           )
@@ -73,15 +96,6 @@ const UserDashboard = () => {
         .order('created_at', { ascending: false });
 
       setWishlist(wishlistData || []);
-
-      // Fetch nearby businesses (sample data for now)
-      const { data: businesses } = await supabase
-        .from('business_profiles')
-        .select('*')
-        .eq('status', 'approved')
-        .limit(6);
-
-      setNearbyBusinesses(businesses || []);
 
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -138,17 +152,6 @@ const UserDashboard = () => {
     );
   }
 
-  const filteredBusinesses = nearbyBusinesses.filter(business => {
-    const matchesSearch = searchTerm === "" || 
-      business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      business.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = locationFilter === "" ||
-      business.city.toLowerCase().includes(locationFilter.toLowerCase());
-
-    return matchesSearch && matchesLocation;
-  });
-
   return (
     <div className="min-h-screen bg-gray-50">
       <SEOHead
@@ -167,10 +170,12 @@ const UserDashboard = () => {
               <p className="text-gray-600 mt-1">Discover your next wellness destination</p>
             </div>
             <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
-                <User className="h-4 w-4 mr-2" />
-                Profile
-              </Button>
+              <Link to="/profile">
+                <Button variant="outline" size="sm">
+                  <User className="h-4 w-4 mr-2" />
+                  Profile
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -233,8 +238,8 @@ const UserDashboard = () => {
                 <CardTitle>Find Your Perfect Wellness Destination</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-col md:flex-row gap-4 mb-6">
-                  <div className="relative flex-1">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                  <div className="relative">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <Input
                       placeholder="Search gyms, spas, yoga studios..."
@@ -244,7 +249,7 @@ const UserDashboard = () => {
                     />
                   </div>
                   
-                  <div className="relative flex-1">
+                  <div className="relative">
                     <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                     <Input
                       placeholder="Location..."
@@ -254,31 +259,64 @@ const UserDashboard = () => {
                     />
                   </div>
                   
-                  <Button>
-                    <Filter className="h-4 w-4 mr-2" />
-                    Filters
-                  </Button>
+                  <Select value={tierFilter} onValueChange={setTierFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filter by tier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Tiers</SelectItem>
+                      <SelectItem value="luxury">Luxury</SelectItem>
+                      <SelectItem value="premium">Premium</SelectItem>
+                      <SelectItem value="budget">Budget Friendly</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Quick Categories */}
                 <div className="flex flex-wrap gap-2 mb-6">
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                    Gyms
+                  <Link to="/gyms">
+                    <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
+                      Gyms
+                    </Badge>
+                  </Link>
+                  <Link to="/spas">
+                    <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
+                      Spas
+                    </Badge>
+                  </Link>
+                  <Link to="/yoga">
+                    <Badge variant="outline" className="cursor-pointer hover:bg-purple-100">
+                      Yoga Studios
+                    </Badge>
+                  </Link>
+                  <Link to="/trainers">
+                    <Badge variant="outline" className="cursor-pointer hover:bg-emerald-100">
+                      Trainers
+                    </Badge>
+                  </Link>
+                  <Badge 
+                    variant="outline" 
+                    className={`cursor-pointer ${tierFilter === 'luxury' ? 'bg-yellow-100' : 'hover:bg-yellow-100'}`}
+                    onClick={() => setTierFilter(tierFilter === 'luxury' ? 'all' : 'luxury')}
+                  >
+                    <Crown className="h-3 w-3 mr-1" />
+                    Luxury
                   </Badge>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                    Spas
-                  </Badge>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                    Yoga Studios
-                  </Badge>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
+                  <Badge 
+                    variant="outline" 
+                    className={`cursor-pointer ${tierFilter === 'premium' ? 'bg-blue-100' : 'hover:bg-blue-100'}`}
+                    onClick={() => setTierFilter(tierFilter === 'premium' ? 'all' : 'premium')}
+                  >
+                    <Diamond className="h-3 w-3 mr-1" />
                     Premium
                   </Badge>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                    Budget Friendly
-                  </Badge>
-                  <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                    Verified
+                  <Badge 
+                    variant="outline" 
+                    className={`cursor-pointer ${tierFilter === 'budget' ? 'bg-green-100' : 'hover:bg-green-100'}`}
+                    onClick={() => setTierFilter(tierFilter === 'budget' ? 'all' : 'budget')}
+                  >
+                    <IndianRupee className="h-3 w-3 mr-1" />
+                    Budget
                   </Badge>
                 </div>
               </CardContent>
@@ -288,22 +326,67 @@ const UserDashboard = () => {
             <div>
               <h2 className="text-2xl font-bold mb-6">Discover Near You</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredBusinesses.map((business) => (
-                  <EnhancedBusinessCard
-                    key={business.id}
-                    id={business.id}
-                    name={business.business_name}
-                    description={business.description || 'Premium wellness destination'}
-                    image={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-                    category={business.category}
-                    location={`${business.city}, ${business.state}`}
-                    price={`₹${business.monthly_price}/month`}
-                    onBookNow={() => handleBookNow(business)}
-                    verified={business.status === 'approved'}
-                    trending={false}
-                    featured={true}
-                  />
-                ))}
+                {nearbyBusinesses.slice(0, 6).map((business) => {
+                  const tier = business.tier || 'budget';
+                  return (
+                    <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                      <div className="relative h-48 overflow-hidden">
+                        <img 
+                          src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
+                          alt={business.business_name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white`}>
+                          {getTierIcon(tier)}
+                          <span className="ml-1 capitalize">{tier}</span>
+                        </Badge>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="absolute top-3 left-3 text-white hover:bg-white/20"
+                          onClick={() => toggleWishlist(business.id)}
+                        >
+                          <Heart className={`h-4 w-4 ${wishlist.some(item => item.business_id === business.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                        </Button>
+                      </div>
+                      <CardHeader className="pb-2">
+                        <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
+                          {business.business_name}
+                        </CardTitle>
+                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                          <MapPin className="h-4 w-4" />
+                          <span>{business.city}, {business.state}</span>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                          {business.description || "Premium wellness destination"}
+                        </p>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center gap-1">
+                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                            <span className="text-sm font-medium">4.7</span>
+                            <span className="text-sm text-gray-500">(142)</span>
+                          </div>
+                          <Badge variant="outline" className="text-xs capitalize">
+                            {business.business_type}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-lg font-bold text-blue-600">
+                            {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
+                          </p>
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleBookNow(business)}
+                          >
+                            Book Now
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           </TabsContent>
@@ -320,22 +403,60 @@ const UserDashboard = () => {
               <CardContent>
                 {wishlist.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {wishlist.map((item) => (
-                      <EnhancedBusinessCard
-                        key={item.business_profiles.id}
-                        id={item.business_profiles.id}
-                        name={item.business_profiles.business_name}
-                        description={item.business_profiles.description || 'Premium wellness destination'}
-                        image={item.business_profiles.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-                        category={item.business_profiles.category}
-                        location={`${item.business_profiles.city}, ${item.business_profiles.state}`}
-                        price={`₹${item.business_profiles.monthly_price}/month`}
-                        onBookNow={() => handleBookNow(item.business_profiles)}
-                        verified={item.business_profiles.status === 'approved'}
-                        trending={false}
-                        featured={true}
-                      />
-                    ))}
+                    {wishlist.map((item) => {
+                      const business = item.business_profiles;
+                      const tier = business.monthly_price >= 5000 || business.session_price >= 2000 ? 'luxury' :
+                                  business.monthly_price >= 3000 || business.session_price >= 1000 ? 'premium' : 'budget';
+                      
+                      return (
+                        <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                          <div className="relative h-48 overflow-hidden">
+                            <img 
+                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
+                              alt={business.business_name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                            <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white`}>
+                              {getTierIcon(tier)}
+                              <span className="ml-1 capitalize">{tier}</span>
+                            </Badge>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="absolute top-3 left-3 text-white hover:bg-white/20"
+                              onClick={() => toggleWishlist(business.id)}
+                            >
+                              <Heart className="h-4 w-4 fill-red-500 text-red-500" />
+                            </Button>
+                          </div>
+                          <CardHeader className="pb-2">
+                            <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
+                              {business.business_name}
+                            </CardTitle>
+                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <MapPin className="h-4 w-4" />
+                              <span>{business.city}, {business.state}</span>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                              {business.description || "Premium wellness destination"}
+                            </p>
+                            <div className="flex items-center justify-between">
+                              <p className="text-lg font-bold text-blue-600">
+                                {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
+                              </p>
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleBookNow(business)}
+                              >
+                                Book Now
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-12">

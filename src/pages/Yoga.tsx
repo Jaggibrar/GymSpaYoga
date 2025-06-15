@@ -2,31 +2,40 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
-import { useYogaStudios } from "@/hooks/useYogaStudios";
+import { useBusinessData } from "@/hooks/useBusinessData";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, Star, Clock, Heart } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, MapPin, Star, Clock, Heart, IndianRupee, Crown, Diamond } from "lucide-react";
 import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
+import SEOHead from "@/components/SEOHead";
 
 const Yoga = () => {
   useScrollToTop();
-  const { yogaStudios, loading, error } = useYogaStudios();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [tierFilter, setTierFilter] = useState("all");
+  
+  const { businesses: yogaStudios, loading, error } = useBusinessData('yoga', searchTerm, locationFilter, tierFilter);
 
-  const filteredYogaStudios = yogaStudios.filter(studio => {
-    const matchesSearch = searchTerm === "" || 
-      studio.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      studio.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = locationFilter === "" ||
-      studio.city.toLowerCase().includes(locationFilter.toLowerCase());
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return <Crown className="h-4 w-4" />;
+      case 'premium': return <Diamond className="h-4 w-4" />;
+      default: return <IndianRupee className="h-4 w-4" />;
+    }
+  };
 
-    return matchesSearch && matchesLocation;
-  });
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return "from-yellow-500 to-yellow-600";
+      case 'premium': return "from-blue-500 to-blue-600";
+      default: return "from-green-500 to-green-600";
+    }
+  };
 
   const handleBookNow = (studioName: string) => {
     toast.success(`Booking ${studioName}. Please sign in to complete your booking!`);
@@ -34,7 +43,11 @@ const Yoga = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
+        <SEOHead
+          title="Yoga Studios - GymSpaYoga"
+          description="Find the best yoga studios and meditation centers near you"
+        />
         <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
           <div className="text-center">
             <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Error loading yoga studios</h2>
@@ -49,12 +62,17 @@ const Yoga = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
+      <SEOHead
+        title="Yoga Studios - GymSpaYoga"
+        description="Discover peaceful yoga studios and meditation centers for mind-body wellness. Find luxury, premium, and budget-friendly yoga studios near you."
+      />
+      
       <PageHero
         title="Yoga Studios"
         subtitle="Mind & Body Harmony"
-        description="Find inner peace and strengthen your body with expert yoga instructors."
-        backgroundImage="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+        description="Find inner peace and strength through yoga practice in serene, welcoming environments."
+        backgroundImage="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
       />
 
       <div className="mobile-container py-4 md:py-8">
@@ -79,6 +97,17 @@ const Yoga = () => {
                 className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-purple-500"
               />
             </div>
+            <Select value={tierFilter} onValueChange={setTierFilter}>
+              <SelectTrigger className="h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-purple-500">
+                <SelectValue placeholder="Filter by tier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tiers</SelectItem>
+                <SelectItem value="luxury">Luxury</SelectItem>
+                <SelectItem value="premium">Premium</SelectItem>
+                <SelectItem value="budget">Budget Friendly</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
@@ -95,18 +124,19 @@ const Yoga = () => {
               </Card>
             ))}
           </div>
-        ) : filteredYogaStudios.length > 0 ? (
+        ) : yogaStudios.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredYogaStudios.map((studio) => (
+            {yogaStudios.map((studio) => (
               <Card key={studio.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                 <div className="relative overflow-hidden h-40 md:h-48">
                   <img 
-                    src={studio.image_urls?.[0] || "https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
+                    src={studio.image_urls?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
                     alt={studio.business_name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <Badge className="absolute top-3 md:top-4 right-3 md:right-4 bg-purple-500 hover:bg-purple-600">
-                    {studio.category}
+                  <Badge className={`absolute top-3 md:top-4 right-3 md:right-4 bg-gradient-to-r ${getTierColor(studio.tier!)} text-white`}>
+                    {getTierIcon(studio.tier!)}
+                    <span className="ml-1 capitalize">{studio.tier}</span>
                   </Badge>
                 </div>
                 <CardHeader className="pb-2 md:pb-3 p-4 md:p-6">
@@ -120,13 +150,13 @@ const Yoga = () => {
                 </CardHeader>
                 <CardContent className="pt-0 p-4 md:p-6">
                   <p className="text-gray-600 mobile-text mb-3 md:mb-4 line-clamp-2">
-                    {studio.description || "Peaceful yoga studio offering classes for all levels with experienced instructors."}
+                    {studio.description || "Peaceful yoga studio offering various styles of yoga practice and meditation."}
                   </p>
                   <div className="flex items-center justify-between mb-3 md:mb-4">
                     <div className="flex items-center gap-1">
                       <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-400 fill-current" />
                       <span className="text-xs md:text-sm font-medium">4.9</span>
-                      <span className="text-xs md:text-sm text-gray-500">(78)</span>
+                      <span className="text-xs md:text-sm text-gray-500">(76)</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs md:text-sm text-gray-600">
                       <Clock className="h-3 w-3 md:h-4 md:w-4" />
@@ -136,7 +166,7 @@ const Yoga = () => {
                   <div className="flex items-center justify-between">
                     <div className="text-right">
                       <p className="text-lg md:text-xl font-bold text-purple-600">
-                        {studio.session_price ? `₹${studio.session_price}/session` : studio.monthly_price ? `₹${studio.monthly_price}/month` : "Contact for pricing"}
+                        {studio.monthly_price ? `₹${studio.monthly_price}/month` : studio.session_price ? `₹${studio.session_price}/session` : "Contact for pricing"}
                       </p>
                     </div>
                     <Link to={`/yoga/${studio.id}`}>
@@ -159,9 +189,9 @@ const Yoga = () => {
             </div>
             <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No yoga studios found</h3>
             <p className="text-gray-600 mb-4 md:mb-6 mobile-text md:text-base">
-              {searchTerm || locationFilter 
+              {searchTerm || locationFilter || tierFilter !== 'all'
                 ? "Try adjusting your search criteria or explore other locations."
-                : "Be the first! Register your yoga studio and start attracting students."
+                : "Be the first! Register your yoga studio and start building your community."
               }
             </p>
             <div className="flex gap-3 md:gap-4 justify-center flex-col sm:flex-row">
