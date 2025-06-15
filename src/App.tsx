@@ -113,12 +113,12 @@ function App() {
                         } 
                       />
                       
-                      {/* Legacy routes */}
+                      {/* Booking routes */}
                       <Route 
-                        path="/profile" 
+                        path="/bookings" 
                         element={
                           <ProtectedRoute>
-                            <Profile />
+                            <UserBookings />
                           </ProtectedRoute>
                         } 
                       />
@@ -135,6 +135,16 @@ function App() {
                         element={
                           <ProtectedRoute>
                             <BusinessBookings />
+                          </ProtectedRoute>
+                        } 
+                      />
+                      
+                      {/* Legacy routes */}
+                      <Route 
+                        path="/profile" 
+                        element={
+                          <ProtectedRoute>
+                            <Profile />
                           </ProtectedRoute>
                         } 
                       />
