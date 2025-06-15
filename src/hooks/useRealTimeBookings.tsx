@@ -25,6 +25,14 @@ interface Booking {
   cancellation_reason: string | null;
   business_response: string | null;
   response_at: string | null;
+  user_profile?: {
+    full_name: string | null;
+    phone: string | null;
+    email: string | null;
+  };
+  business_profile?: {
+    business_name: string | null;
+  };
 }
 
 export const useRealTimeBookings = (businessOwnersView = false) => {
@@ -41,10 +49,10 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
     try {
       setLoading(true);
-      let query = supabase.from('bookings').select('*');
+      let query = supabase.from('bookings');
 
       if (businessOwnersView) {
-        // Fetch bookings for businesses owned by the current user
+        // Fetch bookings for businesses owned by the current user with user profile data
         const { data: businessProfiles } = await supabase
           .from('business_profiles')
           .select('id')
@@ -52,15 +60,26 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
         if (businessProfiles && businessProfiles.length > 0) {
           const businessIds = businessProfiles.map(bp => bp.id);
-          query = query.in('business_id', businessIds);
+          query = query
+            .select(`
+              *,
+              user_profile:user_id(full_name, phone),
+              business_profile:business_id(business_name)
+            `)
+            .in('business_id', businessIds);
         } else {
           setBookings([]);
           setLoading(false);
           return;
         }
       } else {
-        // Fetch bookings for the current user
-        query = query.eq('user_id', user.id);
+        // Fetch bookings for the current user with business profile data
+        query = query
+          .select(`
+            *,
+            business_profile:business_id(business_name)
+          `)
+          .eq('user_id', user.id);
       }
 
       const { data, error } = await query.order('created_at', { ascending: false });
@@ -122,7 +141,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
         },
         (payload) => {
           console.log('Real-time booking update:', payload);
-          fetchBookings(); // Refetch to ensure we get the latest data
+          fetchBookings(); // Refetch to ensure we get the latest data with joins
         }
       )
       .subscribe();
