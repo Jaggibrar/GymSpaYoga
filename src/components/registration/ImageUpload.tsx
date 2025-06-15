@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Upload, X, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useImageUpload } from "@/hooks/useImageUpload";
+import { useBusinessImageUpload } from "@/hooks/useBusinessImageUpload";
 
 interface ImageUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,68 +11,62 @@ interface ImageUploadProps {
 export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-  const { validateFile } = useImageUpload();
+  const { validateFile } = useBusinessImageUpload();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    console.log(`Selected ${files.length} files for upload`);
     
     if (files.length === 0) {
       clearPreviews();
       return;
     }
 
+    // Validate each file
     const validFiles: File[] = [];
     const newPreviewUrls: string[] = [];
     
-    // Clear existing previews
-    previewUrls.forEach(url => URL.revokeObjectURL(url));
-    
-    files.forEach(file => {
+    files.forEach((file, index) => {
       const validation = validateFile(file);
       if (!validation) {
         validFiles.push(file);
         const url = URL.createObjectURL(file);
         newPreviewUrls.push(url);
+        console.log(`File ${index + 1} validated successfully: ${file.name}`);
       } else {
-        console.warn(`File ${file.name} validation failed:`, validation);
+        console.warn(`File ${index + 1} validation failed:`, validation);
       }
     });
+
+    // Clear existing previews
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
     
     setSelectedFiles(validFiles);
     setPreviewUrls(newPreviewUrls);
     
-    // Create a new event with valid files only
-    const fileList = new DataTransfer();
-    validFiles.forEach(file => fileList.items.add(file));
-    
-    const syntheticEvent = {
-      target: {
-        files: fileList.files,
-        value: e.target.value
-      }
-    } as React.ChangeEvent<HTMLInputElement>;
-    
-    onFileChange(syntheticEvent);
+    console.log(`${validFiles.length} files ready for upload`);
+    onFileChange(e);
   };
 
   const removeFile = (index: number) => {
-    const newFiles = selectedFiles.filter((_, i) => i !== index);
-    const newUrls = previewUrls.filter((_, i) => i !== index);
+    console.log(`Removing file at index ${index}`);
     
-    // Revoke the URL to prevent memory leaks
-    URL.revokeObjectURL(previewUrls[index]);
+    // Revoke the URL for the removed file
+    if (previewUrls[index]) {
+      URL.revokeObjectURL(previewUrls[index]);
+    }
+    
+    const newFiles = selectedFiles.filter((_, i) => i !== index);
+    const newPreviews = previewUrls.filter((_, i) => i !== index);
     
     setSelectedFiles(newFiles);
-    setPreviewUrls(newUrls);
+    setPreviewUrls(newPreviews);
     
-    // Create a proper synthetic event for the file input
-    const fileList = new DataTransfer();
-    newFiles.forEach(file => fileList.items.add(file));
-    
+    // Create a proper synthetic event for the updated file list
     const syntheticEvent = {
       target: {
-        files: fileList.files,
-        value: ''
+        files: newFiles.length > 0 ? newFiles : null,
+        value: newFiles.length > 0 ? '' : ''
       }
     } as React.ChangeEvent<HTMLInputElement>;
     
@@ -92,51 +86,51 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
       </h3>
       
       <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-blue-400 transition-colors">
-        <Upload className="h-16 w-16 text-gray-400 mx-auto mb-6" />
-        <p className="text-xl text-gray-600 mb-4">Upload business photos</p>
-        <p className="text-gray-500 mb-6">Upload at least 1 high-quality image (JPG, PNG, WebP, max 5MB each)</p>
-        
-        <div className="flex items-center justify-center gap-2 mb-4 text-sm text-gray-600">
-          <AlertCircle className="h-4 w-4" />
-          <span>Max file size: 5MB | Supported formats: JPG, PNG, GIF, WebP</span>
-        </div>
+        {previewUrls.length > 0 ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            {previewUrls.map((url, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={url}
+                  alt={`Preview ${index + 1}`}
+                  className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeFile(index)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <Upload className="h-16 w-16 mx-auto text-gray-400 mb-6" />
+            <p className="text-xl text-gray-600 mb-4">Upload business images</p>
+            <p className="text-gray-500 mb-6">JPG, PNG, WebP up to 2MB each</p>
+            
+            <div className="flex items-center justify-center gap-2 mb-4 text-sm text-gray-600">
+              <AlertCircle className="h-4 w-4" />
+              <span>Max file size: 2MB per image | Supported formats: JPG, PNG, WebP</span>
+            </div>
+          </>
+        )}
         
         <Input
+          id="businessImages"
           type="file"
           multiple
-          accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+          accept="image/jpeg,image/png,image/webp"
           onChange={handleFileSelect}
           className="max-w-xs mx-auto text-lg"
         />
       </div>
-
-      {previewUrls.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {previewUrls.map((url, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={url}
-                alt={`Preview ${index + 1}`}
-                className="w-full h-32 object-cover rounded-lg border border-gray-200"
-              />
-              <button
-                type="button"
-                onClick={() => removeFile(index)}
-                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <X className="h-4 w-4" />
-              </button>
-              <div className="absolute bottom-1 left-1 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
-                {selectedFiles[index]?.name.slice(0, 15)}...
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
       
       {selectedFiles.length > 0 && (
         <p className="text-sm text-gray-600 text-center">
-          {selectedFiles.length} image{selectedFiles.length > 1 ? 's' : ''} selected
+          Selected: {selectedFiles.length} image(s)
         </p>
       )}
     </div>

@@ -1,25 +1,26 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-export interface Trainer {
+interface Trainer {
   id: string;
   user_id: string;
   name: string;
   email: string;
   phone: string;
-  category: string;
   trainer_tier: string;
+  category: string;
   experience: number;
   certifications?: string;
   specializations: string[];
-  hourly_rate: number;
   location: string;
   bio: string;
   profile_image_url?: string;
+  hourly_rate: number;
   status: string;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 export const useTrainers = () => {
@@ -27,50 +28,42 @@ export const useTrainers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTrainers = useCallback(async () => {
+  const fetchTrainers = async () => {
+    console.log('Fetching trainers from database...');
     try {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching trainers from database...');
-      
+      // Remove status filter to show all listings
       const { data, error } = await supabase
         .from('trainer_profiles')
         .select('*')
-        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Supabase error:', error);
-        setError(error.message);
-        return;
+        console.error('Error fetching trainers:', error);
+        throw error;
       }
 
-      console.log('Fetched trainers:', data?.length || 0);
-      
-      // Ensure specializations is an array
-      const processedData = (data || []).map(trainer => ({
-        ...trainer,
-        specializations: Array.isArray(trainer.specializations) ? trainer.specializations : []
-      }));
-      
-      setTrainers(processedData);
-      
-      if (!data || data.length === 0) {
-        console.info('No trainers found in database');
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch trainers';
-      setError(errorMessage);
-      console.error('Error fetching trainers:', err);
+      console.log(`Fetched ${data?.length || 0} trainer listings:`, data);
+      setTrainers(data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch trainers:', err);
+      setError(err.message);
+      toast.error('Failed to load trainer listings');
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchTrainers();
-  }, [fetchTrainers]);
+  }, []);
 
-  return { trainers, loading, error, refetch: fetchTrainers };
+  return {
+    trainers,
+    loading,
+    error,
+    refetch: fetchTrainers
+  };
 };

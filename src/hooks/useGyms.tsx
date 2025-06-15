@@ -1,8 +1,9 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-export interface Gym {
+interface Gym {
   id: string;
   business_name: string;
   business_type: string;
@@ -22,6 +23,7 @@ export interface Gym {
   image_urls: string[];
   status: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export const useGyms = () => {
@@ -29,52 +31,43 @@ export const useGyms = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchGyms = useCallback(async () => {
+  const fetchGyms = async () => {
+    console.log('Fetching gyms from database...');
     try {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching gyms from database...');
-      
+      // Remove status filter to show all listings
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
         .eq('business_type', 'gym')
-        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) {
-        console.error('Supabase error:', error);
-        setError(error.message);
-        return;
+        console.error('Error fetching gyms:', error);
+        throw error;
       }
 
-      console.log('Fetched gyms:', data?.length || 0);
-      
-      // Ensure amenities and image_urls are arrays
-      const processedData = (data || []).map(gym => ({
-        ...gym,
-        amenities: Array.isArray(gym.amenities) ? gym.amenities : [],
-        image_urls: Array.isArray(gym.image_urls) ? gym.image_urls : []
-      }));
-      
-      setGyms(processedData);
-      
-      if (!data || data.length === 0) {
-        console.info('No gyms found in database');
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch gyms';
-      setError(errorMessage);
-      console.error('Error fetching gyms:', err);
+      console.log(`Fetched ${data?.length || 0} gym listings:`, data);
+      setGyms(data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch gyms:', err);
+      setError(err.message);
+      toast.error('Failed to load gym listings');
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchGyms();
-  }, [fetchGyms]);
+  }, []);
 
-  return { gyms, loading, error, refetch: fetchGyms };
+  return {
+    gyms,
+    loading,
+    error,
+    refetch: fetchGyms
+  };
 };

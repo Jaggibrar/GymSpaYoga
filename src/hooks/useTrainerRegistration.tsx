@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,14 +9,15 @@ interface TrainerFormData {
   name: string;
   email: string;
   phone: string;
+  trainerTier: string;
   category: string;
-  experience: string;
+  experience: number;
   certifications: string;
   specializations: string[];
-  hourlyRate: string;
   location: string;
   bio: string;
-  profileImage: File | null;
+  hourlyRate: number;
+  profileImage?: File;
 }
 
 export const useTrainerRegistration = () => {
@@ -24,17 +26,18 @@ export const useTrainerRegistration = () => {
   const { uploadTrainerProfileImage } = useTrainerProfileImageUpload();
 
   const validateFormData = (formData: TrainerFormData): string[] => {
+    console.log('Validating trainer form data:', formData);
     const errors: string[] = [];
     
     if (!formData.name.trim()) errors.push('Name is required');
     if (!formData.email.trim()) errors.push('Email is required');
     if (!formData.phone.trim()) errors.push('Phone number is required');
+    if (!formData.trainerTier) errors.push('Trainer tier is required');
     if (!formData.category) errors.push('Category is required');
-    if (!formData.experience) errors.push('Experience is required');
-    if (!formData.hourlyRate) errors.push('Hourly rate is required');
+    if (!formData.experience || formData.experience < 0) errors.push('Experience must be a positive number');
     if (!formData.location.trim()) errors.push('Location is required');
     if (!formData.bio.trim()) errors.push('Bio is required');
-    if (!formData.profileImage) errors.push('Profile image is required');
+    if (!formData.hourlyRate || formData.hourlyRate <= 0) errors.push('Hourly rate must be a positive number');
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,23 +51,24 @@ export const useTrainerRegistration = () => {
       errors.push('Please enter a valid phone number');
     }
     
-    // Hourly rate validation
-    const rate = parseInt(formData.hourlyRate);
-    if (isNaN(rate) || rate <= 0) {
-      errors.push('Hourly rate must be a valid positive number');
+    // Bio length validation
+    if (formData.bio && formData.bio.length < 10) {
+      errors.push('Bio must be at least 10 characters long');
     }
     
-    // Experience validation
-    const exp = parseInt(formData.experience);
-    if (isNaN(exp) || exp < 0) {
-      errors.push('Experience must be a valid number');
-    }
-    
+    console.log('Trainer validation errors:', errors);
     return errors;
   };
 
   const registerTrainer = async (formData: TrainerFormData) => {
+    console.log('Starting trainer registration process...');
+    console.log('Trainer form data received:', {
+      ...formData,
+      profileImage: formData.profileImage ? 'File provided' : 'No file'
+    });
+
     if (!user) {
+      console.error('User not authenticated');
       toast.error('You must be logged in to register as a trainer');
       return false;
     }
@@ -72,6 +76,7 @@ export const useTrainerRegistration = () => {
     // Validate form data
     const validationErrors = validateFormData(formData);
     if (validationErrors.length > 0) {
+      console.error('Trainer form validation failed:', validationErrors);
       validationErrors.forEach(error => toast.error(error));
       return false;
     }
@@ -80,6 +85,7 @@ export const useTrainerRegistration = () => {
     
     try {
       // Check if trainer profile already exists
+      console.log('Checking for existing trainer profile...');
       const { data: existingProfile } = await supabase
         .from('trainer_profiles')
         .select('id')
@@ -87,60 +93,80 @@ export const useTrainerRegistration = () => {
         .single();
 
       if (existingProfile) {
+        console.error('Trainer profile already exists for user');
         toast.error('You already have a trainer profile. Please contact support if you need to update it.');
         setLoading(false);
         return false;
       }
 
-      // Upload profile image using the dedicated trainer profile image upload
-      let profileImageUrl = null;
+      // Upload profile image if provided
+      let profileImageUrl: string | null = null;
       if (formData.profileImage) {
         console.log('Uploading trainer profile image...');
         profileImageUrl = await uploadTrainerProfileImage(formData.profileImage);
         if (!profileImageUrl) {
+          console.error('Profile image upload failed');
+          toast.error('Failed to upload profile image. Please try again.');
           setLoading(false);
           return false;
         }
-        console.log('Trainer profile image uploaded:', profileImageUrl);
+        console.log('Profile image uploaded successfully:', profileImageUrl);
       }
 
-      // Insert trainer profile with default tier
+      // Insert trainer profile
+      console.log('Inserting trainer profile to database...');
+      const trainerData = {
+        user_id: user.id,
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        trainer_tier: formData.trainerTier,
+        category: formData.category,
+        experience: formData.experience,
+        certifications: formData.certifications.trim(),
+        specializations: formData.specializations,
+        location: formData.location.trim(),
+        bio: formData.bio.trim(),
+        hourly_rate: formData.hourlyRate,
+        profile_image_url: profileImageUrl,
+        status: 'approved' // Auto-approve for immediate listing
+      };
+
+      console.log('Trainer data to insert:', trainerData);
+
       const { error } = await supabase
         .from('trainer_profiles')
-        .insert({
-          user_id: user.id,
-          name: formData.name.trim(),
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-          category: formData.category,
-          trainer_tier: 'standard', // Default tier instead of payment tier
-          experience: parseInt(formData.experience),
-          certifications: formData.certifications.trim(),
-          specializations: formData.specializations,
-          hourly_rate: parseInt(formData.hourlyRate),
-          location: formData.location.trim(),
-          bio: formData.bio.trim(),
-          profile_image_url: profileImageUrl,
-          status: 'approved' // Auto-approve for immediate listing
-        });
+        .insert(trainerData);
 
       if (error) {
+        console.error('Database insert error:', error);
         throw error;
       }
 
-      // Update user profile role to business_owner (trainers are also business owners)
-      await supabase
+      console.log('Trainer profile inserted successfully');
+
+      // Update user profile role to trainer
+      console.log('Updating user role to trainer...');
+      const { error: roleError } = await supabase
         .from('user_profiles')
-        .update({ role: 'business_owner' })
+        .update({ role: 'trainer' })
         .eq('user_id', user.id);
 
-      toast.success('Trainer registration completed successfully! Your listing is now live.');
+      if (roleError) {
+        console.error('Role update error:', roleError);
+        // Don't fail the registration for this
+      }
+
+      console.log('Trainer registration completed successfully');
+      toast.success('Trainer profile registered successfully! Your listing is now live.');
       setLoading(false);
       return true;
     } catch (error: any) {
       console.error('Error registering trainer:', error);
       if (error.code === '23505') {
         toast.error('A trainer profile with this email already exists.');
+      } else if (error.message?.includes('trainer_tier_check')) {
+        toast.error('Invalid trainer tier selected. Please choose from: basic, premium, luxury.');
       } else {
         toast.error(error.message || 'Failed to register trainer. Please try again.');
       }

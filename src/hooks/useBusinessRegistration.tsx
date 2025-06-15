@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useImageUpload } from '@/hooks/useImageUpload';
+import { useBusinessImageUpload } from '@/hooks/useBusinessImageUpload';
 import { toast } from 'sonner';
 
 interface BusinessFormData {
@@ -27,9 +27,10 @@ interface BusinessFormData {
 export const useBusinessRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const { uploadMultipleImages } = useImageUpload();
+  const { uploadMultipleImages } = useBusinessImageUpload();
 
   const validateFormData = (formData: BusinessFormData): string[] => {
+    console.log('Validating form data:', formData);
     const errors: string[] = [];
     
     if (!formData.businessName.trim()) errors.push('Business name is required');
@@ -85,11 +86,19 @@ export const useBusinessRegistration = () => {
       errors.push('Please upload at least 1 business image');
     }
     
+    console.log('Validation errors:', errors);
     return errors;
   };
 
   const registerBusiness = async (formData: BusinessFormData) => {
+    console.log('Starting business registration process...');
+    console.log('Form data received:', {
+      ...formData,
+      images: `${formData.images.length} files`
+    });
+
     if (!user) {
+      console.error('User not authenticated');
       toast.error('You must be logged in to register a business');
       return false;
     }
@@ -97,6 +106,7 @@ export const useBusinessRegistration = () => {
     // Validate form data
     const validationErrors = validateFormData(formData);
     if (validationErrors.length > 0) {
+      console.error('Form validation failed:', validationErrors);
       validationErrors.forEach(error => toast.error(error));
       return false;
     }
@@ -105,6 +115,7 @@ export const useBusinessRegistration = () => {
     
     try {
       // Check if business profile already exists
+      console.log('Checking for existing business profile...');
       const { data: existingProfile } = await supabase
         .from('business_profiles')
         .select('id')
@@ -112,56 +123,74 @@ export const useBusinessRegistration = () => {
         .single();
 
       if (existingProfile) {
+        console.error('Business profile already exists for user');
         toast.error('You already have a business profile. Please contact support if you need to update it.');
         setLoading(false);
         return false;
       }
 
-      // Upload business images to business-images bucket
-      console.log('Uploading business images...');
-      const imageUrls = await uploadMultipleImages(formData.images, 'business-images', 'business');
+      // Upload business images to business-logos bucket
+      console.log('Starting image upload process...');
+      const imageUrls = await uploadMultipleImages(formData.images);
+      
       if (imageUrls.length === 0 && formData.images.length > 0) {
+        console.error('Image upload failed - no URLs returned');
         toast.error('Failed to upload images. Please try again.');
         setLoading(false);
         return false;
       }
 
-      console.log('Uploaded image URLs:', imageUrls);
+      console.log(`Successfully uploaded ${imageUrls.length} images:`, imageUrls);
 
-      // Insert business profile with default category
+      // Insert business profile
+      console.log('Inserting business profile to database...');
+      const businessData = {
+        user_id: user.id,
+        business_name: formData.businessName.trim(),
+        business_type: formData.businessType,
+        category: 'standard', // Default category
+        email: formData.email.trim().toLowerCase(),
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+        city: formData.city.trim(),
+        state: formData.state.trim(),
+        pin_code: formData.pinCode.trim(),
+        opening_time: formData.openingTime,
+        closing_time: formData.closingTime,
+        monthly_price: formData.monthlyPrice ? parseInt(formData.monthlyPrice) : null,
+        session_price: formData.sessionPrice ? parseInt(formData.sessionPrice) : null,
+        description: formData.description.trim(),
+        amenities: formData.amenities,
+        image_urls: imageUrls,
+        status: 'approved' // Auto-approve for immediate listing
+      };
+
+      console.log('Business data to insert:', businessData);
+
       const { error } = await supabase
         .from('business_profiles')
-        .insert({
-          user_id: user.id,
-          business_name: formData.businessName.trim(),
-          business_type: formData.businessType,
-          category: 'standard', // Default category instead of payment tier
-          email: formData.email.trim().toLowerCase(),
-          phone: formData.phone.trim(),
-          address: formData.address.trim(),
-          city: formData.city.trim(),
-          state: formData.state.trim(),
-          pin_code: formData.pinCode.trim(),
-          opening_time: formData.openingTime,
-          closing_time: formData.closingTime,
-          monthly_price: formData.monthlyPrice ? parseInt(formData.monthlyPrice) : null,
-          session_price: formData.sessionPrice ? parseInt(formData.sessionPrice) : null,
-          description: formData.description.trim(),
-          amenities: formData.amenities,
-          image_urls: imageUrls,
-          status: 'approved' // Auto-approve for immediate listing
-        });
+        .insert(businessData);
 
       if (error) {
+        console.error('Database insert error:', error);
         throw error;
       }
 
+      console.log('Business profile inserted successfully');
+
       // Update user profile role to business_owner
-      await supabase
+      console.log('Updating user role to business_owner...');
+      const { error: roleError } = await supabase
         .from('user_profiles')
         .update({ role: 'business_owner' })
         .eq('user_id', user.id);
 
+      if (roleError) {
+        console.error('Role update error:', roleError);
+        // Don't fail the registration for this
+      }
+
+      console.log('Business registration completed successfully');
       toast.success('Business registered successfully! Your listing is now live.');
       setLoading(false);
       return true;

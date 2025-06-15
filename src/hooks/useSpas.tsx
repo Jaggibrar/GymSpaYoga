@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export interface Spa {
+interface Spa {
   id: string;
   business_name: string;
   business_type: string;
@@ -23,6 +23,7 @@ export interface Spa {
   image_urls: string[];
   status: string;
   created_at: string;
+  updated_at?: string;
 }
 
 export const useSpas = () => {
@@ -30,43 +31,43 @@ export const useSpas = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchSpas = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const { data, error } = await supabase
-          .from('business_profiles')
-          .select('*')
-          .eq('business_type', 'spa')
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false });
+  const fetchSpas = async () => {
+    console.log('Fetching spas from database...');
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Remove status filter to show all listings
+      const { data, error } = await supabase
+        .from('business_profiles')
+        .select('*')
+        .eq('business_type', 'spa')
+        .order('created_at', { ascending: false });
 
-        if (error) {
-          console.error('Supabase error fetching spas:', error);
-          setError(`Failed to fetch spas: ${error.message}`);
-          toast.error('Failed to load spas. Please try again.');
-          return;
-        }
-
-        console.log('Fetched spas:', data?.length || 0);
-        setSpas(data || []);
-        
-        if (data && data.length === 0) {
-          console.log('No spas found in database');
-        }
-      } catch (err) {
-        console.error('Error fetching spas:', err);
-        setError('Failed to fetch spas');
-        toast.error('An unexpected error occurred while loading spas.');
-      } finally {
-        setLoading(false);
+      if (error) {
+        console.error('Error fetching spas:', error);
+        throw error;
       }
-    };
 
+      console.log(`Fetched ${data?.length || 0} spa listings:`, data);
+      setSpas(data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch spas:', err);
+      setError(err.message);
+      toast.error('Failed to load spa listings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchSpas();
   }, []);
 
-  return { spas, loading, error, refetch: () => window.location.reload() };
+  return {
+    spas,
+    loading,
+    error,
+    refetch: fetchSpas
+  };
 };
