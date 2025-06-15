@@ -21,7 +21,6 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [selectedTier, setSelectedTier] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [guestBookingModal, setGuestBookingModal] = useState<{
     isOpen: boolean;
     businessName: string;
@@ -45,9 +44,7 @@ const Index = () => {
     const matchesLocation = locationFilter === "" ||
       business.city.toLowerCase().includes(locationFilter.toLowerCase());
 
-    const matchesTier = selectedTier === "" || business.category_tier === selectedTier;
-
-    return matchesSearch && matchesLocation && matchesTier;
+    return matchesSearch && matchesLocation;
   });
 
   const handleBookNow = (business: any) => {
@@ -86,21 +83,21 @@ const Index = () => {
     {
       id: 'luxury',
       label: 'Luxury',
-      icon: <Crown className="h-8 w-8" />,
+      icon: <Crown className="h-6 w-6" />,
       color: 'from-yellow-500 to-yellow-600',
       description: 'Premium experiences'
     },
     {
       id: 'premium',
       label: 'Premium',
-      icon: <Diamond className="h-8 w-8" />,
+      icon: <Diamond className="h-6 w-6" />,
       color: 'from-blue-500 to-blue-600',
       description: 'Quality services'
     },
     {
       id: 'budget',
       label: 'Budget-friendly',
-      icon: <IndianRupee className="h-8 w-8" />,
+      icon: <IndianRupee className="h-6 w-6" />,
       color: 'from-green-500 to-green-600',
       description: 'Affordable options'
     }
@@ -191,7 +188,7 @@ const Index = () => {
 
           {/* Main Search Bar */}
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl max-w-5xl mx-auto border border-gray-200 mb-8">
-            <div className="flex flex-col lg:flex-row gap-4 mb-6">
+            <div className="flex flex-col lg:flex-row gap-4 mb-8">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-6 w-6" />
                 <Input
@@ -229,42 +226,23 @@ const Index = () => {
               </Button>
             </div>
 
-            {/* Category Filters */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  variant={selectedCategory === category.id ? "default" : "outline"}
-                  className={`h-16 flex flex-col items-center justify-center gap-2 ${
-                    selectedCategory === category.id 
-                      ? `bg-gradient-to-r ${category.color} text-white` 
-                      : 'hover:bg-gray-50'
-                  }`}
-                >
-                  {category.icon}
-                  <span className="text-sm font-medium">{category.name}</span>
-                </Button>
-              ))}
-            </div>
-
-            {/* Tier Filters */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Tier Filters - Centered and Refined */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-3xl mx-auto">
               {tiers.map((tier) => (
                 <Button
                   key={tier.id}
                   onClick={() => setSelectedTier(selectedTier === tier.id ? "" : tier.id)}
-                  variant={selectedTier === tier.id ? "default" : "outline"}
-                  className={`h-20 flex flex-col items-center justify-center gap-2 transition-all duration-300 ${
+                  variant="outline"
+                  className={`flex items-center gap-3 px-6 py-4 h-auto rounded-xl border-2 transition-all duration-300 ${
                     selectedTier === tier.id 
-                      ? `bg-gradient-to-r ${tier.color} text-white shadow-lg scale-105` 
-                      : 'hover:bg-gray-50 hover:scale-102'
+                      ? `bg-gradient-to-r ${tier.color} text-white border-transparent shadow-lg scale-105` 
+                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 hover:scale-102'
                   }`}
                 >
                   {tier.icon}
-                  <div className="text-center">
-                    <div className="font-bold">{tier.label}</div>
-                    <div className="text-xs opacity-90">{tier.description}</div>
+                  <div className="text-left">
+                    <div className="font-bold text-sm">{tier.label}</div>
+                    <div className="text-xs opacity-80">{tier.description}</div>
                   </div>
                 </Button>
               ))}
