@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dumbbell, Waves, Heart, UploadCloud } from "lucide-react";
@@ -27,6 +26,8 @@ const RegisterTrainer = () => {
     bio: "",
     profileImage: null as File | null
   });
+
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   if (!user) {
     navigate('/login');
@@ -69,9 +70,11 @@ const RegisterTrainer = () => {
   };
 
   const handleSubmit = async () => {
+    if (!isFormValid()) return;
     const exp = parseInt(formData.experience);
     const rate = parseInt(formData.hourlyRate);
-    if (!isFormValid()) return;
+
+    setSuccessMessage(null); // Reset message
 
     // Submit, trigger callback in hook
     const submissionData = {
@@ -98,7 +101,17 @@ const RegisterTrainer = () => {
         bio: "",
         profileImage: null
       });
-      navigate("/");
+
+      // Show success instructions
+      setSuccessMessage(
+        "Registration successful! Your listing will appear after admin verification. You will receive an email when your profile is approved. Thank you for registering!"
+      );
+
+      // Optionally: delay before navigating away, or let user click a button.
+      setTimeout(() => {
+        setSuccessMessage(null);
+        navigate("/");
+      }, 6000);
     }
   };
 
@@ -111,6 +124,13 @@ const RegisterTrainer = () => {
   return (
     <div className="max-w-xl mx-auto py-10 px-4 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4">Trainer Registration</h1>
+
+      {successMessage && (
+        <div className="bg-green-50 text-green-700 border border-green-200 rounded px-4 py-3 mb-4 text-center">
+          {successMessage}
+        </div>
+      )}
+
       {/* Name */}
       <div className="mb-2">
         <label className="block font-medium mb-1">Name</label>
@@ -211,6 +231,7 @@ const RegisterTrainer = () => {
         className={`w-full mt-4 py-2 rounded bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition ${loading || !isFormValid() ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={loading || !isFormValid()}
         onClick={handleSubmit}
+        type="button"
       >
         {loading ? "Submitting..." : "Submit Registration"}
       </button>
