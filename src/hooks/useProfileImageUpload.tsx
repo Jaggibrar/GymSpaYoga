@@ -10,7 +10,7 @@ export const useProfileImageUpload = () => {
 
   const validateFile = (file: File): string | null => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 2 * 1024 * 1024; // 2MB for profile images
 
     if (!allowedTypes.includes(file.type)) {
       return 'Please upload a valid image file (JPEG, PNG, GIF, WebP)';
@@ -51,16 +51,7 @@ export const useProfileImageUpload = () => {
       
       if (uploadError) {
         console.error('Profile image upload error:', uploadError);
-        
-        if (uploadError.message.includes('policy')) {
-          toast.error('Upload failed: Permission denied. Please make sure you are logged in.');
-        } else if (uploadError.message.includes('size')) {
-          toast.error('Upload failed: File size too large (max 2MB)');
-        } else if (uploadError.message.includes('type')) {
-          toast.error('Upload failed: Invalid file type. Only images are allowed.');
-        } else {
-          toast.error(`Upload failed: ${uploadError.message}`);
-        }
+        toast.error(`Upload failed: ${uploadError.message}`);
         return null;
       }
       

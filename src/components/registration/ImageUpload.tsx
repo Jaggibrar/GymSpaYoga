@@ -15,8 +15,17 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    
+    if (files.length === 0) {
+      clearPreviews();
+      return;
+    }
+
     const validFiles: File[] = [];
     const newPreviewUrls: string[] = [];
+    
+    // Clear existing previews
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
     
     files.forEach(file => {
       const validation = validateFile(file);
@@ -24,12 +33,26 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
         validFiles.push(file);
         const url = URL.createObjectURL(file);
         newPreviewUrls.push(url);
+      } else {
+        console.warn(`File ${file.name} validation failed:`, validation);
       }
     });
     
     setSelectedFiles(validFiles);
     setPreviewUrls(newPreviewUrls);
-    onFileChange(e);
+    
+    // Create a new event with valid files only
+    const fileList = new DataTransfer();
+    validFiles.forEach(file => fileList.items.add(file));
+    
+    const syntheticEvent = {
+      target: {
+        files: fileList.files,
+        value: e.target.value
+      }
+    } as React.ChangeEvent<HTMLInputElement>;
+    
+    onFileChange(syntheticEvent);
   };
 
   const removeFile = (index: number) => {
@@ -56,6 +79,12 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
     onFileChange(syntheticEvent);
   };
 
+  const clearPreviews = () => {
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
+    setSelectedFiles([]);
+    setPreviewUrls([]);
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
@@ -65,11 +94,11 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
       <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-blue-400 transition-colors">
         <Upload className="h-16 w-16 text-gray-400 mx-auto mb-6" />
         <p className="text-xl text-gray-600 mb-4">Upload business photos</p>
-        <p className="text-gray-500 mb-6">Upload at least 1 high-quality image (JPG, PNG, WebP, max 2MB each)</p>
+        <p className="text-gray-500 mb-6">Upload at least 1 high-quality image (JPG, PNG, WebP, max 5MB each)</p>
         
         <div className="flex items-center justify-center gap-2 mb-4 text-sm text-gray-600">
           <AlertCircle className="h-4 w-4" />
-          <span>Max file size: 2MB | Supported formats: JPG, PNG, GIF, WebP</span>
+          <span>Max file size: 5MB | Supported formats: JPG, PNG, GIF, WebP</span>
         </div>
         
         <Input

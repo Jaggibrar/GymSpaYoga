@@ -10,14 +10,14 @@ export const useImageUpload = () => {
 
   const validateFile = (file: File): string | null => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 5 * 1024 * 1024; // 5MB for business images
 
     if (!allowedTypes.includes(file.type)) {
       return 'Please upload a valid image file (JPEG, PNG, GIF, WebP)';
     }
 
     if (file.size > maxSize) {
-      return 'File size must be less than 2MB';
+      return 'File size must be less than 5MB';
     }
 
     return null;
@@ -51,17 +51,7 @@ export const useImageUpload = () => {
       
       if (uploadError) {
         console.error('Upload error:', uploadError);
-        
-        // Handle specific error types
-        if (uploadError.message.includes('policy')) {
-          toast.error('Upload failed: Permission denied. Please make sure you are logged in.');
-        } else if (uploadError.message.includes('size')) {
-          toast.error('Upload failed: File size too large (max 2MB)');
-        } else if (uploadError.message.includes('type')) {
-          toast.error('Upload failed: Invalid file type. Only images are allowed.');
-        } else {
-          toast.error(`Upload failed: ${uploadError.message}`);
-        }
+        toast.error(`Upload failed: ${uploadError.message}`);
         return null;
       }
       
@@ -87,15 +77,24 @@ export const useImageUpload = () => {
       return [];
     }
 
+    if (files.length === 0) {
+      return [];
+    }
+
     setUploading(true);
-    const uploadPromises = files.map(file => uploadImage(file, bucket, folder));
+    const results: string[] = [];
     
     try {
-      const results = await Promise.all(uploadPromises);
-      return results.filter(url => url !== null) as string[];
+      for (const file of files) {
+        const url = await uploadImage(file, bucket, folder);
+        if (url) {
+          results.push(url);
+        }
+      }
+      return results;
     } catch (error) {
       console.error('Error uploading multiple images:', error);
-      return [];
+      return results;
     } finally {
       setUploading(false);
     }

@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Upload, X, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useImageUpload } from "@/hooks/useImageUpload";
+import { useProfileImageUpload } from "@/hooks/useProfileImageUpload";
 
 interface TrainerProfileImageUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,28 +11,35 @@ interface TrainerProfileImageUploadProps {
 export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageUploadProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const { validateFile } = useImageUpload();
+  const { validateFile } = useProfileImageUpload();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     
-    if (file) {
-      const validation = validateFile(file);
-      if (!validation) {
-        setSelectedFile(file);
-        const url = URL.createObjectURL(file);
-        setPreviewUrl(url);
-        onFileChange(e);
+    if (!file) {
+      clearPreview();
+      return;
+    }
+
+    const validation = validateFile(file);
+    if (!validation) {
+      // Clear existing preview
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
       }
+      
+      setSelectedFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+      onFileChange(e);
+    } else {
+      console.warn(`File ${file.name} validation failed:`, validation);
+      clearPreview();
     }
   };
 
   const removeFile = () => {
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-    setSelectedFile(null);
-    setPreviewUrl(null);
+    clearPreview();
     
     // Create a proper synthetic event for clearing the file
     const syntheticEvent = {
@@ -43,6 +50,14 @@ export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageU
     } as React.ChangeEvent<HTMLInputElement>;
     
     onFileChange(syntheticEvent);
+  };
+
+  const clearPreview = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
   };
 
   return (
