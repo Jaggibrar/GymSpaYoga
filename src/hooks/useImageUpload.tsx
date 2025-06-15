@@ -37,6 +37,23 @@ export const useImageUpload = () => {
 
     setUploading(true);
     try {
+      // Check if the bucket exists
+      console.log(`Checking if ${bucket} bucket exists...`);
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+      
+      if (bucketsError) {
+        console.error('Error listing buckets:', bucketsError);
+        toast.error('Failed to check storage availability');
+        return null;
+      }
+      
+      const targetBucket = buckets?.find(b => b.id === bucket);
+      if (!targetBucket) {
+        console.error(`${bucket} bucket not found. Available buckets:`, buckets?.map(b => b.id));
+        toast.error(`Storage bucket '${bucket}' not found. Please contact support.`);
+        return null;
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/${folder}/${Date.now()}.${fileExt}`;
       

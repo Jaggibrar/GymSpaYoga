@@ -37,6 +37,23 @@ export const useTrainerProfileImageUpload = () => {
 
     setUploading(true);
     try {
+      // First, let's check if the bucket exists
+      console.log('Checking if trainer-images bucket exists...');
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+      
+      if (bucketsError) {
+        console.error('Error listing buckets:', bucketsError);
+        toast.error('Failed to check storage availability');
+        return null;
+      }
+      
+      const trainerBucket = buckets?.find(bucket => bucket.id === 'trainer-images');
+      if (!trainerBucket) {
+        console.error('trainer-images bucket not found. Available buckets:', buckets?.map(b => b.id));
+        toast.error('Trainer images storage bucket not found. Please contact support.');
+        return null;
+      }
+
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile.${fileExt}`;
       
