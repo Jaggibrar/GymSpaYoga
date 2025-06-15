@@ -175,7 +175,7 @@ const About = () => {
               <div className="absolute -inset-4 bg-gradient-to-r from-purple-400/10 to-pink-400/10 rounded-[2.5rem] transform -rotate-2"></div>
               {/* Updated image to use Supabase website media bucket */}
               <img 
-                src="https://pihmoaogjjiicfnkmpbe.supabase.co/storage/v1/object/public/website-media/site-assets/pexels-photo-16963635.jpeg"
+                src="https://pihmoaogjjiicfnkmpbe.supabase.co/storage/v1/object/public/website-media/site-assets/pexels-photo-1597017.jpeg"
                 alt="Modern wellness center" 
                 className="relative rounded-[2rem] shadow-3xl w-full h-[600px] object-cover" 
               />
