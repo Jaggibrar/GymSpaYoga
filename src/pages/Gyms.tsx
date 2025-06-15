@@ -68,10 +68,16 @@ const Gyms = () => {
         description="Discover state-of-the-art fitness centers with modern equipment and expert trainers. Find luxury, premium, and budget-friendly gyms near you."
       />
       
-      {/* Modern Hero Section */}
+      {/* Modern Hero Section with Background Image */}
       <div className="relative overflow-hidden bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80')"
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-red-500/80 via-orange-500/80 to-yellow-500/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/30 to-transparent"></div>
         <div className="relative mobile-container py-16 md:py-24">
           <div className="text-center text-white">
             <div className="flex items-center justify-center gap-3 mb-6">
