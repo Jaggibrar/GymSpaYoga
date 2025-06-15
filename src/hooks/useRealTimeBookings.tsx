@@ -49,7 +49,9 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
     try {
       setLoading(true);
-      let query = supabase.from('bookings');
+
+      let data;
+      let error;
 
       if (businessOwnersView) {
         // Fetch bookings for businesses owned by the current user with user profile data
@@ -60,13 +62,20 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
         if (businessProfiles && businessProfiles.length > 0) {
           const businessIds = businessProfiles.map(bp => bp.id);
-          query = query
+
+          // Build entire query with all clauses before calling order
+          const result = await supabase
+            .from('bookings')
             .select(`
               *,
               user_profile:user_id(full_name, phone),
               business_profile:business_id(business_name)
             `)
-            .in('business_id', businessIds);
+            .in('business_id', businessIds)
+            .order('created_at', { ascending: false });
+
+          data = result.data;
+          error = result.error;
         } else {
           setBookings([]);
           setLoading(false);
@@ -74,15 +83,18 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
         }
       } else {
         // Fetch bookings for the current user with business profile data
-        query = query
+        const result = await supabase
+          .from('bookings')
           .select(`
             *,
             business_profile:business_id(business_name)
           `)
-          .eq('user_id', user.id);
-      }
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+        data = result.data;
+        error = result.error;
+      }
 
       if (error) {
         console.error('Error fetching bookings:', error);
