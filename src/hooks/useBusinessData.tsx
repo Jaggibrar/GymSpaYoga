@@ -40,61 +40,64 @@ export const useBusinessData = (businessType?: string, searchTerm?: string, loca
     return 'budget';
   };
 
-  useEffect(() => {
-    const fetchBusinesses = async () => {
-      try {
-        setLoading(true);
-        let query = supabase
-          .from('business_profiles')
-          .select('*')
-          .eq('status', 'approved');
+  const fetchBusinesses = async () => {
+    try {
+      setLoading(true);
+      let query = supabase
+        .from('business_profiles')
+        .select('*')
+        .eq('status', 'approved');
 
-        if (businessType) {
-          query = query.eq('business_type', businessType);
-        }
-
-        const { data, error } = await query.order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        let filteredData = data || [];
-
-        // Add tier to each business
-        filteredData = filteredData.map(business => ({
-          ...business,
-          tier: getTier(business.monthly_price, business.session_price)
-        }));
-
-        // Apply filters
-        if (searchTerm) {
-          filteredData = filteredData.filter(business =>
-            business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            business.description?.toLowerCase().includes(searchTerm.toLowerCase())
-          );
-        }
-
-        if (locationFilter) {
-          filteredData = filteredData.filter(business =>
-            business.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
-            business.state.toLowerCase().includes(locationFilter.toLowerCase())
-          );
-        }
-
-        if (tierFilter && tierFilter !== 'all') {
-          filteredData = filteredData.filter(business => business.tier === tierFilter);
-        }
-
-        setBusinesses(filteredData);
-      } catch (error: any) {
-        console.error('Error fetching businesses:', error);
-        setError(error.message || 'Failed to fetch businesses');
-      } finally {
-        setLoading(false);
+      if (businessType) {
+        query = query.eq('business_type', businessType);
       }
-    };
 
+      const { data, error } = await query.order('created_at', { ascending: false });
+
+      if (error) throw error;
+
+      let filteredData = data || [];
+
+      // Add tier to each business
+      filteredData = filteredData.map(business => ({
+        ...business,
+        tier: getTier(business.monthly_price, business.session_price)
+      }));
+
+      // Apply filters
+      if (searchTerm) {
+        filteredData = filteredData.filter(business =>
+          business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          business.description?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      if (locationFilter) {
+        filteredData = filteredData.filter(business =>
+          business.city.toLowerCase().includes(locationFilter.toLowerCase()) ||
+          business.state.toLowerCase().includes(locationFilter.toLowerCase())
+        );
+      }
+
+      if (tierFilter && tierFilter !== 'all') {
+        filteredData = filteredData.filter(business => {
+          const businessTier = getTier(business.monthly_price, business.session_price);
+          return businessTier === tierFilter;
+        });
+      }
+
+      setBusinesses(filteredData);
+    } catch (error: any) {
+      console.error('Error fetching businesses:', error);
+      setError(error.message || 'Failed to fetch businesses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchBusinesses();
   }, [businessType, searchTerm, locationFilter, tierFilter]);
 
-  return { businesses, loading, error, refetch: () => fetchBusinesses() };
+  return { businesses, loading, error, refetch: fetchBusinesses };
 };

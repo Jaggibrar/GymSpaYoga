@@ -76,7 +76,7 @@ const PaymentModal = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center space-x-2">
+          <DialogTitle className="flex items-center space-x-2 text-foreground">
             <CreditCard className="h-5 w-5" />
             <span>Book {serviceName}</span>
           </DialogTitle>
@@ -86,7 +86,7 @@ const PaymentModal = ({
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex items-center space-x-2 mb-2">
               <MapPin className="h-4 w-4 text-gray-600" />
-              <span className="font-semibold">{serviceName}</span>
+              <span className="font-semibold text-gray-900">{serviceName}</span>
             </div>
             <p className="text-lg font-bold text-emerald-600">
               ₹{price}/{priceType}
@@ -95,7 +95,7 @@ const PaymentModal = ({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="date" className="flex items-center space-x-2">
+              <Label htmlFor="date" className="flex items-center space-x-2 text-foreground">
                 <Calendar className="h-4 w-4" />
                 <span>Date</span>
               </Label>
@@ -110,7 +110,7 @@ const PaymentModal = ({
             </div>
             
             <div>
-              <Label htmlFor="time" className="flex items-center space-x-2">
+              <Label htmlFor="time" className="flex items-center space-x-2 text-foreground">
                 <Clock className="h-4 w-4" />
                 <span>Time</span>
               </Label>
@@ -125,7 +125,7 @@ const PaymentModal = ({
           </div>
 
           <div>
-            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Label htmlFor="duration" className="text-foreground">Duration (minutes)</Label>
             <Input
               id="duration"
               type="number"
@@ -138,7 +138,7 @@ const PaymentModal = ({
           </div>
 
           <div>
-            <Label htmlFor="notes">Special Requests (Optional)</Label>
+            <Label htmlFor="notes" className="text-foreground">Special Requests (Optional)</Label>
             <Textarea
               id="notes"
               value={bookingData.notes}
@@ -149,13 +149,18 @@ const PaymentModal = ({
           </div>
 
           <div className="flex space-x-3 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1 text-gray-900 border-gray-300 hover:bg-gray-50"
+            >
               Cancel
             </Button>
             <Button 
               type="submit" 
               disabled={loading}
-              className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+              className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white"
             >
               {loading ? "Booking..." : "Submit Booking Request"}
             </Button>
