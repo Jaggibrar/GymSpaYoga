@@ -8,35 +8,32 @@ import SEOHead from "@/components/SEOHead";
 
 const pricingPlans = [
   {
-    name: "Free",
-    price: "₹0",
-    period: "forever",
-    description: "Perfect for hobby projects and getting started.",
+    name: "Budget Friendly",
+    price: "₹1,999",
+    period: "per month",
+    description: "Perfect for affordable wellness businesses starting out.",
     features: [
-      "Up to 5 gym/spa listings",
+      "1 budget-friendly business listing",
       "Basic customer reviews",
       "Email support",
       "Mobile app presence",
       "Basic analytics",
-      "Community support"
+      "Community support",
+      "Monthly price range: ₹1,000 - ₹2,999",
+      "Session price range: ₹200 - ₹999"
     ],
-    limitations: [
-      "Limited customization",
-      "Basic search visibility",
-      "Standard support"
-    ],
-    cta: "Get started",
+    limitations: [],
+    cta: "Start listing",
     popular: false,
     buttonVariant: "outline" as const
   },
   {
-    name: "Pro",
-    price: "₹2,999",
+    name: "Premium",
+    price: "₹3,999",
     period: "per month",
-    description: "Everything you need to scale your wellness business.",
+    description: "Everything you need for quality wellness services.",
     features: [
-      "Everything in Free",
-      "Unlimited listings",
+      "1 premium business listing",
       "Priority search placement",
       "Advanced analytics dashboard",
       "Customer booking management",
@@ -44,32 +41,35 @@ const pricingPlans = [
       "Priority email support",
       "Custom business page design",
       "Performance insights",
-      "API access"
+      "API access",
+      "Monthly price range: ₹3,000 - ₹4,999",
+      "Session price range: ₹1,000 - ₹1,999"
     ],
     limitations: [],
-    cta: "Start free trial",
+    cta: "Start listing",
     popular: true,
     buttonVariant: "default" as const
   },
   {
-    name: "Team",
+    name: "Luxury",
     price: "₹7,999",
     period: "per month",
-    description: "Advanced features for teams and enterprises.",
+    description: "Premium experience for high-end wellness destinations.",
     features: [
-      "Everything in Pro",
-      "Multi-location support",
-      "Advanced booking system",
+      "1 luxury business listing",
+      "Featured placement",
       "White-label solutions",
       "Dedicated account manager",
       "Phone & chat support",
       "Custom integrations",
       "Advanced security",
       "SLA guarantee",
-      "Training & onboarding"
+      "Training & onboarding",
+      "Monthly price range: ₹5,000+",
+      "Session price range: ₹2,000+"
     ],
     limitations: [],
-    cta: "Start free trial",
+    cta: "Start listing",
     popular: false,
     buttonVariant: "outline" as const
   }
@@ -79,31 +79,31 @@ const comparisonFeatures = [
   {
     category: "Platform",
     features: [
-      { name: "Business listings", free: "5", pro: "Unlimited", team: "Unlimited" },
-      { name: "Customer reviews", free: true, pro: true, team: true },
-      { name: "Mobile app presence", free: true, pro: true, team: true },
-      { name: "API access", free: false, pro: true, team: true },
-      { name: "Custom domain", free: false, pro: false, team: true }
+      { name: "Business listings", budget: "1 Budget", premium: "1 Premium", luxury: "1 Luxury" },
+      { name: "Customer reviews", budget: true, premium: true, luxury: true },
+      { name: "Mobile app presence", budget: true, premium: true, luxury: true },
+      { name: "API access", budget: false, premium: true, luxury: true },
+      { name: "Custom domain", budget: false, premium: false, luxury: true }
     ]
   },
   {
     category: "Analytics & Reporting",
     features: [
-      { name: "Basic analytics", free: true, pro: true, team: true },
-      { name: "Advanced analytics", free: false, pro: true, team: true },
-      { name: "Performance insights", free: false, pro: true, team: true },
-      { name: "Custom reports", free: false, pro: false, team: true },
-      { name: "Data export", free: false, pro: true, team: true }
+      { name: "Basic analytics", budget: true, premium: true, luxury: true },
+      { name: "Advanced analytics", budget: false, premium: true, luxury: true },
+      { name: "Performance insights", budget: false, premium: true, luxury: true },
+      { name: "Custom reports", budget: false, premium: false, luxury: true },
+      { name: "Data export", budget: false, premium: true, luxury: true }
     ]
   },
   {
     category: "Support",
     features: [
-      { name: "Community support", free: true, pro: true, team: true },
-      { name: "Email support", free: true, pro: true, team: true },
-      { name: "Priority support", free: false, pro: true, team: true },
-      { name: "Phone support", free: false, pro: false, team: true },
-      { name: "Dedicated account manager", free: false, pro: false, team: true }
+      { name: "Community support", budget: true, premium: true, luxury: true },
+      { name: "Email support", budget: true, premium: true, luxury: true },
+      { name: "Priority support", budget: false, premium: true, luxury: true },
+      { name: "Phone support", budget: false, premium: false, luxury: true },
+      { name: "Dedicated account manager", budget: false, premium: false, luxury: true }
     ]
   }
 ];
@@ -118,8 +118,8 @@ const FAQ = [
     a: "We accept all major credit cards, debit cards, UPI, net banking, and digital wallets."
   },
   {
-    q: "Is there a free trial?",
-    a: "Yes, we offer a 14-day free trial for all paid plans. No credit card required to start."
+    q: "How do the business listing tiers work?",
+    a: "Each plan includes one business listing categorized by your pricing tier: Budget Friendly (₹1,000-₹2,999), Premium (₹3,000-₹4,999), or Luxury (₹5,000+)."
   },
   {
     q: "How does the ₹20 per customer charge work?",
@@ -151,7 +151,7 @@ const Pricing = () => {
     <div className="min-h-screen bg-white">
       <SEOHead 
         title="Pricing - Choose Your Perfect Plan | GymSpaYoga"
-        description="Simple, transparent pricing for gym, spa, and yoga studio owners. Start free, scale as you grow."
+        description="Simple, transparent pricing for gym, spa, and yoga studio owners. Choose from Budget Friendly, Premium, or Luxury business listings."
         keywords="pricing, gym software, spa management, yoga studio software, business listing"
         url="https://gymspayoga.com/pricing"
         structuredData={structuredData}
@@ -165,7 +165,7 @@ const Pricing = () => {
               Simple, transparent pricing
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Choose the perfect plan for your wellness business. Always know what you'll pay.
+              Choose the perfect plan for your wellness business tier. Each plan includes one business listing.
             </p>
           </div>
         </div>
@@ -226,12 +226,6 @@ const Pricing = () => {
                       </span>
                     </li>
                   ))}
-                  {plan.limitations.map((limitation) => (
-                    <li key={limitation} className="flex gap-x-3">
-                      <X className="h-6 w-5 flex-none text-gray-400" />
-                      <span className="text-gray-400">{limitation}</span>
-                    </li>
-                  ))}
                 </ul>
 
                 <Link to="/register-business" className="block mt-8">
@@ -259,11 +253,19 @@ const Pricing = () => {
             Compare features
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Choose the plan that's right for you
+            Choose the plan that's right for your business tier
           </p>
         </div>
 
+        {/* Column Headers for comparison table */}
         <div className="mx-auto mt-16 max-w-5xl">
+          <div className="grid grid-cols-4 gap-x-6 border-b border-gray-200 pb-4 mb-8">
+            <div></div>
+            <div className="text-center text-sm font-semibold text-gray-900">Budget Friendly</div>
+            <div className="text-center text-sm font-semibold text-gray-900">Premium</div>
+            <div className="text-center text-sm font-semibold text-gray-900">Luxury</div>
+          </div>
+
           <div className="grid grid-cols-1 gap-y-16">
             {comparisonFeatures.map((category) => (
               <div key={category.category}>
@@ -277,36 +279,36 @@ const Pricing = () => {
                         {feature.name}
                       </div>
                       <div className="text-center">
-                        {typeof feature.free === 'boolean' ? (
-                          feature.free ? (
+                        {typeof feature.budget === 'boolean' ? (
+                          feature.budget ? (
                             <Check className="mx-auto h-5 w-5 text-indigo-600" />
                           ) : (
                             <X className="mx-auto h-5 w-5 text-gray-400" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.free}</span>
+                          <span className="text-sm text-gray-600">{feature.budget}</span>
                         )}
                       </div>
                       <div className="text-center">
-                        {typeof feature.pro === 'boolean' ? (
-                          feature.pro ? (
+                        {typeof feature.premium === 'boolean' ? (
+                          feature.premium ? (
                             <Check className="mx-auto h-5 w-5 text-indigo-600" />
                           ) : (
                             <X className="mx-auto h-5 w-5 text-gray-400" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.pro}</span>
+                          <span className="text-sm text-gray-600">{feature.premium}</span>
                         )}
                       </div>
                       <div className="text-center">
-                        {typeof feature.team === 'boolean' ? (
-                          feature.team ? (
+                        {typeof feature.luxury === 'boolean' ? (
+                          feature.luxury ? (
                             <Check className="mx-auto h-5 w-5 text-indigo-600" />
                           ) : (
                             <X className="mx-auto h-5 w-5 text-gray-400" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.team}</span>
+                          <span className="text-sm text-gray-600">{feature.luxury}</span>
                         )}
                       </div>
                     </div>
@@ -315,14 +317,6 @@ const Pricing = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Column Headers for comparison table */}
-        <div className="grid grid-cols-4 gap-x-6 border-b border-gray-200 pb-4 mb-8">
-          <div></div>
-          <div className="text-center text-sm font-semibold text-gray-900">Free</div>
-          <div className="text-center text-sm font-semibold text-gray-900">Pro</div>
-          <div className="text-center text-sm font-semibold text-gray-900">Team</div>
         </div>
       </div>
 
@@ -378,7 +372,7 @@ const Pricing = () => {
             <div className="mt-8">
               <Link to="/register-business">
                 <Button size="lg" className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3">
-                  Start your free trial
+                  Start your business listing
                 </Button>
               </Link>
             </div>
