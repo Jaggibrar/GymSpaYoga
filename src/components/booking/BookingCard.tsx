@@ -1,29 +1,21 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Clock, User, Phone, CreditCard, Building, Loader2 } from 'lucide-react';
-import { BookingStatusBadge } from './BookingStatusBadge';
+import { 
+  Calendar, 
+  Clock, 
+  MapPin, 
+  User, 
+  CheckCircle, 
+  XCircle, 
+  Eye,
+  Loader2 
+} from 'lucide-react';
+import { format } from 'date-fns';
 
 interface BookingCardProps {
-  booking: {
-    id: number;
-    booking_date: string;
-    booking_time: string;
-    status: string;
-    business_type: string;
-    total_amount?: number;
-    duration_minutes?: number;
-    notes?: string;
-    confirmed_at?: string;
-    created_at: string;
-    user_profile?: {
-      full_name: string;
-      phone?: string;
-    };
-    business_profile?: {
-      business_name: string;
-    };
-  };
+  booking: any;
   showActions?: boolean;
   showBusinessInfo?: boolean;
   showUserInfo?: boolean;
@@ -35,178 +27,181 @@ interface BookingCardProps {
   onViewDetails?: (bookingId: number) => void;
 }
 
-export const BookingCard = ({ 
-  booking, 
+export const BookingCard = ({
+  booking,
   showActions = false,
-  showBusinessInfo = false,
+  showBusinessInfo = true,
   showUserInfo = false,
   showCancelOption = false,
   isLoading = false,
-  onConfirm, 
-  onReject, 
+  onConfirm,
+  onReject,
   onCancel,
-  onViewDetails 
+  onViewDetails
 }: BookingCardProps) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(amount);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      return format(new Date(dateString), 'MMM dd, yyyy');
+    } catch {
+      return dateString;
+    }
   };
 
-  const canConfirmOrReject = showActions && booking.status === 'pending';
-  const canCancel = showCancelOption && (booking.status === 'pending' || booking.status === 'confirmed');
+  const formatTime = (timeString: string) => {
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours), parseInt(minutes));
+      return format(date, 'hh:mm a');
+    } catch {
+      return timeString;
+    }
+  };
 
   return (
-    <Card className={`hover:shadow-lg transition-shadow duration-300 ${isLoading ? 'opacity-70' : ''}`}>
+    <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">
-            {booking.business_type?.toUpperCase()} Session
+          <CardTitle className="text-lg font-semibold text-gray-900">
+            Booking #{booking.id}
           </CardTitle>
-          <BookingStatusBadge status={booking.status} />
+          <Badge className={getStatusColor(booking.status)}>
+            {booking.status?.charAt(0).toUpperCase() + booking.status?.slice(1)}
+          </Badge>
         </div>
-        <p className="text-sm text-gray-600">Booking ID: #{booking.id}</p>
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {/* User Information (for business owners) */}
-        {showUserInfo && booking.user_profile && (
-          <div className="bg-blue-50 p-3 rounded-lg">
-            <h4 className="font-semibold text-sm mb-2 flex items-center">
-              <User className="h-4 w-4 mr-1 text-blue-600" />
-              Customer Details
-            </h4>
-            <div className="space-y-1">
-              <p className="text-sm"><strong>Name:</strong> {booking.user_profile.full_name}</p>
-              {booking.user_profile.phone && (
-                <p className="text-sm"><strong>Phone:</strong> {booking.user_profile.phone}</p>
-              )}
-            </div>
+        {/* Date and Time */}
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center space-x-2">
+            <Calendar className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-700">
+              {booking.booking_date ? formatDate(booking.booking_date) : 'Date not set'}
+            </span>
           </div>
-        )}
-
-        {/* Business Information (for users) */}
-        {showBusinessInfo && booking.business_profile && (
-          <div className="bg-green-50 p-3 rounded-lg">
-            <h4 className="font-semibold text-sm mb-2 flex items-center">
-              <Building className="h-4 w-4 mr-1 text-green-600" />
-              Business Details
-            </h4>
-            <p className="text-sm"><strong>Business:</strong> {booking.business_profile.business_name}</p>
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-blue-500" />
-            <div>
-              <p className="font-medium text-sm">Date</p>
-              <p className="text-sm text-gray-600">
-                {booking.booking_date ? formatDate(booking.booking_date) : 'Not set'}
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-green-500" />
-            <div>
-              <p className="font-medium text-sm">Time & Duration</p>
-              <p className="text-sm text-gray-600">
-                {booking.booking_time || 'Not set'} ({booking.duration_minutes || 60} min)
-              </p>
-            </div>
-          </div>
-          
-          {booking.total_amount && (
-            <div className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4 text-purple-500" />
-              <div>
-                <p className="font-medium text-sm">Amount</p>
-                <p className="text-sm font-semibold text-green-600">
-                  {formatCurrency(booking.total_amount)}
-                </p>
-              </div>
-            </div>
-          )}
-          
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-orange-500" />
-            <div>
-              <p className="font-medium text-sm">Created</p>
-              <p className="text-sm text-gray-600">
-                {new Date(booking.created_at).toLocaleDateString()}
-              </p>
-            </div>
+          <div className="flex items-center space-x-2">
+            <Clock className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-700">
+              {booking.booking_time ? formatTime(booking.booking_time) : 'Time not set'}
+            </span>
           </div>
         </div>
 
+        {/* Business/User Info */}
+        {showBusinessInfo && (
+          <div className="flex items-center space-x-2">
+            <MapPin className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-700">
+              {booking.business_type?.charAt(0).toUpperCase() + booking.business_type?.slice(1)} Service
+            </span>
+          </div>
+        )}
+
+        {showUserInfo && (
+          <div className="flex items-center space-x-2">
+            <User className="h-4 w-4 text-gray-500" />
+            <span className="text-sm text-gray-700">
+              Customer Booking
+            </span>
+          </div>
+        )}
+
+        {/* Duration and Amount */}
+        <div className="grid grid-cols-2 gap-4">
+          {booking.duration_minutes && (
+            <div className="text-sm text-gray-700">
+              <span className="font-medium">Duration:</span> {booking.duration_minutes} min
+            </div>
+          )}
+          {booking.total_amount && (
+            <div className="text-sm text-gray-700">
+              <span className="font-medium">Amount:</span> ₹{booking.total_amount}
+            </div>
+          )}
+        </div>
+
+        {/* Notes */}
         {booking.notes && (
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <p className="font-medium text-sm mb-1">Notes</p>
-            <p className="text-sm text-gray-600">{booking.notes}</p>
+          <div className="text-sm text-gray-700">
+            <span className="font-medium">Notes:</span> {booking.notes}
           </div>
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
-          {canConfirmOrReject && onConfirm && onReject && (
-            <>
-              <Button 
-                onClick={() => onConfirm(booking.id)}
-                className="flex-1 bg-green-500 hover:bg-green-600"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : null}
-                Confirm
-              </Button>
-              <Button 
-                onClick={() => onReject(booking.id)}
-                variant="destructive"
-                className="flex-1"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                ) : null}
-                Reject
-              </Button>
-            </>
-          )}
-          
-          {canCancel && onCancel && (
-            <Button 
-              onClick={() => onCancel(booking.id)}
-              variant="destructive"
-              className="flex-1"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
-              Cancel Booking
-            </Button>
-          )}
-          
+        <div className="flex flex-wrap gap-2 pt-2">
           {onViewDetails && (
             <Button 
+              variant="outline" 
+              size="sm" 
               onClick={() => onViewDetails(booking.id)}
-              variant="outline"
-              className="flex-1"
-              disabled={isLoading}
+              className="flex items-center gap-1"
             >
+              <Eye className="h-3 w-3" />
               View Details
+            </Button>
+          )}
+
+          {showActions && booking.status === 'pending' && (
+            <>
+              {onConfirm && (
+                <Button 
+                  size="sm" 
+                  onClick={() => onConfirm(booking.id)}
+                  disabled={isLoading}
+                  className="bg-green-500 hover:bg-green-600 text-white flex items-center gap-1"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <CheckCircle className="h-3 w-3" />
+                  )}
+                  Confirm
+                </Button>
+              )}
+              {onReject && (
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  onClick={() => onReject(booking.id)}
+                  disabled={isLoading}
+                  className="flex items-center gap-1"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <XCircle className="h-3 w-3" />
+                  )}
+                  Reject
+                </Button>
+              )}
+            </>
+          )}
+
+          {showCancelOption && booking.status === 'pending' && onCancel && (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => onCancel(booking.id)}
+              disabled={isLoading}
+              className="text-red-600 border-red-200 hover:bg-red-50 flex items-center gap-1"
+            >
+              {isLoading ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <XCircle className="h-3 w-3" />
+              )}
+              Cancel
             </Button>
           )}
         </div>

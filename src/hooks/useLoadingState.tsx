@@ -1,56 +1,26 @@
 
-import { useState, useCallback } from 'react';
-import { errorTracker } from '@/utils/errorTracking';
+import { useState } from 'react';
 
-interface LoadingState {
-  [key: string]: boolean;
-}
+export const useLoadingState = () => {
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
 
-interface LoadingManager {
-  loading: LoadingState;
-  setLoading: (key: string, isLoading: boolean) => void;
-  isLoading: (key?: string) => boolean;
-  withLoading: <T>(key: string, fn: () => Promise<T>) => Promise<T>;
-}
+  const setLoading = (key: string, loading: boolean) => {
+    setLoadingStates(prev => ({ ...prev, [key]: loading }));
+  };
 
-export const useLoadingState = (initialState: LoadingState = {}): LoadingManager => {
-  const [loading, setLoadingState] = useState<LoadingState>(initialState);
-  
-  const setLoading = useCallback((key: string, isLoading: boolean) => {
-    setLoadingState(prev => ({
-      ...prev,
-      [key]: isLoading
-    }));
-  }, []);
-  
-  const isLoading = useCallback((key?: string) => {
-    if (key) {
-      return loading[key] || false;
-    }
-    return Object.values(loading).some(Boolean);
-  }, [loading]);
-  
-  const withLoading = useCallback(async <T,>(key: string, fn: () => Promise<T>): Promise<T> => {
+  const isLoading = (key?: string) => {
+    if (key) return loadingStates[key] || false;
+    return Object.values(loadingStates).some(Boolean);
+  };
+
+  const withLoading = async <T,>(key: string, fn: () => Promise<T>): Promise<T> => {
+    setLoading(key, true);
     try {
-      setLoading(key, true);
-      const result = await fn();
-      return result;
-    } catch (error) {
-      errorTracker.logError(
-        error instanceof Error ? error : 'Unknown error',
-        'medium',
-        { loadingKey: key }
-      );
-      throw error;
+      return await fn();
     } finally {
       setLoading(key, false);
     }
-  }, [setLoading]);
-  
-  return {
-    loading,
-    setLoading,
-    isLoading,
-    withLoading
   };
+
+  return { setLoading, isLoading, withLoading };
 };

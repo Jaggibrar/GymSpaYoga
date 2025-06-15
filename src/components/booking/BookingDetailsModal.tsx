@@ -1,30 +1,12 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, User, Building, CreditCard, FileText, CheckCircle } from "lucide-react";
-import { BookingStatusBadge } from "./BookingStatusBadge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Calendar, Clock, MapPin, User, CreditCard, FileText } from "lucide-react";
+import { format } from 'date-fns';
 
 interface BookingDetailsModalProps {
-  booking: {
-    id: number;
-    booking_date: string;
-    booking_time: string;
-    status: string;
-    business_type: string;
-    total_amount?: number;
-    duration_minutes?: number;
-    notes?: string;
-    confirmed_at?: string;
-    created_at: string;
-    confirmation_code?: string;
-    user_profile?: {
-      full_name: string;
-      phone?: string;
-    };
-    business_profile?: {
-      business_name: string;
-    };
-  } | null;
+  booking: any;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -32,125 +14,172 @@ interface BookingDetailsModalProps {
 export const BookingDetailsModal = ({ booking, isOpen, onClose }: BookingDetailsModalProps) => {
   if (!booking) return null;
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(amount);
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
+      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
+      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    try {
+      return format(new Date(dateString), 'EEEE, MMMM dd, yyyy');
+    } catch {
+      return dateString;
+    }
   };
 
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-IN', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
+  const formatTime = (timeString: string) => {
+    try {
+      const [hours, minutes] = timeString.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours), parseInt(minutes));
+      return format(date, 'hh:mm a');
+    } catch {
+      return timeString;
+    }
+  };
+
+  const formatDateTime = (dateTimeString: string) => {
+    try {
+      return format(new Date(dateTimeString), 'MMM dd, yyyy at hh:mm a');
+    } catch {
+      return dateTimeString;
+    }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] bg-white">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-3">
+          <DialogTitle className="flex items-center justify-between">
             <span>Booking Details</span>
-            <BookingStatusBadge status={booking.status} />
+            <Badge className={getStatusColor(booking.status)}>
+              {booking.status?.charAt(0).toUpperCase() + booking.status?.slice(1)}
+            </Badge>
           </DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-6">
+
+        <div className="space-y-4">
           {/* Basic Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-sm mb-3 flex items-center">
-                <Calendar className="h-4 w-4 mr-2 text-blue-600" />
-                Booking Information
-              </h3>
-              <div className="space-y-2">
-                <p className="text-sm"><strong>ID:</strong> #{booking.id}</p>
-                <p className="text-sm"><strong>Service:</strong> {booking.business_type?.toUpperCase()}</p>
-                <p className="text-sm"><strong>Date:</strong> {booking.booking_date ? formatDate(booking.booking_date) : 'Not set'}</p>
-                <p className="text-sm"><strong>Time:</strong> {booking.booking_time || 'Not set'}</p>
-                <p className="text-sm"><strong>Duration:</strong> {booking.duration_minutes || 60} minutes</p>
+          <Card>
+            <CardContent className="p-4 space-y-3">
+              <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4 text-emerald-600" />
+                <span className="font-medium">Date:</span>
+                <span>{booking.booking_date ? formatDate(booking.booking_date) : 'Not set'}</span>
               </div>
-            </div>
-
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-sm mb-3 flex items-center">
-                <CreditCard className="h-4 w-4 mr-2 text-green-600" />
-                Payment Information
-              </h3>
-              <div className="space-y-2">
-                {booking.total_amount ? (
-                  <p className="text-sm"><strong>Amount:</strong> <span className="text-green-600 font-semibold">{formatCurrency(booking.total_amount)}</span></p>
-                ) : (
-                  <p className="text-sm text-gray-500">Amount not specified</p>
-                )}
-                <p className="text-sm"><strong>Payment Status:</strong> <Badge variant="outline">Pending</Badge></p>
+              
+              <div className="flex items-center space-x-2">
+                <Clock className="h-4 w-4 text-emerald-600" />
+                <span className="font-medium">Time:</span>
+                <span>{booking.booking_time ? formatTime(booking.booking_time) : 'Not set'}</span>
               </div>
-            </div>
-          </div>
-
-          {/* Business/User Information */}
-          {booking.business_profile && (
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-sm mb-3 flex items-center">
-                <Building className="h-4 w-4 mr-2 text-green-600" />
-                Business Details
-              </h3>
-              <p className="text-sm"><strong>Business:</strong> {booking.business_profile.business_name}</p>
-            </div>
-          )}
-
-          {booking.user_profile && (
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-sm mb-3 flex items-center">
-                <User className="h-4 w-4 mr-2 text-blue-600" />
-                Customer Details
-              </h3>
-              <div className="space-y-1">
-                <p className="text-sm"><strong>Name:</strong> {booking.user_profile.full_name}</p>
-                {booking.user_profile.phone && (
-                  <p className="text-sm"><strong>Phone:</strong> {booking.user_profile.phone}</p>
-                )}
+              
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-4 w-4 text-emerald-600" />
+                <span className="font-medium">Service:</span>
+                <span>{booking.business_type?.charAt(0).toUpperCase() + booking.business_type?.slice(1)}</span>
               </div>
-            </div>
+              
+              {booking.duration_minutes && (
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-emerald-600" />
+                  <span className="font-medium">Duration:</span>
+                  <span>{booking.duration_minutes} minutes</span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Payment Info */}
+          {booking.total_amount && (
+            <Card>
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center space-x-2">
+                  <CreditCard className="h-4 w-4 text-emerald-600" />
+                  <span className="font-medium">Amount:</span>
+                  <span>₹{booking.total_amount}</span>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium">Payment Status:</span>
+                  <Badge variant="outline">
+                    {booking.payment_status?.charAt(0).toUpperCase() + booking.payment_status?.slice(1)}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Notes */}
           {booking.notes && (
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-sm mb-3 flex items-center">
-                <FileText className="h-4 w-4 mr-2 text-orange-600" />
-                Special Notes
-              </h3>
-              <p className="text-sm text-gray-700">{booking.notes}</p>
-            </div>
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-2">
+                  <FileText className="h-4 w-4 text-emerald-600 mt-0.5" />
+                  <div>
+                    <span className="font-medium">Notes:</span>
+                    <p className="text-sm text-gray-600 mt-1">{booking.notes}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
-          {/* Status Information */}
-          <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="font-semibold text-sm mb-3 flex items-center">
-              <CheckCircle className="h-4 w-4 mr-2 text-purple-600" />
-              Status Information
-            </h3>
-            <div className="space-y-2">
-              <p className="text-sm"><strong>Created:</strong> {formatDateTime(booking.created_at)}</p>
+          {/* Business Response */}
+          {booking.business_response && (
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-2">
+                  <User className="h-4 w-4 text-emerald-600 mt-0.5" />
+                  <div>
+                    <span className="font-medium">Business Response:</span>
+                    <p className="text-sm text-gray-600 mt-1">{booking.business_response}</p>
+                    {booking.response_at && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Responded on {formatDateTime(booking.response_at)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Timestamps */}
+          <Card>
+            <CardContent className="p-4 space-y-2">
+              <div className="text-sm">
+                <span className="font-medium">Created:</span>
+                <span className="ml-2 text-gray-600">{formatDateTime(booking.created_at)}</span>
+              </div>
+              
               {booking.confirmed_at && (
-                <p className="text-sm"><strong>Confirmed:</strong> {formatDateTime(booking.confirmed_at)}</p>
+                <div className="text-sm">
+                  <span className="font-medium">Confirmed:</span>
+                  <span className="ml-2 text-gray-600">{formatDateTime(booking.confirmed_at)}</span>
+                </div>
               )}
+              
+              {booking.cancelled_at && (
+                <div className="text-sm">
+                  <span className="font-medium">Cancelled:</span>
+                  <span className="ml-2 text-gray-600">{formatDateTime(booking.cancelled_at)}</span>
+                </div>
+              )}
+
               {booking.confirmation_code && (
-                <p className="text-sm"><strong>Confirmation Code:</strong> <code className="bg-gray-200 px-2 py-1 rounded text-xs">{booking.confirmation_code}</code></p>
+                <div className="text-sm">
+                  <span className="font-medium">Confirmation Code:</span>
+                  <span className="ml-2 text-gray-600 font-mono">{booking.confirmation_code}</span>
+                </div>
               )}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </DialogContent>
     </Dialog>
