@@ -253,6 +253,7 @@ const GymDetails = () => {
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
+        businessId={gym.id}
         businessName={gym.business_name}
         businessType={`Gym ${selectedPlan}`}
         price={membershipPlans.find(p => p.name === selectedPlan)?.price || (gym.monthly_price ? `₹${gym.monthly_price}` : `₹${gym.session_price}`)}
