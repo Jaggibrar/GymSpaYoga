@@ -1,0 +1,10 @@
+
+/* Central theme gradients/backgrounds - import into pages/components if needed */
+:root {
+  --gyms-payoga-gradient: linear-gradient(135deg, #106EBE 0%, #0FFCBE 100%);
+  --gyms-payoga-gradient-dark: linear-gradient(135deg, #181F1B 0%, #3ECF8E 100%);
+  --gyms-payoga-bg-card: linear-gradient(135deg, #101113 0%, #181F1B 100%);
+  --gyms-payoga-bg-section: linear-gradient(135deg, #000 0%, #101413 100%);
+  --gyms-payoga-text-glow: 0 0 32px #3ECF8E66;
+  --gyms-payoga-outline: #3ECF8E;
+}
