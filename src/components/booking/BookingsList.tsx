@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Search, Filter } from 'lucide-react';
 import { BookingCard } from './BookingCard';
+import { BookingDetailsModal } from './BookingDetailsModal';
 import { useRealTimeBookings } from '@/hooks/useRealTimeBookings';
 import { toast } from 'sonner';
 
@@ -19,6 +20,8 @@ export const BookingsList = ({
 }: BookingsListProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { bookings, loading, updateBookingStatus } = useRealTimeBookings(businessOwnersView);
 
   const filteredBookings = bookings.filter(booking => {
@@ -53,8 +56,16 @@ export const BookingsList = ({
   };
 
   const handleViewDetails = (bookingId: number) => {
-    console.log('View details for booking:', bookingId);
-    // TODO: Implement booking details modal or navigation
+    const booking = bookings.find(b => b.id === bookingId);
+    if (booking) {
+      setSelectedBooking(booking);
+      setIsDetailsModalOpen(true);
+    }
+  };
+
+  const handleCloseDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+    setSelectedBooking(null);
   };
 
   if (loading) {
@@ -129,6 +140,13 @@ export const BookingsList = ({
           ))}
         </div>
       )}
+
+      {/* Booking Details Modal */}
+      <BookingDetailsModal
+        booking={selectedBooking}
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseDetailsModal}
+      />
     </div>
   );
 };
