@@ -35,6 +35,7 @@ export const useBusinessRegistration = () => {
     
     if (!formData.businessName.trim()) errors.push('Business name is required');
     if (!formData.businessType) errors.push('Business type is required');
+    if (!formData.category) errors.push('Business tier is required');
     if (!formData.email.trim()) errors.push('Email is required');
     if (!formData.phone.trim()) errors.push('Phone number is required');
     if (!formData.address.trim()) errors.push('Address is required');
@@ -90,20 +91,6 @@ export const useBusinessRegistration = () => {
     return errors;
   };
 
-  const determinePricingCategory = (monthlyPrice: string, sessionPrice: string): string => {
-    // Determine category based on pricing - this matches the database constraint
-    const monthly = monthlyPrice ? parseInt(monthlyPrice) : 0;
-    const session = sessionPrice ? parseInt(sessionPrice) : 0;
-    
-    if (monthly >= 5000 || session >= 2000) {
-      return 'luxury';
-    } else if (monthly >= 3000 || session >= 1000) {
-      return 'premium';
-    } else {
-      return 'budget';
-    }
-  };
-
   const registerBusiness = async (formData: BusinessFormData) => {
     console.log('Starting business registration process...');
     console.log('Form data received:', {
@@ -156,17 +143,13 @@ export const useBusinessRegistration = () => {
 
       console.log(`Successfully uploaded ${imageUrls.length} images:`, imageUrls);
 
-      // Determine pricing category based on actual prices
-      const pricingCategory = determinePricingCategory(formData.monthlyPrice, formData.sessionPrice);
-      console.log('Determined pricing category:', pricingCategory);
-
-      // Insert business profile
+      // Insert business profile - use the selected tier directly
       console.log('Inserting business profile to database...');
       const businessData = {
         user_id: user.id,
         business_name: formData.businessName.trim(),
         business_type: formData.businessType,
-        category: pricingCategory, // Use determined category instead of "standard"
+        category: formData.category, // Use the selected tier directly
         email: formData.email.trim().toLowerCase(),
         phone: formData.phone.trim(),
         address: formData.address.trim(),
@@ -217,7 +200,7 @@ export const useBusinessRegistration = () => {
       if (error.code === '23505') {
         toast.error('A business profile with this email already exists.');
       } else if (error.code === '23514' && error.message.includes('category_check')) {
-        toast.error('Invalid pricing category. Please check your pricing information.');
+        toast.error('Invalid pricing category. Please check your tier selection.');
       } else {
         toast.error(error.message || 'Failed to register business. Please try again.');
       }

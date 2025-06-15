@@ -25,6 +25,7 @@ const RegisterBusiness = () => {
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [businessType, setBusinessType] = useState("");
   const [businessImages, setBusinessImages] = useState<File[]>([]);
+  const [selectedTier, setSelectedTier] = useState("");
   
   const [formData, setFormData] = useState({
     businessName: "",
@@ -83,7 +84,7 @@ const RegisterBusiness = () => {
     if (!formData.businessName || !businessType || 
         !formData.email || !formData.phone || !formData.address || 
         !formData.city || !formData.state || !formData.pinCode ||
-        !formData.openingTime || !formData.closingTime) {
+        !formData.openingTime || !formData.closingTime || !selectedTier) {
       alert("Please fill in all required fields");
       return;
     }
@@ -91,7 +92,7 @@ const RegisterBusiness = () => {
     const businessFormData = {
       ...formData,
       businessType,
-      category: "budget", // This will be determined automatically based on pricing
+      category: selectedTier, // Use selected tier instead of hardcoded value
       amenities: selectedAmenities,
       images: businessImages
     };
@@ -117,6 +118,7 @@ const RegisterBusiness = () => {
       setSelectedAmenities([]);
       setBusinessType("");
       setBusinessImages([]);
+      setSelectedTier("");
       navigate('/');
     }
   };
@@ -145,7 +147,7 @@ const RegisterBusiness = () => {
   };
 
   const validateOperations = () => {
-    if (!formData.openingTime || !formData.closingTime) return false;
+    if (!formData.openingTime || !formData.closingTime || !selectedTier) return false;
     const opening = new Date(`2000-01-01T${formData.openingTime}`);
     const closing = new Date(`2000-01-01T${formData.closingTime}`);
     return opening < closing;
@@ -222,10 +224,10 @@ const RegisterBusiness = () => {
     {
       id: "operations",
       title: "Operations",
-      description: "Hours and pricing",
+      description: "Hours, pricing & tier",
       validate: validateOperations,
       component: (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 gap-10">
           <OperatingHoursForm 
             openingTime={formData.openingTime}
             closingTime={formData.closingTime}
@@ -235,8 +237,10 @@ const RegisterBusiness = () => {
           <PricingForm 
             monthlyPrice={formData.monthlyPrice}
             sessionPrice={formData.sessionPrice}
+            tier={selectedTier}
             onMonthlyPriceChange={(monthlyPrice) => setFormData(prev => ({ ...prev, monthlyPrice }))}
             onSessionPriceChange={(sessionPrice) => setFormData(prev => ({ ...prev, sessionPrice }))}
+            onTierChange={setSelectedTier}
           />
         </div>
       )

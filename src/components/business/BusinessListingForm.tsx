@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Upload, X, MapPin, Clock, Phone, Mail, Building, Star } from 'lucide-react';
+import { Upload, X, MapPin, Clock, Phone, Mail, Building, Star, Crown, Diamond, IndianRupee } from 'lucide-react';
 
 const BusinessListingForm = () => {
   const { user } = useAuth();
@@ -32,7 +32,7 @@ const BusinessListingForm = () => {
     monthly_price: '',
     session_price: '',
     amenities: [] as string[],
-    category_level: ''
+    tier: ''
   });
 
   const businessTypes = [
@@ -51,10 +51,10 @@ const BusinessListingForm = () => {
     'Sports & Recreation'
   ];
 
-  const categoryLevels = [
-    { value: 'budget', label: 'Budget Friendly', icon: '💰', desc: 'Affordable options for everyone' },
-    { value: 'premium', label: 'Premium', icon: '⭐', desc: 'Quality services with great value' },
-    { value: 'luxury', label: 'Luxury', icon: '👑', desc: 'Premium experience with top amenities' }
+  const tiers = [
+    { value: 'budget', label: 'Budget Friendly', icon: IndianRupee, color: 'from-green-500 to-green-600', desc: 'Affordable options for everyone' },
+    { value: 'premium', label: 'Premium', icon: Diamond, color: 'from-blue-500 to-blue-600', desc: 'Quality services with great value' },
+    { value: 'luxury', label: 'Luxury', icon: Crown, color: 'from-yellow-500 to-yellow-600', desc: 'Premium experience with top amenities' }
   ];
 
   const amenitiesList = [
@@ -131,7 +131,7 @@ const BusinessListingForm = () => {
           user_id: user.id,
           business_name: formData.business_name,
           business_type: formData.business_type,
-          category: formData.category,
+          category: formData.tier, // Use tier instead of category
           description: formData.description,
           address: formData.address,
           city: formData.city,
@@ -169,7 +169,7 @@ const BusinessListingForm = () => {
         monthly_price: '',
         session_price: '',
         amenities: [],
-        category_level: ''
+        tier: ''
       });
       setImages([]);
     } catch (error: any) {
@@ -224,22 +224,6 @@ const BusinessListingForm = () => {
               </div>
 
               <div>
-                <Label htmlFor="category">Category *</Label>
-                <Select value={formData.category} onValueChange={(value) => setFormData({...formData, category: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map(cat => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
                 <Label htmlFor="phone">Phone Number *</Label>
                 <Input
                   id="phone"
@@ -263,24 +247,26 @@ const BusinessListingForm = () => {
               </div>
             </div>
 
-            {/* Category Level Selection */}
+            {/* Tier Selection */}
             <div>
-              <Label>Category Level *</Label>
+              <Label>Business Tier *</Label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                {categoryLevels.map(level => (
+                {tiers.map(tier => (
                   <Card 
-                    key={level.value}
+                    key={tier.value}
                     className={`cursor-pointer transition-all ${
-                      formData.category_level === level.value 
+                      formData.tier === tier.value 
                         ? 'ring-2 ring-blue-500 bg-blue-50' 
                         : 'hover:shadow-md'
                     }`}
-                    onClick={() => setFormData({...formData, category_level: level.value})}
+                    onClick={() => setFormData({...formData, tier: tier.value})}
                   >
                     <CardContent className="p-4 text-center">
-                      <div className="text-2xl mb-2">{level.icon}</div>
-                      <h3 className="font-semibold">{level.label}</h3>
-                      <p className="text-sm text-gray-600">{level.desc}</p>
+                      <div className={`w-12 h-12 bg-gradient-to-r ${tier.color} rounded-xl flex items-center justify-center mx-auto mb-2`}>
+                        <tier.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="font-semibold">{tier.label}</h3>
+                      <p className="text-sm text-gray-600">{tier.desc}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -458,7 +444,7 @@ const BusinessListingForm = () => {
 
             <Button 
               type="submit" 
-              disabled={loading || !formData.business_name || !formData.business_type || !formData.category_level}
+              disabled={loading || !formData.business_name || !formData.business_type || !formData.tier}
               className="w-full"
             >
               {loading ? 'Creating Listing...' : 'Create Business Listing'}
