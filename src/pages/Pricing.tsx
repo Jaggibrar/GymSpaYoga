@@ -155,7 +155,7 @@ const FAQ = [
 
 const Pricing = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
+    <div className="min-h-screen bg-gradient-to-b from-[#f8fbff] to-[#ecfdf5] overflow-x-hidden">
       <SEOHead 
         title="Pricing Plans - Grow Your Wellness Business | GymSpaYoga"
         description="Choose the perfect pricing plan for your gym, spa, or yoga studio. One-time registration with performance-based lead charges. Start growing today!"
@@ -164,37 +164,63 @@ const Pricing = () => {
         structuredData={structuredData}
       />
 
-      {/* Hero header */}
-      <div className="mx-auto text-center pt-20 pb-10 max-w-2xl">
-        <Badge className="bg-emerald-100 text-emerald-700 mb-3 px-4 py-2 text-base font-medium">Special Offer: Save up to ₹2,000</Badge>
-        <h1 className="text-5xl font-black text-gray-900 mb-6">Simple, Transparent Pricing</h1>
-        <p className="text-xl text-gray-600 font-light mb-6">Pick the plan crafted for your business journey. Growing brands trust GymSpaYoga.</p>
+      {/* Premium Hero Header */}
+      <div className="mx-auto text-center pt-24 pb-12 max-w-2xl">
+        <Badge className="bg-gradient-to-r from-emerald-200 via-teal-200 to-blue-200 text-emerald-800 mb-4 px-5 py-2 text-base font-bold rounded-full shadow-glass animate-float">
+          <span className="mr-2">🚀</span>Special Offer: Save up to ₹2,000
+        </Badge>
+        <h1 className="text-5xl md:text-6xl font-extrabold gradient-text mb-6 drop-shadow-lg animate-scale-in">
+          Unlock Limitless Growth
+        </h1>
+        <p className="text-2xl text-gray-700 font-light mb-7">
+          Choose a premium plan—grow at your own pace, with zero hidden fees.
+        </p>
       </div>
 
-      {/* Pricing Tables (Supabase style) */}
-      <section className="py-8 max-w-6xl mx-auto px-2">
-        <div className="flex flex-col lg:flex-row gap-8 justify-center">
+      {/* Premium Pricing Cards Section */}
+      <section className="py-12 max-w-6xl mx-auto px-3">
+        <div className="flex flex-col lg:flex-row gap-12 justify-center items-center lg:items-stretch">
           {pricingPlans.map((plan, idx) => (
-            <Card key={plan.name}
+            <Card
+              key={plan.name}
               className={`
-                flex-1 min-w-[325px] border-2 px-4 
-                ${plan.highlight ? "border-emerald-400 scale-105 ring-4 ring-emerald-100 shadow-xl z-10" : "border-gray-200 shadow-md"}
+                flex-1 min-w-[325px] max-w-[410px] relative px-6 hover-lift
+                bg-white/50 glass-glow rounded-3xl border-none shadow-xl
                 transition-all duration-300
+                ${plan.highlight
+                  ? "z-20 animate-float border-2 border-gradient bg-white/80 shadow-2xl scale-105 ring-8 ring-emerald-100"
+                  : "shadow-md"}
               `}
+              style={
+                plan.highlight
+                  ? {
+                      borderImage: "linear-gradient(90deg, #10b981 0%, #3b82f6 100%) 1",
+                      boxShadow: "0 12px 32px rgba(16,185,129,0.15), 0 1.5px 8px rgba(0,0,0,0.08)",
+                    }
+                  : { }
+              }
             >
+              {/* Card Glow & Shine */}
+              {plan.highlight && (
+                <div className="absolute inset-0 pointer-events-none z-10 rounded-3xl ring-1 ring-emerald-300 shadow-lg animate-glow"></div>
+              )}
+              
               {/* Plan Header */}
-              <CardHeader className="py-8 flex flex-col items-center bg-gradient-to-r from-emerald-50 to-blue-50 rounded-xl mb-5 relative">
-                <span className={`absolute top-6 right-7`}>
+              <CardHeader className={`py-10 flex flex-col items-center bg-gradient-to-br from-white/70 via-blue-50 to-emerald-50 rounded-2xl mb-5 shadow-md relative overflow-visible`}>
+                <span className="absolute top-5 right-6">
                   {plan.highlight && (
-                    <Badge className="bg-emerald-500 text-white px-3 py-2 text-xs">Most Popular</Badge>
+                    <Badge className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 text-sm font-black drop-shadow-lg tracking-wide animate-pulse animate-delay-2000 glass-strong">
+                      <Star className="h-5 w-5 inline mr-1 -mt-1" />
+                      Most Popular
+                    </Badge>
                   )}
                 </span>
-                <div className="mb-5">{plan.icon}</div>
-                <CardTitle className="text-3xl font-extrabold text-gray-800 mb-2">{plan.name}</CardTitle>
-                <div className="text-gray-500 text-sm mb-2">{plan.description}</div>
-                <div className="flex items-end mb-2">
-                  <span className="text-4xl sm:text-5xl font-black text-gray-900">{plan.price}</span>
-                  <span className="text-lg text-gray-400 ml-2 line-through">{plan.originalPrice}</span>
+                <div className="mb-6 animate-float">{plan.icon}</div>
+                <CardTitle className="text-3xl font-extrabold text-transparent gradient-text bg-clip-text mb-2">{plan.name}</CardTitle>
+                <div className="text-gray-500 text-sm mb-3">{plan.description}</div>
+                <div className="flex items-end gap-2 mb-2">
+                  <span className="text-5xl font-black text-gray-900 leading-none">{plan.price}</span>
+                  <span className="text-lg text-gray-400 line-through">{plan.originalPrice}</span>
                 </div>
               </CardHeader>
 
@@ -202,14 +228,25 @@ const Pricing = () => {
               <CardContent>
                 <ul className="mb-8 mt-2 space-y-4">
                   {plan.features.filter(f => !f.startsWith("Everything in")).map((feature, fi) => (
-                    <li className="flex items-center" key={fi}>
-                      <Check className="h-5 w-5 text-emerald-500 mr-2" />
-                      <span className="text-sm text-gray-700">{feature}</span>
+                    <li className="flex items-center group" key={fi}>
+                      <span className="relative mr-3">
+                        <Check className="h-5 w-5 text-emerald-500 transition-transform group-hover:scale-125 duration-200" />
+                        {/* Animate checkmark on hover */}
+                        <span className="absolute left-0 top-0 w-5 h-5 rounded-full bg-emerald-100 opacity-50 group-hover:scale-110 group-hover:opacity-100 transition-all duration-200"></span>
+                      </span>
+                      <span className="text-base text-gray-700 leading-tight">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link to="/register-business">
-                  <Button className={`w-full py-3 text-lg font-semibold ${plan.highlight ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white" : "bg-white text-emerald-700 border border-emerald-400"}`}>
+                  <Button
+                    className={`
+                      w-full py-4 text-lg font-extrabold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-200
+                      ${plan.highlight
+                        ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white border-none animate-glow"
+                        : "bg-white/80 text-emerald-700 border-2 border-emerald-300 hover:bg-emerald-50"}
+                    `}
+                  >
                     {plan.cta}
                   </Button>
                 </Link>
@@ -218,25 +255,31 @@ const Pricing = () => {
           ))}
         </div>
 
-        {/* Comparison Table (optional for desktop) */}
-        <div className="overflow-x-auto mt-16 rounded-xl border border-gray-100 bg-white shadow md:block hidden">
-          <table className="min-w-full border-collapse text-sm">
+        {/* Feature Comparison Table - subtle glass effect, sticky header */}
+        <div className="overflow-x-auto mt-20 rounded-xl border border-gray-100 bg-white/60 shadow-md md:block hidden">
+          <table className="min-w-full border-collapse text-sm font-medium">
             <thead>
               <tr>
-                <th className="border-b px-4 py-4 text-left text-base text-gray-700 font-bold">Features</th>
+                <th className="border-b px-4 py-5 bg-gradient-to-r from-emerald-100 to-blue-50 text-left text-base text-emerald-700 font-extrabold sticky top-0 z-10">
+                  Features
+                </th>
                 {pricingPlans.map(plan => (
-                  <th key={plan.name} className="border-b px-4 py-4 text-center text-base text-gray-700 font-bold">{plan.name}</th>
+                  <th key={plan.name} className="border-b px-4 py-5 text-center text-base gradient-text font-extrabold bg-gradient-to-br from-white via-blue-50 to-emerald-50 sticky top-0 z-10">
+                    {plan.name}
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {allFeatures.map((feature, idx) => (
-                <tr key={feature} className="even:bg-gray-50">
+                <tr key={feature} className="even:bg-white/30 hover:bg-emerald-50/40 transition-colors">
                   <td className="px-4 py-3">{feature}</td>
                   {pricingPlans.map((_, planIdx) => (
                     <td key={planIdx} className="px-4 py-3 text-center">
                       {planHasFeature(feature, planIdx) ? (
-                        <span className="inline-block"><Check className="h-4 w-4 text-emerald-500 inline" /></span>
+                        <span className="inline-flex justify-center items-center animate-scale-in">
+                          <Check className="h-4 w-4 text-emerald-500 inline" />
+                        </span>
                       ) : (
                         <span className="inline-block text-gray-300">—</span>
                       )}
@@ -249,24 +292,24 @@ const Pricing = () => {
         </div>
       </section>
 
-      {/* "Per Conversion Fee" like Supabase's "Usage-based" */}
-      <section className="mt-20 mx-auto max-w-3xl text-center">
-        <div className="bg-gradient-to-r from-emerald-100 to-blue-100 rounded-2xl p-8 mb-8 shadow">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-2 text-gray-800">Performance-Based Charges</h2>
+      {/* Per Conversion Fee - premium glass highlight */}
+      <section className="mt-24 mx-auto max-w-3xl text-center">
+        <div className="bg-gradient-to-r from-emerald-100/80 to-blue-100/80 rounded-2xl p-10 mb-10 shadow-xl glass-strong border border-emerald-200 flex flex-col items-center justify-center animate-slide-in">
+          <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-text">Performance-Based Charges</h2>
           <div className="flex items-center justify-center gap-4 mb-2">
-            <span className="text-5xl font-extrabold text-emerald-600">₹20</span>
-            <span className="text-xl text-gray-700 font-medium">per paying customer<br className="sm:hidden" /></span>
+            <span className="text-6xl font-black text-emerald-600 animate-pulse">₹20</span>
+            <span className="text-2xl text-gray-700 font-medium leading-tight">per paying customer</span>
           </div>
-          <div className="text-gray-600 text-base">Only pay when we send you a genuine customer. Rest easy—no hidden fees.</div>
+          <div className="text-gray-600 text-base font-medium">Only pay when we send you a genuine customer. Rest easy—no hidden fees.</div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="mt-20 mx-auto max-w-4xl px-2">
-        <h3 className="text-3xl font-bold mb-8 text-gray-800">Frequently Asked Questions</h3>
+      <section className="mt-24 mx-auto max-w-4xl px-2">
+        <h3 className="text-3xl font-bold mb-8 text-gray-800 section-divider">Frequently Asked Questions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {FAQ.map((item, idx) => (
-            <Card key={idx} className="p-6">
+            <Card key={idx} className="p-7 rounded-2xl glass shadow-md">
               <h4 className="text-lg font-semibold text-gray-900 mb-2">{item.q}</h4>
               <div className="text-gray-600 text-base">{item.a}</div>
             </Card>
@@ -275,10 +318,10 @@ const Pricing = () => {
       </section>
 
       {/* CTA */}
-      <section className="mt-20 mx-auto text-center max-w-2xl pb-20">
-        <h4 className="text-2xl font-bold mb-2 text-gray-900">Boost your wellness business growth today!</h4>
+      <section className="mt-24 mx-auto text-center max-w-2xl pb-28">
+        <h4 className="text-2xl font-black mb-2 text-gray-900 gradient-text drop-shadow-lg">Boost your wellness business growth today!</h4>
         <Link to="/register-business">
-          <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-10 py-5 mt-4 font-bold rounded-xl shadow-xl">
+          <Button size="lg" className="btn-brand px-12 py-6 mt-6 font-black rounded-2xl shadow-2xl animate-scale-in text-xl">
             Get Started Now
           </Button>
         </Link>
