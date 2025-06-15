@@ -34,13 +34,15 @@ export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageU
     setSelectedFile(null);
     setPreviewUrl(null);
     
-    // Create a synthetic event to clear the file
-    const event = {
+    // Create a proper synthetic event for clearing the file
+    const syntheticEvent = {
       target: {
-        files: null
+        files: null,
+        value: ''
       }
     } as React.ChangeEvent<HTMLInputElement>;
-    onFileChange(event);
+    
+    onFileChange(syntheticEvent);
   };
 
   return (

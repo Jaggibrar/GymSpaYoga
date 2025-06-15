@@ -42,13 +42,18 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
     setSelectedFiles(newFiles);
     setPreviewUrls(newUrls);
     
-    // Create a synthetic event to pass to onFileChange
-    const event = {
+    // Create a proper synthetic event for the file input
+    const fileList = new DataTransfer();
+    newFiles.forEach(file => fileList.items.add(file));
+    
+    const syntheticEvent = {
       target: {
-        files: newFiles
+        files: fileList.files,
+        value: ''
       }
     } as React.ChangeEvent<HTMLInputElement>;
-    onFileChange(event);
+    
+    onFileChange(syntheticEvent);
   };
 
   return (
