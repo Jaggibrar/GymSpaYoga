@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -20,10 +20,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
+import { toast } from "sonner";
 
 const EnhancedNavigation = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -40,8 +42,15 @@ const EnhancedNavigation = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
-    closeMobileMenu();
+    try {
+      console.log('Sign out button clicked');
+      closeMobileMenu();
+      toast.success("Signing out...");
+      await signOut();
+    } catch (error) {
+      console.error('Error during sign out:', error);
+      toast.error("Error signing out");
+    }
   };
 
   const navItems = [

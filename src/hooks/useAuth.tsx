@@ -64,10 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const initializeAuth = async () => {
       try {
-        // Set up auth state listener first
         const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange);
 
-        // Get initial session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -143,12 +141,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
+      console.log('Signing out user...');
+      
+      // Clear local state immediately
+      setUser(null);
+      setSession(null);
+      setUserProfile(null);
+      
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
+      
       if (error) {
         console.error('Sign out error:', error);
+        // Even if there's an error, we've cleared local state
+      } else {
+        console.log('Successfully signed out');
       }
+      
+      // Force a page refresh to ensure clean state
+      window.location.href = '/';
     } catch (error) {
       console.error('Sign out error:', error);
+      // Clear local state even if sign out fails
+      setUser(null);
+      setSession(null);
+      setUserProfile(null);
+      window.location.href = '/';
     }
   };
 
