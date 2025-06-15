@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useImageUpload } from '@/hooks/useImageUpload';
 import { toast } from 'sonner';
 
 interface TrainerFormData {
@@ -22,54 +23,7 @@ interface TrainerFormData {
 export const useTrainerRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-
-  const uploadProfileImage = async (file: File, userId: string): Promise<string | null> => {
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}/${Date.now()}.${fileExt}`;
-      
-      // First, ensure the bucket exists
-      const { data: buckets } = await supabase.storage.listBuckets();
-      const profileBucket = buckets?.find(bucket => bucket.name === 'profile-images');
-      
-      if (!profileBucket) {
-        // Create the bucket if it doesn't exist
-        const { error: bucketError } = await supabase.storage.createBucket('profile-images', {
-          public: true,
-          allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp']
-        });
-        
-        if (bucketError) {
-          console.error('Error creating bucket:', bucketError);
-          toast.error('Failed to set up image storage. Please try again.');
-          return null;
-        }
-      }
-      
-      const { error: uploadError } = await supabase.storage
-        .from('profile-images')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-      
-      if (uploadError) {
-        console.error('Error uploading image:', uploadError);
-        toast.error('Failed to upload profile image. Please try again.');
-        return null;
-      }
-      
-      const { data } = supabase.storage
-        .from('profile-images')
-        .getPublicUrl(fileName);
-      
-      return data.publicUrl;
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload image. Please try again.');
-      return null;
-    }
-  };
+  const { uploadImage } = useImageUpload();
 
   const validateFormData = (formData: TrainerFormData): string[] => {
     const errors: string[] = [];
@@ -83,6 +37,7 @@ export const useTrainerRegistration = () => {
     if (!formData.hourlyRate) errors.push('Hourly rate is required');
     if (!formData.location.trim()) errors.push('Location is required');
     if (!formData.bio.trim()) errors.push('Bio is required');
+    if (!formData.profileImage) errors.push('Profile image is required');
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -127,17 +82,6 @@ export const useTrainerRegistration = () => {
     setLoading(true);
     
     try {
-      let profileImageUrl = null;
-      
-      // Upload profile image if provided
-      if (formData.profileImage) {
-        profileImageUrl = await uploadProfileImage(formData.profileImage, user.id);
-        if (!profileImageUrl) {
-          setLoading(false);
-          return false;
-        }
-      }
-
       // Check if trainer profile already exists
       const { data: existingProfile } = await supabase
         .from('trainer_profiles')
@@ -149,6 +93,16 @@ export const useTrainerRegistration = () => {
         toast.error('You already have a trainer profile. Please contact support if you need to update it.');
         setLoading(false);
         return false;
+      }
+
+      // Upload profile image
+      let profileImageUrl = null;
+      if (formData.profileImage) {
+        profileImageUrl = await uploadImage(formData.profileImage, 'trainers');
+        if (!profileImageUrl) {
+          setLoading(false);
+          return false;
+        }
       }
 
       // Insert trainer profile
@@ -168,14 +122,20 @@ export const useTrainerRegistration = () => {
           location: formData.location.trim(),
           bio: formData.bio.trim(),
           profile_image_url: profileImageUrl,
-          status: 'pending'
+          status: 'approved' // Auto-approve for now, can be changed to 'pending' for manual approval
         });
 
       if (error) {
         throw error;
       }
 
-      toast.success('Trainer registration submitted successfully! We will review your application and get back to you soon.');
+      // Update user profile role to business_owner (trainers are also business owners)
+      await supabase
+        .from('user_profiles')
+        .update({ role: 'business_owner' })
+        .eq('user_id', user.id);
+
+      toast.success('Trainer registration completed successfully! Your listing is now live.');
       setLoading(false);
       return true;
     } catch (error: any) {

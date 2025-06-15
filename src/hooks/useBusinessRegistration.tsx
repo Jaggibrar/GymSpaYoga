@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useImageUpload } from '@/hooks/useImageUpload';
 import { toast } from 'sonner';
 
 interface BusinessFormData {
@@ -26,57 +27,7 @@ interface BusinessFormData {
 export const useBusinessRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-
-  const uploadBusinessImages = async (files: File[], userId: string): Promise<string[]> => {
-    try {
-      // Ensure the bucket exists
-      const { data: buckets } = await supabase.storage.listBuckets();
-      const profileBucket = buckets?.find(bucket => bucket.name === 'profile-images');
-      
-      if (!profileBucket) {
-        const { error: bucketError } = await supabase.storage.createBucket('profile-images', {
-          public: true,
-          allowedMimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp']
-        });
-        
-        if (bucketError) {
-          console.error('Error creating bucket:', bucketError);
-          toast.error('Failed to set up image storage. Please try again.');
-          return [];
-        }
-      }
-
-      const uploadPromises = files.map(async (file, index) => {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${userId}/business/${Date.now()}_${index}.${fileExt}`;
-        
-        const { error } = await supabase.storage
-          .from('profile-images')
-          .upload(fileName, file, {
-            cacheControl: '3600',
-            upsert: false
-          });
-        
-        if (error) {
-          console.error('Error uploading image:', error);
-          return null;
-        }
-        
-        const { data } = supabase.storage
-          .from('profile-images')
-          .getPublicUrl(fileName);
-        
-        return data.publicUrl;
-      });
-
-      const urls = await Promise.all(uploadPromises);
-      return urls.filter(url => url !== null) as string[];
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload images. Please try again.');
-      return [];
-    }
-  };
+  const { uploadMultipleImages } = useImageUpload();
 
   const validateFormData = (formData: BusinessFormData): string[] => {
     const errors: string[] = [];
@@ -92,6 +43,7 @@ export const useBusinessRegistration = () => {
     if (!formData.pinCode.trim()) errors.push('PIN code is required');
     if (!formData.openingTime) errors.push('Opening time is required');
     if (!formData.closingTime) errors.push('Closing time is required');
+    if (!formData.description.trim()) errors.push('Description is required');
     
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -129,6 +81,11 @@ export const useBusinessRegistration = () => {
       errors.push('Session price must be a valid positive number');
     }
     
+    // Image validation
+    if (formData.images.length < 1) {
+      errors.push('Please upload at least 1 business image');
+    }
+    
     return errors;
   };
 
@@ -148,13 +105,6 @@ export const useBusinessRegistration = () => {
     setLoading(true);
     
     try {
-      let imageUrls: string[] = [];
-      
-      // Upload business images if provided
-      if (formData.images && formData.images.length > 0) {
-        imageUrls = await uploadBusinessImages(formData.images, user.id);
-      }
-
       // Check if business profile already exists
       const { data: existingProfile } = await supabase
         .from('business_profiles')
@@ -164,6 +114,14 @@ export const useBusinessRegistration = () => {
 
       if (existingProfile) {
         toast.error('You already have a business profile. Please contact support if you need to update it.');
+        setLoading(false);
+        return false;
+      }
+
+      // Upload business images
+      const imageUrls = await uploadMultipleImages(formData.images, 'business');
+      if (imageUrls.length === 0 && formData.images.length > 0) {
+        toast.error('Failed to upload images. Please try again.');
         setLoading(false);
         return false;
       }
@@ -189,14 +147,20 @@ export const useBusinessRegistration = () => {
           description: formData.description.trim(),
           amenities: formData.amenities,
           image_urls: imageUrls,
-          status: 'pending'
+          status: 'approved' // Auto-approve for now, can be changed to 'pending' for manual approval
         });
 
       if (error) {
         throw error;
       }
 
-      toast.success('Business registration submitted successfully! We will review your application and get back to you soon.');
+      // Update user profile role to business_owner
+      await supabase
+        .from('user_profiles')
+        .update({ role: 'business_owner' })
+        .eq('user_id', user.id);
+
+      toast.success('Business registered successfully! Your listing is now live.');
       setLoading(false);
       return true;
     } catch (error: any) {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, MapPin, Star, Users, Award, Dumbbell, Waves, Heart, Shield, Zap, Target, CheckCircle, ArrowRight, Play, UserPlus, Building2, Diamond, IndianRupee, Crown } from "lucide-react";
@@ -13,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import SEOHead from "@/components/SEOHead";
 import OptimizedImage from "@/components/OptimizedImage";
 import GuestBookingModal from "@/components/GuestBookingModal";
+import RecentListings from "@/components/RecentListings";
 
 const Index = () => {
   useScrollToTop();
@@ -290,6 +290,53 @@ const Index = () => {
                   </CardContent>
                 </Card>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recently Listed Section */}
+      <RecentListings />
+
+      {/* Pay Per Use Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-gray-800 mb-4">Pay Per Use</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              No subscriptions required. Pay only for what you use with our flexible booking system.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Single Session",
+                description: "Book individual workout sessions, spa treatments, or yoga classes",
+                icon: <Target className="h-12 w-12 text-blue-600" />,
+                price: "Starting ₹300"
+              },
+              {
+                title: "Day Pass",
+                description: "Access gym facilities for a full day without long-term commitment",
+                icon: <CheckCircle className="h-12 w-12 text-green-600" />,
+                price: "Starting ₹500"
+              },
+              {
+                title: "Package Deals",
+                description: "Bundle multiple sessions for better value and flexibility",
+                icon: <Star className="h-12 w-12 text-purple-600" />,
+                price: "Starting ₹2000"
+              }
+            ].map((option, index) => (
+              <Card key={index} className="text-center p-8 hover:shadow-lg transition-shadow">
+                <div className="flex justify-center mb-4">
+                  {option.icon}
+                </div>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{option.title}</h3>
+                <p className="text-gray-600 mb-4">{option.description}</p>
+                <div className="text-lg font-bold text-blue-600">{option.price}</div>
+              </Card>
             ))}
           </div>
         </div>
