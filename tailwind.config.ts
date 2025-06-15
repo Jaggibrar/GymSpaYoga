@@ -22,11 +22,11 @@ export default {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
-				background: 'hsl(var(--background))',
-				foreground: 'hsl(var(--foreground))',
+				background: '#000000', // set default background to black
+				foreground: '#ffffff', // set default text to white
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#3ECF8E',      // Supabase green for CTA/buttons
+					foreground: '#000000'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -53,14 +53,14 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+					DEFAULT: '#111111',
+					foreground: '#fff',
+					primary: '#3ECF8E',
+					'primary-foreground': '#000',
+					accent: '#222222',
+					'accent-foreground': '#fff',
+					border: '#333',
+					ring: '#3ECF8E'
 				}
 			},
 			borderRadius: {
