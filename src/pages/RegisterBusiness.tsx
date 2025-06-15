@@ -91,11 +91,12 @@ const RegisterBusiness = () => {
     const businessFormData = {
       ...formData,
       businessType,
-      category: "standard", // Set a default category since we removed tier selection
+      category: "budget", // This will be determined automatically based on pricing
       amenities: selectedAmenities,
       images: businessImages
     };
 
+    console.log('Submitting business form with data:', businessFormData);
     const success = await registerBusiness(businessFormData);
     if (success) {
       // Reset form
