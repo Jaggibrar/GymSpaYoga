@@ -1,8 +1,7 @@
-
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useImageUpload } from '@/hooks/useImageUpload';
+import { useTrainerProfileImageUpload } from '@/hooks/useTrainerProfileImageUpload';
 import { toast } from 'sonner';
 
 interface TrainerFormData {
@@ -22,7 +21,7 @@ interface TrainerFormData {
 export const useTrainerRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const { uploadImage } = useImageUpload();
+  const { uploadTrainerProfileImage } = useTrainerProfileImageUpload();
 
   const validateFormData = (formData: TrainerFormData): string[] => {
     const errors: string[] = [];
@@ -93,11 +92,11 @@ export const useTrainerRegistration = () => {
         return false;
       }
 
-      // Upload profile image to trainer-images bucket
+      // Upload profile image using the dedicated trainer profile image upload
       let profileImageUrl = null;
       if (formData.profileImage) {
         console.log('Uploading trainer profile image...');
-        profileImageUrl = await uploadImage(formData.profileImage, 'trainer-images', 'profiles');
+        profileImageUrl = await uploadTrainerProfileImage(formData.profileImage);
         if (!profileImageUrl) {
           setLoading(false);
           return false;

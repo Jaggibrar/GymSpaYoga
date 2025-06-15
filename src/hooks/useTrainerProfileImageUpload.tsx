@@ -4,13 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 
-export const useProfileImageUpload = () => {
+export const useTrainerProfileImageUpload = () => {
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
 
   const validateFile = (file: File): string | null => {
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
-    const maxSize = 2 * 1024 * 1024; // 2MB for profile images
+    const maxSize = 2 * 1024 * 1024; // 2MB for trainer profile images
 
     if (!allowedTypes.includes(file.type)) {
       return 'Please upload a valid image file (JPEG, PNG, GIF, WebP)';
@@ -23,7 +23,7 @@ export const useProfileImageUpload = () => {
     return null;
   };
 
-  const uploadProfileImage = async (file: File): Promise<string | null> => {
+  const uploadTrainerProfileImage = async (file: File): Promise<string | null> => {
     if (!user) {
       toast.error('Please login to upload images');
       return null;
@@ -40,31 +40,31 @@ export const useProfileImageUpload = () => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile.${fileExt}`;
       
-      console.log(`Uploading profile image to: profile-images/${fileName}`);
+      console.log(`Uploading trainer profile image to: trainer-images/${fileName}`);
       
       const { error: uploadError } = await supabase.storage
-        .from('profile-images')
+        .from('trainer-images')
         .upload(fileName, file, { 
           upsert: true,
           cacheControl: '3600'
         });
       
       if (uploadError) {
-        console.error('Profile image upload error:', uploadError);
+        console.error('Trainer profile image upload error:', uploadError);
         toast.error(`Upload failed: ${uploadError.message}`);
         return null;
       }
       
       const { data } = supabase.storage
-        .from('profile-images')
+        .from('trainer-images')
         .getPublicUrl(fileName);
       
-      toast.success('Profile image uploaded successfully!');
-      console.log('Profile upload successful, public URL:', data.publicUrl);
+      toast.success('Trainer profile image uploaded successfully!');
+      console.log('Trainer profile upload successful, public URL:', data.publicUrl);
       return data.publicUrl;
     } catch (err) {
-      console.error('Error uploading profile image:', err);
-      toast.error('Failed to upload profile image');
+      console.error('Error uploading trainer profile image:', err);
+      toast.error('Failed to upload trainer profile image');
       return null;
     } finally {
       setUploading(false);
@@ -72,7 +72,7 @@ export const useProfileImageUpload = () => {
   };
 
   return {
-    uploadProfileImage,
+    uploadTrainerProfileImage,
     uploading,
     validateFile
   };

@@ -2,7 +2,7 @@
 import { Input } from "@/components/ui/input";
 import { Upload, X, AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { useProfileImageUpload } from "@/hooks/useProfileImageUpload";
+import { useTrainerProfileImageUpload } from "@/hooks/useTrainerProfileImageUpload";
 
 interface TrainerProfileImageUploadProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -11,7 +11,7 @@ interface TrainerProfileImageUploadProps {
 export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageUploadProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const { validateFile } = useProfileImageUpload();
+  const { validateFile } = useTrainerProfileImageUpload();
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
