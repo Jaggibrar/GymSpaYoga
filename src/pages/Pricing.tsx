@@ -1,251 +1,247 @@
+
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Check, Star, Zap, Crown } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import SEOHead from "@/components/SEOHead";
 
 const pricingPlans = [
   {
-    tier: "Budget",
-    name: "Budget Friendly",
-    price: "₹2,999",
-    originalPrice: "₹3,999",
-    description: "Perfect for small local businesses getting started",
+    name: "Free",
+    price: "₹0",
+    period: "forever",
+    description: "Perfect for hobby projects and getting started.",
     features: [
-      "Basic business listing",
-      "Up to 10 photos",
-      "Contact information display",
+      "Up to 5 gym/spa listings",
       "Basic customer reviews",
+      "Email support",
       "Mobile app presence",
-      "Business hours display",
-      "Search result inclusion",
-      "Email support"
+      "Basic analytics",
+      "Community support"
     ],
-    cta: "Get Started",
-    highlight: false,
-    icon: <Zap className="h-7 w-7" />,
+    limitations: [
+      "Limited customization",
+      "Basic search visibility",
+      "Standard support"
+    ],
+    cta: "Get started",
+    popular: false,
+    buttonVariant: "outline" as const
   },
   {
-    tier: "Premium",
-    name: "Premium",
-    price: "₹4,999",
-    originalPrice: "₹6,999",
-    description: "Ideal for established businesses looking to grow",
+    name: "Pro",
+    price: "₹2,999",
+    period: "per month",
+    description: "Everything you need to scale your wellness business.",
     features: [
-      "Everything in Budget Friendly",
-      "Up to 25 photos & videos",
+      "Everything in Free",
+      "Unlimited listings",
       "Priority search placement",
       "Advanced analytics dashboard",
       "Customer booking management",
       "Social media integration",
-      "Chat support",
-      "Customer inquiry management",
-      "Basic promotional tools",
-      "Featured listing badge"
+      "Priority email support",
+      "Custom business page design",
+      "Performance insights",
+      "API access"
     ],
-    cta: "Start Premium",
-    highlight: true,
-    icon: <Star className="h-7 w-7" />,
+    limitations: [],
+    cta: "Start free trial",
+    popular: true,
+    buttonVariant: "default" as const
   },
   {
-    tier: "Luxury",
-    name: "Luxury",
+    name: "Team",
     price: "₹7,999",
-    originalPrice: "₹9,999",
-    description: "Premium solution for luxury establishments",
+    period: "per month",
+    description: "Advanced features for teams and enterprises.",
     features: [
-      "Everything in Premium",
-      "Unlimited photos & videos",
-      "Featured business badge",
-      "Top search result placement",
-      "Advanced booking system",
-      "Custom business page design",
-      "Priority customer support",
-      "Advanced marketing tools",
-      "Performance insights",
+      "Everything in Pro",
       "Multi-location support",
-      "White-label booking system",
-      "Dedicated account manager"
+      "Advanced booking system",
+      "White-label solutions",
+      "Dedicated account manager",
+      "Phone & chat support",
+      "Custom integrations",
+      "Advanced security",
+      "SLA guarantee",
+      "Training & onboarding"
     ],
-    cta: "Go Luxury",
-    highlight: false,
-    icon: <Crown className="h-7 w-7" />,
+    limitations: [],
+    cta: "Start free trial",
+    popular: false,
+    buttonVariant: "outline" as const
   }
 ];
 
-// Unified features map for quick table presentation
-const allFeatures = [
-  "Basic business listing",
-  "Up to 10 photos",
-  "Contact information display",
-  "Basic customer reviews",
-  "Mobile app presence",
-  "Business hours display",
-  "Search result inclusion",
-  "Email support",
-
-  "Up to 25 photos & videos",
-  "Priority search placement",
-  "Advanced analytics dashboard",
-  "Customer booking management",
-  "Social media integration",
-  "Chat support",
-  "Customer inquiry management",
-  "Basic promotional tools",
-  "Featured listing badge",
-
-  "Unlimited photos & videos",
-  "Featured business badge",
-  "Top search result placement",
-  "Advanced booking system",
-  "Custom business page design",
-  "Priority customer support",
-  "Advanced marketing tools",
-  "Performance insights",
-  "Multi-location support",
-  "White-label booking system",
-  "Dedicated account manager"
+const comparisonFeatures = [
+  {
+    category: "Platform",
+    features: [
+      { name: "Business listings", free: "5", pro: "Unlimited", team: "Unlimited" },
+      { name: "Customer reviews", free: true, pro: true, team: true },
+      { name: "Mobile app presence", free: true, pro: true, team: true },
+      { name: "API access", free: false, pro: true, team: true },
+      { name: "Custom domain", free: false, pro: false, team: true }
+    ]
+  },
+  {
+    category: "Analytics & Reporting",
+    features: [
+      { name: "Basic analytics", free: true, pro: true, team: true },
+      { name: "Advanced analytics", free: false, pro: true, team: true },
+      { name: "Performance insights", free: false, pro: true, team: true },
+      { name: "Custom reports", free: false, pro: false, team: true },
+      { name: "Data export", free: false, pro: true, team: true }
+    ]
+  },
+  {
+    category: "Support",
+    features: [
+      { name: "Community support", free: true, pro: true, team: true },
+      { name: "Email support", free: true, pro: true, team: true },
+      { name: "Priority support", free: false, pro: true, team: true },
+      { name: "Phone support", free: false, pro: false, team: true },
+      { name: "Dedicated account manager", free: false, pro: false, team: true }
+    ]
+  }
 ];
-
-// What plan contains which feature
-const planHasFeature = (feature: string, planIndex: number) => {
-  const plan = pricingPlans[planIndex];
-  return plan.features.some(f => f === feature || (feature.startsWith("Everything in") && f.startsWith(feature)));
-};
 
 const FAQ = [
   {
-    q: "Is the registration fee refundable?",
-    a: "No, the one-time registration fee is non-refundable as it covers the setup and lifetime listing of your business on our platform.",
-  },
-  {
-    q: "How does the ₹20 per customer charge work?",
-    a: "You only pay ₹20 when we successfully connect you with a genuine customer who books or inquires about your services."
-  },
-  {
-    q: "Can I upgrade my plan later?",
-    a: "Yes, you can upgrade your plan at any time by paying the difference between your current plan and the upgraded plan.",
+    q: "Can I change plans at any time?",
+    a: "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle."
   },
   {
     q: "What payment methods do you accept?",
-    a: "We accept all major credit cards, debit cards, UPI, net banking, and digital wallets for your convenience.",
+    a: "We accept all major credit cards, debit cards, UPI, net banking, and digital wallets."
   },
+  {
+    q: "Is there a free trial?",
+    a: "Yes, we offer a 14-day free trial for all paid plans. No credit card required to start."
+  },
+  {
+    q: "How does the ₹20 per customer charge work?",
+    a: "You only pay ₹20 when we successfully connect you with a genuine customer who books your services."
+  }
 ];
 
-  // Structured data for SEO
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "GymSpaYoga Business Listing Plans",
-    "description": "Professional business listing plans for gyms, spas, and yoga studios in India",
-    "brand": {
-      "@type": "Brand",
-      "name": "GymSpaYoga"
-    },
-    "offers": pricingPlans.map(plan => ({
-      "@type": "Offer",
-      "name": plan.name,
-      "price": plan.price.replace('₹', ''),
-      "priceCurrency": "INR",
-      "description": plan.description,
-      "availability": "https://schema.org/InStock"
-    }))
-  };
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "GymSpaYoga Business Plans",
+  "description": "Professional business listing plans for gyms, spas, and yoga studios",
+  "brand": {
+    "@type": "Brand",
+    "name": "GymSpaYoga"
+  },
+  "offers": pricingPlans.map(plan => ({
+    "@type": "Offer",
+    "name": plan.name,
+    "price": plan.price.replace('₹', ''),
+    "priceCurrency": "INR",
+    "description": plan.description,
+    "availability": "https://schema.org/InStock"
+  }))
+};
 
 const Pricing = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#f8fbff] to-[#ecfdf5] overflow-x-hidden">
+    <div className="min-h-screen bg-white">
       <SEOHead 
-        title="Pricing Plans - Grow Your Wellness Business | GymSpaYoga"
-        description="Choose the perfect pricing plan for your gym, spa, or yoga studio. One-time registration with performance-based lead charges. Start growing today!"
-        keywords="gym pricing, spa pricing, yoga studio pricing, business listing, wellness business growth, fitness center pricing, spa membership plans"
+        title="Pricing - Choose Your Perfect Plan | GymSpaYoga"
+        description="Simple, transparent pricing for gym, spa, and yoga studio owners. Start free, scale as you grow."
+        keywords="pricing, gym software, spa management, yoga studio software, business listing"
         url="https://gymspayoga.com/pricing"
         structuredData={structuredData}
       />
 
-      {/* Premium Hero Header */}
-      <div className="mx-auto text-center pt-24 pb-12 max-w-2xl">
-        <Badge className="bg-gradient-to-r from-emerald-200 via-teal-200 to-blue-200 text-emerald-800 mb-4 px-5 py-2 text-base font-bold rounded-full shadow-glass animate-float">
-          <span className="mr-2">🚀</span>Special Offer: Save up to ₹2,000
-        </Badge>
-        <h1 className="text-5xl md:text-6xl font-extrabold gradient-text mb-6 drop-shadow-lg animate-scale-in">
-          Unlock Limitless Growth
-        </h1>
-        <p className="text-2xl text-gray-700 font-light mb-7">
-          Choose a premium plan—grow at your own pace, with zero hidden fees.
-        </p>
+      {/* Header */}
+      <div className="relative">
+        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
+          <div className="mx-auto max-w-4xl text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Simple, transparent pricing
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Choose the perfect plan for your wellness business. Always know what you'll pay.
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Premium Pricing Cards Section */}
-      <section className="py-12 max-w-6xl mx-auto px-3">
-        <div className="flex flex-col lg:flex-row gap-12 justify-center items-center lg:items-stretch">
-          {pricingPlans.map((plan, idx) => (
-            <Card
-              key={plan.name}
-              className={`
-                flex-1 min-w-[325px] max-w-[410px] relative px-6 hover-lift
-                bg-white/50 glass-glow rounded-3xl border-none shadow-xl
-                transition-all duration-300
-                ${plan.highlight
-                  ? "z-20 animate-float border-2 border-gradient bg-white/80 shadow-2xl scale-105 ring-8 ring-emerald-100"
-                  : "shadow-md"}
-              `}
-              style={
-                plan.highlight
-                  ? {
-                      borderImage: "linear-gradient(90deg, #10b981 0%, #3b82f6 100%) 1",
-                      boxShadow: "0 12px 32px rgba(16,185,129,0.15), 0 1.5px 8px rgba(0,0,0,0.08)",
-                    }
-                  : { }
-              }
+      {/* Pricing Cards */}
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mx-auto max-w-md grid gap-8 lg:max-w-none lg:grid-cols-3">
+          {pricingPlans.map((plan) => (
+            <Card 
+              key={plan.name} 
+              className={`relative rounded-3xl p-8 ring-1 ring-gray-200 ${
+                plan.popular ? 'bg-gray-900 ring-gray-900' : 'bg-white'
+              }`}
             >
-              {/* Card Glow & Shine */}
-              {plan.highlight && (
-                <div className="absolute inset-0 pointer-events-none z-10 rounded-3xl ring-1 ring-emerald-300 shadow-lg animate-glow"></div>
+              {plan.popular && (
+                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-1">
+                  Most popular
+                </Badge>
               )}
               
-              {/* Plan Header */}
-              <CardHeader className={`py-10 flex flex-col items-center bg-gradient-to-br from-white/70 via-blue-50 to-emerald-50 rounded-2xl mb-5 shadow-md relative overflow-visible`}>
-                <span className="absolute top-5 right-6">
-                  {plan.highlight && (
-                    <Badge className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 text-sm font-black drop-shadow-lg tracking-wide animate-pulse animate-delay-2000 glass-strong">
-                      <Star className="h-5 w-5 inline mr-1 -mt-1" />
-                      Most Popular
-                    </Badge>
-                  )}
-                </span>
-                <div className="mb-6 animate-float">{plan.icon}</div>
-                <CardTitle className="text-3xl font-extrabold text-transparent gradient-text bg-clip-text mb-2">{plan.name}</CardTitle>
-                <div className="text-gray-500 text-sm mb-3">{plan.description}</div>
-                <div className="flex items-end gap-2 mb-2">
-                  <span className="text-5xl font-black text-gray-900 leading-none">{plan.price}</span>
-                  <span className="text-lg text-gray-400 line-through">{plan.originalPrice}</span>
+              <CardHeader className="p-0">
+                <div className="flex items-center justify-between gap-x-4">
+                  <h3 className={`text-lg font-semibold leading-8 ${
+                    plan.popular ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {plan.name}
+                  </h3>
                 </div>
+                <p className={`mt-4 text-sm leading-6 ${
+                  plan.popular ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  {plan.description}
+                </p>
+                <p className="mt-6 flex items-baseline gap-x-1">
+                  <span className={`text-4xl font-bold tracking-tight ${
+                    plan.popular ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {plan.price}
+                  </span>
+                  <span className={`text-sm font-semibold leading-6 ${
+                    plan.popular ? 'text-gray-300' : 'text-gray-600'
+                  }`}>
+                    /{plan.period}
+                  </span>
+                </p>
               </CardHeader>
 
-              {/* Features */}
-              <CardContent>
-                <ul className="mb-8 mt-2 space-y-4">
-                  {plan.features.filter(f => !f.startsWith("Everything in")).map((feature, fi) => (
-                    <li className="flex items-center group" key={fi}>
-                      <span className="relative mr-3">
-                        <Check className="h-5 w-5 text-emerald-500 transition-transform group-hover:scale-125 duration-200" />
-                        {/* Animate checkmark on hover */}
-                        <span className="absolute left-0 top-0 w-5 h-5 rounded-full bg-emerald-100 opacity-50 group-hover:scale-110 group-hover:opacity-100 transition-all duration-200"></span>
+              <CardContent className="p-0 mt-8">
+                <ul className="mt-8 space-y-3 text-sm leading-6">
+                  {plan.features.map((feature) => (
+                    <li key={feature} className="flex gap-x-3">
+                      <Check className={`h-6 w-5 flex-none ${
+                        plan.popular ? 'text-indigo-400' : 'text-indigo-600'
+                      }`} />
+                      <span className={plan.popular ? 'text-gray-300' : 'text-gray-600'}>
+                        {feature}
                       </span>
-                      <span className="text-base text-gray-700 leading-tight">{feature}</span>
+                    </li>
+                  ))}
+                  {plan.limitations.map((limitation) => (
+                    <li key={limitation} className="flex gap-x-3">
+                      <X className="h-6 w-5 flex-none text-gray-400" />
+                      <span className="text-gray-400">{limitation}</span>
                     </li>
                   ))}
                 </ul>
-                <Link to="/register-business">
-                  <Button
-                    className={`
-                      w-full py-4 text-lg font-extrabold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-200
-                      ${plan.highlight
-                        ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white border-none animate-glow"
-                        : "bg-white/80 text-emerald-700 border-2 border-emerald-300 hover:bg-emerald-50"}
-                    `}
+
+                <Link to="/register-business" className="block mt-8">
+                  <Button 
+                    className={`w-full ${
+                      plan.popular 
+                        ? 'bg-indigo-500 text-white hover:bg-indigo-400 focus-visible:outline-indigo-500' 
+                        : 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
+                    }`}
+                    variant={plan.buttonVariant}
                   >
                     {plan.cta}
                   </Button>
@@ -254,78 +250,141 @@ const Pricing = () => {
             </Card>
           ))}
         </div>
+      </div>
 
-        {/* Feature Comparison Table - subtle glass effect, sticky header */}
-        <div className="overflow-x-auto mt-20 rounded-xl border border-gray-100 bg-white/60 shadow-md md:block hidden">
-          <table className="min-w-full border-collapse text-sm font-medium">
-            <thead>
-              <tr>
-                <th className="border-b px-4 py-5 bg-gradient-to-r from-emerald-100 to-blue-50 text-left text-base text-emerald-700 font-extrabold sticky top-0 z-10">
-                  Features
-                </th>
-                {pricingPlans.map(plan => (
-                  <th key={plan.name} className="border-b px-4 py-5 text-center text-base gradient-text font-extrabold bg-gradient-to-br from-white via-blue-50 to-emerald-50 sticky top-0 z-10">
-                    {plan.name}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {allFeatures.map((feature, idx) => (
-                <tr key={feature} className="even:bg-white/30 hover:bg-emerald-50/40 transition-colors">
-                  <td className="px-4 py-3">{feature}</td>
-                  {pricingPlans.map((_, planIdx) => (
-                    <td key={planIdx} className="px-4 py-3 text-center">
-                      {planHasFeature(feature, planIdx) ? (
-                        <span className="inline-flex justify-center items-center animate-scale-in">
-                          <Check className="h-4 w-4 text-emerald-500 inline" />
-                        </span>
-                      ) : (
-                        <span className="inline-block text-gray-300">—</span>
-                      )}
-                    </td>
+      {/* Feature Comparison */}
+      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div className="mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Compare features
+          </h2>
+          <p className="mt-6 text-lg leading-8 text-gray-600">
+            Choose the plan that's right for you
+          </p>
+        </div>
+
+        <div className="mx-auto mt-16 max-w-5xl">
+          <div className="grid grid-cols-1 gap-y-16">
+            {comparisonFeatures.map((category) => (
+              <div key={category.category}>
+                <h3 className="text-lg font-semibold leading-8 text-gray-900">
+                  {category.category}
+                </h3>
+                <div className="mt-4 space-y-4">
+                  {category.features.map((feature) => (
+                    <div key={feature.name} className="grid grid-cols-4 gap-x-6 py-4 border-b border-gray-200">
+                      <div className="text-sm leading-6 text-gray-900 font-medium">
+                        {feature.name}
+                      </div>
+                      <div className="text-center">
+                        {typeof feature.free === 'boolean' ? (
+                          feature.free ? (
+                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                          ) : (
+                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                          )
+                        ) : (
+                          <span className="text-sm text-gray-600">{feature.free}</span>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        {typeof feature.pro === 'boolean' ? (
+                          feature.pro ? (
+                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                          ) : (
+                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                          )
+                        ) : (
+                          <span className="text-sm text-gray-600">{feature.pro}</span>
+                        )}
+                      </div>
+                      <div className="text-center">
+                        {typeof feature.team === 'boolean' ? (
+                          feature.team ? (
+                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                          ) : (
+                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                          )
+                        ) : (
+                          <span className="text-sm text-gray-600">{feature.team}</span>
+                        )}
+                      </div>
+                    </div>
                   ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Per Conversion Fee - premium glass highlight */}
-      <section className="mt-24 mx-auto max-w-3xl text-center">
-        <div className="bg-gradient-to-r from-emerald-100/80 to-blue-100/80 rounded-2xl p-10 mb-10 shadow-xl glass-strong border border-emerald-200 flex flex-col items-center justify-center animate-slide-in">
-          <h2 className="text-3xl sm:text-4xl font-black mb-2 gradient-text">Performance-Based Charges</h2>
-          <div className="flex items-center justify-center gap-4 mb-2">
-            <span className="text-6xl font-black text-emerald-600 animate-pulse">₹20</span>
-            <span className="text-2xl text-gray-700 font-medium leading-tight">per paying customer</span>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="text-gray-600 text-base font-medium">Only pay when we send you a genuine customer. Rest easy—no hidden fees.</div>
         </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section className="mt-24 mx-auto max-w-4xl px-2">
-        <h3 className="text-3xl font-bold mb-8 text-gray-800 section-divider">Frequently Asked Questions</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-          {FAQ.map((item, idx) => (
-            <Card key={idx} className="p-7 rounded-2xl glass shadow-md">
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">{item.q}</h4>
-              <div className="text-gray-600 text-base">{item.a}</div>
-            </Card>
-          ))}
+        {/* Column Headers for comparison table */}
+        <div className="grid grid-cols-4 gap-x-6 border-b border-gray-200 pb-4 mb-8">
+          <div></div>
+          <div className="text-center text-sm font-semibold text-gray-900">Free</div>
+          <div className="text-center text-sm font-semibold text-gray-900">Pro</div>
+          <div className="text-center text-sm font-semibold text-gray-900">Team</div>
         </div>
-      </section>
+      </div>
+
+      {/* Performance-based pricing */}
+      <div className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+              Performance-based pricing
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Only pay for results. ₹20 per genuine customer booking.
+            </p>
+            <div className="mt-8 flex items-center justify-center gap-x-2">
+              <span className="text-5xl font-bold text-indigo-600">₹20</span>
+              <span className="text-lg text-gray-600">per customer booking</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 text-center mb-16">
+            Frequently asked questions
+          </h2>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {FAQ.map((item, index) => (
+              <div key={index}>
+                <h3 className="text-lg font-semibold leading-8 text-gray-900">
+                  {item.q}
+                </h3>
+                <p className="mt-4 text-base leading-7 text-gray-600">
+                  {item.a}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* CTA */}
-      <section className="mt-24 mx-auto text-center max-w-2xl pb-28">
-        <h4 className="text-2xl font-black mb-2 text-gray-900 gradient-text drop-shadow-lg">Boost your wellness business growth today!</h4>
-        <Link to="/register-business">
-          <Button size="lg" className="btn-brand px-12 py-6 mt-6 font-black rounded-2xl shadow-2xl animate-scale-in text-xl">
-            Get Started Now
-          </Button>
-        </Link>
-      </section>
+      <div className="bg-gray-50">
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+              Ready to get started?
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Join thousands of wellness businesses already growing with our platform.
+            </p>
+            <div className="mt-8">
+              <Link to="/register-business">
+                <Button size="lg" className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3">
+                  Start your free trial
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
