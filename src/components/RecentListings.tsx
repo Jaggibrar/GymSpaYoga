@@ -1,9 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Star, Crown, Diamond, IndianRupee } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 import OptimizedImage from '@/components/OptimizedImage';
 
 interface RecentListing {
@@ -22,6 +22,7 @@ interface RecentListing {
 const RecentListings = () => {
   const [listings, setListings] = useState<RecentListing[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecentListings = async () => {
@@ -62,6 +63,23 @@ const RecentListings = () => {
       supabase.removeChannel(channel);
     };
   }, []);
+
+  const handleCardClick = (listing: RecentListing) => {
+    const businessType = listing.business_type.toLowerCase();
+    switch (businessType) {
+      case 'gym':
+        navigate(`/gyms`);
+        break;
+      case 'spa':
+        navigate(`/spas`);
+        break;
+      case 'yoga':
+        navigate(`/yoga`);
+        break;
+      default:
+        navigate(`/explore`);
+    }
+  };
 
   const getTierIcon = (price?: number) => {
     if (!price) return <IndianRupee className="h-4 w-4" />;
@@ -116,7 +134,11 @@ const RecentListings = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.map((listing) => (
-            <Card key={listing.id} className="overflow-hidden hover:shadow-lg transition-shadow group cursor-pointer">
+            <Card 
+              key={listing.id} 
+              className="overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer transform hover:scale-105"
+              onClick={() => handleCardClick(listing)}
+            >
               <div className="relative h-48 overflow-hidden">
                 <OptimizedImage 
                   src={listing.image_urls[0] || "/placeholder.svg"} 
@@ -134,13 +156,13 @@ const RecentListings = () => {
               </div>
               
               <CardContent className="p-4">
-                <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-1">{listing.business_name}</h3>
+                <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">{listing.business_name}</h3>
                 <div className="flex items-center text-gray-600 mb-2">
                   <MapPin className="h-4 w-4 mr-1" />
                   <span className="text-sm">{listing.city}, {listing.state}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs capitalize">
                     {listing.business_type}
                   </Badge>
                   <div className="flex items-center text-gray-500 text-xs">

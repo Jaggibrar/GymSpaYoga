@@ -1,13 +1,11 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, MapPin, ArrowRight, Dumbbell, Waves, Heart, Star, Crown, Diamond, IndianRupee } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useBusinessData } from "@/hooks/useBusinessData";
 import { useTrainerData } from "@/hooks/useTrainerData";
 import RecentListings from "@/components/RecentListings";
@@ -31,6 +29,23 @@ const Index = () => {
     if (selectedTier !== 'all') params.set('tier', selectedTier);
     
     navigate(`/search?${params.toString()}`);
+  };
+
+  const handleBusinessCardClick = (business: any) => {
+    const businessType = business.business_type.toLowerCase();
+    switch (businessType) {
+      case 'gym':
+        navigate(`/gyms`);
+        break;
+      case 'spa':
+        navigate(`/spas`);
+        break;
+      case 'yoga':
+        navigate(`/yoga`);
+        break;
+      default:
+        navigate(`/explore`);
+    }
   };
 
   const getTierIcon = (tier: string) => {
@@ -242,7 +257,11 @@ const Index = () => {
               <h3 className="text-2xl font-bold text-gray-800 mb-6">Featured Businesses</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {featuredBusinesses.slice(0, 6).map((business) => (
-                  <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <Card 
+                    key={business.id} 
+                    className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                    onClick={() => handleBusinessCardClick(business)}
+                  >
                     <div className="relative h-48 overflow-hidden">
                       <img 
                         src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
