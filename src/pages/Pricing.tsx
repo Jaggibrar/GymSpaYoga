@@ -148,7 +148,7 @@ const structuredData = {
 
 const Pricing = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-black">
       <SEOHead 
         title="Pricing - Choose Your Perfect Plan | GymSpaYoga"
         description="Simple, transparent pricing for gym, spa, and yoga studio owners. Choose from Budget Friendly, Premium, or Luxury business listings."
@@ -161,10 +161,10 @@ const Pricing = () => {
       <div className="relative">
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
               Simple, transparent pricing
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-300">
               Choose the perfect plan for your wellness business tier. Each plan includes one business listing.
             </p>
           </div>
@@ -177,38 +177,32 @@ const Pricing = () => {
           {pricingPlans.map((plan) => (
             <Card 
               key={plan.name} 
-              className={`relative rounded-3xl p-8 ring-1 ring-gray-200 ${
-                plan.popular ? 'bg-gray-900 ring-gray-900' : 'bg-white'
+              className={`relative rounded-3xl p-8 ring-1 ${
+                plan.popular 
+                  ? 'bg-gray-900 ring-[#3ECF8E] ring-2' 
+                  : 'bg-gray-900 ring-gray-700'
               }`}
             >
               {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-600 text-white px-4 py-1">
+                <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#3ECF8E] text-black px-4 py-1 font-semibold">
                   Most popular
                 </Badge>
               )}
               
               <CardHeader className="p-0">
                 <div className="flex items-center justify-between gap-x-4">
-                  <h3 className={`text-lg font-semibold leading-8 ${
-                    plan.popular ? 'text-white' : 'text-gray-900'
-                  }`}>
+                  <h3 className="text-lg font-semibold leading-8 text-white">
                     {plan.name}
                   </h3>
                 </div>
-                <p className={`mt-4 text-sm leading-6 ${
-                  plan.popular ? 'text-gray-300' : 'text-gray-600'
-                }`}>
+                <p className="mt-4 text-sm leading-6 text-gray-300">
                   {plan.description}
                 </p>
                 <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className={`text-4xl font-bold tracking-tight ${
-                    plan.popular ? 'text-white' : 'text-gray-900'
-                  }`}>
+                  <span className="text-4xl font-bold tracking-tight text-white">
                     {plan.price}
                   </span>
-                  <span className={`text-sm font-semibold leading-6 ${
-                    plan.popular ? 'text-gray-300' : 'text-gray-600'
-                  }`}>
+                  <span className="text-sm font-semibold leading-6 text-gray-300">
                     /{plan.period}
                   </span>
                 </p>
@@ -218,10 +212,8 @@ const Pricing = () => {
                 <ul className="mt-8 space-y-3 text-sm leading-6">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex gap-x-3">
-                      <Check className={`h-6 w-5 flex-none ${
-                        plan.popular ? 'text-indigo-400' : 'text-indigo-600'
-                      }`} />
-                      <span className={plan.popular ? 'text-gray-300' : 'text-gray-600'}>
+                      <Check className="h-6 w-5 flex-none text-[#3ECF8E]" />
+                      <span className="text-gray-300">
                         {feature}
                       </span>
                     </li>
@@ -232,10 +224,10 @@ const Pricing = () => {
                   <Button 
                     className={`w-full ${
                       plan.popular 
-                        ? 'bg-indigo-500 text-white hover:bg-indigo-400 focus-visible:outline-indigo-500' 
-                        : 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline-indigo-600'
+                        ? 'bg-[#3ECF8E] text-black hover:bg-[#2EBF7E] font-semibold' 
+                        : 'bg-transparent border border-gray-700 text-white hover:bg-gray-800 hover:border-[#3ECF8E]'
                     }`}
-                    variant={plan.buttonVariant}
+                    variant={plan.popular ? "default" : "outline"}
                   >
                     {plan.cta}
                   </Button>
@@ -249,66 +241,66 @@ const Pricing = () => {
       {/* Feature Comparison */}
       <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Compare features
           </h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
+          <p className="mt-6 text-lg leading-8 text-gray-300">
             Choose the plan that's right for your business tier
           </p>
         </div>
 
         {/* Column Headers for comparison table */}
         <div className="mx-auto mt-16 max-w-5xl">
-          <div className="grid grid-cols-4 gap-x-6 border-b border-gray-200 pb-4 mb-8">
+          <div className="grid grid-cols-4 gap-x-6 border-b border-gray-700 pb-4 mb-8">
             <div></div>
-            <div className="text-center text-sm font-semibold text-gray-900">Budget Friendly</div>
-            <div className="text-center text-sm font-semibold text-gray-900">Premium</div>
-            <div className="text-center text-sm font-semibold text-gray-900">Luxury</div>
+            <div className="text-center text-sm font-semibold text-white">Budget Friendly</div>
+            <div className="text-center text-sm font-semibold text-white">Premium</div>
+            <div className="text-center text-sm font-semibold text-white">Luxury</div>
           </div>
 
           <div className="grid grid-cols-1 gap-y-16">
             {comparisonFeatures.map((category) => (
               <div key={category.category}>
-                <h3 className="text-lg font-semibold leading-8 text-gray-900">
+                <h3 className="text-lg font-semibold leading-8 text-white">
                   {category.category}
                 </h3>
                 <div className="mt-4 space-y-4">
                   {category.features.map((feature) => (
-                    <div key={feature.name} className="grid grid-cols-4 gap-x-6 py-4 border-b border-gray-200">
-                      <div className="text-sm leading-6 text-gray-900 font-medium">
+                    <div key={feature.name} className="grid grid-cols-4 gap-x-6 py-4 border-b border-gray-800">
+                      <div className="text-sm leading-6 text-white font-medium">
                         {feature.name}
                       </div>
                       <div className="text-center">
                         {typeof feature.budget === 'boolean' ? (
                           feature.budget ? (
-                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                            <Check className="mx-auto h-5 w-5 text-[#3ECF8E]" />
                           ) : (
-                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                            <X className="mx-auto h-5 w-5 text-gray-600" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.budget}</span>
+                          <span className="text-sm text-gray-300">{feature.budget}</span>
                         )}
                       </div>
                       <div className="text-center">
                         {typeof feature.premium === 'boolean' ? (
                           feature.premium ? (
-                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                            <Check className="mx-auto h-5 w-5 text-[#3ECF8E]" />
                           ) : (
-                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                            <X className="mx-auto h-5 w-5 text-gray-600" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.premium}</span>
+                          <span className="text-sm text-gray-300">{feature.premium}</span>
                         )}
                       </div>
                       <div className="text-center">
                         {typeof feature.luxury === 'boolean' ? (
                           feature.luxury ? (
-                            <Check className="mx-auto h-5 w-5 text-indigo-600" />
+                            <Check className="mx-auto h-5 w-5 text-[#3ECF8E]" />
                           ) : (
-                            <X className="mx-auto h-5 w-5 text-gray-400" />
+                            <X className="mx-auto h-5 w-5 text-gray-600" />
                           )
                         ) : (
-                          <span className="text-sm text-gray-600">{feature.luxury}</span>
+                          <span className="text-sm text-gray-300">{feature.luxury}</span>
                         )}
                       </div>
                     </div>
@@ -321,18 +313,18 @@ const Pricing = () => {
       </div>
 
       {/* Performance-based pricing */}
-      <div className="bg-gray-50">
+      <div className="bg-gray-900">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="text-3xl font-bold tracking-tight text-white">
               Performance-based pricing
             </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-300">
               Only pay for results. ₹20 per genuine customer booking.
             </p>
             <div className="mt-8 flex items-center justify-center gap-x-2">
-              <span className="text-5xl font-bold text-indigo-600">₹20</span>
-              <span className="text-lg text-gray-600">per customer booking</span>
+              <span className="text-5xl font-bold text-[#3ECF8E]">₹20</span>
+              <span className="text-lg text-gray-300">per customer booking</span>
             </div>
           </div>
         </div>
@@ -341,16 +333,16 @@ const Pricing = () => {
       {/* FAQ */}
       <div className="mx-auto max-w-7xl px-6 py-24 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight text-white text-center mb-16">
             Frequently asked questions
           </h2>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             {FAQ.map((item, index) => (
               <div key={index}>
-                <h3 className="text-lg font-semibold leading-8 text-gray-900">
+                <h3 className="text-lg font-semibold leading-8 text-white">
                   {item.q}
                 </h3>
-                <p className="mt-4 text-base leading-7 text-gray-600">
+                <p className="mt-4 text-base leading-7 text-gray-300">
                   {item.a}
                 </p>
               </div>
@@ -360,18 +352,18 @@ const Pricing = () => {
       </div>
 
       {/* CTA */}
-      <div className="bg-gray-50">
+      <div className="bg-gray-900">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+            <h2 className="text-3xl font-bold tracking-tight text-white">
               Ready to get started?
             </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-300">
               Join thousands of wellness businesses already growing with our platform.
             </p>
             <div className="mt-8">
               <Link to="/register-business">
-                <Button size="lg" className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-3">
+                <Button size="lg" className="bg-[#3ECF8E] hover:bg-[#2EBF7E] text-black px-8 py-3 font-semibold">
                   Start your business listing
                 </Button>
               </Link>
