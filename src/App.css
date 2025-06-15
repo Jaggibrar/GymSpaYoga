@@ -1,3 +1,4 @@
+
 .animate-pulse {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -328,36 +329,4 @@ h3, .h3 {
 ::-moz-selection {
   background: rgba(15, 252, 190, 0.3);
   color: #106EBE;
-}
-
-/* Add or override to ensure consistent style */
-body {
-  background: #000 !important;
-  color: #fff !important;
-}
-h1, h2, h3, h4, h5, h6 {
-  color: #fff !important;
-}
-a {
-  color: #3ECF8E !important;
-}
-input,
-textarea,
-select {
-  background: #000 !important;
-  color: #fff !important;
-  border-color: #222 !important;
-}
-.button,
-.btn,
-button,
-.btn-gradient,
-.btn-brand {
-  background: #3ECF8E !important;
-  color: #000 !important;
-  border: none !important;
-}
-.btn-brand:hover, .btn-gradient:hover, .button:hover, button:hover {
-  background: #32bf73 !important;
-  color: #000 !important;
 }
