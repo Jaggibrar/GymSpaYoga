@@ -134,9 +134,9 @@ export const BookingCard = ({
           )}
           
           <div className="flex items-center gap-2">
-            <User className="h-4 w-4 text-orange-500" />
+            <Calendar className="h-4 w-4 text-orange-500" />
             <div>
-              <p className="font-medium text-sm">Booked</p>
+              <p className="font-medium text-sm">Created</p>
               <p className="text-sm text-gray-600">
                 {new Date(booking.created_at).toLocaleDateString()}
               </p>
@@ -145,50 +145,42 @@ export const BookingCard = ({
         </div>
 
         {booking.notes && (
-          <div className="pt-2 border-t">
-            <p className="text-sm font-medium">Notes:</p>
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <p className="font-medium text-sm mb-1">Notes</p>
             <p className="text-sm text-gray-600">{booking.notes}</p>
           </div>
         )}
 
-        {booking.confirmed_at && (
-          <div className="pt-2 border-t">
-            <p className="text-xs text-green-600">
-              Confirmed on {new Date(booking.confirmed_at).toLocaleString()}
-            </p>
-          </div>
-        )}
-
-        {showActions && (
-          <div className="flex gap-2 pt-4 border-t">
-            {canConfirmOrReject && (
-              <>
-                <Button
-                  size="sm"
-                  className="bg-green-500 hover:bg-green-600 flex-1"
-                  onClick={() => onConfirm?.(booking.id)}
-                >
-                  Confirm
-                </Button>
-                <Button
-                  size="sm"
-                  variant="destructive"
-                  className="flex-1"
-                  onClick={() => onReject?.(booking.id)}
-                >
-                  Reject
-                </Button>
-              </>
-            )}
-            <Button
-              size="sm"
+        {/* Action Buttons */}
+        <div className="flex gap-2 pt-2">
+          {canConfirmOrReject && onConfirm && onReject && (
+            <>
+              <Button 
+                onClick={() => onConfirm(booking.id)}
+                className="flex-1 bg-green-500 hover:bg-green-600"
+              >
+                Confirm
+              </Button>
+              <Button 
+                onClick={() => onReject(booking.id)}
+                variant="destructive"
+                className="flex-1"
+              >
+                Reject
+              </Button>
+            </>
+          )}
+          
+          {onViewDetails && (
+            <Button 
+              onClick={() => onViewDetails(booking.id)}
               variant="outline"
-              onClick={() => onViewDetails?.(booking.id)}
+              className="flex-1"
             >
               View Details
             </Button>
-          </div>
-        )}
+          )}
+        </div>
       </CardContent>
     </Card>
   );

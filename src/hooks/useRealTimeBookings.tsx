@@ -49,37 +49,56 @@ export const useRealTimeBookings = (businessOwnersOnly: boolean = false) => {
 
   const fetchBookings = async () => {
     try {
-      let query = supabase
-        .from('bookings')
-        .select(`
-          *,
-          user_profiles!inner(full_name, phone),
-          business_profiles!inner(business_name)
-        `)
-        .order('created_at', { ascending: false });
-
       if (businessOwnersOnly) {
         // Get bookings for businesses owned by current user
-        query = query.eq('business_profiles.user_id', user?.id);
+        const { data, error } = await supabase
+          .from('bookings')
+          .select(`
+            *,
+            user_profiles!bookings_user_id_fkey(full_name, phone)
+          `)
+          .eq('business_profiles.user_id', user?.id)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching business bookings:', error);
+          return;
+        }
+
+        const formattedData = data?.map(booking => ({
+          ...booking,
+          user_profile: booking.user_profiles ? {
+            full_name: booking.user_profiles.full_name || 'Unknown User',
+            phone: booking.user_profiles.phone
+          } : undefined
+        })) || [];
+
+        setBookings(formattedData);
       } else {
         // Get bookings for current user
-        query = query.eq('user_id', user?.id);
+        const { data, error } = await supabase
+          .from('bookings')
+          .select(`
+            *,
+            business_profiles!bookings_business_id_fkey(business_name)
+          `)
+          .eq('user_id', user?.id)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching user bookings:', error);
+          return;
+        }
+
+        const formattedData = data?.map(booking => ({
+          ...booking,
+          business_profile: booking.business_profiles ? {
+            business_name: booking.business_profiles.business_name || 'Unknown Business'
+          } : undefined
+        })) || [];
+
+        setBookings(formattedData);
       }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Error fetching bookings:', error);
-        return;
-      }
-
-      const formattedData = data?.map(booking => ({
-        ...booking,
-        user_profile: booking.user_profiles,
-        business_profile: booking.business_profiles
-      })) || [];
-
-      setBookings(formattedData);
     } catch (error) {
       console.error('Error fetching bookings:', error);
     } finally {

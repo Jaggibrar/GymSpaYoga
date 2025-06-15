@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -46,7 +45,7 @@ const BusinessBookings = () => {
           <p className="text-gray-600 text-lg">Manage incoming booking requests for your business</p>
         </div>
 
-        <BookingsList showBusinessActions={true} />
+        <BookingsList showBusinessActions={true} businessOwnersView={true} />
       </div>
     </div>
   );
