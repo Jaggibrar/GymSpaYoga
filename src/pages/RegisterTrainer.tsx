@@ -1,39 +1,33 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dumbbell, Waves, Heart } from "lucide-react";
+import { Dumbbell, Waves, Heart, UploadCloud } from "lucide-react";
 import { useTrainerRegistration } from "@/hooks/useTrainerRegistration";
 import { useAuth } from "@/hooks/useAuth";
-
-// Import components
-import { MultiStepForm } from "@/components/registration/MultiStepForm";
-import { TrainerPersonalInfo } from "@/components/registration/TrainerPersonalInfo";
-import { TrainerCategorySelector } from "@/components/registration/TrainerCategorySelector";
-import { TrainerProfessionalDetails } from "@/components/registration/TrainerProfessionalDetails";
-import { TrainerBioAndCertifications } from "@/components/registration/TrainerBioAndCertifications";
-import { TrainerSpecializationsSelector } from "@/components/registration/TrainerSpecializationsSelector";
-import { TrainerProfileImageUpload } from "@/components/registration/TrainerProfileImageUpload";
 
 const RegisterTrainer = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { registerTrainer, loading } = useTrainerRegistration();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    trainerTier: "basic", // Add default trainer tier
+    trainerTier: "basic",
     category: "",
     experience: "",
     certifications: "",
+    certificationFile: null as File | null,
+    certificationUrl: "",
     specializations: [] as string[],
     hourlyRate: "",
     location: "",
+    city: "",
     bio: "",
     profileImage: null as File | null
   });
 
-  // Redirect to login if not authenticated
   if (!user) {
     navigate('/login');
     return null;
@@ -45,21 +39,47 @@ const RegisterTrainer = () => {
     { value: "yoga", label: "Yoga Instructor", icon: Heart, color: "from-purple-500 to-pink-500" }
   ];
 
-  const specializations = {
-    gym: ["Weight Training", "Cardio", "Strength Training", "CrossFit", "Bodybuilding", "HIIT"],
-    spa: ["Swedish Massage", "Deep Tissue", "Aromatherapy", "Hot Stone", "Reflexology", "Facial"],
-    yoga: ["Hatha Yoga", "Vinyasa", "Ashtanga", "Yin Yoga", "Power Yoga", "Meditation"]
+  // Frontend validation
+  const isFormValid = () => {
+    if (!formData.name.trim()) return false;
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) return false;
+    if (!formData.phone.trim() || !/^[+]?[\d\s\-\(\)]{10,}$/.test(formData.phone)) return false;
+    if (!formData.category) return false;
+    if (formData.experience === "" || parseInt(formData.experience) < 0) return false;
+    if (formData.hourlyRate === "" || parseInt(formData.hourlyRate) <= 0) return false;
+    if (!formData.location.trim()) return false;
+    if (!formData.city.trim()) return false;
+    if (!formData.bio.trim() || formData.bio.length < 10) return false;
+    if (!formData.profileImage) return false;
+    if (!formData.certificationFile) return false; // certification attachment required
+    return true;
+  };
+
+  const handleFileChange = (field: "profileImage" | "certificationFile", file: File | null) => {
+    setFormData(prev => ({ ...prev, [field]: file }));
+  };
+
+  const handleSpecializationChange = (spec: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      specializations: checked
+        ? [...prev.specializations, spec]
+        : prev.specializations.filter(s => s !== spec)
+    }));
   };
 
   const handleSubmit = async () => {
-    // Convert string values to numbers for the API
-    const formDataForSubmission = {
+    const exp = parseInt(formData.experience);
+    const rate = parseInt(formData.hourlyRate);
+    if (!isFormValid()) return;
+
+    // Submit, trigger callback in hook
+    const submissionData = {
       ...formData,
-      experience: parseInt(formData.experience),
-      hourlyRate: parseInt(formData.hourlyRate)
+      experience: exp,
+      hourlyRate: rate,
     };
-    
-    const success = await registerTrainer(formDataForSubmission);
+    const success = await registerTrainer(submissionData);
     if (success) {
       setFormData({
         name: "",
@@ -69,153 +89,132 @@ const RegisterTrainer = () => {
         category: "",
         experience: "",
         certifications: "",
+        certificationFile: null,
+        certificationUrl: "",
         specializations: [],
         hourlyRate: "",
         location: "",
+        city: "",
         bio: "",
         profileImage: null
       });
-      navigate('/');
+      navigate("/");
     }
   };
 
-  const handleSpecializationChange = (specialization: string, checked: boolean) => {
-    setFormData(prev => ({
-      ...prev,
-      specializations: checked 
-        ? [...prev.specializations, specialization]
-        : prev.specializations.filter(s => s !== specialization)
-    }));
+  const specializations = {
+    gym: ["Weight Training", "Cardio", "Strength Training", "CrossFit", "Bodybuilding", "HIIT"],
+    spa: ["Swedish Massage", "Deep Tissue", "Aromatherapy", "Hot Stone", "Reflexology", "Facial"],
+    yoga: ["Hatha Yoga", "Vinyasa", "Ashtanga", "Yin Yoga", "Power Yoga", "Meditation"]
   };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData(prev => ({ ...prev, profileImage: file }));
-  };
-
-  // Fixed validation functions
-  const validatePersonalInfo = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[+]?[\d\s\-\(\)]{10,}$/;
-    return formData.name.trim() !== "" && 
-           formData.email.trim() !== "" && 
-           formData.phone.trim() !== "" &&
-           emailRegex.test(formData.email) && 
-           phoneRegex.test(formData.phone);
-  };
-
-  const validateCategory = () => {
-    return formData.category !== "";
-  };
-
-  const validateProfessionalDetails = () => {
-    const experience = parseInt(formData.experience);
-    const hourlyRate = parseInt(formData.hourlyRate);
-    return formData.experience !== "" && 
-           formData.hourlyRate !== "" && 
-           formData.location.trim() !== "" &&
-           !isNaN(experience) && experience >= 0 &&
-           !isNaN(hourlyRate) && hourlyRate > 0;
-  };
-
-  const validateBio = () => {
-    return formData.bio.trim().length >= 10;
-  };
-
-  const validateProfileImage = () => {
-    return formData.profileImage !== null;
-  };
-
-  const steps = [
-    {
-      id: "personal",
-      title: "Personal Info",
-      description: "Basic information",
-      validate: validatePersonalInfo,
-      component: (
-        <TrainerPersonalInfo
-          name={formData.name}
-          email={formData.email}
-          phone={formData.phone}
-          onNameChange={(name) => setFormData(prev => ({ ...prev, name }))}
-          onEmailChange={(email) => setFormData(prev => ({ ...prev, email }))}
-          onPhoneChange={(phone) => setFormData(prev => ({ ...prev, phone }))}
-        />
-      )
-    },
-    {
-      id: "category",
-      title: "Category",
-      description: "Choose your expertise",
-      validate: validateCategory,
-      component: (
-        <TrainerCategorySelector
-          categories={categories}
-          selectedCategory={formData.category}
-          onCategorySelect={(category) => setFormData(prev => ({ ...prev, category }))}
-        />
-      )
-    },
-    {
-      id: "professional",
-      title: "Professional Details",
-      description: "Experience and rates",
-      validate: validateProfessionalDetails,
-      component: (
-        <TrainerProfessionalDetails
-          experience={formData.experience}
-          hourlyRate={formData.hourlyRate}
-          location={formData.location}
-          onExperienceChange={(experience) => setFormData(prev => ({ ...prev, experience }))}
-          onHourlyRateChange={(hourlyRate) => setFormData(prev => ({ ...prev, hourlyRate }))}
-          onLocationChange={(location) => setFormData(prev => ({ ...prev, location }))}
-        />
-      )
-    },
-    {
-      id: "bio",
-      title: "Bio & Certifications",
-      description: "Tell us about yourself",
-      validate: validateBio,
-      component: (
-        <TrainerBioAndCertifications
-          bio={formData.bio}
-          certifications={formData.certifications}
-          onBioChange={(bio) => setFormData(prev => ({ ...prev, bio }))}
-          onCertificationsChange={(certifications) => setFormData(prev => ({ ...prev, certifications }))}
-        />
-      )
-    },
-    {
-      id: "specializations",
-      title: "Specializations",
-      description: "Your areas of expertise",
-      component: (
-        <TrainerSpecializationsSelector
-          category={formData.category}
-          specializations={specializations}
-          selectedSpecializations={formData.specializations}
-          onSpecializationChange={handleSpecializationChange}
-        />
-      )
-    },
-    {
-      id: "profile",
-      title: "Profile Image",
-      description: "Upload your photo",
-      validate: validateProfileImage,
-      component: <TrainerProfileImageUpload onFileChange={handleFileChange} />
-    }
-  ];
 
   return (
-    <MultiStepForm
-      steps={steps}
-      onSubmit={handleSubmit}
-      isSubmitting={loading}
-      title="Trainer Registration"
-      description="Join our platform and start connecting with clients"
-    />
+    <div className="max-w-xl mx-auto py-10 px-4 bg-white rounded-lg shadow-lg">
+      <h1 className="text-2xl font-bold mb-4">Trainer Registration</h1>
+      {/* Name */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Name</label>
+        <input className="input w-full" value={formData.name}
+          onChange={e => setFormData({ ...formData, name: e.target.value })} />
+      </div>
+      {/* Expertise */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Area of Expertise</label>
+        <select className="input w-full" value={formData.category}
+          onChange={e => setFormData({ ...formData, category: e.target.value })}>
+          <option value="">Select...</option>
+          {categories.map(cat =>
+            <option key={cat.value} value={cat.value}>{cat.label}</option>
+          )}
+        </select>
+      </div>
+      {/* Phone/Email */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Phone</label>
+        <input className="input w-full" value={formData.phone}
+          onChange={e => setFormData({ ...formData, phone: e.target.value })} />
+      </div>
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Email</label>
+        <input className="input w-full" value={formData.email}
+          onChange={e => setFormData({ ...formData, email: e.target.value })} />
+      </div>
+      {/* City & Location */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">City</label>
+        <input className="input w-full" value={formData.city}
+          onChange={e => setFormData({ ...formData, city: e.target.value })} />
+      </div>
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Location</label>
+        <input className="input w-full" value={formData.location}
+          onChange={e => setFormData({ ...formData, location: e.target.value })} />
+      </div>
+      {/* Experience, hourly rate */}
+      <div className="flex gap-2 mb-2">
+        <div className="flex-1">
+          <label className="block font-medium mb-1">Experience (years)</label>
+          <input className="input w-full" type="number" min={0} value={formData.experience}
+            onChange={e => setFormData({ ...formData, experience: e.target.value })} />
+        </div>
+        <div className="flex-1">
+          <label className="block font-medium mb-1">Hourly Rate (₹)</label>
+          <input className="input w-full" type="number" min={0} value={formData.hourlyRate}
+            onChange={e => setFormData({ ...formData, hourlyRate: e.target.value })} />
+        </div>
+      </div>
+      {/* Specializations */}
+      <div className="mb-3">
+        <label className="block font-medium mb-1">Specializations</label>
+        <div className="flex flex-wrap gap-2">
+          {(specializations[formData.category as keyof typeof specializations] || []).map(spec =>
+            <label key={spec} className="flex items-center gap-1 text-xs border rounded px-2 py-1">
+              <input
+                type="checkbox"
+                checked={formData.specializations.includes(spec)}
+                onChange={e => handleSpecializationChange(spec, e.target.checked)}
+              />
+              {spec}
+            </label>
+          )}
+        </div>
+      </div>
+      {/* Bio */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Short Bio</label>
+        <textarea className="input w-full min-h-[60px]" value={formData.bio}
+          onChange={e => setFormData({ ...formData, bio: e.target.value })} />
+      </div>
+      {/* Profile Image */}
+      <div className="mb-2">
+        <label className="block font-medium mb-1">Profile Image</label>
+        <input type="file" accept="image/*"
+          onChange={e => handleFileChange('profileImage', e.target.files && e.target.files[0] || null)}
+        />
+        {formData.profileImage && (
+          <div className="mt-2"><img src={URL.createObjectURL(formData.profileImage)} alt="Preview" className="h-16 rounded" /></div>
+        )}
+      </div>
+      {/* Certification Upload */}
+      <div className="mb-3">
+        <label className="block font-medium mb-1">Certification Document</label>
+        <input type="file" accept=".pdf,image/*"
+          onChange={e => handleFileChange('certificationFile', e.target.files && e.target.files[0] || null)}
+        />
+        {formData.certificationFile && (
+          <div className="flex items-center gap-2 mt-2 text-xs text-gray-700">
+            <UploadCloud className="w-4 h-4" /> {formData.certificationFile.name}
+          </div>
+        )}
+      </div>
+      <button
+        className={`w-full mt-4 py-2 rounded bg-emerald-500 text-white font-bold hover:bg-emerald-600 transition ${loading || !isFormValid() ? "opacity-50 cursor-not-allowed" : ""}`}
+        disabled={loading || !isFormValid()}
+        onClick={handleSubmit}
+      >
+        {loading ? "Submitting..." : "Submit Registration"}
+      </button>
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -30,7 +29,7 @@ export const useTrainerData = (category?: string, searchTerm?: string, locationF
       let query = supabase
         .from('trainer_profiles')
         .select('*')
-        .eq('status', 'approved');
+        .eq('status', 'pending'); // Fetch 'pending' and 'approved' for admin views if relevant
 
       if (category) {
         query = query.eq('category', category);
@@ -42,12 +41,12 @@ export const useTrainerData = (category?: string, searchTerm?: string, locationF
 
       let filteredData = data || [];
 
-      // Apply filters
+      // Additional Filters
       if (searchTerm) {
         filteredData = filteredData.filter(trainer =>
           trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           trainer.bio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          trainer.specializations?.some(spec => 
+          trainer.specializations?.some(spec =>
             spec.toLowerCase().includes(searchTerm.toLowerCase())
           )
         );
@@ -72,8 +71,15 @@ export const useTrainerData = (category?: string, searchTerm?: string, locationF
     }
   };
 
+  // Subscribes to Supabase realtime to instantly reflect new registrations
   useEffect(() => {
     fetchTrainers();
+    const channel = supabase.channel("trainers-realtime")
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'trainer_profiles' }, fetchTrainers)
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [category, searchTerm, locationFilter, tierFilter]);
 
   return { trainers, loading, error, refetch: fetchTrainers };
