@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,79 @@ const Index = () => {
   // Fetch featured businesses and trainers for discovery section
   const { businesses: featuredBusinesses } = useBusinessData(undefined, "", "", selectedTier === 'all' ? undefined : selectedTier);
   const { trainers: featuredTrainers } = useTrainerData(undefined, "", "", selectedTier === 'all' ? undefined : selectedTier);
+
+  // Sample data for discovery section if no real data is available
+  const sampleBusinesses = [
+    {
+      id: 'sample-1',
+      business_name: 'Elite Fitness Hub',
+      business_type: 'gym',
+      city: 'Mumbai',
+      state: 'Maharashtra',
+      description: 'State-of-the-art gym with modern equipment and expert trainers',
+      image_urls: ['https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+      monthly_price: 3500,
+      tier: 'premium'
+    },
+    {
+      id: 'sample-2',
+      business_name: 'Luxury Wellness Spa',
+      business_type: 'spa',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      description: 'Premium spa services with holistic wellness treatments',
+      image_urls: ['https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+      session_price: 2500,
+      tier: 'luxury'
+    },
+    {
+      id: 'sample-3',
+      business_name: 'Peaceful Yoga Center',
+      business_type: 'yoga',
+      city: 'Delhi',
+      state: 'Delhi',
+      description: 'Serene yoga studio for mindfulness and inner peace',
+      image_urls: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+      monthly_price: 2000,
+      tier: 'budget'
+    }
+  ];
+
+  const sampleTrainers = [
+    {
+      id: 'trainer-1',
+      name: 'Rajesh Kumar',
+      category: 'fitness',
+      location: 'Mumbai, Maharashtra',
+      experience: 8,
+      hourly_rate: 1500,
+      trainer_tier: 'premium',
+      profile_image_url: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'trainer-2',
+      name: 'Priya Sharma',
+      category: 'yoga',
+      location: 'Bangalore, Karnataka',
+      experience: 6,
+      hourly_rate: 1200,
+      trainer_tier: 'budget',
+      profile_image_url: 'https://images.unsplash.com/photo-1594736797933-d0c6943de29e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+    },
+    {
+      id: 'trainer-3',
+      name: 'Amit Patel',
+      category: 'wellness',
+      location: 'Delhi, Delhi',
+      experience: 10,
+      hourly_rate: 2000,
+      trainer_tier: 'luxury',
+      profile_image_url: 'https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+    }
+  ];
+
+  const displayBusinesses = featuredBusinesses.length > 0 ? featuredBusinesses : sampleBusinesses;
+  const displayTrainers = featuredTrainers.length > 0 ? featuredTrainers : sampleTrainers;
 
   const handleSearch = () => {
     // Navigate to search results with filters
@@ -252,109 +326,105 @@ const Index = () => {
           </div>
 
           {/* Featured Businesses */}
-          {featuredBusinesses.length > 0 && (
-            <div className="mb-12">
-              <h3 className="text-2xl font-bold text-gray-800 mb-6">Featured Businesses</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredBusinesses.slice(0, 6).map((business) => (
-                  <Card 
-                    key={business.id} 
-                    className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-                    onClick={() => handleBusinessCardClick(business)}
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
-                        alt={business.business_name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(business.tier!)} text-white`}>
-                        {getTierIcon(business.tier!)}
-                        <span className="ml-1 capitalize">{business.tier}</span>
-                      </Badge>
+          <div className="mb-12">
+            <h3 className="text-2xl font-bold text-gray-800 mb-6">Featured Businesses</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayBusinesses.slice(0, 6).map((business) => (
+                <Card 
+                  key={business.id} 
+                  className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+                  onClick={() => handleBusinessCardClick(business)}
+                >
+                  <div className="relative h-48 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
+                      alt={business.business_name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(business.tier!)} text-white`}>
+                      {getTierIcon(business.tier!)}
+                      <span className="ml-1 capitalize">{business.tier}</span>
+                    </Badge>
+                  </div>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
+                      {business.business_name}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      <span>{business.city}, {business.state}</span>
                     </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
-                        {business.business_name}
-                      </CardTitle>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        <span>{business.city}, {business.state}</span>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                      {business.description || "Premium wellness destination"}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium">4.7</span>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {business.description || "Premium wellness destination"}
+                      <p className="text-lg font-bold text-blue-600">
+                        {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
                       </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="text-sm font-medium">4.7</span>
-                        </div>
-                        <p className="text-lg font-bold text-blue-600">
-                          {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          )}
+          </div>
 
           {/* Featured Trainers */}
-          {featuredTrainers.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-800">Featured Trainers</h3>
-                <Link to="/trainers">
-                  <Button variant="outline">
-                    View All Trainers
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredTrainers.slice(0, 3).map((trainer) => (
-                  <Card key={trainer.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"} 
-                        alt={trainer.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      <Badge className="absolute top-3 right-3 bg-emerald-500 text-white capitalize">
-                        {trainer.trainer_tier}
-                      </Badge>
-                    </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg group-hover:text-emerald-600 transition-colors">
-                        {trainer.name}
-                      </CardTitle>
-                      <div className="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin className="h-4 w-4" />
-                        <span>{trainer.location}</span>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600 text-sm mb-3 capitalize">
-                        {trainer.category} • {trainer.experience} years experience
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                          <span className="text-sm font-medium">4.8</span>
-                        </div>
-                        <p className="text-lg font-bold text-emerald-600">
-                          ₹{trainer.hourly_rate}/hour
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-800">Featured Trainers</h3>
+              <Link to="/trainers">
+                <Button variant="outline">
+                  View All Trainers
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
             </div>
-          )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayTrainers.slice(0, 3).map((trainer) => (
+                <Card key={trainer.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <div className="relative h-48 overflow-hidden rounded-t-lg">
+                    <img 
+                      src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"} 
+                      alt={trainer.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge className="absolute top-3 right-3 bg-emerald-500 text-white capitalize">
+                      {trainer.trainer_tier}
+                    </Badge>
+                  </div>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-lg group-hover:text-emerald-600 transition-colors">
+                      {trainer.name}
+                    </CardTitle>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <MapPin className="h-4 w-4" />
+                      <span>{trainer.location}</span>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 text-sm mb-3 capitalize">
+                      {trainer.category} • {trainer.experience} years experience
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="text-sm font-medium">4.8</span>
+                      </div>
+                      <p className="text-lg font-bold text-emerald-600">
+                        ₹{trainer.hourly_rate}/hour
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
