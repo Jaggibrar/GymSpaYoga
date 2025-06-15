@@ -47,9 +47,64 @@ import AnalyticsTracker from "./components/AnalyticsTracker";
 import BusinessLanding from "@/pages/BusinessLanding";
 import RoleBasedRedirect from "./components/RoleBasedRedirect";
 
-const queryClient = new QueryClient();
+// Import monitoring utilities
+import { errorTracker } from "@/utils/errorTracking";
+import { performanceMonitor } from "@/utils/performanceMonitor";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        // Enhanced retry logic with error tracking
+        errorTracker.logError(
+          `Query failed (attempt ${failureCount + 1}): ${error}`,
+          'medium',
+          { failureCount, error: String(error) }
+        );
+        return failureCount < 2;
+      },
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+    },
+    mutations: {
+      retry: false,
+      onError: (error) => {
+        errorTracker.logError(
+          `Mutation failed: ${error}`,
+          'high',
+          { error: String(error) }
+        );
+      },
+    },
+  },
+});
 
 function App() {
+  // Initialize performance monitoring
+  React.useEffect(() => {
+    performanceMonitor.recordMetric('app_initialized', 1, 'counter');
+    
+    // Monitor Core Web Vitals
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'largest-contentful-paint') {
+            performanceMonitor.recordMetric('lcp', entry.startTime, 'gauge');
+          }
+          if (entry.entryType === 'first-input') {
+            performanceMonitor.recordMetric('fid', entry.processingStart - entry.startTime, 'gauge');
+          }
+        }
+      });
+      
+      try {
+        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+      } catch (e) {
+        // Browser doesn't support these entry types
+      }
+    }
+  }, []);
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>

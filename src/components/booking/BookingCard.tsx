@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Clock, User, Phone, CreditCard, Building } from 'lucide-react';
+import { Calendar, MapPin, Clock, User, Phone, CreditCard, Building, Loader2 } from 'lucide-react';
 import { BookingStatusBadge } from './BookingStatusBadge';
 
 interface BookingCardProps {
@@ -29,6 +28,7 @@ interface BookingCardProps {
   showBusinessInfo?: boolean;
   showUserInfo?: boolean;
   showCancelOption?: boolean;
+  isLoading?: boolean;
   onConfirm?: (bookingId: number) => void;
   onReject?: (bookingId: number) => void;
   onCancel?: (bookingId: number) => void;
@@ -41,6 +41,7 @@ export const BookingCard = ({
   showBusinessInfo = false,
   showUserInfo = false,
   showCancelOption = false,
+  isLoading = false,
   onConfirm, 
   onReject, 
   onCancel,
@@ -66,7 +67,7 @@ export const BookingCard = ({
   const canCancel = showCancelOption && (booking.status === 'pending' || booking.status === 'confirmed');
 
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-300">
+    <Card className={`hover:shadow-lg transition-shadow duration-300 ${isLoading ? 'opacity-70' : ''}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">
@@ -163,14 +164,22 @@ export const BookingCard = ({
               <Button 
                 onClick={() => onConfirm(booking.id)}
                 className="flex-1 bg-green-500 hover:bg-green-600"
+                disabled={isLoading}
               >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
                 Confirm
               </Button>
               <Button 
                 onClick={() => onReject(booking.id)}
                 variant="destructive"
                 className="flex-1"
+                disabled={isLoading}
               >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                ) : null}
                 Reject
               </Button>
             </>
@@ -181,7 +190,11 @@ export const BookingCard = ({
               onClick={() => onCancel(booking.id)}
               variant="destructive"
               className="flex-1"
+              disabled={isLoading}
             >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              ) : null}
               Cancel Booking
             </Button>
           )}
@@ -191,6 +204,7 @@ export const BookingCard = ({
               onClick={() => onViewDetails(booking.id)}
               variant="outline"
               className="flex-1"
+              disabled={isLoading}
             >
               View Details
             </Button>

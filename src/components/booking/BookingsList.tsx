@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -7,6 +6,9 @@ import { Search, Filter } from 'lucide-react';
 import { BookingCard } from './BookingCard';
 import { BookingDetailsModal } from './BookingDetailsModal';
 import { useRealTimeBookings } from '@/hooks/useRealTimeBookings';
+import { useLoadingState } from '@/hooks/useLoadingState';
+import { errorTracker } from '@/utils/errorTracking';
+import { performanceMonitor } from '@/utils/performanceMonitor';
 import { toast } from 'sonner';
 
 interface BookingsListProps {
@@ -23,6 +25,7 @@ export const BookingsList = ({
   const [selectedBooking, setSelectedBooking] = useState<any>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const { bookings, loading, updateBookingStatus } = useRealTimeBookings(businessOwnersView);
+  const { withLoading, isLoading } = useLoadingState();
 
   const filteredBookings = bookings.filter(booking => {
     const searchableText = `${booking.business_type} ${booking.notes || ''} ${booking.id}`.toLowerCase();
@@ -42,23 +45,59 @@ export const BookingsList = ({
   });
 
   const handleConfirm = async (bookingId: number) => {
-    const success = await updateBookingStatus(bookingId, 'confirmed', 'Booking confirmed by business');
-    if (success) {
-      toast.success('Booking confirmed successfully');
+    try {
+      const success = await withLoading(`confirm-${bookingId}`, async () => {
+        const timer = performanceMonitor.startTimer('booking_confirmation');
+        const result = await updateBookingStatus(bookingId, 'confirmed', 'Booking confirmed by business');
+        timer();
+        return result;
+      });
+      
+      if (success) {
+        toast.success('Booking confirmed successfully');
+      }
+    } catch (error) {
+      errorTracker.logError(error instanceof Error ? error : 'Failed to confirm booking', 'high', {
+        bookingId,
+        action: 'confirm'
+      });
+      toast.error('Failed to confirm booking');
     }
   };
 
   const handleReject = async (bookingId: number) => {
-    const success = await updateBookingStatus(bookingId, 'rejected', 'Booking rejected by business');
-    if (success) {
-      toast.success('Booking rejected');
+    try {
+      const success = await withLoading(`reject-${bookingId}`, async () => {
+        return await updateBookingStatus(bookingId, 'rejected', 'Booking rejected by business');
+      });
+      
+      if (success) {
+        toast.success('Booking rejected');
+      }
+    } catch (error) {
+      errorTracker.logError(error instanceof Error ? error : 'Failed to reject booking', 'high', {
+        bookingId,
+        action: 'reject'
+      });
+      toast.error('Failed to reject booking');
     }
   };
 
   const handleCancel = async (bookingId: number) => {
-    const success = await updateBookingStatus(bookingId, 'cancelled', 'Booking cancelled by user');
-    if (success) {
-      toast.success('Booking cancelled successfully');
+    try {
+      const success = await withLoading(`cancel-${bookingId}`, async () => {
+        return await updateBookingStatus(bookingId, 'cancelled', 'Booking cancelled by user');
+      });
+      
+      if (success) {
+        toast.success('Booking cancelled successfully');
+      }
+    } catch (error) {
+      errorTracker.logError(error instanceof Error ? error : 'Failed to cancel booking', 'high', {
+        bookingId,
+        action: 'cancel'
+      });
+      toast.error('Failed to cancel booking');
     }
   };
 
@@ -79,6 +118,7 @@ export const BookingsList = ({
     return (
       <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+        <span className="ml-2 text-gray-600">Loading bookings...</span>
       </div>
     );
   }
@@ -145,6 +185,7 @@ export const BookingsList = ({
               onReject={handleReject}
               onCancel={handleCancel}
               onViewDetails={handleViewDetails}
+              isLoading={isLoading(`confirm-${booking.id}`) || isLoading(`reject-${booking.id}`) || isLoading(`cancel-${booking.id}`)}
             />
           ))}
         </div>
