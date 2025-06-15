@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { BookingsList } from "@/components/booking/BookingsList";
+import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
 
 const BusinessDashboard = () => {
   const { user, userProfile } = useAuth();
@@ -221,7 +221,7 @@ const BusinessDashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <BookingsList showBusinessActions={true} businessOwnersView={true} />
+                <BusinessBookingsDashboard />
               </CardContent>
             </Card>
           </TabsContent>
