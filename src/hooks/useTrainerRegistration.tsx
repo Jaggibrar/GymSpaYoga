@@ -144,19 +144,6 @@ export const useTrainerRegistration = () => {
       }
 
       console.log('Trainer profile inserted successfully');
-
-      // Update user profile role to trainer
-      console.log('Updating user role to trainer...');
-      const { error: roleError } = await supabase
-        .from('user_profiles')
-        .update({ role: 'trainer' })
-        .eq('user_id', user.id);
-
-      if (roleError) {
-        console.error('Role update error:', roleError);
-        // Don't fail the registration for this
-      }
-
       console.log('Trainer registration completed successfully');
       toast.success('Trainer profile registered successfully! Your listing is now live.');
       setLoading(false);

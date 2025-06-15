@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Upload, X, AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -62,12 +61,18 @@ export const ImageUpload = ({ onFileChange }: ImageUploadProps) => {
     setSelectedFiles(newFiles);
     setPreviewUrls(newPreviews);
     
-    // Create a proper synthetic event for the updated file list
+    // Create a new FileList for the updated files
+    const dataTransfer = new DataTransfer();
+    newFiles.forEach(file => dataTransfer.items.add(file));
+    
+    // Create a properly typed synthetic event
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.files = dataTransfer.files;
+    
     const syntheticEvent = {
-      target: {
-        files: newFiles.length > 0 ? newFiles : null,
-        value: newFiles.length > 0 ? '' : ''
-      }
+      target: input,
+      currentTarget: input
     } as React.ChangeEvent<HTMLInputElement>;
     
     onFileChange(syntheticEvent);

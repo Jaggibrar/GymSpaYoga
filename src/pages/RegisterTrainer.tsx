@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dumbbell, Waves, Heart } from "lucide-react";
@@ -23,6 +22,7 @@ const RegisterTrainer = () => {
     name: "",
     email: "",
     phone: "",
+    trainerTier: "basic", // Add default trainer tier
     category: "",
     experience: "",
     certifications: "",
@@ -52,12 +52,20 @@ const RegisterTrainer = () => {
   };
 
   const handleSubmit = async () => {
-    const success = await registerTrainer(formData);
+    // Convert string values to numbers for the API
+    const formDataForSubmission = {
+      ...formData,
+      experience: parseInt(formData.experience),
+      hourlyRate: parseInt(formData.hourlyRate)
+    };
+    
+    const success = await registerTrainer(formDataForSubmission);
     if (success) {
       setFormData({
         name: "",
         email: "",
         phone: "",
+        trainerTier: "basic",
         category: "",
         experience: "",
         certifications: "",
