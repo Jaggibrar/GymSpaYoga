@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -36,7 +37,8 @@ export const useBookingConfirmation = () => {
     setLoading(true);
     try {
       console.log('useBookingConfirmation - Inserting booking into database');
-      // Insert booking into database
+      
+      // Insert booking into database with proper error handling
       const { data: booking, error: bookingError } = await supabase
         .from('bookings')
         .insert({
@@ -57,31 +59,31 @@ export const useBookingConfirmation = () => {
 
       if (bookingError) {
         console.error('useBookingConfirmation - Error creating booking:', bookingError);
-        toast.error('Failed to create booking');
+        toast.error(`Failed to create booking: ${bookingError.message}`);
         return null;
       }
 
       console.log('useBookingConfirmation - Booking created successfully:', booking.id);
 
-      // Get business details for notification
+      // Get business details for notification with proper error handling
       const { data: business, error: businessError } = await supabase
         .from('business_profiles')
         .select('business_name, user_id, email')
         .eq('id', bookingData.business_id)
-        .single();
+        .maybeSingle();
 
-      if (businessError) {
+      if (businessError && businessError.code !== 'PGRST116') {
         console.error('Error fetching business details:', businessError);
       }
 
-      // Get user details
+      // Get user details with proper error handling
       const { data: userProfile, error: userError } = await supabase
         .from('user_profiles')
         .select('full_name')
         .eq('user_id', bookingData.user_id)
-        .single();
+        .maybeSingle();
 
-      if (userError) {
+      if (userError && userError.code !== 'PGRST116') {
         console.error('Error fetching user details:', userError);
       }
 
@@ -109,7 +111,8 @@ export const useBookingConfirmation = () => {
       return booking;
     } catch (error) {
       console.error('useBookingConfirmation - Error in booking creation:', error);
-      toast.error('Failed to create booking');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`Failed to create booking: ${errorMessage}`);
       return null;
     } finally {
       setLoading(false);
@@ -127,7 +130,7 @@ export const useBookingConfirmation = () => {
 
       if (error) {
         console.error('Error confirming booking:', error);
-        toast.error('Failed to confirm booking');
+        toast.error(`Failed to confirm booking: ${error.message}`);
         return false;
       }
 
@@ -135,7 +138,8 @@ export const useBookingConfirmation = () => {
       return true;
     } catch (error) {
       console.error('Error confirming booking:', error);
-      toast.error('Failed to confirm booking');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`Failed to confirm booking: ${errorMessage}`);
       return false;
     } finally {
       setLoading(false);
@@ -153,7 +157,7 @@ export const useBookingConfirmation = () => {
 
       if (error) {
         console.error('Error rejecting booking:', error);
-        toast.error('Failed to reject booking');
+        toast.error(`Failed to reject booking: ${error.message}`);
         return false;
       }
 
@@ -161,7 +165,8 @@ export const useBookingConfirmation = () => {
       return true;
     } catch (error) {
       console.error('Error rejecting booking:', error);
-      toast.error('Failed to reject booking');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`Failed to reject booking: ${errorMessage}`);
       return false;
     } finally {
       setLoading(false);
