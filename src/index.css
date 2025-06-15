@@ -1,3 +1,4 @@
+
 /* Import the Inter font from Google Fonts for all text */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 
@@ -8,58 +9,58 @@
 @layer base {
   html {
     font-family: 'Inter', theme('fontFamily.sans');
-    background: #000 !important;
-    color: #fff !important;
-    /* Improved antialiasing for legibility on dark bg */
+    background: #fff !important;
+    color: #000 !important;
+    /* Improved antialiasing for legibility on light bg */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-text min-h-screen font-sans;
-    background: #000 !important;
-    color: #fff !important;
+    background: #fff !important;
+    color: #000 !important;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply text-text font-extrabold;
-    color: #fff !important;
+    color: #000 !important;
     letter-spacing: -0.01em;
   }
   a {
     @apply underline underline-offset-2 transition-colors;
-    color: #3ECF8E !important;
+    color: #106EBE !important;
     text-decoration-thickness: 2px;
     transition: color 0.18s;
   }
   a:hover, a:focus {
-    color: #56F2AF !important;
+    color: #0FFCBE !important;
     outline: none;
     text-decoration-thickness: 3px;
   }
   label {
     @apply text-text font-medium;
-    color: #fff !important;
+    color: #000 !important;
   }
   input,
   textarea,
   select {
     @apply bg-background border-border text-text placeholder:text-gray-400 rounded-xl px-4 py-2 focus-visible:ring-supaGreen focus:outline-none border-2;
-    background: #000 !important;
-    color: #fff !important;
-    border-color: #222 !important;
+    background: #fff !important;
+    color: #000 !important;
+    border-color: #d1d5db !important;
     font-size: 1rem;
     transition: border-color 0.18s, box-shadow 0.18s;
   }
   input:focus,
   textarea:focus,
   select:focus {
-    border-color: #3ECF8E !important;
+    border-color: #106EBE !important;
     outline: none;
-    box-shadow: 0 0 0 2px #3ECF8E40;
+    box-shadow: 0 0 0 2px #106EBE30;
   }
   button, .button, .btn, .btn-gradient, .btn-brand {
     @apply font-bold rounded-xl px-6 py-3 shadow transition-all duration-200;
-    background: #3ECF8E !important;
-    color: #121312 !important;
+    background: #106EBE !important;
+    color: #fff !important;
     border: none !important;
     font-family: 'Inter', theme('fontFamily.sans');
     outline: none;
@@ -72,7 +73,7 @@
   .button:hover, 
   .btn-gradient:hover,
   .btn-brand:hover {
-    background: #56F2AF !important;
+    background: #0FFCBE !important;
     color: #000 !important;
     transform: translateY(-2px) scale(1.03);
   }
@@ -81,7 +82,7 @@
   .button:focus-visible,
   .btn-gradient:focus-visible, 
   .btn-brand:focus-visible {
-    outline: 2.5px solid #3ECF8E;
+    outline: 2.5px solid #106EBE;
     outline-offset: 2px;
   }
   button:disabled, .btn[disabled], .button[disabled] {
@@ -89,30 +90,30 @@
     cursor: not-allowed;
   }
 
-  /* Secondary/outline/ghost buttons (extra contrast and green rings) */
+  /* Secondary/outline/ghost buttons (extra contrast and blue rings) */
   .btn-outline, .button-outline, .button[variant="outline"] {
     background: transparent !important;
-    color: #3ECF8E !important;
-    border: 2px solid #3ECF8E !important;
+    color: #106EBE !important;
+    border: 2px solid #106EBE !important;
     box-shadow: none !important;
     transition: border-color 0.18s, color 0.18s, background 0.18s;
   }
   .btn-outline:hover, .button-outline:hover, .button[variant="outline"]:hover {
-    background: #101413 !important;
-    color: #fff !important;
-    border-color: #56F2AF !important;
+    background: #f3f4f6 !important;
+    color: #000 !important;
+    border-color: #0FFCBE !important;
   }
 
-  /* Emphasize ghost variant on dark bg */
+  /* Emphasize ghost variant on light bg */
   .btn-ghost, .button-ghost, .button[variant="ghost"] {
-    background: #181F1B !important;
-    color: #3ECF8E !important;
+    background: #f1f5f9 !important;
+    color: #106EBE !important;
     border: none !important;
     box-shadow: none !important;
   }
   .btn-ghost:hover, .button-ghost:hover, .button[variant="ghost"]:hover {
-    background: #1C2620 !important;
-    color: #56F2AF !important;
+    background: #e0f7f7 !important;
+    color: #0FFCBE !important;
   }
 }
 
@@ -123,33 +124,32 @@
   }
   .card {
     @apply bg-card text-card-foreground rounded-2xl border border-border shadow;
-    background: #101113;
-    color: #fff;
-    border-color: #262626;
+    background: #fff;
+    color: #000;
+    border-color: #e5e7eb;
     transition: box-shadow 0.18s, border-color 0.25s;
   }
   .card:hover, .card:focus-within {
-    box-shadow: 0 0 0 3px #3ECF8E33, 0 4px 40px #000D  ;
-    border-color: #3ECF8E !important;
+    box-shadow: 0 0 0 3px #106EBE33, 0 4px 40px #106EBE12 ;
+    border-color: #0FFCBE !important;
   }
 
-  /* Badge color system improvements for contrast and recognition */
   .badge {
     @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors;
     font-family: 'Inter', theme('fontFamily.sans');
     font-weight: 600;
     &.badge-default,
     &[data-variant='default'] {
-      background: #3ECF8E !important;
-      color: #171918 !important;
+      background: #106EBE !important;
+      color: #fff !important;
       border: none;
-      box-shadow: 0 1px 6px #3ECF8E22;
+      box-shadow: 0 1px 6px #106EBE22;
     }
     &.badge-secondary,
     &[data-variant='secondary'] {
-      background: #101113 !important;
-      color: #fff !important;
-      border: 1px solid #222 !important;
+      background: #fff !important;
+      color: #000 !important;
+      border: 1px solid #d1d5db !important;
     }
     &.badge-destructive,
     &[data-variant='destructive'] {
@@ -160,13 +160,13 @@
     &.badge-outline,
     &[data-variant='outline'] {
       background: transparent !important;
-      color: #fff !important;
-      border: 1.7px solid #3ECF8E !important;
+      color: #106EBE !important;
+      border: 1.7px solid #106EBE !important;
     }
     &.badge-ghost,
     &[data-variant='ghost'] {
-      background: #181F1B !important;
-      color: #3ECF8E !important;
+      background: #e0f2fe !important;
+      color: #106EBE !important;
       border: none !important;
     }
   }
@@ -176,17 +176,18 @@
 
 ::-webkit-scrollbar {
   width: 8px;
-  background: #111;
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #222;
+  background: #e5e7eb;
   border-radius: 4px;
 }
 ::selection {
-  background: #3ECF8E44; 
-  color: #000;
+  background: #106EBE44; 
+  color: #fff;
 }
 ::-moz-selection {
-  background: #3ECF8E44; 
-  color: #000;
+  background: #106EBE44; 
+  color: #fff;
 }
+
