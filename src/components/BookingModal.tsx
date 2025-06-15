@@ -79,13 +79,18 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     yoga: ['Hatha Yoga', 'Vinyasa Flow', 'Meditation Session', 'Private Class', 'Power Yoga', 'Yin Yoga']
   };
 
-  // Determine service type based on businessType
+  // Normalize business type to match database constraints
+  const normalizeBusinessType = (type: string): string => {
+    const lowerType = type.toLowerCase();
+    if (lowerType.includes('gym') || lowerType.includes('fitness')) return 'gym';
+    if (lowerType.includes('spa') || lowerType.includes('massage')) return 'spa';
+    if (lowerType.includes('yoga') || lowerType.includes('meditation')) return 'yoga';
+    return 'gym'; // default fallback
+  };
+
   const getServiceType = () => {
-    const lowerBusinessType = businessType.toLowerCase();
-    if (lowerBusinessType.includes('gym') || lowerBusinessType.includes('fitness')) return 'gym';
-    if (lowerBusinessType.includes('spa') || lowerBusinessType.includes('massage')) return 'spa';
-    if (lowerBusinessType.includes('yoga') || lowerBusinessType.includes('meditation')) return 'yoga';
-    return 'gym'; // default
+    const normalizedType = normalizeBusinessType(businessType);
+    return normalizedType as keyof typeof services;
   };
 
   const serviceType = getServiceType();
@@ -104,10 +109,12 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
 
     setSubmissionStatus('submitting');
     
+    const normalizedBusinessType = normalizeBusinessType(businessType);
+    
     const booking = await submitBooking({
       user_id: user.id,
       business_id: businessId,
-      business_type: businessType,
+      business_type: normalizedBusinessType, // Use normalized type
       trainer_id: null,
       booking_date: bookingData.date ? format(bookingData.date, 'yyyy-MM-dd') : null,
       booking_time: bookingData.time,
