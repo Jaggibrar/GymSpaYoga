@@ -8,14 +8,30 @@ export const useProfileImageUpload = () => {
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
 
+  const validateFile = (file: File): string | null => {
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    if (!allowedTypes.includes(file.type)) {
+      return 'Please upload a valid image file (JPEG, PNG, GIF, WebP)';
+    }
+
+    if (file.size > maxSize) {
+      return 'File size must be less than 2MB';
+    }
+
+    return null;
+  };
+
   const uploadProfileImage = async (file: File): Promise<string | null> => {
     if (!user) {
       toast.error('Please login to upload images');
       return null;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error('File size must be less than 5MB');
+    const validationError = validateFile(file);
+    if (validationError) {
+      toast.error(validationError);
       return null;
     }
 
@@ -24,12 +40,28 @@ export const useProfileImageUpload = () => {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}/profile.${fileExt}`;
       
+      console.log(`Uploading profile image to: profile-images/${fileName}`);
+      
       const { error: uploadError } = await supabase.storage
         .from('profile-images')
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, file, { 
+          upsert: true,
+          cacheControl: '3600'
+        });
       
       if (uploadError) {
-        throw uploadError;
+        console.error('Profile image upload error:', uploadError);
+        
+        if (uploadError.message.includes('policy')) {
+          toast.error('Upload failed: Permission denied. Please make sure you are logged in.');
+        } else if (uploadError.message.includes('size')) {
+          toast.error('Upload failed: File size too large (max 2MB)');
+        } else if (uploadError.message.includes('type')) {
+          toast.error('Upload failed: Invalid file type. Only images are allowed.');
+        } else {
+          toast.error(`Upload failed: ${uploadError.message}`);
+        }
+        return null;
       }
       
       const { data } = supabase.storage
@@ -37,6 +69,7 @@ export const useProfileImageUpload = () => {
         .getPublicUrl(fileName);
       
       toast.success('Profile image uploaded successfully!');
+      console.log('Profile upload successful, public URL:', data.publicUrl);
       return data.publicUrl;
     } catch (err) {
       console.error('Error uploading profile image:', err);
@@ -49,6 +82,7 @@ export const useProfileImageUpload = () => {
 
   return {
     uploadProfileImage,
-    uploading
+    uploading,
+    validateFile
   };
 };

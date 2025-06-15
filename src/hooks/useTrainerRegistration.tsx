@@ -95,14 +95,16 @@ export const useTrainerRegistration = () => {
         return false;
       }
 
-      // Upload profile image
+      // Upload profile image to business-images bucket (trainers folder)
       let profileImageUrl = null;
       if (formData.profileImage) {
-        profileImageUrl = await uploadImage(formData.profileImage, 'trainers');
+        console.log('Uploading trainer profile image...');
+        profileImageUrl = await uploadImage(formData.profileImage, 'business-images', 'trainers');
         if (!profileImageUrl) {
           setLoading(false);
           return false;
         }
+        console.log('Trainer profile image uploaded:', profileImageUrl);
       }
 
       // Insert trainer profile

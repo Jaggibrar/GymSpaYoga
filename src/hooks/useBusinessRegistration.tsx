@@ -118,13 +118,16 @@ export const useBusinessRegistration = () => {
         return false;
       }
 
-      // Upload business images
-      const imageUrls = await uploadMultipleImages(formData.images, 'business');
+      // Upload business images to business-images bucket
+      console.log('Uploading business images...');
+      const imageUrls = await uploadMultipleImages(formData.images, 'business-images', 'business');
       if (imageUrls.length === 0 && formData.images.length > 0) {
         toast.error('Failed to upload images. Please try again.');
         setLoading(false);
         return false;
       }
+
+      console.log('Uploaded image URLs:', imageUrls);
 
       // Insert business profile
       const { error } = await supabase
