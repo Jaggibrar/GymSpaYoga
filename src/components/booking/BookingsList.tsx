@@ -1,7 +1,8 @@
-
+import { useState } from 'react';
 import { useRealTimeBookings } from '@/hooks/useRealTimeBookings';
 import { useBookingConfirmation } from '@/hooks/useBookingConfirmation';
 import { BookingCard } from './BookingCard';
+import { BookingDetailsModal } from './BookingDetailsModal';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -21,12 +22,14 @@ export const BookingsList = ({
   const { bookings, loading, updateBookingStatus, refetch } = useRealTimeBookings(businessOwnersView);
   const { confirmBooking, rejectBooking } = useBookingConfirmation();
   const loadingManager = useLoadingState();
+  const [selectedBooking, setSelectedBooking] = useState<any>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
   const handleConfirmBooking = async (bookingId: number) => {
     const success = await loadingManager.withLoading(`confirm-${bookingId}`, async () => {
       const result = await confirmBooking(bookingId);
       if (result) {
-        await refetch(); // Refresh the list
+        await refetch();
         toast.success('Booking confirmed successfully!');
       }
       return result;
@@ -37,7 +40,7 @@ export const BookingsList = ({
     const success = await loadingManager.withLoading(`reject-${bookingId}`, async () => {
       const result = await rejectBooking(bookingId, 'Business declined the booking request');
       if (result) {
-        await refetch(); // Refresh the list
+        await refetch();
         toast.success('Booking rejected');
       }
       return result;
@@ -48,7 +51,7 @@ export const BookingsList = ({
     const success = await loadingManager.withLoading(`cancel-${bookingId}`, async () => {
       const result = await updateBookingStatus(bookingId, 'cancelled', 'Cancelled by user');
       if (result) {
-        await refetch(); // Refresh the list
+        await refetch();
         toast.success('Booking cancelled');
       }
       return result;
@@ -56,9 +59,18 @@ export const BookingsList = ({
   };
 
   const handleViewDetails = (bookingId: number) => {
-    // Navigate to booking details or show detailed modal
-    console.log('View booking details:', bookingId);
-    toast.info('Booking details feature coming soon!');
+    const booking = bookings.find(b => b.id === bookingId);
+    if (booking) {
+      setSelectedBooking(booking);
+      setIsDetailsModalOpen(true);
+    } else {
+      toast.error('Booking not found');
+    }
+  };
+
+  const handleCloseDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+    setSelectedBooking(null);
   };
 
   if (loading) {
@@ -97,70 +109,79 @@ export const BookingsList = ({
   }
 
   return (
-    <div className="space-y-6">
-      {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card className="p-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-emerald-600">{bookings.length}</div>
-            <div className="text-sm text-gray-600">Total Bookings</div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-yellow-600">
-              {bookings.filter(b => b.status === 'pending').length}
+    <>
+      <div className="space-y-6">
+        {/* Summary Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <Card className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-emerald-600">{bookings.length}</div>
+              <div className="text-sm text-gray-600">Total Bookings</div>
             </div>
-            <div className="text-sm text-gray-600">Pending</div>
-          </div>
-        </Card>
-        <Card className="p-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {bookings.filter(b => b.status === 'confirmed').length}
+          </Card>
+          <Card className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-600">
+                {bookings.filter(b => b.status === 'pending').length}
+              </div>
+              <div className="text-sm text-gray-600">Pending</div>
             </div>
-            <div className="text-sm text-gray-600">Confirmed</div>
-          </div>
-        </Card>
+          </Card>
+          <Card className="p-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">
+                {bookings.filter(b => b.status === 'confirmed').length}
+              </div>
+              <div className="text-sm text-gray-600">Confirmed</div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Bookings List */}
+        <div className="space-y-4">
+          {bookings.map((booking) => (
+            <BookingCard
+              key={booking.id}
+              booking={booking}
+              showActions={showBusinessActions}
+              showBusinessInfo={!businessOwnersView}
+              showUserInfo={businessOwnersView}
+              showCancelOption={!businessOwnersView}
+              isLoading={loadingManager.isLoading(`confirm-${booking.id}`) || 
+                        loadingManager.isLoading(`reject-${booking.id}`) || 
+                        loadingManager.isLoading(`cancel-${booking.id}`)}
+              onConfirm={showBusinessActions ? handleConfirmBooking : undefined}
+              onReject={showBusinessActions ? handleRejectBooking : undefined}
+              onCancel={!businessOwnersView ? handleCancelBooking : undefined}
+              onViewDetails={handleViewDetails}
+            />
+          ))}
+        </div>
+
+        {/* Refresh Button */}
+        <div className="text-center pt-4">
+          <Button 
+            variant="outline" 
+            onClick={refetch}
+            disabled={loadingManager.isLoading()}
+            className="flex items-center gap-2"
+          >
+            {loadingManager.isLoading() ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Calendar className="h-4 w-4" />
+            )}
+            Refresh Bookings
+          </Button>
+        </div>
       </div>
 
-      {/* Bookings List */}
-      <div className="space-y-4">
-        {bookings.map((booking) => (
-          <BookingCard
-            key={booking.id}
-            booking={booking}
-            showActions={showBusinessActions}
-            showBusinessInfo={!businessOwnersView}
-            showUserInfo={businessOwnersView}
-            showCancelOption={!businessOwnersView}
-            isLoading={loadingManager.isLoading(`confirm-${booking.id}`) || 
-                      loadingManager.isLoading(`reject-${booking.id}`) || 
-                      loadingManager.isLoading(`cancel-${booking.id}`)}
-            onConfirm={showBusinessActions ? handleConfirmBooking : undefined}
-            onReject={showBusinessActions ? handleRejectBooking : undefined}
-            onCancel={!businessOwnersView ? handleCancelBooking : undefined}
-            onViewDetails={handleViewDetails}
-          />
-        ))}
-      </div>
-
-      {/* Refresh Button */}
-      <div className="text-center pt-4">
-        <Button 
-          variant="outline" 
-          onClick={refetch}
-          disabled={loadingManager.isLoading()}
-          className="flex items-center gap-2"
-        >
-          {loadingManager.isLoading() ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Calendar className="h-4 w-4" />
-          )}
-          Refresh Bookings
-        </Button>
-      </div>
-    </div>
+      {/* Booking Details Modal */}
+      <BookingDetailsModal
+        booking={selectedBooking}
+        isOpen={isDetailsModalOpen}
+        onClose={handleCloseDetailsModal}
+      />
+    </>
   );
 };
