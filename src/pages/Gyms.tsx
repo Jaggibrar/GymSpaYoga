@@ -169,7 +169,7 @@ const Gyms = () => {
                         {gym.monthly_price ? `₹${gym.monthly_price}/month` : gym.session_price ? `₹${gym.session_price}/session` : "Contact for pricing"}
                       </p>
                     </div>
-                    <Link to={`/gym/${gym.id}`}>
+                    <Link to={`/gyms/${gym.id}`}>
                       <Button 
                         size="sm" 
                         className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 touch-target text-xs md:text-sm"
