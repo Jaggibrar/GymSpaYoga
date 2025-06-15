@@ -29,7 +29,7 @@ const PaymentModal = ({
   price, 
   priceType 
 }: PaymentModalProps) => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { submitBooking, loading } = useBookings();
   const [bookingData, setBookingData] = useState({
     date: '',
@@ -41,6 +41,12 @@ const PaymentModal = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Wait for auth loading to complete
+    if (authLoading) {
+      toast.error("Please wait while we verify your login status");
+      return;
+    }
+    
     if (!user) {
       toast.error("Please login to book a session");
       return;
@@ -50,6 +56,8 @@ const PaymentModal = ({
       toast.error("Please select date and time");
       return;
     }
+
+    console.log('Submitting booking with user:', user.id);
 
     const booking = await submitBooking({
       user_id: user.id,
@@ -71,6 +79,20 @@ const PaymentModal = ({
       setBookingData({ date: '', time: '', duration: 60, notes: '' });
     }
   };
+
+  // Show loading while auth is being determined
+  if (authLoading) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="sm:max-w-md">
+          <div className="flex items-center justify-center p-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+            <span className="ml-3">Verifying login status...</span>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -174,7 +196,7 @@ const PaymentModal = ({
             </Button>
             <Button 
               type="submit" 
-              disabled={loading}
+              disabled={loading || authLoading}
               className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white"
             >
               {loading ? "Booking..." : "Submit Booking Request"}

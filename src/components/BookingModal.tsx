@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
   const [submissionStatus, setSubmissionStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
   
   const { submitBooking } = useBookings();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   // Use external open/close if provided, otherwise use internal state
   const modalOpen = isOpen !== undefined ? isOpen : internalOpen;
@@ -98,6 +97,12 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
   const availableServices = services[serviceType] || services.gym;
 
   const handleSubmit = async () => {
+    // Wait for auth loading to complete
+    if (authLoading) {
+      toast.error("Please wait while we verify your login status");
+      return;
+    }
+
     if (!user) {
       toast.error("Please login to submit a booking");
       return;
@@ -122,6 +127,8 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
     setSubmissionStatus('submitting');
     
     const normalizedBusinessType = normalizeBusinessType(businessType);
+    
+    console.log('Submitting booking with user:', user.id);
     
     const booking = await submitBooking({
       user_id: user.id,
@@ -329,6 +336,35 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
   const isStep1Valid = bookingData.service && bookingData.date && bookingData.time && bookingData.duration;
   const isStep2Valid = bookingData.name && bookingData.phone && bookingData.email;
 
+  // Show loading while auth is being determined
+  if (authLoading) {
+    const loadingContent = (
+      <DialogContent className="sm:max-w-[500px] bg-white">
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+          <span className="ml-3">Verifying login status...</span>
+        </div>
+      </DialogContent>
+    );
+
+    if (trigger) {
+      return (
+        <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
+          <DialogTrigger asChild>
+            {trigger}
+          </DialogTrigger>
+          {loadingContent}
+        </Dialog>
+      );
+    }
+
+    return (
+      <Dialog open={modalOpen} onOpenChange={handleOpenChange}>
+        {loadingContent}
+      </Dialog>
+    );
+  }
+
   const modalContent = (
     <DialogContent className="sm:max-w-[500px] bg-white">
       <DialogHeader>
@@ -389,7 +425,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
             <Button 
               onClick={handleSubmit}
               className="ml-auto bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-              disabled={submissionStatus !== 'idle'}
+              disabled={submissionStatus !== 'idle' || authLoading}
             >
               {submissionStatus === 'submitting' ? 'Submitting...' : 'Submit Booking Request'}
             </Button>
