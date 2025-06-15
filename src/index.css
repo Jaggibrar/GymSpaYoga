@@ -1,5 +1,5 @@
 
-/* Inter font import for Google Fonts. (If not hosted locally) */
+/* Import the Inter font from Google Fonts for all text */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 
 @tailwind base;
@@ -11,42 +11,109 @@
     font-family: 'Inter', theme('fontFamily.sans');
     background: #000 !important;
     color: #fff !important;
+    /* Ensure no unwanted scrollbars on dark backgrounds */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   body {
     @apply bg-background text-text min-h-screen font-sans;
+    /* Maintain dark background on all pages */
+    background: #000 !important;
+    color: #fff !important;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply text-text font-extrabold;
+    color: #fff !important;
+    /* Add visual spacing for headers */
+    letter-spacing: -0.01em;
   }
   a {
-    @apply text-supaGreen underline underline-offset-2 hover:text-[#32bf73] transition-colors;
+    @apply underline underline-offset-2 transition-colors;
+    color: #3ECF8E !important;
+    text-decoration-thickness: 2px;
+    &:hover {
+      color: #32bf73 !important;
+    }
   }
   label {
-    @apply text-text;
+    @apply text-text font-medium;
+    color: #fff !important;
   }
   input,
   textarea,
   select {
-    @apply bg-background border-border text-text placeholder:text-gray-400 rounded-lg px-4 py-2 focus-visible:ring-supaGreen;
+    @apply bg-background border-border text-text placeholder:text-gray-400 rounded-xl px-4 py-2 focus-visible:ring-supaGreen border-2;
+    background: #000 !important;
+    color: #fff !important;
+    border-color: #222 !important;
+    font-size: 1rem;
   }
-  button {
-    @apply font-bold bg-supaGreen text-black rounded-lg shadow transition-all duration-200 hover:bg-[#32bf73] focus-visible:ring-supaGreen;
+  input:focus,
+  textarea:focus,
+  select:focus {
+    border-color: #3ECF8E !important;
+    outline: none;
+    box-shadow: 0 0 0 2px #3ECF8E40;
+  }
+  button, .button, .btn, .btn-gradient, .btn-brand {
+    @apply font-bold rounded-xl px-6 py-3 shadow hover:bg-[#32bf73] transition-all duration-200;
+    background: #3ECF8E !important;
+    color: #000 !important;
+    border: none !important;
+    font-family: 'Inter', theme('fontFamily.sans');
+    outline: none;
+  }
+  button:disabled, .btn[disabled], .button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
+/* Components Layer: Card, Container, Badge */
 @layer components {
   .container {
     @apply mx-auto px-4;
+    max-width: 1400px;
   }
   .card {
-    @apply bg-card text-card-foreground rounded-lg border border-border shadow;
+    @apply bg-card text-card-foreground rounded-2xl border border-border shadow;
+    background: #101113;
+    color: #fff;
+    border-color: #262626;
   }
   .badge {
-    @apply bg-supaGreen text-black font-semibold px-2 py-0.5 rounded-full text-xs;
+    @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors;
+    font-family: 'Inter', theme('fontFamily.sans');
+    font-weight: 600;
+    &.badge-default {
+      background: #3ECF8E;
+      color: #000;
+      border: none;
+    }
+    &.badge-secondary {
+      background: #101113;
+      color: #fff;
+      border: 1px solid #222;
+    }
+    &.badge-destructive {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+    }
+    &.badge-outline {
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid #3ECF8E;
+    }
+    &.badge-ghost {
+      background: #181F1B;
+      color: #3ECF8E;
+      border: none;
+    }
   }
 }
 
-/* Custom scrollbars, selection, etc. (matching dark UI) */
+/* Custom scrollbars and selection UX for dark UI */
 ::-webkit-scrollbar {
   width: 8px;
   background: #111;
@@ -56,5 +123,12 @@
   border-radius: 4px;
 }
 ::selection {
-  background: #3ECF8E44; color: #000;
+  background: #3ECF8E44; 
+  color: #000;
 }
+::-moz-selection {
+  background: #3ECF8E44; 
+  color: #000;
+}
+
+/* Remove legacy global color overrides that bloat maintainability (moved above) */
