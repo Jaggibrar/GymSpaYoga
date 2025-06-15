@@ -7,6 +7,19 @@ interface PerformanceMetric {
   tags?: Record<string, string>;
 }
 
+// Extend PerformanceEntry interfaces for proper typing
+interface PerformanceMeasure extends PerformanceEntry {
+  value?: number;
+}
+
+interface PerformanceNavigationTiming extends PerformanceEntry {
+  value?: number;
+}
+
+interface PerformancePaintTiming extends PerformanceEntry {
+  value?: number;
+}
+
 class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private observers: PerformanceObserver[] = [];
@@ -20,9 +33,13 @@ class PerformanceMonitor {
     if ('PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          this.recordMetric(entry.name, entry.value, 'gauge', {
-            entryType: entry.entryType
-          });
+          const entryWithValue = entry as PerformanceMeasure;
+          this.recordMetric(
+            entry.name, 
+            entryWithValue.value || entry.duration || entry.startTime, 
+            'gauge', 
+            { entryType: entry.entryType }
+          );
         }
       });
       

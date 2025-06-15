@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -64,7 +65,7 @@ const queryClient = new QueryClient({
         return failureCount < 2;
       },
       staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (renamed from cacheTime)
     },
     mutations: {
       retry: false,
@@ -92,7 +93,8 @@ function App() {
             performanceMonitor.recordMetric('lcp', entry.startTime, 'gauge');
           }
           if (entry.entryType === 'first-input') {
-            performanceMonitor.recordMetric('fid', entry.processingStart - entry.startTime, 'gauge');
+            const eventEntry = entry as PerformanceEventTiming;
+            performanceMonitor.recordMetric('fid', eventEntry.processingStart - eventEntry.startTime, 'gauge');
           }
         }
       });
