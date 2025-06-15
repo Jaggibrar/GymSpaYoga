@@ -1,283 +1,424 @@
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useParams, Link } from "react-router-dom";
+import { useScrollToTop } from "@/hooks/useScrollToTop";
+import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Clock, Phone, Dumbbell, Users, ArrowLeft, CheckCircle } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { 
+  MapPin, 
+  Clock, 
+  Phone, 
+  Mail, 
+  Star, 
+  Dumbbell, 
+  Crown, 
+  Diamond, 
+  IndianRupee,
+  Check,
+  ArrowLeft,
+  Calendar,
+  Users,
+  Award,
+  Zap,
+  Shield,
+  Heart
+} from "lucide-react";
 import { toast } from "sonner";
-import BookingModal from "@/components/BookingModal";
-import { useGyms } from "@/hooks/useGyms";
+import SEOHead from "@/components/SEOHead";
+
+interface Gym {
+  id: string;
+  business_name: string;
+  description?: string;
+  address: string;
+  city: string;
+  state: string;
+  pin_code: string;
+  phone: string;
+  email: string;
+  opening_time: string;
+  closing_time: string;
+  monthly_price?: number;
+  session_price?: number;
+  amenities: string[];
+  image_urls: string[];
+  tier?: string;
+}
 
 const GymDetails = () => {
+  useScrollToTop();
   const { id } = useParams();
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState("");
-  const { gyms, loading } = useGyms();
-  const [gym, setGym] = useState<any>(null);
+  const [gym, setGym] = useState<Gym | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(0);
 
   useEffect(() => {
-    if (gyms && id) {
-      const foundGym = gyms.find(g => g.id === id);
-      setGym(foundGym);
+    if (id) {
+      fetchGymDetails(id);
     }
-  }, [gyms, id]);
+  }, [id]);
+
+  const fetchGymDetails = async (gymId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('business_profiles')
+        .select('*')
+        .eq('id', gymId)
+        .eq('business_type', 'gym')
+        .single();
+
+      if (error) throw error;
+      setGym(data);
+    } catch (error) {
+      console.error('Error fetching gym details:', error);
+      toast.error('Failed to load gym details');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return <Crown className="h-5 w-5" />;
+      case 'premium': return <Diamond className="h-5 w-5" />;
+      default: return <IndianRupee className="h-5 w-5" />;
+    }
+  };
+
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return "from-yellow-500 to-yellow-600";
+      case 'premium': return "from-blue-500 to-blue-600";
+      default: return "from-green-500 to-green-600";
+    }
+  };
+
+  const handleBookNow = () => {
+    toast.success("Booking initiated! Please sign in to complete your booking.");
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent"></div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-600 font-medium">Loading gym details...</p>
+        </div>
       </div>
     );
   }
 
   if (!gym) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center mobile-container">
-        <div className="text-center">
-          <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Gym not found</h2>
-          <Link to="/gyms">
-            <Button className="touch-target bg-orange-500 hover:bg-orange-600">Back to Gyms</Button>
-          </Link>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto">
+            <Dumbbell className="h-12 w-12 text-red-500" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Gym not found</h2>
+            <p className="text-gray-600 mb-6">The gym you're looking for doesn't exist.</p>
+            <Link to="/gyms">
+              <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Gyms
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
-  const handleCallNow = () => {
-    window.open(`tel:${gym.phone}`, '_self');
-    toast.success("Opening phone dialer...");
-  };
-
-  const handleBooking = (planName: string) => {
-    setSelectedPlan(planName);
-    setIsBookingOpen(true);
-  };
-
-  const membershipPlans = [
-    { 
-      name: "Day Pass", 
-      price: gym.session_price ? `₹${gym.session_price}` : "₹300", 
-      duration: "1 Day", 
-      savings: null,
-      popular: false
-    },
-    { 
-      name: "Monthly", 
-      price: gym.monthly_price ? `₹${gym.monthly_price}` : "₹1200", 
-      duration: "1 Month", 
-      savings: null,
-      popular: true
-    },
-    { 
-      name: "Quarterly", 
-      price: gym.monthly_price ? `₹${Math.round(gym.monthly_price * 3 * 0.9)}` : "₹3240", 
-      duration: "3 Months", 
-      savings: gym.monthly_price ? `₹${Math.round(gym.monthly_price * 3 * 0.1)}` : "₹360",
-      popular: false
-    },
-    { 
-      name: "Annual", 
-      price: gym.monthly_price ? `₹${Math.round(gym.monthly_price * 12 * 0.8)}` : "₹11520", 
-      duration: "12 Months", 
-      savings: gym.monthly_price ? `₹${Math.round(gym.monthly_price * 12 * 0.2)}` : "₹2880",
-      popular: false
-    }
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
-      {/* Modern Header */}
-      <header className="bg-white shadow-lg sticky top-0 z-50 border-b border-gray-200">
-        <div className="mobile-container py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/gyms" className="flex items-center space-x-2 text-gray-600 hover:text-orange-500 transition-colors duration-300 touch-target">
-              <ArrowLeft className="h-5 w-5" />
-              <span className="font-medium">Back</span>
-            </Link>
-            <Link to="/" className="flex items-center space-x-3">
-              <div className="h-10 w-10 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                <Dumbbell className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                GymSpaYoga
-              </h1>
-            </Link>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      <SEOHead
+        title={`${gym.business_name} - Premium Gym Details`}
+        description={gym.description || `Discover ${gym.business_name} - Premium fitness center with state-of-the-art equipment and professional trainers.`}
+      />
 
-      <div className="mobile-container py-6">
-        {/* Hero Section with Image and Basic Info */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-8">
-          {/* Main Image */}
-          <div className="lg:col-span-2">
-            <div className="relative h-80 lg:h-96 rounded-3xl overflow-hidden shadow-2xl">
-              <img 
-                src={gym.image_urls[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"} 
-                alt={gym.business_name} 
-                className="w-full h-full object-cover" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
-              <div className="absolute top-6 right-6">
-                <Badge className="bg-yellow-500 text-yellow-900 px-4 py-2 text-sm font-semibold shadow-lg">
-                  {gym.category || "Premium"}
-                </Badge>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-orange-600 to-yellow-500 opacity-90"></div>
+        <div className="relative h-[60vh] flex items-center">
+          {gym.image_urls && gym.image_urls.length > 0 && (
+            <img 
+              src={gym.image_urls[selectedImage] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"}
+              alt={gym.business_name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          <div className="absolute inset-0 bg-black/40"></div>
+          
+          <div className="relative mobile-container z-10 text-white">
+            <div className="max-w-4xl">
+              <Link to="/gyms" className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors">
+                <ArrowLeft className="h-5 w-5" />
+                <span className="font-medium">Back to Gyms</span>
+              </Link>
+              
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                  <Dumbbell className="h-8 w-8 text-white" />
+                </div>
+                {gym.tier && (
+                  <Badge className={`bg-gradient-to-r ${getTierColor(gym.tier)} text-white border-0 px-4 py-2 text-lg font-bold`}>
+                    {getTierIcon(gym.tier)}
+                    <span className="ml-2 capitalize">{gym.tier}</span>
+                  </Badge>
+                )}
               </div>
-              <div className="absolute bottom-6 left-6 text-white">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-lg font-bold">4.8</span>
-                  <span className="text-sm opacity-90">(128 reviews)</span>
+              
+              <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight">{gym.business_name}</h1>
+              <p className="text-xl md:text-2xl text-white/90 mb-6 max-w-3xl">
+                {gym.description || "Premium fitness center with state-of-the-art equipment and professional trainers"}
+              </p>
+              
+              <div className="flex items-center gap-6 text-white/90">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  <span className="font-medium">{gym.city}, {gym.state}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="h-5 w-5 fill-current text-yellow-400" />
+                  <span className="font-medium">4.8 Rating</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  <span className="font-medium">1000+ Members</span>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* Quick Info Card */}
-          <div>
-            <Card className="p-6 h-fit shadow-xl bg-white border-0">
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2 leading-tight">{gym.business_name}</h1>
-                  <div className="text-right">
-                    <p className="text-3xl font-bold text-orange-500">
-                      {gym.monthly_price ? `₹${gym.monthly_price}` : `₹${gym.session_price}`}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {gym.monthly_price ? "/month" : "/session"}
-                    </p>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <MapPin className="h-5 w-5 text-orange-500 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-semibold text-gray-900">{gym.city}, {gym.state}</p>
-                      <p className="text-sm text-gray-600 line-clamp-2">{gym.address}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Clock className="h-5 w-5 text-orange-500" />
-                    <span className="text-gray-700">{gym.opening_time} - {gym.closing_time}</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Phone className="h-5 w-5 text-orange-500" />
-                    <span className="text-gray-700">{gym.phone}</span>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-3">
-                  <Button 
-                    onClick={() => handleBooking("Monthly")}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-4 text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                  >
-                    Book Membership Now
-                  </Button>
-                  <Button 
-                    onClick={handleCallNow}
-                    variant="outline" 
-                    className="w-full border-2 border-orange-500 text-orange-600 hover:bg-orange-50 font-semibold py-3 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
-                  >
-                    Call Now
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
         </div>
 
-        {/* Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left Column - About & Amenities */}
+        {/* Image Gallery Dots */}
+        {gym.image_urls && gym.image_urls.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
+            {gym.image_urls.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImage(index)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  index === selectedImage ? 'bg-white' : 'bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mobile-container py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* About Section */}
-            <Card className="p-8 shadow-lg bg-white border-0">
-              <h2 className="text-2xl font-bold mb-6 text-gray-900">About {gym.business_name}</h2>
-              <p className="text-gray-700 leading-relaxed text-lg">
-                {gym.description || "Experience state-of-the-art fitness facilities with premium equipment and expert trainers. Our modern gym offers a complete wellness experience with personalized training programs designed to help you achieve your fitness goals."}
-              </p>
+            <Card className="border-0 shadow-xl rounded-3xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 pb-8">
+                <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <Award className="h-5 w-5 text-white" />
+                  </div>
+                  About {gym.business_name}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  {gym.description || "Experience premium fitness at its finest with state-of-the-art equipment, expert trainers, and a motivating environment designed to help you achieve your fitness goals."}
+                </p>
+              </CardContent>
             </Card>
 
             {/* Amenities Section */}
-            {gym.amenities && gym.amenities.length > 0 && (
-              <Card className="p-8 shadow-lg bg-white border-0">
-                <h2 className="text-2xl font-bold mb-6 text-gray-900">Amenities & Features</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  {gym.amenities.map((amenity: string) => (
-                    <div key={amenity} className="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-orange-500 flex-shrink-0" />
-                      <span className="text-gray-700 font-medium">{amenity}</span>
+            <Card className="border-0 shadow-xl rounded-3xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 pb-8">
+                <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <Zap className="h-5 w-5 text-white" />
+                  </div>
+                  Amenities & Features
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {gym.amenities && gym.amenities.length > 0 ? (
+                    gym.amenities.map((amenity, index) => (
+                      <div key={index} className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                        <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                          <Check className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="font-medium text-gray-700 capitalize">{amenity}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {['Air Conditioning', 'Locker Room', 'Parking', 'Shower Facilities', 'Personal Training', 'Group Classes'].map((amenity, index) => (
+                        <div key={index} className="flex items-center gap-3 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                          <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                            <Check className="h-4 w-4 text-white" />
+                          </div>
+                          <span className="font-medium text-gray-700">{amenity}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </Card>
-            )}
+              </CardContent>
+            </Card>
+
+            {/* Contact Information */}
+            <Card className="border-0 shadow-xl rounded-3xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-red-50 to-orange-50 pb-8">
+                <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-white" />
+                  </div>
+                  Location & Contact
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8 space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-gray-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Address</h4>
+                    <p className="text-gray-600">{gym.address}, {gym.city}, {gym.state} - {gym.pin_code}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-gray-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Phone</h4>
+                    <p className="text-gray-600">{gym.phone}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-gray-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Email</h4>
+                    <p className="text-gray-600">{gym.email}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                    <Clock className="h-6 w-6 text-gray-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-1">Operating Hours</h4>
+                    <p className="text-gray-600">{gym.opening_time} - {gym.closing_time}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Right Column - Membership Plans */}
-          <div>
-            <Card className="p-8 shadow-lg bg-white border-0">
-              <h2 className="text-2xl font-bold mb-6 text-gray-900">Membership Plans</h2>
-              <div className="space-y-6">
-                {membershipPlans.map((plan) => (
-                  <div key={plan.name} className={`relative border-2 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg ${plan.popular ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:border-orange-300'}`}>
-                    {plan.popular && (
-                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className="bg-orange-500 text-white px-4 py-1 text-sm font-bold">
-                          Most Popular
-                        </Badge>
-                      </div>
-                    )}
-                    
-                    <div className="text-center mb-4">
-                      <h3 className="font-bold text-xl text-gray-900 mb-2">{plan.name}</h3>
-                      <div className="flex items-baseline justify-center space-x-1">
-                        <span className="text-3xl font-bold text-orange-500">{plan.price}</span>
-                      </div>
-                      <p className="text-gray-600 mt-1">{plan.duration}</p>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Membership Plans */}
+            <Card className="border-0 shadow-2xl rounded-3xl overflow-hidden sticky top-8">
+              <CardHeader className="bg-gradient-to-r from-red-500 to-orange-500 text-white pb-8">
+                <CardTitle className="text-2xl font-bold flex items-center gap-3">
+                  <Shield className="h-6 w-6" />
+                  Membership Plans
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-8 space-y-6">
+                {/* Monthly Plan */}
+                {gym.monthly_price && (
+                  <div className="relative p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl border-2 border-orange-200">
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-orange-500 text-white px-4 py-1 font-bold">Most Popular</Badge>
                     </div>
-                    
-                    {plan.savings && (
-                      <div className="text-center mb-4">
-                        <Badge className="bg-green-500 text-white text-sm px-3 py-1">
-                          Save {plan.savings}
-                        </Badge>
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">Monthly</h3>
+                      <div className="mb-4">
+                        <span className="text-4xl font-black text-orange-600">₹{gym.monthly_price}</span>
+                        <span className="text-gray-500 ml-2">/month</span>
                       </div>
-                    )}
-                    
-                    <Button 
-                      onClick={() => handleBooking(plan.name)}
-                      className={`w-full font-bold py-3 text-lg transition-all duration-300 ${
-                        plan.popular 
-                          ? 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105' 
-                          : 'bg-gray-100 hover:bg-orange-500 text-gray-700 hover:text-white border-2 border-gray-200 hover:border-orange-500'
-                      }`}
-                    >
-                      Book {plan.name}
-                    </Button>
+                      <Button 
+                        onClick={handleBookNow}
+                        className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 font-bold py-3 text-lg rounded-xl transform hover:scale-105 transition-all duration-300"
+                      >
+                        <Calendar className="h-5 w-5 mr-2" />
+                        Book Monthly
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </div>
+                )}
+
+                {/* Session Plan */}
+                {gym.session_price && (
+                  <div className="p-6 bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl border border-gray-200">
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">Per Session</h3>
+                      <div className="mb-4">
+                        <span className="text-3xl font-black text-blue-600">₹{gym.session_price}</span>
+                        <span className="text-gray-500 ml-2">/session</span>
+                      </div>
+                      <Button 
+                        onClick={handleBookNow}
+                        variant="outline"
+                        className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white font-bold py-3 text-lg rounded-xl transition-all duration-300"
+                      >
+                        <Heart className="h-5 w-5 mr-2" />
+                        Book Session
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Contact for Pricing */}
+                {!gym.monthly_price && !gym.session_price && (
+                  <div className="p-6 bg-gradient-to-br from-gray-50 to-purple-50 rounded-2xl border border-gray-200">
+                    <div className="text-center">
+                      <h3 className="text-xl font-bold text-gray-800 mb-2">Custom Plans</h3>
+                      <p className="text-gray-600 mb-4">Contact us for personalized pricing</p>
+                      <Button 
+                        onClick={handleBookNow}
+                        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 font-bold py-3 text-lg rounded-xl"
+                      >
+                        Get Quote
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Trust Indicators */}
+                <div className="pt-6 border-t border-gray-200">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Verified Business</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Professional Trainers</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Modern Equipment</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <Check className="h-4 w-4 text-green-500" />
+                      <span>Flexible Memberships</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
       </div>
-
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        businessId={gym.id}
-        businessName={gym.business_name}
-        businessType={`Gym ${selectedPlan}`}
-        price={membershipPlans.find(p => p.name === selectedPlan)?.price || (gym.monthly_price ? `₹${gym.monthly_price}` : `₹${gym.session_price}`)}
-      />
     </div>
   );
 };
