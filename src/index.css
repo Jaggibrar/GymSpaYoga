@@ -1,432 +1,60 @@
+
+/* Inter font import for Google Fonts. (If not hosted locally) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  html {
+    font-family: 'Inter', theme('fontFamily.sans');
+    background: #000 !important;
+    color: #fff !important;
   }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-
   body {
-    @apply bg-black text-white;
+    @apply bg-background text-text min-h-screen font-sans;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply text-white;
+    @apply text-text font-extrabold;
   }
   a {
-    @apply text-[#3ECF8E] underline decoration-[#3ECF8E]/40 hover:text-[#32bf73];
+    @apply text-supaGreen underline underline-offset-2 hover:text-[#32bf73] transition-colors;
   }
   label {
-    @apply text-white;
+    @apply text-text;
   }
   input,
   textarea,
   select {
-    @apply bg-black border-gray-700 text-white placeholder:text-gray-400;
+    @apply bg-background border-border text-text placeholder:text-gray-400 rounded-lg px-4 py-2 focus-visible:ring-supaGreen;
   }
   button {
-    @apply font-bold;
+    @apply font-bold bg-supaGreen text-black rounded-lg shadow transition-all duration-200 hover:bg-[#32bf73] focus-visible:ring-supaGreen;
   }
 }
 
-/* Enhanced Mobile Responsive Design */
 @layer components {
-  /* Hide scrollbars while maintaining functionality */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Mobile-first responsive design utilities - full width on mobile */
-  .mobile-container {
-    @apply w-full mx-auto;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  @screen sm {
-    .mobile-container {
-      @apply px-4 max-w-none;
-    }
-  }
-
-  @screen md {
-    .mobile-container {
-      @apply px-6 max-w-7xl;
-    }
-  }
-
-  @screen lg {
-    .mobile-container {
-      @apply px-8;
-    }
-  }
-
-  /* Touch-friendly button sizes for all mobile devices */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px] relative;
-  }
-
-  /* Responsive text sizing optimized for all screen sizes */
-  .mobile-text {
-    @apply text-xs leading-relaxed;
-  }
-
-  @screen sm {
-    .mobile-text {
-      @apply text-sm;
-    }
-  }
-
-  @screen md {
-    .mobile-text {
-      @apply text-base;
-    }
-  }
-
-  /* Enhanced horizontal scrolling for mobile with better UX */
-  .horizontal-scroll {
-    @apply overflow-x-auto overflow-y-hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  .horizontal-scroll > * {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
-
-  /* Mobile navigation improvements */
-  .mobile-nav {
-    @apply flex overflow-x-auto space-x-2 scrollbar-hide;
-  }
-
-  .mobile-nav > * {
-    @apply flex-shrink-0;
-  }
-
-  /* Mobile horizontal card layout */
-  .mobile-horizontal-cards {
-    @apply flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  .mobile-horizontal-cards > * {
-    @apply flex-shrink-0;
-    scroll-snap-align: start;
-  }
-
-  /* Responsive card sizing for all devices */
-  .mobile-card {
-    @apply min-w-[250px] max-w-[280px];
-  }
-
-  @screen sm {
-    .mobile-card {
-      @apply min-w-[280px] max-w-[320px];
-    }
-  }
-
-  .mobile-card-sm {
-    @apply min-w-[200px] max-w-[220px];
-  }
-
-  @screen sm {
-    .mobile-card-sm {
-      @apply min-w-[240px] max-w-[260px];
-    }
-  }
-
-  /* Text truncation utilities */
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  /* Responsive grid utilities */
-  .responsive-grid {
-    @apply grid grid-cols-1 gap-4;
-  }
-
-  @screen sm {
-    .responsive-grid {
-      @apply grid-cols-2 gap-6;
-    }
-  }
-
-  @screen md {
-    .responsive-grid {
-      @apply grid-cols-3 gap-8;
-    }
-  }
-
-  /* Mobile-first spacing utilities - full width on mobile */
-  .mobile-section {
-    @apply py-8 px-3 w-full;
-  }
-
-  @screen sm {
-    .mobile-section {
-      @apply py-12 px-4;
-    }
-  }
-
-  @screen md {
-    .mobile-section {
-      @apply py-16 px-6;
-    }
-  }
-}
-
-/* Performance optimizations */
-@layer utilities {
-  /* GPU acceleration for smooth animations */
-  .gpu-accelerated {
-    @apply transform-gpu;
-  }
-
-  /* Optimized image loading */
-  .optimized-image {
-    @apply object-cover will-change-transform;
-  }
-
-  /* Smooth touch scrolling */
-  .smooth-scroll {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  /* Enhanced mobile horizontal scroll indicators */
-  .scroll-indicator::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
-    pointer-events: none;
-  }
-
-  /* Mobile-specific responsive utilities - full width on mobile */
-  .mobile-w-full {
-    @apply w-full;
-  }
-
-  @screen sm {
-    .mobile-w-full {
-      @apply w-auto;
-    }
-  }
-
-  /* Responsive flexbox utilities */
-  .mobile-flex-col {
-    @apply flex flex-col;
-  }
-
-  @screen sm {
-    .mobile-flex-col {
-      @apply flex-row;
-    }
-  }
-
-  /* Full width utility for mobile */
-  .mobile-full-width {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-  }
-}
-
-/* Mobile viewport fixes */
-@supports (-webkit-touch-callout: none) {
-  .ios-scroll-fix {
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Focus management for mobile */
-@media (pointer: coarse) {
-  .focus\:outline-mobile:focus {
-    @apply outline-2 outline-blue-500 outline-offset-2;
-  }
-}
-
-/* Mobile-specific improvements for all screen sizes */
-@media (max-width: 640px) {
-  /* Extra small mobile devices - full width */
-  .mobile-section {
-    @apply px-3 py-6 w-full;
-  }
-
-  .mobile-container {
-    @apply px-3 w-full max-w-none;
-  }
-
-  button, .touch-target {
-    @apply min-h-[44px] min-w-[44px];
-  }
-
-  h1 {
-    @apply text-2xl leading-tight;
-  }
-
-  h2 {
-    @apply text-xl leading-tight;
-  }
-
-  .mobile-optimized-card {
-    @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
-  }
-
-  /* Ensure full width for all containers on mobile */
   .container {
-    @apply px-3 w-full max-w-none;
+    @apply mx-auto px-4;
+  }
+  .card {
+    @apply bg-card text-card-foreground rounded-lg border border-border shadow;
+  }
+  .badge {
+    @apply bg-supaGreen text-black font-semibold px-2 py-0.5 rounded-full text-xs;
   }
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-  /* Small tablets and large mobile devices */
-  .mobile-section {
-    @apply px-4 py-8;
-  }
+/* Custom scrollbars, selection, etc. (matching dark UI) */
+::-webkit-scrollbar {
+  width: 8px;
+  background: #111;
 }
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  /* Tablets */
-  .mobile-section {
-    @apply px-6 py-12;
-  }
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 4px;
 }
-
-/* Ultra-wide and large screen optimizations */
-@media (min-width: 1440px) {
-  .mobile-container {
-    @apply max-w-7xl;
-  }
-}
-
-/* Portrait and landscape orientation handling */
-@media (orientation: portrait) {
-  .portrait-optimized {
-    @apply flex-col;
-  }
-}
-
-@media (orientation: landscape) {
-  .landscape-optimized {
-    @apply flex-row;
-  }
+::selection {
+  background: #3ECF8E44; color: #000;
 }
