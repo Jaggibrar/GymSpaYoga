@@ -1,13 +1,12 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Crown, Star, Zap } from "lucide-react";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
 import { useAuth } from "@/hooks/useAuth";
 
 // Import components
 import { MultiStepForm } from "@/components/registration/MultiStepForm";
 import { BusinessTypeSelector } from "@/components/registration/BusinessTypeSelector";
-import { CategoryTierSelector } from "@/components/registration/CategoryTierSelector";
 import { ContactInfoForm } from "@/components/registration/ContactInfoForm";
 import { AddressForm } from "@/components/registration/AddressForm";
 import { OperatingHoursForm } from "@/components/registration/OperatingHoursForm";
@@ -24,7 +23,6 @@ const RegisterBusiness = () => {
   const { registerBusiness, loading } = useBusinessRegistration();
   
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [businessImages, setBusinessImages] = useState<File[]>([]);
   
@@ -55,33 +53,6 @@ const RegisterBusiness = () => {
     return null;
   }
 
-  const categoryTiers = [
-    {
-      value: "luxury",
-      label: "Luxury Destination",
-      price: "₹7,999",
-      color: "from-purple-600 to-purple-700",
-      icon: Crown,
-      features: ["Premium Profile Badge", "Top Search Rankings", "Marketing Campaign", "Priority Support", "Analytics Dashboard"]
-    },
-    {
-      value: "premium",
-      label: "Premium Destination",
-      price: "₹4,999",
-      color: "from-blue-600 to-blue-700",
-      icon: Star,
-      features: ["Premium Badge", "Featured Listings", "Social Media Promotion", "Email Support", "Basic Analytics"]
-    },
-    {
-      value: "budget",
-      label: "Budget Friendly",
-      price: "₹2,999",
-      color: "from-emerald-600 to-emerald-700",
-      icon: Zap,
-      features: ["Standard Profile", "Regular Listings", "Community Support", "Basic Promotion"]
-    }
-  ];
-
   const businessTypes = [
     { value: "gym", label: "Gym / Fitness Center", icon: "💪" },
     { value: "spa", label: "Spa / Wellness Center", icon: "🧘" },
@@ -109,7 +80,7 @@ const RegisterBusiness = () => {
 
   const handleSubmit = async () => {
     // Basic validation
-    if (!formData.businessName || !businessType || !selectedCategory || 
+    if (!formData.businessName || !businessType || 
         !formData.email || !formData.phone || !formData.address || 
         !formData.city || !formData.state || !formData.pinCode ||
         !formData.openingTime || !formData.closingTime) {
@@ -120,7 +91,7 @@ const RegisterBusiness = () => {
     const businessFormData = {
       ...formData,
       businessType,
-      category: selectedCategory,
+      category: "standard", // Set a default category since we removed tier selection
       amenities: selectedAmenities,
       images: businessImages
     };
@@ -143,7 +114,6 @@ const RegisterBusiness = () => {
         description: ""
       });
       setSelectedAmenities([]);
-      setSelectedCategory("");
       setBusinessType("");
       setBusinessImages([]);
       navigate('/');
@@ -153,10 +123,6 @@ const RegisterBusiness = () => {
   // Fixed validation functions for each step
   const validateBusinessType = () => {
     return businessType.trim() !== "" && formData.businessName.trim() !== "";
-  };
-
-  const validateCategory = () => {
-    return selectedCategory !== "";
   };
 
   const validateContact = () => {
@@ -218,19 +184,6 @@ const RegisterBusiness = () => {
             />
           </div>
         </div>
-      )
-    },
-    {
-      id: "category",
-      title: "Category & Tier",
-      description: "Choose your category",
-      validate: validateCategory,
-      component: (
-        <CategoryTierSelector 
-          categoryTiers={categoryTiers}
-          selectedCategory={selectedCategory}
-          onCategorySelect={setSelectedCategory}
-        />
       )
     },
     {

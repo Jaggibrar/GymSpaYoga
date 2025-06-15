@@ -34,7 +34,6 @@ export const useBusinessRegistration = () => {
     
     if (!formData.businessName.trim()) errors.push('Business name is required');
     if (!formData.businessType) errors.push('Business type is required');
-    if (!formData.category) errors.push('Category is required');
     if (!formData.email.trim()) errors.push('Email is required');
     if (!formData.phone.trim()) errors.push('Phone number is required');
     if (!formData.address.trim()) errors.push('Address is required');
@@ -129,14 +128,14 @@ export const useBusinessRegistration = () => {
 
       console.log('Uploaded image URLs:', imageUrls);
 
-      // Insert business profile
+      // Insert business profile with default category
       const { error } = await supabase
         .from('business_profiles')
         .insert({
           user_id: user.id,
           business_name: formData.businessName.trim(),
           business_type: formData.businessType,
-          category: formData.category,
+          category: 'standard', // Default category instead of payment tier
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
           address: formData.address.trim(),
@@ -150,7 +149,7 @@ export const useBusinessRegistration = () => {
           description: formData.description.trim(),
           amenities: formData.amenities,
           image_urls: imageUrls,
-          status: 'approved' // Auto-approve for now, can be changed to 'pending' for manual approval
+          status: 'approved' // Auto-approve for immediate listing
         });
 
       if (error) {

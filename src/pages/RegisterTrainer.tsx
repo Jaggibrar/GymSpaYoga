@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Crown, Zap, Shield, Award, Dumbbell, Waves, Heart } from "lucide-react";
+import { Dumbbell, Waves, Heart } from "lucide-react";
 import { useTrainerRegistration } from "@/hooks/useTrainerRegistration";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -9,12 +9,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { MultiStepForm } from "@/components/registration/MultiStepForm";
 import { TrainerPersonalInfo } from "@/components/registration/TrainerPersonalInfo";
 import { TrainerCategorySelector } from "@/components/registration/TrainerCategorySelector";
-import { TrainerTierSelector } from "@/components/registration/TrainerTierSelector";
 import { TrainerProfessionalDetails } from "@/components/registration/TrainerProfessionalDetails";
 import { TrainerBioAndCertifications } from "@/components/registration/TrainerBioAndCertifications";
 import { TrainerSpecializationsSelector } from "@/components/registration/TrainerSpecializationsSelector";
 import { TrainerProfileImageUpload } from "@/components/registration/TrainerProfileImageUpload";
-import { TrainerPricingSummary } from "@/components/registration/TrainerPricingSummary";
 
 const RegisterTrainer = () => {
   const navigate = useNavigate();
@@ -26,7 +24,6 @@ const RegisterTrainer = () => {
     email: "",
     phone: "",
     category: "",
-    trainerTier: "",
     experience: "",
     certifications: "",
     specializations: [] as string[],
@@ -48,41 +45,6 @@ const RegisterTrainer = () => {
     { value: "yoga", label: "Yoga Instructor", icon: Heart, color: "from-purple-500 to-pink-500" }
   ];
 
-  const trainerTiers = [
-    { 
-      value: "elite", 
-      label: "Elite", 
-      price: "₹4,999", 
-      color: "from-purple-600 to-purple-700",
-      icon: Crown,
-      features: ["Premium Profile Badge", "Priority Listings", "Marketing Support", "24/7 Support"]
-    },
-    { 
-      value: "pro", 
-      label: "Pro", 
-      price: "₹3,999", 
-      color: "from-blue-600 to-blue-700",
-      icon: Award,
-      features: ["Pro Profile Badge", "Featured Listings", "Basic Marketing", "Email Support"]
-    },
-    { 
-      value: "intermediate", 
-      label: "Intermediate", 
-      price: "₹2,999", 
-      color: "from-emerald-600 to-emerald-700",
-      icon: Zap,
-      features: ["Standard Profile", "Regular Listings", "Community Support"]
-    },
-    { 
-      value: "basic", 
-      label: "Basic", 
-      price: "₹1,700", 
-      color: "from-orange-600 to-orange-700",
-      icon: Shield,
-      features: ["Basic Profile", "Standard Listings", "Email Support"]
-    }
-  ];
-
   const specializations = {
     gym: ["Weight Training", "Cardio", "Strength Training", "CrossFit", "Bodybuilding", "HIIT"],
     spa: ["Swedish Massage", "Deep Tissue", "Aromatherapy", "Hot Stone", "Reflexology", "Facial"],
@@ -97,7 +59,6 @@ const RegisterTrainer = () => {
         email: "",
         phone: "",
         category: "",
-        trainerTier: "",
         experience: "",
         certifications: "",
         specializations: [],
@@ -135,8 +96,8 @@ const RegisterTrainer = () => {
            phoneRegex.test(formData.phone);
   };
 
-  const validateCategoryAndTier = () => {
-    return formData.category !== "" && formData.trainerTier !== "";
+  const validateCategory = () => {
+    return formData.category !== "";
   };
 
   const validateProfessionalDetails = () => {
@@ -176,22 +137,15 @@ const RegisterTrainer = () => {
     },
     {
       id: "category",
-      title: "Category & Tier",
+      title: "Category",
       description: "Choose your expertise",
-      validate: validateCategoryAndTier,
+      validate: validateCategory,
       component: (
-        <div className="space-y-8">
-          <TrainerCategorySelector
-            categories={categories}
-            selectedCategory={formData.category}
-            onCategorySelect={(category) => setFormData(prev => ({ ...prev, category }))}
-          />
-          <TrainerTierSelector
-            trainerTiers={trainerTiers}
-            selectedTier={formData.trainerTier}
-            onTierSelect={(trainerTier) => setFormData(prev => ({ ...prev, trainerTier }))}
-          />
-        </div>
+        <TrainerCategorySelector
+          categories={categories}
+          selectedCategory={formData.category}
+          onCategorySelect={(category) => setFormData(prev => ({ ...prev, category }))}
+        />
       )
     },
     {
@@ -243,17 +197,6 @@ const RegisterTrainer = () => {
       description: "Upload your photo",
       validate: validateProfileImage,
       component: <TrainerProfileImageUpload onFileChange={handleFileChange} />
-    },
-    {
-      id: "summary",
-      title: "Review & Payment",
-      description: "Confirm your details",
-      component: (
-        <TrainerPricingSummary
-          selectedTier={formData.trainerTier}
-          trainerTiers={trainerTiers}
-        />
-      )
     }
   ];
 

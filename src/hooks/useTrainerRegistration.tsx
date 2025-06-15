@@ -10,7 +10,6 @@ interface TrainerFormData {
   email: string;
   phone: string;
   category: string;
-  trainerTier: string;
   experience: string;
   certifications: string;
   specializations: string[];
@@ -32,7 +31,6 @@ export const useTrainerRegistration = () => {
     if (!formData.email.trim()) errors.push('Email is required');
     if (!formData.phone.trim()) errors.push('Phone number is required');
     if (!formData.category) errors.push('Category is required');
-    if (!formData.trainerTier) errors.push('Trainer tier is required');
     if (!formData.experience) errors.push('Experience is required');
     if (!formData.hourlyRate) errors.push('Hourly rate is required');
     if (!formData.location.trim()) errors.push('Location is required');
@@ -107,7 +105,7 @@ export const useTrainerRegistration = () => {
         console.log('Trainer profile image uploaded:', profileImageUrl);
       }
 
-      // Insert trainer profile
+      // Insert trainer profile with default tier
       const { error } = await supabase
         .from('trainer_profiles')
         .insert({
@@ -116,7 +114,7 @@ export const useTrainerRegistration = () => {
           email: formData.email.trim().toLowerCase(),
           phone: formData.phone.trim(),
           category: formData.category,
-          trainer_tier: formData.trainerTier,
+          trainer_tier: 'standard', // Default tier instead of payment tier
           experience: parseInt(formData.experience),
           certifications: formData.certifications.trim(),
           specializations: formData.specializations,
@@ -124,7 +122,7 @@ export const useTrainerRegistration = () => {
           location: formData.location.trim(),
           bio: formData.bio.trim(),
           profile_image_url: profileImageUrl,
-          status: 'approved' // Auto-approve for now, can be changed to 'pending' for manual approval
+          status: 'approved' // Auto-approve for immediate listing
         });
 
       if (error) {
