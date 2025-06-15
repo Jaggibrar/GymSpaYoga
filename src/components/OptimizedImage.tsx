@@ -116,7 +116,7 @@ const OptimizedImage = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full h-full overflow-hidden">
       {!isLoaded && placeholder}
       
       <picture>
@@ -134,7 +134,7 @@ const OptimizedImage = ({
           width={width}
           height={height}
           className={cn(
-            "transition-opacity duration-300",
+            "transition-opacity duration-300 w-full h-full object-cover",
             isLoaded ? "opacity-100" : "opacity-0",
             className
           )}

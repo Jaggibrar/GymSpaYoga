@@ -36,12 +36,12 @@ const EnhancedBusinessCard = ({
   featured = false
 }: EnhancedBusinessCardProps) => {
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#0FFCBE] bg-white relative overflow-hidden">
-      <div className="relative overflow-hidden h-48 md:h-56">
+    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#0FFCBE] bg-white relative overflow-hidden rounded-xl">
+      <div className="relative overflow-hidden h-48 md:h-56 w-full rounded-t-xl">
         <OptimizedImage 
           src={image} 
           alt={`${name} - ${description}`}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          className="group-hover:scale-110 transition-transform duration-700"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         

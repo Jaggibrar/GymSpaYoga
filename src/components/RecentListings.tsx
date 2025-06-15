@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -136,14 +137,14 @@ const RecentListings = () => {
           {listings.map((listing) => (
             <Card 
               key={listing.id} 
-              className="overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer transform hover:scale-105"
+              className="overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer transform hover:scale-105 rounded-xl"
               onClick={() => handleCardClick(listing)}
             >
-              <div className="relative h-48 overflow-hidden">
+              <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
                 <OptimizedImage 
                   src={listing.image_urls[0] || "/placeholder.svg"} 
                   alt={listing.business_name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="group-hover:scale-105 transition-transform duration-300"
                   width={400}
                   height={200}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
