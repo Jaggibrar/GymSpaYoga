@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Clock, CreditCard, MapPin, User } from "lucide-react";
+import { Calendar, Clock, MapPin, User, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from '@/hooks/useAuth';
 import { useBookings } from '@/hooks/useBookings';
@@ -66,7 +66,7 @@ const PaymentModal = ({
     });
 
     if (booking) {
-      toast.success("Booking request submitted successfully!");
+      toast.success("Booking request submitted successfully! Payment will be made at the counter.");
       onClose();
       setBookingData({ date: '', time: '', duration: 60, notes: '' });
     }
@@ -77,7 +77,7 @@ const PaymentModal = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-gray-900">
-            <CreditCard className="h-5 w-5" />
+            <Calendar className="h-5 w-5" />
             <span>Book {serviceName}</span>
           </DialogTitle>
         </DialogHeader>
@@ -150,6 +150,17 @@ const PaymentModal = ({
               rows={3}
               className="text-gray-900"
             />
+          </div>
+
+          {/* Payment Information Notice */}
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <div className="flex items-center space-x-2 mb-2">
+              <CreditCard className="h-4 w-4 text-blue-600" />
+              <span className="font-semibold text-blue-900">Payment Information</span>
+            </div>
+            <p className="text-sm text-blue-800">
+              Payment will be made directly at the counter. No advance payment required.
+            </p>
           </div>
 
           <div className="flex space-x-3 pt-4">

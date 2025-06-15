@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, CheckCircle, AlertCircle } from "lucide-react";
+import { CalendarIcon, CheckCircle, AlertCircle, CreditCard } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { useBookings } from '@/hooks/useBookings';
@@ -139,7 +139,7 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
 
     if (booking) {
       setSubmissionStatus('submitted');
-      toast.success("Booking request submitted successfully!");
+      toast.success("Booking request submitted successfully! Payment will be made at the counter.");
       // Close modal after a delay
       setTimeout(() => {
         handleOpenChange(false);
@@ -289,6 +289,17 @@ const BookingModal = ({ businessName, businessType, businessId, trigger, isOpen,
                 <p><strong>Contact:</strong> {bookingData.name} ({bookingData.phone})</p>
                 {price && <p><strong>Price:</strong> {price}</p>}
               </div>
+            </div>
+
+            {/* Payment Information Notice */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <div className="flex items-center space-x-2 mb-2">
+                <CreditCard className="h-4 w-4 text-blue-600" />
+                <span className="font-semibold text-blue-900">Payment Information</span>
+              </div>
+              <p className="text-sm text-blue-800">
+                Payment will be made directly at the counter. No advance payment required.
+              </p>
             </div>
             
             {submissionStatus !== 'idle' && (
