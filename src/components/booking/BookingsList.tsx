@@ -55,6 +55,13 @@ export const BookingsList = ({
     }
   };
 
+  const handleCancel = async (bookingId: number) => {
+    const success = await updateBookingStatus(bookingId, 'cancelled', 'Booking cancelled by user');
+    if (success) {
+      toast.success('Booking cancelled successfully');
+    }
+  };
+
   const handleViewDetails = (bookingId: number) => {
     const booking = bookings.find(b => b.id === bookingId);
     if (booking) {
@@ -133,8 +140,10 @@ export const BookingsList = ({
               showActions={showBusinessActions}
               showUserInfo={businessOwnersView}
               showBusinessInfo={!businessOwnersView}
+              showCancelOption={!businessOwnersView}
               onConfirm={handleConfirm}
               onReject={handleReject}
+              onCancel={handleCancel}
               onViewDetails={handleViewDetails}
             />
           ))}

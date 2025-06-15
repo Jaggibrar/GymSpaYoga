@@ -28,8 +28,10 @@ interface BookingCardProps {
   showActions?: boolean;
   showBusinessInfo?: boolean;
   showUserInfo?: boolean;
+  showCancelOption?: boolean;
   onConfirm?: (bookingId: number) => void;
   onReject?: (bookingId: number) => void;
+  onCancel?: (bookingId: number) => void;
   onViewDetails?: (bookingId: number) => void;
 }
 
@@ -38,8 +40,10 @@ export const BookingCard = ({
   showActions = false,
   showBusinessInfo = false,
   showUserInfo = false,
+  showCancelOption = false,
   onConfirm, 
   onReject, 
+  onCancel,
   onViewDetails 
 }: BookingCardProps) => {
   const formatCurrency = (amount: number) => {
@@ -59,6 +63,7 @@ export const BookingCard = ({
   };
 
   const canConfirmOrReject = showActions && booking.status === 'pending';
+  const canCancel = showCancelOption && (booking.status === 'pending' || booking.status === 'confirmed');
 
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300">
@@ -169,6 +174,16 @@ export const BookingCard = ({
                 Reject
               </Button>
             </>
+          )}
+          
+          {canCancel && onCancel && (
+            <Button 
+              onClick={() => onCancel(booking.id)}
+              variant="destructive"
+              className="flex-1"
+            >
+              Cancel Booking
+            </Button>
           )}
           
           {onViewDetails && (
