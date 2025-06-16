@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dumbbell, Waves, Heart, UploadCloud, Star, MapPin, Phone, Mail, User, Award, FileText, Camera } from "lucide-react";
@@ -117,10 +118,20 @@ const RegisterTrainer = () => {
 
     setSuccessMessage(null);
 
+    // Transform the form data to match TrainerFormData interface
     const submissionData = {
-      ...formData,
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      location: formData.location,
+      category: formData.category,
+      trainer_tier: formData.trainerTier, // Convert camelCase to snake_case
+      bio: formData.bio,
       experience: exp,
-      hourlyRate: rate,
+      hourly_rate: rate, // Convert camelCase to snake_case
+      specializations: formData.specializations,
+      certifications: formData.certifications,
+      profile_image: formData.profileImage, // Convert camelCase to snake_case
     };
     
     const success = await registerTrainer(submissionData);
