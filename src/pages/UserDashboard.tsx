@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, MapPin, Clock, DollarSign, User, Building, Phone, Mail, Star, TrendingUp, Activity, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { getTierFromPricing, getTierIcon, getTierColor } from "@/utils/businessUtils";
 
 const UserDashboard = () => {
