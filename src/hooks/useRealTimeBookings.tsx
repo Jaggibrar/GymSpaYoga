@@ -107,8 +107,8 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
           // Normalize and validate the data
           const validBookings = (data || [])
-            .filter(isValidBooking)
-            .map(normalizeBookingData);
+            .map(normalizeBookingData)
+            .filter(isValidBooking);
           
           setBookings(validBookings);
         } else {
@@ -134,8 +134,8 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
         // Normalize and validate the data
         const validBookings = (data || [])
-          .filter(isValidBooking)
-          .map(normalizeBookingData);
+          .map(normalizeBookingData)
+          .filter(isValidBooking);
         
         setBookings(validBookings);
       }

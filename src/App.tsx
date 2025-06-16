@@ -32,6 +32,7 @@ import Blogs from "./pages/Blogs";
 import BlogPost from "./pages/BlogPost";
 import BlogList from "./pages/BlogList";
 import NotFound from "./pages/NotFound";
+import UserDashboard from "./pages/UserDashboard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -65,6 +66,7 @@ function App() {
                     <Route path="/register-business" element={<RegisterBusiness />} />
                     <Route path="/register-trainer" element={<RegisterTrainer />} />
                     <Route path="/user-bookings" element={<UserBookings />} />
+                    <Route path="/user-dashboard" element={<UserDashboard />} />
                     <Route path="/business-bookings" element={<BusinessBookings />} />
                     <Route path="/explore" element={<Explore />} />
                     <Route path="/about" element={<About />} />

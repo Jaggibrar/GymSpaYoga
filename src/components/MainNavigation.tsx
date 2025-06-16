@@ -110,10 +110,10 @@ const MainNavigation = () => {
           <div className="hidden md:flex items-center space-x-3">
             {user ? (
               <div className="flex items-center space-x-2">
-                <Link to="/user-bookings">
+                <Link to="/user-dashboard">
                   <Button variant="outline" size="sm" className="hover:border-emerald-500 hover:text-emerald-600">
                     <Calendar className="h-4 w-4 mr-2" />
-                    My Bookings
+                    My Dashboard
                   </Button>
                 </Link>
                 <Link to="/business-bookings">
@@ -205,10 +205,10 @@ const MainNavigation = () => {
                   <div className="border-t pt-4 mt-4 space-y-2">
                     {user ? (
                       <>
-                        <Link to="/user-bookings" onClick={() => setIsOpen(false)}>
+                        <Link to="/user-dashboard" onClick={() => setIsOpen(false)}>
                           <Button variant="outline" className="w-full justify-start hover:border-emerald-500 hover:text-emerald-600">
                             <Calendar className="h-4 w-4 mr-3" />
-                            My Bookings
+                            My Dashboard
                           </Button>
                         </Link>
                         <Link to="/business-bookings" onClick={() => setIsOpen(false)}>
