@@ -47,25 +47,69 @@ export const useBusinessData = (
     setError('');
     
     try {
+      // For trainer category, we need to fetch from trainer_profiles instead
+      if (category === 'trainer') {
+        const { data: trainers, error: trainerError } = await supabase
+          .from('trainer_profiles')
+          .select('*')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+
+        if (trainerError) {
+          console.error('❌ Error fetching trainers:', trainerError);
+          setError(trainerError.message);
+          toast.error('Failed to fetch trainers');
+          return;
+        }
+
+        console.log('✅ Successfully fetched trainers:', trainers?.length || 0);
+        
+        // Transform trainer data to match Business interface
+        const transformedTrainers = (trainers || []).map(trainer => ({
+          id: trainer.id,
+          business_name: trainer.name,
+          business_type: 'trainer',
+          category: trainer.category,
+          email: trainer.email,
+          phone: trainer.phone,
+          address: trainer.location,
+          city: trainer.location.split(',')[0] || trainer.location,
+          state: trainer.location.split(',')[1]?.trim() || 'India',
+          pin_code: '000000',
+          opening_time: '09:00:00',
+          closing_time: '18:00:00',
+          session_price: trainer.hourly_rate,
+          description: trainer.bio,
+          amenities: trainer.specializations || [],
+          image_urls: trainer.profile_image_url ? [trainer.profile_image_url] : [],
+          status: trainer.status,
+          created_at: trainer.created_at,
+          updated_at: trainer.updated_at || trainer.created_at
+        }));
+
+        setBusinesses(transformedTrainers);
+        return;
+      }
+
+      // For regular businesses, use the existing logic
       let query = supabase
         .from('business_profiles')
         .select('*');
 
-      // First, let's check all businesses regardless of status for debugging
+      // Debug: Check all businesses in database
       const { data: allBusinesses, error: allError } = await supabase
         .from('business_profiles')
         .select('business_type, status, business_name')
         .order('created_at', { ascending: false });
       
       console.log('📋 All businesses in database:', allBusinesses);
-      console.log('🏋️ Gym businesses:', allBusinesses?.filter(b => b.business_type === 'gym'));
       console.log('✅ Approved businesses:', allBusinesses?.filter(b => b.status === 'approved'));
 
-      // Now apply the approved filter
+      // Apply the approved filter
       query = query.eq('status', 'approved');
 
-      // Apply category filter
-      if (category && category !== 'all') {
+      // Apply category filter (exclude trainer as it's handled above)
+      if (category && category !== 'all' && category !== 'trainer') {
         console.log('🎯 Filtering by category:', category);
         query = query.eq('business_type', category);
       }
@@ -122,9 +166,6 @@ export const useBusinessData = (
       
       if (validBusinesses.length === 0) {
         console.log('⚠️ No businesses found with current filters');
-        if (category === 'gym') {
-          console.log('🏋️ Specifically no approved gyms found');
-        }
       }
       
     } catch (err) {

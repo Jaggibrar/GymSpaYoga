@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useBusinessData } from '@/hooks/useBusinessData';
 import BookingModal from '@/components/BookingModal';
 import { getTierFromPricing } from '@/utils/businessUtils';
+import AppFooter from '@/components/AppFooter';
 
 const Index = () => {
   const [searchLocation, setSearchLocation] = useState('');
@@ -368,6 +369,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Add Footer */}
+      <AppFooter />
     </div>
   );
 };

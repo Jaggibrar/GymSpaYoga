@@ -1,357 +1,199 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Search, Filter, MapPin, Clock, Star, Heart, Phone, Mail, Calendar, DollarSign } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { MapPin, Star, Calendar, Search, Filter, Crown, Sparkles, Heart } from 'lucide-react';
 import { useBusinessData } from '@/hooks/useBusinessData';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
-import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
 import BookingModal from '@/components/BookingModal';
-import SampleDataCreator from '@/components/SampleDataCreator';
-import type { Business } from '@/hooks/useBusinessData';
+import { getTierFromPricing } from '@/utils/businessUtils';
 
 interface CategoryBusinessesProps {
   category: string;
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
 }
 
 const CategoryBusinesses = ({ category, title, description }: CategoryBusinessesProps) => {
-  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [priceRange, setPriceRange] = useState('');
-  const [sortBy, setSortBy] = useState('name');
-  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
-  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
-  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [locationFilter, setLocationFilter] = useState('');
+  const [sortBy, setSortBy] = useState('created_at');
+  
+  const { businesses, loading, error } = useBusinessData(category, searchTerm, locationFilter, sortBy);
 
-  const { 
-    businesses = [], 
-    loading, 
-    error 
-  } = useBusinessData(category, searchTerm, selectedLocation, sortBy);
-
-  // Load user wishlist
-  useEffect(() => {
-    if (user) {
-      loadWishlist();
-    }
-  }, [user]);
-
-  const loadWishlist = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('user_wishlist')
-        .select('business_id')
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      const wishlistIds = new Set(data.map(item => item.business_id));
-      setWishlist(wishlistIds);
-    } catch (error) {
-      console.error('Error loading wishlist:', error);
+  const getTierIcon = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return <Crown className="h-4 w-4" />;
+      case 'premium': return <Sparkles className="h-4 w-4" />;
+      default: return <Heart className="h-4 w-4" />;
     }
   };
 
-  const toggleWishlist = async (businessId: string) => {
-    if (!user) {
-      toast.error('Please login to add to wishlist');
-      return;
-    }
-
-    const isInWishlist = wishlist.has(businessId);
-    
-    try {
-      if (isInWishlist) {
-        const { error } = await supabase
-          .from('user_wishlist')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('business_id', businessId);
-
-        if (error) throw error;
-
-        setWishlist(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(businessId);
-          return newSet;
-        });
-        toast.success('Removed from wishlist');
-      } else {
-        const { error } = await supabase
-          .from('user_wishlist')
-          .insert({
-            user_id: user.id,
-            business_id: businessId
-          });
-
-        if (error) throw error;
-
-        setWishlist(prev => new Set(prev).add(businessId));
-        toast.success('Added to wishlist');
-      }
-    } catch (error) {
-      console.error('Error updating wishlist:', error);
-      toast.error('Failed to update wishlist');
+  const getTierColor = (tier: string) => {
+    switch (tier) {
+      case 'luxury': return 'from-yellow-500 to-orange-500';
+      case 'premium': return 'from-purple-500 to-pink-500';
+      default: return 'from-green-500 to-blue-500';
     }
   };
-
-  const filteredBusinesses = businesses.filter(business => {
-    const matchesSearch = business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         business.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         business.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesLocation = !selectedLocation || 
-                           business.city.toLowerCase().includes(selectedLocation.toLowerCase()) ||
-                           business.state.toLowerCase().includes(selectedLocation.toLowerCase());
-    
-    const matchesPrice = !priceRange || (() => {
-      const price = business.monthly_price || business.session_price || 0;
-      switch (priceRange) {
-        case 'budget': return price < 2000;
-        case 'mid': return price >= 2000 && price < 5000;
-        case 'premium': return price >= 5000;
-        default: return true;
-      }
-    })();
-
-    return matchesSearch && matchesLocation && matchesPrice;
-  });
-
-  const handleBookNow = (business: Business) => {
-    if (!user) {
-      toast.error('Please login to book');
-      return;
-    }
-    setSelectedBusiness(business);
-    setShowBookingModal(true);
-  };
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-red-600">Error loading businesses: {error}</p>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="container mx-auto px-6 py-12">
-        {(title || description) && (
-          <div className="text-center mb-12">
-            {title && <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>}
-            {description && <p className="text-xl text-gray-600">{description}</p>}
-          </div>
-        )}
+    <div className="container mx-auto px-4 py-8">
+      {/* Page Header - No Logo */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-bold text-gray-800 mb-4">{title}</h1>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto">{description}</p>
+      </div>
 
-        {/* Search and Filters */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Search and Filters */}
+      <Card className="mb-8">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search businesses..."
+                placeholder={`Search ${category === 'trainer' ? 'trainers' : title.toLowerCase()}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 h-12"
+                className="pl-10"
               />
             </div>
+            
             <div className="relative">
-              <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Location..."
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                className="pl-10 h-12"
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="pl-10"
               />
             </div>
-            <select
-              value={priceRange}
-              onChange={(e) => setPriceRange(e.target.value)}
-              className="h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">All Price Ranges</option>
-              <option value="budget">Budget (Under ₹2,000)</option>
-              <option value="mid">Mid-range (₹2,000-₹5,000)</option>
-              <option value="premium">Premium (₹5,000+)</option>
-            </select>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="name">Sort by Name</option>
-              <option value="price">Sort by Price</option>
-              <option value="created_at">Sort by Newest</option>
-            </select>
+            
+            <Select value={sortBy} onValueChange={setSortBy}>
+              <SelectTrigger>
+                <Filter className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="created_at">Newest First</SelectItem>
+                <SelectItem value="name">Name A-Z</SelectItem>
+                <SelectItem value="price">Price Low to High</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Results */}
-        <div className="mb-8">
-          <p className="text-gray-600">
-            Found {filteredBusinesses.length} {category} businesses
+      {/* Business Listings */}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+              <CardContent className="p-6">
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                <div className="h-8 bg-gray-200 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : error ? (
+        <div className="text-center py-12">
+          <div className="text-red-500 mb-4">
+            <span className="text-4xl">⚠️</span>
+          </div>
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Data</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      ) : businesses.length === 0 ? (
+        <div className="text-center py-12">
+          <div className="text-gray-400 mb-6">
+            <span className="text-6xl">🏢</span>
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            No {category === 'trainer' ? 'Trainers' : title} Found
+          </h3>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">
+            Try adjusting your search filters or check back later for new listings.
           </p>
         </div>
-
-        {/* Show sample data creator if no businesses */}
-        {filteredBusinesses.length === 0 && businesses.length === 0 && (
-          <div className="text-center py-12">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">No businesses found</h3>
-            <p className="text-gray-600 mb-8">Create some sample data to get started</p>
-            <SampleDataCreator />
-          </div>
-        )}
-
-        {/* Business Grid */}
-        {filteredBusinesses.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredBusinesses.map((business) => (
-              <Card key={business.id} className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-                <div className="relative">
-                  <div className="aspect-video bg-gray-200 overflow-hidden">
-                    {business.image_urls && business.image_urls.length > 0 ? (
-                      <img
-                        src={business.image_urls[0]}
-                        alt={business.business_name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800';
-                        }}
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gray-100">
-                        <span className="text-gray-400">No image available</span>
-                      </div>
-                    )}
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="absolute top-3 right-3 h-9 w-9 p-0 bg-white/80 hover:bg-white"
-                    onClick={() => toggleWishlist(business.id)}
-                  >
-                    <Heart 
-                      className={`h-4 w-4 ${wishlist.has(business.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
-                    />
-                  </Button>
-                  <Badge className="absolute top-3 left-3 capitalize bg-blue-600">
-                    {business.category}
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {businesses.map((business) => {
+            const tier = getTierFromPricing(business);
+            return (
+              <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
+                    alt={business.business_name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white border-0`}>
+                    {getTierIcon(tier)}
+                    <span className="ml-1 capitalize">{tier}</span>
                   </Badge>
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
                 </div>
-
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
-                    {business.business_name}
-                  </CardTitle>
-                  <div className="flex items-center text-gray-600">
-                    <MapPin className="h-4 w-4 mr-1" />
+                
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-xl font-bold group-hover:text-emerald-600 transition-colors line-clamp-1">
+                      {business.business_name}
+                    </h3>
+                    <div className="flex items-center gap-1 text-sm text-yellow-600">
+                      <Star className="h-4 w-4 fill-current" />
+                      <span className="font-medium">4.7</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-gray-600 mb-3">
+                    <MapPin className="h-4 w-4" />
                     <span className="text-sm">{business.city}, {business.state}</span>
                   </div>
-                </CardHeader>
-
-                <CardContent className="space-y-4">
-                  <p className="text-gray-600 text-sm line-clamp-2">{business.description}</p>
-
+                  
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {business.description || "Premium wellness destination offering excellent services"}
+                  </p>
+                  
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span className="text-sm">
-                        {business.opening_time} - {business.closing_time}
-                      </span>
+                    <div>
+                      {business.monthly_price && (
+                        <p className="text-lg font-bold text-emerald-600">₹{business.monthly_price}/month</p>
+                      )}
+                      {business.session_price && (
+                        <p className="text-lg font-bold text-emerald-600">₹{business.session_price}/session</p>
+                      )}
+                      {!business.monthly_price && !business.session_price && (
+                        <p className="text-lg font-bold text-emerald-600">Contact for pricing</p>
+                      )}
                     </div>
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                      <span className="text-sm text-gray-600">4.5</span>
-                    </div>
-                  </div>
-
-                  {(business.monthly_price || business.session_price) && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-green-600 font-semibold">
-                        <DollarSign className="h-4 w-4 mr-1" />
-                        <span>
-                          ₹{business.monthly_price || business.session_price}
-                          {business.monthly_price ? '/month' : '/session'}
-                        </span>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {business.amenities.slice(0, 3).map((amenity, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
-                        {amenity}
-                      </Badge>
-                    ))}
-                    {business.amenities.length > 3 && (
-                      <Badge variant="secondary" className="text-xs">
-                        +{business.amenities.length - 3} more
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => window.open(`tel:${business.phone}`, '_self')}
-                    >
-                      <Phone className="h-4 w-4 mr-1" />
-                      Call
-                    </Button>
-                    <Button
-                      size="sm"
-                      className="w-full bg-blue-600 hover:bg-blue-700"
-                      onClick={() => handleBookNow(business)}
-                    >
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Book Now
-                    </Button>
+                    
+                    <BookingModal
+                      businessName={business.business_name}
+                      businessType={business.business_type}
+                      businessId={business.id}
+                      price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
+                      trigger={
+                        <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                          <Calendar className="h-4 w-4 mr-2" />
+                          Book Now
+                        </Button>
+                      }
+                    />
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-        )}
-
-        {filteredBusinesses.length === 0 && businesses.length > 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">No businesses found matching your criteria.</p>
-            <p className="text-gray-500 mt-2">Try adjusting your search filters.</p>
-          </div>
-        )}
-
-        {/* Booking Modal */}
-        {selectedBusiness && (
-          <BookingModal
-            businessName={selectedBusiness.business_name}
-            businessType={selectedBusiness.business_type}
-            businessId={selectedBusiness.id}
-            isOpen={showBookingModal}
-            onClose={() => {
-              setShowBookingModal(false);
-              setSelectedBusiness(null);
-            }}
-            price={selectedBusiness.monthly_price ? `₹${selectedBusiness.monthly_price}` : selectedBusiness.session_price ? `₹${selectedBusiness.session_price}` : undefined}
-          />
-        )}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
