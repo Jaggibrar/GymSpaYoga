@@ -35,11 +35,7 @@ export const useBusinessRegistration = () => {
 
   const registerBusiness = async (formData: BusinessFormData) => {
     console.log('Starting business registration process...');
-    console.log('Form data received:', {
-      ...formData,
-      images: `${formData.images?.length || 0} files`
-    });
-
+    
     if (!user) {
       console.error('User not authenticated');
       toast.error('You must be logged in to register a business');
@@ -65,28 +61,21 @@ export const useBusinessRegistration = () => {
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (checkError) {
+      if (checkError && checkError.code !== 'PGRST116') {
         console.error('Error checking existing profile:', checkError);
         throw checkError;
       }
 
       if (existingProfile) {
         console.error('Business profile already exists for user');
-        toast.error('You already have a business profile. Please contact support if you need to update it.');
+        toast.error('You already have a business profile registered.');
         return false;
       }
 
       // Upload business images
       console.log('Starting image upload process...');
       const imageUrls = await uploadMultipleImages(formData.images);
-      
-      if (imageUrls.length === 0 && formData.images?.length > 0) {
-        console.error('Image upload failed - no URLs returned');
-        toast.error('Failed to upload images. Please try again.');
-        return false;
-      }
-
-      console.log(`Successfully uploaded ${imageUrls.length} images:`, imageUrls);
+      console.log(`Successfully uploaded ${imageUrls.length} images`);
 
       // Insert business profile
       console.log('Inserting business profile to database...');
@@ -110,8 +99,6 @@ export const useBusinessRegistration = () => {
         image_urls: imageUrls,
         status: 'approved'
       };
-
-      console.log('Business data to insert:', businessData);
 
       const { error } = await supabase
         .from('business_profiles')
@@ -140,20 +127,18 @@ export const useBusinessRegistration = () => {
       }
 
       console.log('Business registration completed successfully');
-      toast.success('🎉 Business registered successfully! Your listing is now live and ready to receive bookings.');
+      toast.success('🎉 Business registered successfully! Redirecting to explore page...');
       
-      // Navigate to explore page to see the listing
+      // Navigate to explore page
       setTimeout(() => {
         navigate('/explore', { replace: true });
-      }, 2000);
+      }, 1500);
       
       return true;
     } catch (error: any) {
       console.error('Error registering business:', error);
       if (error.code === '23505') {
-        toast.error('A business profile with this email already exists.');
-      } else if (error.code === '23514' && error.message.includes('category_check')) {
-        toast.error('Invalid pricing category. Please check your tier selection.');
+        toast.error('A business with this information already exists.');
       } else {
         toast.error(error.message || 'Failed to register business. Please try again.');
       }

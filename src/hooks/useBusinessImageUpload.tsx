@@ -6,6 +6,20 @@ import { toast } from 'sonner';
 export const useBusinessImageUpload = () => {
   const [uploading, setUploading] = useState(false);
 
+  const validateFile = (file: File): string | null => {
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      return `Invalid file type: ${file.name}. Only image files are allowed.`;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return `File too large: ${file.name}. Maximum size is 5MB.`;
+    }
+
+    return null; // No errors
+  };
+
   const uploadMultipleImages = async (files: File[]): Promise<string[]> => {
     if (!files || files.length === 0) {
       console.log('No files to upload');
@@ -22,17 +36,11 @@ export const useBusinessImageUpload = () => {
         const file = files[i];
         console.log(`Uploading file ${i + 1}/${files.length}:`, file.name);
 
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-          console.error('Invalid file type:', file.type);
-          toast.error(`Invalid file type: ${file.name}`);
-          continue;
-        }
-
-        // Validate file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-          console.error('File too large:', file.size);
-          toast.error(`File too large: ${file.name}`);
+        // Validate file
+        const validationError = validateFile(file);
+        if (validationError) {
+          console.error('Validation error:', validationError);
+          toast.error(validationError);
           continue;
         }
 
@@ -91,6 +99,7 @@ export const useBusinessImageUpload = () => {
 
   return {
     uploadMultipleImages,
-    uploading
+    uploading,
+    validateFile
   };
 };

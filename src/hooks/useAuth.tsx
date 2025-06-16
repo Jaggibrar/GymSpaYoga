@@ -2,6 +2,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   user: User | null;
@@ -60,7 +61,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (session?.user) {
         console.log('User signed in, fetching profile');
-        await fetchUserProfile(session.user.id);
+        // Use setTimeout to defer profile fetching
+        setTimeout(() => {
+          if (mounted) {
+            fetchUserProfile(session.user.id);
+          }
+        }, 0);
       } else {
         console.log('No user, clearing profile');
         setUserProfile(null);
@@ -73,8 +79,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         console.log('Initializing auth...');
         
+        // Set up auth state listener first
         const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange);
 
+        // Then get current session
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -135,13 +143,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('Sign up error:', error);
+        toast.error(error.message);
       } else {
         console.log('Sign up successful');
+        toast.success('Account created successfully! Please check your email to verify your account.');
       }
       
       return { error };
     } catch (error) {
       console.error('Sign up error:', error);
+      toast.error('An unexpected error occurred during sign up');
       return { error: error as AuthError };
     }
   };
@@ -156,13 +167,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('Sign in error:', error);
+        toast.error(error.message);
       } else {
         console.log('Sign in successful');
+        toast.success('Signed in successfully!');
       }
       
       return { error };
     } catch (error) {
       console.error('Sign in error:', error);
+      toast.error('An unexpected error occurred during sign in');
       return { error: error as AuthError };
     }
   };
@@ -171,11 +185,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('Starting sign out process...');
       
-      // Sign out from Supabase first
+      // Sign out from Supabase
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error('Supabase sign out error:', error);
+        toast.error('Error signing out');
         throw error;
       }
       
@@ -186,7 +201,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(null);
       setUserProfile(null);
       
-      console.log('Local state cleared, redirecting to home');
+      toast.success('Signed out successfully');
+      console.log('Local state cleared');
       
     } catch (error) {
       console.error('Sign out error:', error);
