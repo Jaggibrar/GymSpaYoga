@@ -1,129 +1,94 @@
+
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useTrainerProfileImageUpload } from '@/hooks/useTrainerProfileImageUpload';
 import { toast } from 'sonner';
 
 interface TrainerFormData {
   name: string;
   email: string;
   phone: string;
-  trainerTier: string;
-  category: string;
-  experience: number;
-  certifications: string;
-  specializations: string[];
   location: string;
+  category: string;
+  trainer_tier: string;
   bio: string;
-  hourlyRate: number;
-  profileImage?: File;
+  experience: number;
+  hourly_rate: number;
+  specializations: string[];
+  certifications: string;
+  profile_image?: File;
 }
 
 export const useTrainerRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const { uploadTrainerProfileImage } = useTrainerProfileImageUpload();
 
-  const uploadCertification = async (file: File) => {
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error('Certification must be PDF or image.');
-      return null;
-    }
+  const registerTrainer = async (formData: TrainerFormData): Promise<boolean> => {
     if (!user) {
-      toast.error('Login required for certification upload');
-      return null;
-    }
-    setLoading(true);
-    try {
-      const ext = file.name.split('.').pop();
-      const fileName = `${user.id}/certification-${Date.now()}.${ext}`;
-      const { error } = await supabase.storage
-        .from('trainer-certifications')
-        .upload(fileName, file, { upsert: true });
-
-      if (error) {
-        toast.error('Failed to upload certification.');
-        return null;
-      }
-      const { data } = supabase.storage
-        .from('trainer-certifications')
-        .getPublicUrl(fileName);
-      return data.publicUrl;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const registerTrainer = async (formData: any) => {
-    if (!user) {
-      toast.error("You must be logged in to register as a trainer");
-      return false;
-    }
-    // strict validation
-    const validationErrors = [];
-    if (!formData.name) validationErrors.push('Name is required');
-    if (!formData.category) validationErrors.push('Expertise is required');
-    if (!formData.phone) validationErrors.push('Phone is required');
-    if (!formData.email) validationErrors.push('Email is required');
-    if (!formData.city) validationErrors.push('City is required');
-    if (!formData.profileImage) validationErrors.push('Profile image required');
-    if (!formData.certificationFile) validationErrors.push('Certification required');
-    if (validationErrors.length > 0) {
-      validationErrors.forEach(e => toast.error(e));
+      toast.error('Please login to register as a trainer');
       return false;
     }
 
-    setLoading(true);
-
     try {
-      // upload files
-      let profileImageUrl = null;
-      if (formData.profileImage) {
-        profileImageUrl = await uploadTrainerProfileImage(formData.profileImage);
-        if (!profileImageUrl) {
-          setLoading(false); return false;
+      setLoading(true);
+
+      // Upload profile image if provided
+      let profile_image_url = null;
+      if (formData.profile_image) {
+        const fileExt = formData.profile_image.name.split('.').pop();
+        const fileName = `${user.id}-${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('trainer-images')
+          .upload(fileName, formData.profile_image);
+
+        if (uploadError) {
+          console.error('Error uploading image:', uploadError);
+          toast.error('Failed to upload profile image');
+          return false;
         }
-      }
-      let certificationUrl = null;
-      if (formData.certificationFile) {
-        certificationUrl = await uploadCertification(formData.certificationFile);
-        if (!certificationUrl) {
-          setLoading(false); return false;
-        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('trainer-images')
+          .getPublicUrl(fileName);
+        
+        profile_image_url = publicUrl;
       }
 
-      // Insert row in DB with status "pending"
-      const { error } = await supabase.from('trainer_profiles').insert([{
-        user_id: user.id,
-        name: formData.name.trim(),
-        email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
-        trainer_tier: formData.trainerTier || "basic",
-        city: formData.city.trim(),
-        location: formData.location?.trim?.() ?? "",
-        category: formData.category,
-        experience: formData.experience,
-        certifications: formData.certifications?.trim() ?? "",
-        specializations: formData.specializations,
-        bio: formData.bio.trim(),
-        hourly_rate: formData.hourlyRate,
-        profile_image_url: profileImageUrl,
-        certification_url: certificationUrl,
-        status: "pending"
-      }]);
+      // Insert trainer profile
+      const { error } = await supabase
+        .from('trainer_profiles')
+        .insert({
+          user_id: user.id,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          location: formData.location,
+          category: formData.category,
+          trainer_tier: formData.trainer_tier,
+          bio: formData.bio,
+          experience: formData.experience,
+          hourly_rate: formData.hourly_rate,
+          specializations: formData.specializations,
+          certifications: formData.certifications,
+          profile_image_url,
+          status: 'pending'
+        });
+
       if (error) {
-        toast.error("Registration failed: " + error.message);
-        setLoading(false);
+        console.error('Error registering trainer:', error);
+        toast.error('Failed to register trainer: ' + error.message);
         return false;
       }
-      toast.success("Registration complete! Your listing will appear after verification.");
-      setLoading(false);
+
+      toast.success('Trainer registration submitted successfully! Your profile is under review.');
       return true;
-    } catch (error: any) {
-      toast.error("Error: " + error.message);
-      setLoading(false);
+    } catch (error) {
+      console.error('Error in trainer registration:', error);
+      toast.error('Failed to register trainer');
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 

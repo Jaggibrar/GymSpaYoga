@@ -29,11 +29,29 @@ interface Booking {
     full_name: string | null;
     phone: string | null;
     email: string | null;
-  };
+  } | null;
   business_profile?: {
     business_name: string | null;
-  };
+  } | null;
 }
+
+// Type guard to validate booking data
+const isValidBooking = (data: any): data is Booking => {
+  return data && typeof data.id === 'number' && typeof data.created_at === 'string';
+};
+
+// Type guard to ensure proper profile data
+const normalizeBookingData = (rawBooking: any): Booking => {
+  return {
+    ...rawBooking,
+    user_profile: rawBooking.user_profile && !rawBooking.user_profile.error 
+      ? rawBooking.user_profile 
+      : null,
+    business_profile: rawBooking.business_profile && !rawBooking.business_profile.error 
+      ? rawBooking.business_profile 
+      : null,
+  };
+};
 
 export const useRealTimeBookings = (businessOwnersView = false) => {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -87,7 +105,12 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
             return;
           }
 
-          setBookings(data || []);
+          // Normalize and validate the data
+          const validBookings = (data || [])
+            .filter(isValidBooking)
+            .map(normalizeBookingData);
+          
+          setBookings(validBookings);
         } else {
           setBookings([]);
         }
@@ -109,7 +132,12 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
           return;
         }
 
-        setBookings(data || []);
+        // Normalize and validate the data
+        const validBookings = (data || [])
+          .filter(isValidBooking)
+          .map(normalizeBookingData);
+        
+        setBookings(validBookings);
       }
     } catch (err) {
       console.error('Error in fetchBookings:', err);
