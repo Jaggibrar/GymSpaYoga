@@ -19,8 +19,15 @@ const BusinessListings = () => {
     categoryFilter === 'all' ? undefined : categoryFilter,
     searchTerm,
     locationFilter,
-    tierFilter === 'all' ? undefined : tierFilter
+    'created_at'
   );
+
+  const getTierFromPricing = (business: any) => {
+    const price = business.monthly_price || business.session_price || 0;
+    if (price >= 5000) return 'luxury';
+    if (price >= 3000) return 'premium';
+    return 'budget';
+  };
 
   const getTierIcon = (tier: string) => {
     switch (tier) {
@@ -127,7 +134,7 @@ const BusinessListings = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {businesses.map((business) => {
-            const tier = business.tier || 'budget';
+            const tier = getTierFromPricing(business);
             return (
               <Card key={business.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                 <div className="relative h-48 overflow-hidden">

@@ -131,7 +131,7 @@ const SampleDataCreator = () => {
     try {
       // First, check if data already exists
       const { data: existingData } = await supabase
-        .from('businesses')
+        .from('business_profiles')
         .select('id')
         .limit(1);
 
@@ -143,7 +143,7 @@ const SampleDataCreator = () => {
 
       // Insert sample data
       const { error } = await supabase
-        .from('businesses')
+        .from('business_profiles')
         .insert(sampleBusinesses);
 
       if (error) {

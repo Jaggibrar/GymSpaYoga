@@ -47,7 +47,7 @@ export const useBusinessData = (
     
     try {
       let query = supabase
-        .from('businesses')
+        .from('business_profiles')
         .select('*')
         .eq('status', 'approved');
 
@@ -72,7 +72,7 @@ export const useBusinessData = (
           query = query.order('business_name', { ascending: true });
           break;
         case 'price':
-          query = query.order('monthly_price', { ascending: true, nullsLast: true });
+          query = query.order('monthly_price', { ascending: true, nullsFirst: false });
           break;
         case 'created_at':
         default:
