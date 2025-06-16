@@ -31,6 +31,20 @@ export const useTrainerRegistration = () => {
 
     try {
       setLoading(true);
+      console.log('Starting trainer registration process...', formData);
+
+      // Check if trainer profile already exists
+      const { data: existingProfile } = await supabase
+        .from('trainer_profiles')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (existingProfile) {
+        toast.error('You already have a trainer profile. Please contact support if you need to update it.');
+        setLoading(false);
+        return false;
+      }
 
       // Upload profile image if provided
       let profile_image_url = null;
@@ -45,6 +59,7 @@ export const useTrainerRegistration = () => {
         if (uploadError) {
           console.error('Error uploading image:', uploadError);
           toast.error('Failed to upload profile image');
+          setLoading(false);
           return false;
         }
 
@@ -72,23 +87,43 @@ export const useTrainerRegistration = () => {
           specializations: formData.specializations,
           certifications: formData.certifications,
           profile_image_url,
-          status: 'pending'
+          status: 'approved' // Auto-approve for immediate listing
         });
 
       if (error) {
         console.error('Error registering trainer:', error);
         toast.error('Failed to register trainer: ' + error.message);
+        setLoading(false);
         return false;
       }
 
-      toast.success('Trainer registration submitted successfully! Your profile is under review.');
+      // Update user profile role to trainer
+      const { error: roleError } = await supabase
+        .from('user_profiles')
+        .upsert({ 
+          user_id: user.id, 
+          role: 'trainer',
+          full_name: formData.name
+        });
+
+      if (roleError) {
+        console.error('Role update error:', roleError);
+        // Don't fail the registration for this
+      }
+
+      console.log('Trainer registration completed successfully');
+      toast.success('🎉 Trainer registration successful! Your profile is now live and ready to receive bookings.');
+      
+      // Add a small delay to show the success message
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      setLoading(false);
       return true;
     } catch (error) {
       console.error('Error in trainer registration:', error);
       toast.error('Failed to register trainer');
-      return false;
-    } finally {
       setLoading(false);
+      return false;
     }
   };
 

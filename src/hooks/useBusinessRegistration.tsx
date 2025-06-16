@@ -183,8 +183,11 @@ export const useBusinessRegistration = () => {
       console.log('Updating user role to business_owner...');
       const { error: roleError } = await supabase
         .from('user_profiles')
-        .update({ role: 'business_owner' })
-        .eq('user_id', user.id);
+        .upsert({ 
+          user_id: user.id, 
+          role: 'business_owner',
+          full_name: user.user_metadata?.full_name || formData.businessName
+        });
 
       if (roleError) {
         console.error('Role update error:', roleError);
@@ -192,7 +195,11 @@ export const useBusinessRegistration = () => {
       }
 
       console.log('Business registration completed successfully');
-      toast.success('Business registered successfully! Your listing is now live.');
+      toast.success('🎉 Business registered successfully! Your listing is now live and ready to receive bookings.');
+      
+      // Add a small delay to show the success message
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
       setLoading(false);
       return true;
     } catch (error: any) {

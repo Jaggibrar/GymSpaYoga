@@ -326,7 +326,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             if (isTrainerCategory && isTrainer(item)) {
               return <TrainerCard key={item.id} trainer={item} />;
             } else if (!isTrainerCategory && isBusiness(item)) {
-              return <OptimizedBusinessCard key={item.id} business={item} />;
+              return <OptimizedBusinessCard key={item.id} business={item as Business} />;
             }
             return null;
           })}

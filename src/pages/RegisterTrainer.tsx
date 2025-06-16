@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dumbbell, Waves, Heart, UploadCloud, Star, MapPin, Phone, Mail, User, Award, FileText, Camera } from "lucide-react";
@@ -41,6 +40,7 @@ const RegisterTrainer = () => {
   });
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // Only redirect if auth is finished loading and user is not found
@@ -108,60 +108,75 @@ const RegisterTrainer = () => {
   };
 
   const handleSubmit = async () => {
-    if (!isFormValid()) {
-      toast.error("Please fill in all required fields correctly");
-      return;
-    }
+    console.log('Starting trainer registration submission...');
+    setIsSubmitting(true);
     
-    const exp = parseInt(formData.experience);
-    const rate = parseInt(formData.hourlyRate);
+    try {
+      if (!isFormValid()) {
+        toast.error("Please fill in all required fields correctly");
+        return;
+      }
+      
+      const exp = parseInt(formData.experience);
+      const rate = parseInt(formData.hourlyRate);
 
-    setSuccessMessage(null);
+      setSuccessMessage(null);
 
-    // Transform the form data to match TrainerFormData interface
-    const submissionData = {
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      location: formData.location,
-      category: formData.category,
-      trainer_tier: formData.trainerTier, // Convert camelCase to snake_case
-      bio: formData.bio,
-      experience: exp,
-      hourly_rate: rate, // Convert camelCase to snake_case
-      specializations: formData.specializations,
-      certifications: formData.certifications,
-      profile_image: formData.profileImage, // Convert camelCase to snake_case
-    };
-    
-    const success = await registerTrainer(submissionData);
-    if (success) {
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        trainerTier: "basic",
-        category: "",
-        experience: "",
-        certifications: "",
-        certificationFile: null,
-        certificationUrl: "",
-        specializations: [],
-        hourlyRate: "",
-        location: "",
-        city: "",
-        bio: "",
-        profileImage: null
-      });
+      // Transform the form data to match TrainerFormData interface
+      const submissionData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        location: formData.location,
+        category: formData.category,
+        trainer_tier: formData.trainerTier,
+        bio: formData.bio,
+        experience: exp,
+        hourly_rate: rate,
+        specializations: formData.specializations,
+        certifications: formData.certifications,
+        profile_image: formData.profileImage,
+      };
+      
+      console.log('Submitting trainer data:', submissionData);
+      const success = await registerTrainer(submissionData);
+      
+      if (success) {
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          trainerTier: "basic",
+          category: "",
+          experience: "",
+          certifications: "",
+          certificationFile: null,
+          certificationUrl: "",
+          specializations: [],
+          hourlyRate: "",
+          location: "",
+          city: "",
+          bio: "",
+          profileImage: null
+        });
 
-      setSuccessMessage(
-        "Registration successful! Your listing will appear after admin verification. You will receive an email when your profile is approved. Thank you for registering!"
-      );
+        setSuccessMessage(
+          "Registration successful! Your trainer profile is now live and ready to receive bookings. Thank you for joining our platform!"
+        );
 
-      setTimeout(() => {
-        setSuccessMessage(null);
-        navigate("/");
-      }, 6000);
+        // Navigate to home after showing success message
+        setTimeout(() => {
+          setSuccessMessage(null);
+          navigate("/", { replace: true });
+        }, 3000);
+      } else {
+        toast.error("Registration failed. Please check all fields and try again.");
+      }
+    } catch (error) {
+      console.error('Trainer registration error:', error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -415,15 +430,15 @@ const RegisterTrainer = () => {
                 <div className="pt-6 border-t border-gray-200">
                   <Button
                     onClick={handleSubmit}
-                    disabled={loading || !isFormValid()}
+                    disabled={isSubmitting || loading || !isFormValid()}
                     className={`w-full h-12 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold rounded-xl shadow-lg transition-all ${
-                      loading || !isFormValid() ? "opacity-50 cursor-not-allowed" : "hover:shadow-xl"
+                      (isSubmitting || loading || !isFormValid()) ? "opacity-50 cursor-not-allowed" : "hover:shadow-xl"
                     }`}
                   >
-                    {loading ? (
+                    {(isSubmitting || loading) ? (
                       <>
                         <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                        Submitting...
+                        {isSubmitting ? 'Submitting...' : 'Processing...'}
                       </>
                     ) : (
                       <>
@@ -433,7 +448,7 @@ const RegisterTrainer = () => {
                     )}
                   </Button>
                   <p className="text-xs text-gray-500 text-center mt-3">
-                    By submitting, you agree to our terms and conditions. Your profile will be reviewed within 24-48 hours.
+                    By submitting, you agree to our terms and conditions. Your profile will be live immediately after submission.
                   </p>
                 </div>
               </CardContent>

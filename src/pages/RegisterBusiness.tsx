@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
@@ -16,6 +15,7 @@ import { ImageUpload } from "@/components/registration/ImageUpload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from 'sonner';
 
 const RegisterBusiness = () => {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ const RegisterBusiness = () => {
   const [businessType, setBusinessType] = useState("");
   const [businessImages, setBusinessImages] = useState<File[]>([]);
   const [selectedTier, setSelectedTier] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [formData, setFormData] = useState({
     businessName: "",
@@ -80,46 +81,90 @@ const RegisterBusiness = () => {
   };
 
   const handleSubmit = async () => {
-    // Basic validation
-    if (!formData.businessName || !businessType || 
-        !formData.email || !formData.phone || !formData.address || 
-        !formData.city || !formData.state || !formData.pinCode ||
-        !formData.openingTime || !formData.closingTime || !selectedTier) {
-      alert("Please fill in all required fields");
-      return;
-    }
+    console.log('Starting submission process...');
+    setIsSubmitting(true);
+    
+    try {
+      // Comprehensive validation
+      if (!formData.businessName.trim()) {
+        toast.error("Business name is required");
+        return;
+      }
+      
+      if (!businessType) {
+        toast.error("Please select a business type");
+        return;
+      }
+      
+      if (!formData.email.trim() || !formData.phone.trim()) {
+        toast.error("Email and phone are required");
+        return;
+      }
+      
+      if (!formData.address.trim() || !formData.city.trim() || !formData.state.trim() || !formData.pinCode.trim()) {
+        toast.error("Complete address information is required");
+        return;
+      }
+      
+      if (!formData.openingTime || !formData.closingTime || !selectedTier) {
+        toast.error("Operating hours and tier selection are required");
+        return;
+      }
+      
+      if (!formData.description.trim() || formData.description.length < 10) {
+        toast.error("Please provide a detailed business description (minimum 10 characters)");
+        return;
+      }
+      
+      if (businessImages.length === 0) {
+        toast.error("Please upload at least one business image");
+        return;
+      }
 
-    const businessFormData = {
-      ...formData,
-      businessType,
-      category: selectedTier, // Use selected tier instead of hardcoded value
-      amenities: selectedAmenities,
-      images: businessImages
-    };
+      const businessFormData = {
+        ...formData,
+        businessType,
+        category: selectedTier,
+        amenities: selectedAmenities,
+        images: businessImages
+      };
 
-    console.log('Submitting business form with data:', businessFormData);
-    const success = await registerBusiness(businessFormData);
-    if (success) {
-      // Reset form
-      setFormData({
-        businessName: "",
-        email: "",
-        phone: "",
-        address: "",
-        city: "",
-        state: "",
-        pinCode: "",
-        openingTime: "",
-        closingTime: "",
-        monthlyPrice: "",
-        sessionPrice: "",
-        description: ""
-      });
-      setSelectedAmenities([]);
-      setBusinessType("");
-      setBusinessImages([]);
-      setSelectedTier("");
-      navigate('/');
+      console.log('Submitting business form with data:', businessFormData);
+      const success = await registerBusiness(businessFormData);
+      
+      if (success) {
+        console.log('Registration successful, navigating to home...');
+        // Reset form
+        setFormData({
+          businessName: "",
+          email: "",
+          phone: "",
+          address: "",
+          city: "",
+          state: "",
+          pinCode: "",
+          openingTime: "",
+          closingTime: "",
+          monthlyPrice: "",
+          sessionPrice: "",
+          description: ""
+        });
+        setSelectedAmenities([]);
+        setBusinessType("");
+        setBusinessImages([]);
+        setSelectedTier("");
+        
+        // Navigate to home page
+        navigate('/', { replace: true });
+      } else {
+        console.log('Registration failed');
+        toast.error("Registration failed. Please check all fields and try again.");
+      }
+    } catch (error) {
+      console.error('Submission error:', error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -155,6 +200,10 @@ const RegisterBusiness = () => {
 
   const validateDescription = () => {
     return formData.description.trim().length >= 10;
+  };
+
+  const validateImages = () => {
+    return businessImages.length >= 1;
   };
 
   // Fixed: Add validation for images step
@@ -288,7 +337,7 @@ const RegisterBusiness = () => {
     <MultiStepForm
       steps={steps}
       onSubmit={handleSubmit}
-      isSubmitting={loading}
+      isSubmitting={isSubmitting || loading}
       title="Business Registration"
       description="Join our platform and start attracting customers"
     />

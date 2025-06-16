@@ -39,7 +39,7 @@ export const MultiStepForm = ({
     if (currentStepData.validate) {
       return currentStepData.validate();
     }
-    return true; // If no validation function, consider it valid
+    return true;
   };
 
   const handleNext = () => {
@@ -71,13 +71,21 @@ export const MultiStepForm = ({
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    console.log('MultiStepForm: handleSubmit called');
     const isValid = validateCurrentStep();
     if (!isValid) {
       toast.error('Please complete all required fields before submitting');
       return;
     }
-    onSubmit();
+    
+    if (isSubmitting) {
+      console.log('MultiStepForm: Already submitting, preventing duplicate submission');
+      return;
+    }
+    
+    console.log('MultiStepForm: Calling onSubmit');
+    await onSubmit();
   };
 
   const isLastStep = currentStep === steps.length - 1;
@@ -186,7 +194,7 @@ export const MultiStepForm = ({
                   type="button"
                   variant="outline"
                   onClick={handlePrevious}
-                  disabled={isFirstStep}
+                  disabled={isFirstStep || isSubmitting}
                   className="px-8 py-3 text-lg"
                 >
                   Previous
@@ -197,7 +205,7 @@ export const MultiStepForm = ({
                     <Button
                       type="button"
                       onClick={handleNext}
-                      disabled={!canProceed && Boolean(steps[currentStep].validate)}
+                      disabled={(!canProceed && Boolean(steps[currentStep].validate)) || isSubmitting}
                       className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next Step
@@ -209,7 +217,14 @@ export const MultiStepForm = ({
                       disabled={isSubmitting || (!canProceed && Boolean(steps[currentStep].validate))}
                       className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-12 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? "Submitting..." : "Complete Registration"}
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          Submitting...
+                        </>
+                      ) : (
+                        "Complete Registration"
+                      )}
                     </Button>
                   )}
                 </div>
