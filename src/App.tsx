@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,6 +32,7 @@ import BlogPost from "./pages/BlogPost";
 import BlogList from "./pages/BlogList";
 import NotFound from "./pages/NotFound";
 import UserDashboard from "./pages/UserDashboard";
+import CTOTestPage from "./pages/CTOTestPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,6 +77,7 @@ function App() {
                     <Route path="/blogs" element={<Blogs />} />
                     <Route path="/blog/:slug" element={<BlogPost />} />
                     <Route path="/blog-list" element={<BlogList />} />
+                    <Route path="/cto-test" element={<CTOTestPage />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
