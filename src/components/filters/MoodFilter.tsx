@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, Zap, Sparkles, Dumbbell } from 'lucide-react';
+import { Heart, Dumbbell, Sparkles } from 'lucide-react';
 
 interface MoodFilterProps {
   selectedMood: string | null;
@@ -20,39 +21,30 @@ export const MoodFilter = ({ selectedMood, onMoodChange }: MoodFilterProps) => {
       tiers: ['luxury', 'premium']
     },
     {
-      id: 'energize',
-      label: 'Get Energized',
-      description: 'High-intensity workouts and fitness',
-      icon: Zap,
+      id: 'fitness',
+      label: 'Get Energized & Build Strength',
+      description: 'High-intensity workouts and strength training',
+      icon: Dumbbell,
       color: 'from-orange-500 to-red-500',
-      categories: ['gym', 'fitness_center'],
-      tiers: ['premium', 'budget']
+      categories: ['gym'],
+      tiers: ['premium', 'budget', 'luxury']
     },
     {
       id: 'rejuvenate',
-      label: 'Rejuvenate',
-      description: 'Wellness and recovery focused',
+      label: 'Rejuvenate & Recover',
+      description: 'Wellness and recovery focused treatments',
       icon: Sparkles,
       color: 'from-emerald-500 to-teal-500',
-      categories: ['spa', 'yoga', 'gym'],
+      categories: ['spa', 'yoga'],
       tiers: ['luxury', 'premium']
-    },
-    {
-      id: 'strengthen',
-      label: 'Build Strength',
-      description: 'Strength training and muscle building',
-      icon: Dumbbell,
-      color: 'from-gray-600 to-gray-800',
-      categories: ['gym', 'fitness_center'],
-      tiers: ['premium', 'budget']
     }
   ];
 
   return (
     <Card className="mb-6">
       <CardContent className="p-6">
-        <h3 className="text-lg font-semibold mb-4">How are you feeling today?</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <h3 className="text-lg font-semibold mb-4 text-center">How are you feeling today?</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {moods.map((mood) => {
             const Icon = mood.icon;
             const isSelected = selectedMood === mood.id;

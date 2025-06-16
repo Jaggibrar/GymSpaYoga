@@ -19,7 +19,7 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilt
   const [location, setLocation] = useState('');
   const [category, setCategory] = useState(activeFilter || 'all');
   const [tier, setTier] = useState('all');
-  const [mood, setMood] = useState('all');
+  const [mood, setMood] = useState<string | null>(null);
 
   const handleFilterChange = () => {
     const filters = {
@@ -27,7 +27,7 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilt
       location,
       category: category === 'all' ? undefined : category,
       tier: tier === 'all' ? undefined : tier,
-      mood: mood === 'all' ? undefined : mood
+      mood: mood || undefined
     };
     onFilterChange?.(filters);
   };
@@ -51,13 +51,20 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilt
         setTier('all');
         break;
       case 'mood':
-        setMood('all');
+        setMood(null);
         break;
     }
   };
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+      {/* Mood Filter */}
+      {showMoodFilter && (
+        <div className="mb-6">
+          <MoodFilter selectedMood={mood} onMoodChange={setMood} />
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {/* Search Input */}
         <div className="relative">
@@ -108,15 +115,8 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilt
         </Select>
       </div>
 
-      {/* Mood Filter */}
-      {showMoodFilter && (
-        <div className="mb-4">
-          <MoodFilter selectedMood={mood} onMoodChange={setMood} />
-        </div>
-      )}
-
       {/* Active Filters */}
-      {(searchTerm || location || category !== 'all' || tier !== 'all' || mood !== 'all') && (
+      {(searchTerm || location || category !== 'all' || tier !== 'all' || mood) && (
         <div className="flex flex-wrap gap-2">
           {searchTerm && (
             <Badge variant="secondary" className="flex items-center gap-1">
@@ -142,7 +142,7 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilt
               <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('tier')} />
             </Badge>
           )}
-          {mood !== 'all' && (
+          {mood && (
             <Badge variant="secondary" className="flex items-center gap-1">
               Mood: {mood}
               <X className="h-3 w-3 cursor-pointer" onClick={() => clearFilter('mood')} />

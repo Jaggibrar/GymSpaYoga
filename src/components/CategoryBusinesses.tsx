@@ -9,6 +9,7 @@ import { Input } from './ui/input';
 import { Search, MapPin, Filter, Star, RefreshCw } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { toast } from 'sonner';
+import { MoodFilter } from './filters/MoodFilter';
 
 interface CategoryBusinessesProps {
   category: string;
@@ -18,6 +19,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [tierFilter, setTierFilter] = useState('all');
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
   
   const { businesses, loading, error, filteredCount, totalCount, refetch } = useBusinessData(
     category,
@@ -26,18 +28,41 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
     tierFilter
   );
 
+  // Filter businesses based on mood selection
+  const moodFilteredBusinesses = React.useMemo(() => {
+    if (!selectedMood) return businesses;
+    
+    const moodMapping = {
+      'relax': ['spa', 'yoga'],
+      'fitness': ['gym'],
+      'rejuvenate': ['spa', 'yoga']
+    };
+    
+    const allowedCategories = moodMapping[selectedMood as keyof typeof moodMapping] || [];
+    return businesses.filter(business => allowedCategories.includes(business.business_type));
+  }, [businesses, selectedMood]);
+
   // Debug logging with more detail
   useEffect(() => {
-    console.log(`CategoryBusinesses [${category}] - Loading: ${loading}, Total: ${totalCount}, Filtered: ${filteredCount}, Error: ${error}`);
-    if (businesses.length > 0) {
-      console.log(`Sample business:`, businesses[0]);
+    console.log(`CategoryBusinesses [${category}] - Loading: ${loading}, Total: ${totalCount}, Filtered: ${filteredCount}, Mood: ${selectedMood}, Error: ${error}`);
+    if (moodFilteredBusinesses.length > 0) {
+      console.log(`Sample business:`, moodFilteredBusinesses[0]);
     }
-  }, [category, loading, totalCount, filteredCount, error, businesses]);
+  }, [category, loading, totalCount, filteredCount, error, moodFilteredBusinesses, selectedMood]);
 
   const handleRefresh = async () => {
     console.log(`Manually refreshing ${category} data...`);
     toast.info(`Refreshing ${category} listings...`);
     await refetch();
+  };
+
+  const handleMoodChange = (mood: string | null) => {
+    setSelectedMood(mood);
+    if (mood) {
+      toast.success(`Filtering by mood: ${mood}`);
+    } else {
+      toast.info('Mood filter cleared');
+    }
   };
 
   if (loading) {
@@ -119,7 +144,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             {totalCount} Total Listings
           </Badge>
           <Badge className="bg-emerald-500 text-sm">
-            {filteredCount} Showing
+            {selectedMood ? moodFilteredBusinesses.length : filteredCount} Showing
           </Badge>
           {totalCount === 0 && (
             <Badge variant="destructive" className="text-sm">
@@ -128,6 +153,9 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
           )}
         </div>
       </div>
+
+      {/* Mood Filter */}
+      <MoodFilter selectedMood={selectedMood} onMoodChange={handleMoodChange} />
 
       {/* Filters */}
       <Card className="mb-8 shadow-lg">
@@ -176,18 +204,19 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
                 setSearchTerm('');
                 setLocationFilter('');
                 setTierFilter('all');
-                toast.success('Filters cleared');
+                setSelectedMood(null);
+                toast.success('All filters cleared');
               }}
               variant="outline"
             >
-              Clear Filters
+              Clear All Filters
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Business Listings */}
-      {businesses.length === 0 ? (
+      {moodFilteredBusinesses.length === 0 ? (
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="p-8 text-center">
             <Star className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
@@ -197,7 +226,9 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             <p className="text-yellow-700 mb-4">
               {totalCount === 0 
                 ? `No ${category}s have been registered yet. Be the first to list your business!`
-                : `No ${category}s match your current filters. Try adjusting your search criteria.`
+                : selectedMood 
+                  ? `No ${category}s match your current mood and filters. Try adjusting your selection.`
+                  : `No ${category}s match your current filters. Try adjusting your search criteria.`
               }
             </p>
             <div className="flex gap-2 justify-center">
@@ -219,7 +250,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {businesses.map((business) => (
+          {moodFilteredBusinesses.map((business) => (
             <OptimizedBusinessCard
               key={business.id}
               business={business}
@@ -237,6 +268,8 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
               <div>Category: {category}</div>
               <div>Total businesses: {totalCount}</div>
               <div>Filtered count: {filteredCount}</div>
+              <div>Mood filtered count: {moodFilteredBusinesses.length}</div>
+              <div>Selected mood: {selectedMood || 'None'}</div>
               <div>Loading: {loading ? 'Yes' : 'No'}</div>
               <div>Error: {error || 'None'}</div>
               <div>Search term: {searchTerm || 'None'}</div>
