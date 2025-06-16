@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
@@ -202,11 +203,6 @@ const RegisterBusiness = () => {
     return formData.description.trim().length >= 10;
   };
 
-  const validateImages = () => {
-    return businessImages.length >= 1;
-  };
-
-  // Fixed: Add validation for images step
   const validateImages = () => {
     return businessImages.length >= 1;
   };

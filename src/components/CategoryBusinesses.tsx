@@ -1,361 +1,381 @@
 
-import React, { useState, useEffect } from 'react';
-import { useBusinessData } from '@/hooks/useBusinessData';
-import { useTrainers } from '@/hooks/useTrainers';
-import OptimizedBusinessCard from './OptimizedBusinessCard';
-import TrainerCard from './TrainerCard';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Input } from './ui/input';
-import { Search, MapPin, Filter, Star, RefreshCw } from 'lucide-react';
-import { Badge } from './ui/badge';
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Search, Filter, MapPin, Clock, Star, Heart, Phone, Mail, Calendar, DollarSign } from 'lucide-react';
+import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
-import { MoodFilter } from './filters/MoodFilter';
-
-interface CategoryBusinessesProps {
-  category: string;
-}
-
-// Type guard functions
-const isTrainer = (item: any): item is Trainer => {
-  return 'trainer_tier' in item && 'experience' in item;
-};
-
-const isBusiness = (item: any): item is Business => {
-  return 'business_type' in item && 'business_name' in item;
-};
-
-interface Trainer {
-  id: string;
-  name: string;
-  category: string;
-  trainer_tier: string;
-  experience: number;
-  specializations: string[];
-  hourly_rate: number;
-  location: string;
-  bio: string;
-  profile_image_url?: string;
-}
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { BookingModal } from '@/components/BookingModal';
 
 interface Business {
   id: string;
   business_name: string;
   business_type: string;
+  category: string;
+  email: string;
+  phone: string;
+  address: string;
   city: string;
   state: string;
-  tier: string;
-  pricing_tier: string;
+  pin_code: string;
+  opening_time: string;
+  closing_time: string;
+  monthly_price?: number;
+  session_price?: number;
   description: string;
-  images: string[];
+  amenities: string[];
+  image_urls: string[];
+  status: string;
+  created_at: string;
+  updated_at: string;
 }
 
-const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
+interface CategoryBusinessesProps {
+  category: string;
+  title: string;
+  description?: string;
+}
+
+export const CategoryBusinesses = ({ category, title, description }: CategoryBusinessesProps) => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [tierFilter, setTierFilter] = useState('all');
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  
-  const isTrainerCategory = category === 'trainer';
-  
-  // Use appropriate hook based on category
-  const businessData = useBusinessData(
-    isTrainerCategory ? undefined : category,
-    searchTerm,
-    locationFilter,
-    tierFilter
-  );
-  
-  const trainerData = useTrainers(
-    searchTerm,
-    locationFilter,
-    tierFilter,
-    category
-  );
-  
-  const data = isTrainerCategory ? trainerData : businessData;
-  const { loading, error, refetch } = data;
-  const items = isTrainerCategory ? trainerData.trainers : businessData.businesses;
-  const totalCount = isTrainerCategory ? trainerData.totalCount : businessData.totalCount;
-  const filteredCount = isTrainerCategory ? trainerData.trainers.length : businessData.filteredCount;
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [priceRange, setPriceRange] = useState('');
+  const [sortBy, setSortBy] = useState('name');
+  const [wishlist, setWishlist] = useState<Set<string>>(new Set());
+  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
-  // Filter items based on mood selection for non-trainer categories
-  const moodFilteredItems = React.useMemo(() => {
-    if (isTrainerCategory || !selectedMood) return items;
-    
-    const moodMapping = {
-      'relax': ['spa', 'yoga'],
-      'fitness': ['gym'],
-      'rejuvenate': ['spa', 'yoga']
-    };
-    
-    const allowedCategories = moodMapping[selectedMood as keyof typeof moodMapping] || [];
-    return items.filter(item => {
-      if (isBusiness(item)) {
-        return allowedCategories.includes(item.business_type);
-      }
-      return false;
-    });
-  }, [items, selectedMood, isTrainerCategory]);
+  const { 
+    data: businesses = [], 
+    isLoading, 
+    error 
+  } = useOptimizedBusinessData({
+    category,
+    searchTerm,
+    location: selectedLocation,
+    sortBy
+  });
 
-  // Debug logging with more detail
+  // Type guard to ensure we have a valid business
+  const isValidBusiness = (business: any): business is Business => {
+    return business && 
+           typeof business.id === 'string' &&
+           typeof business.business_name === 'string' &&
+           typeof business.business_type === 'string' &&
+           Array.isArray(business.image_urls) &&
+           typeof business.opening_time === 'string' &&
+           typeof business.closing_time === 'string';
+  };
+
+  // Filter and validate businesses
+  const validBusinesses = businesses.filter(isValidBusiness);
+
+  // Load user wishlist
   useEffect(() => {
-    console.log(`CategoryBusinesses [${category}] - Loading: ${loading}, Total: ${totalCount}, Filtered: ${filteredCount}, Mood: ${selectedMood}, Error: ${error}`);
-    if (moodFilteredItems.length > 0) {
-      console.log(`Sample item:`, moodFilteredItems[0]);
+    if (user) {
+      loadWishlist();
     }
-  }, [category, loading, totalCount, filteredCount, error, moodFilteredItems, selectedMood]);
+  }, [user]);
 
-  const handleRefresh = async () => {
-    console.log(`Manually refreshing ${category} data...`);
-    toast.info(`Refreshing ${category} listings...`);
-    await refetch();
+  const loadWishlist = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('user_wishlist')
+        .select('business_id')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      const wishlistIds = new Set(data.map(item => item.business_id));
+      setWishlist(wishlistIds);
+    } catch (error) {
+      console.error('Error loading wishlist:', error);
+    }
   };
 
-  const handleMoodChange = (mood: string | null) => {
-    setSelectedMood(mood);
-    if (mood) {
-      toast.success(`Filtering by mood: ${mood}`);
-    } else {
-      toast.info('Mood filter cleared');
+  const toggleWishlist = async (businessId: string) => {
+    if (!user) {
+      toast.error('Please login to add to wishlist');
+      return;
+    }
+
+    const isInWishlist = wishlist.has(businessId);
+    
+    try {
+      if (isInWishlist) {
+        const { error } = await supabase
+          .from('user_wishlist')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('business_id', businessId);
+
+        if (error) throw error;
+
+        setWishlist(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(businessId);
+          return newSet;
+        });
+        toast.success('Removed from wishlist');
+      } else {
+        const { error } = await supabase
+          .from('user_wishlist')
+          .insert({
+            user_id: user.id,
+            business_id: businessId
+          });
+
+        if (error) throw error;
+
+        setWishlist(prev => new Set(prev).add(businessId));
+        toast.success('Added to wishlist');
+      }
+    } catch (error) {
+      console.error('Error updating wishlist:', error);
+      toast.error('Failed to update wishlist');
     }
   };
 
-  const categoryDisplayName = isTrainerCategory ? 'Personal Trainers' : `${category.charAt(0).toUpperCase() + category.slice(1)}s`;
+  const filteredBusinesses = validBusinesses.filter(business => {
+    const matchesSearch = business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         business.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         business.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesLocation = !selectedLocation || 
+                           business.city.toLowerCase().includes(selectedLocation.toLowerCase()) ||
+                           business.state.toLowerCase().includes(selectedLocation.toLowerCase());
+    
+    const matchesPrice = !priceRange || (() => {
+      const price = business.monthly_price || business.session_price || 0;
+      switch (priceRange) {
+        case 'budget': return price < 2000;
+        case 'mid': return price >= 2000 && price < 5000;
+        case 'premium': return price >= 5000;
+        default: return true;
+      }
+    })();
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
-            Loading {categoryDisplayName}...
-          </h2>
-          <div className="flex justify-center">
-            <RefreshCw className="h-8 w-8 animate-spin text-emerald-500" />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-48 bg-gray-200 rounded-t-lg"></div>
-              <CardContent className="p-4">
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded mb-4"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
+    return matchesSearch && matchesLocation && matchesPrice;
+  });
+
+  const handleBookNow = (business: Business) => {
+    if (!user) {
+      toast.error('Please login to book');
+      return;
+    }
+    setSelectedBusiness(business);
+    setShowBookingModal(true);
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16">
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="p-6 text-center">
-            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading {categoryDisplayName}</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <div className="flex gap-2 justify-center">
-              <Button 
-                onClick={handleRefresh} 
-                className="bg-red-600 hover:bg-red-700"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Retry
-              </Button>
-              <Button 
-                onClick={() => window.location.reload()} 
-                variant="outline"
-                className="border-red-600 text-red-600 hover:bg-red-50"
-              >
-                Reload Page
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="text-center py-8">
+        <p className="text-red-600">Error loading businesses: {error.message}</p>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-16">
-      {/* Header with Stats and Refresh */}
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-            Featured {categoryDisplayName}
-          </h2>
-          <Button
-            onClick={handleRefresh}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Refresh
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="container mx-auto px-6 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
+          {description && <p className="text-xl text-gray-600">{description}</p>}
         </div>
-        <div className="flex justify-center gap-4 mb-6">
-          <Badge variant="outline" className="text-sm">
-            {totalCount} Total Listings
-          </Badge>
-          <Badge className="bg-emerald-500 text-sm">
-            {selectedMood && !isTrainerCategory ? moodFilteredItems.length : filteredCount} Showing
-          </Badge>
-          {totalCount === 0 && (
-            <Badge variant="destructive" className="text-sm">
-              No Data Found
-            </Badge>
-          )}
-        </div>
-      </div>
 
-      {/* Mood Filter (only for non-trainer categories) */}
-      {!isTrainerCategory && (
-        <MoodFilter selectedMood={selectedMood} onMoodChange={handleMoodChange} />
-      )}
-
-      {/* Filters */}
-      <Card className="mb-8 shadow-lg">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            Search & Filter
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {/* Search and Filters */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                placeholder={`Search ${categoryDisplayName.toLowerCase()}...`}
+                placeholder="Search businesses..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 h-12"
               />
             </div>
-            
             <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 placeholder="Location..."
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="pl-10"
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="pl-10 h-12"
               />
             </div>
-            
-            <Select value={tierFilter} onValueChange={setTierFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Tiers" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tiers</SelectItem>
-                {isTrainerCategory ? (
-                  <>
-                    <SelectItem value="elite">Elite</SelectItem>
-                    <SelectItem value="pro">Pro</SelectItem>
-                    <SelectItem value="intermediate">Intermediate</SelectItem>
-                    <SelectItem value="basic">Basic</SelectItem>
-                  </>
-                ) : (
-                  <>
-                    <SelectItem value="budget">Budget Friendly</SelectItem>
-                    <SelectItem value="premium">Premium</SelectItem>
-                    <SelectItem value="luxury">Luxury</SelectItem>
-                  </>
-                )}
-              </SelectContent>
-            </Select>
-            
-            <Button 
-              onClick={() => {
-                setSearchTerm('');
-                setLocationFilter('');
-                setTierFilter('all');
-                setSelectedMood(null);
-                toast.success('All filters cleared');
-              }}
-              variant="outline"
+            <select
+              value={priceRange}
+              onChange={(e) => setPriceRange(e.target.value)}
+              className="h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              Clear All Filters
-            </Button>
+              <option value="">All Price Ranges</option>
+              <option value="budget">Budget (Under ₹2,000)</option>
+              <option value="mid">Mid-range (₹2,000-₹5,000)</option>
+              <option value="premium">Premium (₹5,000+)</option>
+            </select>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="h-12 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="name">Sort by Name</option>
+              <option value="price">Sort by Price</option>
+              <option value="created_at">Sort by Newest</option>
+            </select>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Listings */}
-      {moodFilteredItems.length === 0 ? (
-        <Card className="border-yellow-200 bg-yellow-50">
-          <CardContent className="p-8 text-center">
-            <Star className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-yellow-800 mb-2">
-              No {categoryDisplayName.toLowerCase()} found
-            </h3>
-            <p className="text-yellow-700 mb-4">
-              {totalCount === 0 
-                ? `No ${categoryDisplayName.toLowerCase()} have been registered yet. Be the first to list your business!`
-                : selectedMood && !isTrainerCategory
-                  ? `No ${categoryDisplayName.toLowerCase()} match your current mood and filters. Try adjusting your selection.`
-                  : `No ${categoryDisplayName.toLowerCase()} match your current filters. Try adjusting your search criteria.`
-              }
-            </p>
-            <div className="flex gap-2 justify-center">
-              {totalCount === 0 && (
-                <Button className="bg-yellow-600 hover:bg-yellow-700">
-                  List Your {isTrainerCategory ? 'Profile' : 'Business'}
-                </Button>
-              )}
-              <Button 
-                onClick={handleRefresh}
-                variant="outline"
-                className="border-yellow-600 text-yellow-600 hover:bg-yellow-50"
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Check Again
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {moodFilteredItems.map((item) => {
-            if (isTrainerCategory && isTrainer(item)) {
-              return <TrainerCard key={item.id} trainer={item} />;
-            } else if (!isTrainerCategory && isBusiness(item)) {
-              return <OptimizedBusinessCard key={item.id} business={item as Business} />;
-            }
-            return null;
-          })}
         </div>
-      )}
 
-      {/* Debug Information (only in development) */}
-      {process.env.NODE_ENV === 'development' && (
-        <Card className="mt-8 bg-gray-50 border-gray-200">
-          <CardContent className="p-4">
-            <h4 className="font-semibold text-gray-700 mb-2">Debug Info:</h4>
-            <div className="text-sm text-gray-600 space-y-1">
-              <div>Category: {category}</div>
-              <div>Is Trainer: {isTrainerCategory ? 'Yes' : 'No'}</div>
-              <div>Total items: {totalCount}</div>
-              <div>Filtered count: {filteredCount}</div>
-              <div>Mood filtered count: {moodFilteredItems.length}</div>
-              <div>Selected mood: {selectedMood || 'None'}</div>
-              <div>Loading: {loading ? 'Yes' : 'No'}</div>
-              <div>Error: {error || 'None'}</div>
-              <div>Search term: {searchTerm || 'None'}</div>
-              <div>Location filter: {locationFilter || 'None'}</div>
-              <div>Tier filter: {tierFilter}</div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+        {/* Results */}
+        <div className="mb-8">
+          <p className="text-gray-600">
+            Found {filteredBusinesses.length} {category} businesses
+          </p>
+        </div>
+
+        {/* Business Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredBusinesses.map((business) => (
+            <Card key={business.id} className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
+              <div className="relative">
+                <div className="aspect-video bg-gray-200 overflow-hidden">
+                  {business.image_urls && business.image_urls.length > 0 ? (
+                    <img
+                      src={business.image_urls[0]}
+                      alt={business.business_name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-100">
+                      <span className="text-gray-400">No image available</span>
+                    </div>
+                  )}
+                </div>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="absolute top-3 right-3 h-9 w-9 p-0 bg-white/80 hover:bg-white"
+                  onClick={() => toggleWishlist(business.id)}
+                >
+                  <Heart 
+                    className={`h-4 w-4 ${wishlist.has(business.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
+                  />
+                </Button>
+                <Badge className="absolute top-3 left-3 capitalize bg-blue-600">
+                  {business.category}
+                </Badge>
+              </div>
+
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
+                  {business.business_name}
+                </CardTitle>
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span className="text-sm">{business.city}, {business.state}</span>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                <p className="text-gray-600 text-sm line-clamp-2">{business.description}</p>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center text-gray-600">
+                    <Clock className="h-4 w-4 mr-1" />
+                    <span className="text-sm">
+                      {business.opening_time} - {business.closing_time}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                    <span className="text-sm text-gray-600">4.5</span>
+                  </div>
+                </div>
+
+                {(business.monthly_price || business.session_price) && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-green-600 font-semibold">
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      <span>
+                        ₹{business.monthly_price || business.session_price}
+                        {business.monthly_price ? '/month' : '/session'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {business.amenities.slice(0, 3).map((amenity, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      {amenity}
+                    </Badge>
+                  ))}
+                  {business.amenities.length > 3 && (
+                    <Badge variant="secondary" className="text-xs">
+                      +{business.amenities.length - 3} more
+                    </Badge>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => window.open(`tel:${business.phone}`, '_self')}
+                  >
+                    <Phone className="h-4 w-4 mr-1" />
+                    Call
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={() => handleBookNow(business)}
+                  >
+                    <Calendar className="h-4 w-4 mr-1" />
+                    Book Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {filteredBusinesses.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No businesses found matching your criteria.</p>
+            <p className="text-gray-500 mt-2">Try adjusting your search filters.</p>
+          </div>
+        )}
+
+        {/* Booking Modal */}
+        {selectedBusiness && (
+          <BookingModal
+            isOpen={showBookingModal}
+            onClose={() => {
+              setShowBookingModal(false);
+              setSelectedBusiness(null);
+            }}
+            business={selectedBusiness}
+          />
+        )}
+      </div>
     </div>
   );
 };
-
-export default CategoryBusinesses;

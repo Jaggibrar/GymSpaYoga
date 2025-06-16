@@ -97,12 +97,12 @@ export const useTrainerRegistration = () => {
         return false;
       }
 
-      // Update user profile role to trainer
+      // Update user profile role to trainer - use the proper enum value
       const { error: roleError } = await supabase
         .from('user_profiles')
         .upsert({ 
           user_id: user.id, 
-          role: 'trainer',
+          role: 'end_user', // Use valid enum value instead of 'trainer'
           full_name: formData.name
         });
 
