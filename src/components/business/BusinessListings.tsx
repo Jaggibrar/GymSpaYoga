@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Star, Clock, Phone, Mail, Crown, Diamond, IndianRupee, Search, Filter } from 'lucide-react';
 import BookingModal from '@/components/BookingModal';
+import { getTierFromPricing, getTierIcon, getTierColor } from '@/utils/businessUtils';
 
 const BusinessListings = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -22,14 +23,7 @@ const BusinessListings = () => {
     'created_at'
   );
 
-  const getTierFromPricing = (business: any) => {
-    const price = business.monthly_price || business.session_price || 0;
-    if (price >= 5000) return 'luxury';
-    if (price >= 3000) return 'premium';
-    return 'budget';
-  };
-
-  const getTierIcon = (tier: string) => {
+  const getIconComponent = (tier: string) => {
     switch (tier) {
       case 'luxury': return <Crown className="h-4 w-4" />;
       case 'premium': return <Diamond className="h-4 w-4" />;
@@ -37,13 +31,10 @@ const BusinessListings = () => {
     }
   };
 
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return "from-yellow-500 to-yellow-600";
-      case 'premium': return "from-blue-500 to-blue-600";
-      default: return "from-green-500 to-green-600";
-    }
-  };
+  // Filter businesses by tier if tierFilter is not 'all'
+  const filteredBusinesses = tierFilter === 'all' 
+    ? businesses 
+    : businesses.filter(business => getTierFromPricing(business) === tierFilter);
 
   if (loading) {
     return (
@@ -123,7 +114,7 @@ const BusinessListings = () => {
       </Card>
 
       {/* Business Cards */}
-      {businesses.length === 0 ? (
+      {filteredBusinesses.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
             <Search className="h-16 w-16 mx-auto" />
@@ -133,7 +124,7 @@ const BusinessListings = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {businesses.map((business) => {
+          {filteredBusinesses.map((business) => {
             const tier = getTierFromPricing(business);
             return (
               <Card key={business.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
@@ -144,7 +135,7 @@ const BusinessListings = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white border-0`}>
-                    {getTierIcon(tier)}
+                    {getIconComponent(tier)}
                     <span className="ml-1 capitalize">{tier}</span>
                   </Badge>
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
