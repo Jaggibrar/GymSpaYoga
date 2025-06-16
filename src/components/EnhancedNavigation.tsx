@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -64,7 +65,6 @@ const EnhancedNavigation = () => {
     { name: "Spas", href: "/spas" },
     { name: "Yoga", href: "/yoga" },
     { name: "Trainers", href: "/trainers" },
-    { name: "For Business", href: "/business", highlight: true }, // Add business link
     { name: "About", href: "/about" },
     { name: "Support", href: "/support" }
   ];
@@ -87,12 +87,10 @@ const EnhancedNavigation = () => {
                 location.pathname === item.href
                   ? "text-emerald-600"
                   : "text-gray-700 hover:text-emerald-600"
-              } ${item.highlight ? "bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300" : ""}`}
+              }`}
             >
               {item.name}
-              {!item.highlight && (
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
-              )}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
         </div>
