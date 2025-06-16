@@ -37,7 +37,7 @@ export const useGyms = () => {
       setLoading(true);
       setError(null);
       
-      // Remove status filter to show all listings
+      // Fetch all gym businesses regardless of status for debugging
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
@@ -50,7 +50,16 @@ export const useGyms = () => {
       }
 
       console.log(`Fetched ${data?.length || 0} gym listings:`, data);
-      setGyms(data || []);
+      
+      // Filter approved gyms for display, but show count of all
+      const approvedGyms = data?.filter(gym => gym.status === 'approved') || [];
+      const pendingCount = (data?.length || 0) - approvedGyms.length;
+      
+      if (pendingCount > 0) {
+        console.log(`${pendingCount} gym(s) are pending approval and won't be displayed`);
+      }
+      
+      setGyms(approvedGyms);
     } catch (err: any) {
       console.error('Failed to fetch gyms:', err);
       setError(err.message);

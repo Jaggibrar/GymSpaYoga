@@ -143,7 +143,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Trending Destinations */}
+        {/* Trending Destinations - Fixed routing */}
         {!loading && trendingDestinations.length > 0 && (
           <section className="container mx-auto px-4 py-16 bg-gray-50">
             <div className="text-center mb-12">
@@ -197,9 +197,11 @@ const Index = () => {
                       <Badge variant="outline" className="text-xs">
                         {business.business_type?.replace('_', ' ').toUpperCase()}
                       </Badge>
-                      <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
-                        View Details
-                      </Button>
+                      <Link to={`/${business.business_type}s/${business.id}`}>
+                        <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
+                          View Details
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>

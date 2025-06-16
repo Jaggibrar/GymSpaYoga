@@ -1,125 +1,179 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Dumbbell, Star, MapPin, Waves, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useBusinessData } from '@/hooks/useBusinessData';
+import OptimizedBusinessCard from './OptimizedBusinessCard';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Input } from './ui/input';
+import { Search, MapPin, Filter, Star } from 'lucide-react';
+import { Badge } from './ui/badge';
 
 interface CategoryBusinessesProps {
   category: string;
 }
 
 const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
-  const getCategoryIcon = () => {
-    switch (category) {
-      case 'gym':
-        return <Dumbbell className="h-6 w-6 text-red-600" />;
-      case 'spa':
-        return <Waves className="h-6 w-6 text-blue-600" />;
-      case 'yoga':
-        return <Heart className="h-6 w-6 text-purple-600" />;
-      default:
-        return <Dumbbell className="h-6 w-6 text-red-600" />;
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState('');
+  const [locationFilter, setLocationFilter] = useState('');
+  const [tierFilter, setTierFilter] = useState('all');
+  
+  const { businesses, loading, error, filteredCount, totalCount } = useBusinessData(
+    category,
+    searchTerm,
+    locationFilter,
+    tierFilter
+  );
 
-  const getCategoryTitle = () => {
-    switch (category) {
-      case 'gym':
-        return 'Premium Fitness Centers';
-      case 'spa':
-        return 'Luxury Spa Experiences';
-      case 'yoga':
-        return 'Mindful Yoga Studios';
-      default:
-        return 'Featured Businesses';
-    }
-  };
+  console.log(`CategoryBusinesses - Category: ${category}, Total: ${totalCount}, Filtered: ${filteredCount}`);
 
-  const getCategoryDescription = () => {
-    switch (category) {
-      case 'gym':
-        return 'Discover top-rated gym facilities with modern amenities and expert trainers.';
-      case 'spa':
-        return 'Experience luxury spa treatments and wellness services for ultimate relaxation.';
-      case 'yoga':
-        return 'Find peaceful yoga studios with certified instructors for mind-body wellness.';
-      default:
-        return 'Discover top-rated facilities with modern amenities and expert professionals.';
-    }
-  };
-
-  const getCategoryColor = () => {
-    switch (category) {
-      case 'gym':
-        return 'from-red-500 to-orange-500';
-      case 'spa':
-        return 'from-blue-500 to-cyan-500';
-      case 'yoga':
-        return 'from-purple-500 to-pink-500';
-      default:
-        return 'from-red-500 to-orange-500';
-    }
-  };
-
-  const getRegisterLink = () => {
-    return '/register-business';
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          {getCategoryIcon()}
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-            {getCategoryTitle()}
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Loading {category.charAt(0).toUpperCase() + category.slice(1)}s...
           </h2>
         </div>
-        <p className="text-gray-600 max-w-2xl mx-auto mb-6">
-          {getCategoryDescription()}
-        </p>
-        
-        <div className="flex justify-center gap-4">
-          <Link to={getRegisterLink()}>
-            <Button className={`bg-gradient-to-r ${getCategoryColor()} hover:opacity-90 text-white px-6 py-3`}>
-              List Your {category.charAt(0).toUpperCase() + category.slice(1)}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+              <CardContent className="p-4">
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                <div className="h-8 bg-gray-200 rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-6 text-center">
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Businesses</h3>
+            <p className="text-red-600">{error}</p>
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="mt-4 bg-red-600 hover:bg-red-700"
+            >
+              Retry
             </Button>
-          </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-16">
+      {/* Header with Stats */}
+      <div className="text-center mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          Featured {category.charAt(0).toUpperCase() + category.slice(1)}s
+        </h2>
+        <div className="flex justify-center gap-4 mb-6">
+          <Badge variant="outline" className="text-sm">
+            {totalCount} Total Listings
+          </Badge>
+          <Badge className="bg-emerald-500 text-sm">
+            {filteredCount} Showing
+          </Badge>
         </div>
       </div>
 
-      {/* Feature Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-        <Card className="text-center p-6 hover:shadow-lg transition-shadow">
-          <div className="flex justify-center mb-4">
-            <Star className="h-12 w-12 text-yellow-500" />
+      {/* Filters */}
+      <Card className="mb-8 shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Filter className="h-5 w-5" />
+            Search & Filter
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder={`Search ${category}s...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Location..."
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <Select value={tierFilter} onValueChange={setTierFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="All Tiers" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Tiers</SelectItem>
+                <SelectItem value="budget">Budget Friendly</SelectItem>
+                <SelectItem value="premium">Premium</SelectItem>
+                <SelectItem value="luxury">Luxury</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Button 
+              onClick={() => {
+                setSearchTerm('');
+                setLocationFilter('');
+                setTierFilter('all');
+              }}
+              variant="outline"
+            >
+              Clear Filters
+            </Button>
           </div>
-          <h3 className="text-lg font-semibold mb-2">Top Rated</h3>
-          <p className="text-gray-600 text-sm">
-            Only the highest quality {category} facilities make it to our platform
-          </p>
-        </Card>
+        </CardContent>
+      </Card>
 
-        <Card className="text-center p-6 hover:shadow-lg transition-shadow">
-          <div className="flex justify-center mb-4">
-            <MapPin className="h-12 w-12 text-emerald-500" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Convenient Locations</h3>
-          <p className="text-gray-600 text-sm">
-            Find {category} facilities near you with easy booking and scheduling
-          </p>
+      {/* Business Listings */}
+      {businesses.length === 0 ? (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardContent className="p-8 text-center">
+            <Star className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-yellow-800 mb-2">
+              No {category}s found
+            </h3>
+            <p className="text-yellow-700 mb-4">
+              {totalCount === 0 
+                ? `No ${category}s have been registered yet. Be the first to list your business!`
+                : `No ${category}s match your current filters. Try adjusting your search criteria.`
+              }
+            </p>
+            {totalCount === 0 && (
+              <Button className="bg-yellow-600 hover:bg-yellow-700">
+                List Your {category.charAt(0).toUpperCase() + category.slice(1)}
+              </Button>
+            )}
+          </CardContent>
         </Card>
-
-        <Card className="text-center p-6 hover:shadow-lg transition-shadow">
-          <div className="flex justify-center mb-4">
-            {getCategoryIcon()}
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Professional Service</h3>
-          <p className="text-gray-600 text-sm">
-            Experienced professionals ready to help you achieve your wellness goals
-          </p>
-        </Card>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {businesses.map((business) => (
+            <OptimizedBusinessCard
+              key={business.id}
+              business={business}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
