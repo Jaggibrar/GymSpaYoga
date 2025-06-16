@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, MapPin, Clock, Star, Heart, Phone, Mail, Calendar, DollarSign } from 'lucide-react';
-import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
+import { useBusinessData } from '@/hooks/useBusinessData';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { BookingModal } from '@/components/BookingModal';
+import BookingModal from '@/components/BookingModal';
 
 interface Business {
   id: string;
@@ -37,11 +37,11 @@ interface Business {
 
 interface CategoryBusinessesProps {
   category: string;
-  title: string;
+  title?: string;
   description?: string;
 }
 
-export const CategoryBusinesses = ({ category, title, description }: CategoryBusinessesProps) => {
+const CategoryBusinesses = ({ category, title, description }: CategoryBusinessesProps) => {
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
@@ -52,15 +52,10 @@ export const CategoryBusinesses = ({ category, title, description }: CategoryBus
   const [showBookingModal, setShowBookingModal] = useState(false);
 
   const { 
-    data: businesses = [], 
-    isLoading, 
+    businesses = [], 
+    loading, 
     error 
-  } = useOptimizedBusinessData({
-    category,
-    searchTerm,
-    location: selectedLocation,
-    sortBy
-  });
+  } = useBusinessData(category, searchTerm, selectedLocation, sortBy);
 
   // Type guard to ensure we have a valid business
   const isValidBusiness = (business: any): business is Business => {
@@ -175,14 +170,14 @@ export const CategoryBusinesses = ({ category, title, description }: CategoryBus
     setShowBookingModal(true);
   };
 
-  if (isLoading) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600">Error loading businesses: {error.message}</p>
+        <p className="text-red-600">Error loading businesses: {error}</p>
       </div>
     );
   }
@@ -190,10 +185,12 @@ export const CategoryBusinesses = ({ category, title, description }: CategoryBus
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <div className="container mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>
-          {description && <p className="text-xl text-gray-600">{description}</p>}
-        </div>
+        {(title || description) && (
+          <div className="text-center mb-12">
+            {title && <h1 className="text-4xl font-bold text-gray-900 mb-4">{title}</h1>}
+            {description && <p className="text-xl text-gray-600">{description}</p>}
+          </div>
+        )}
 
         {/* Search and Filters */}
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
@@ -367,15 +364,20 @@ export const CategoryBusinesses = ({ category, title, description }: CategoryBus
         {/* Booking Modal */}
         {selectedBusiness && (
           <BookingModal
+            businessName={selectedBusiness.business_name}
+            businessType={selectedBusiness.business_type}
+            businessId={selectedBusiness.id}
             isOpen={showBookingModal}
             onClose={() => {
               setShowBookingModal(false);
               setSelectedBusiness(null);
             }}
-            business={selectedBusiness}
+            price={selectedBusiness.monthly_price ? `₹${selectedBusiness.monthly_price}` : selectedBusiness.session_price ? `₹${selectedBusiness.session_price}` : undefined}
           />
         )}
       </div>
     </div>
   );
 };
+
+export default CategoryBusinesses;

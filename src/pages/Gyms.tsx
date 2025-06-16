@@ -145,4 +145,3 @@ const Gyms = () => {
 };
 
 export default Gyms;
-
