@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dumbbell, Waves, Heart, UploadCloud, Star, MapPin, Phone, Mail, User, Award, FileText, Camera } from "lucide-react";
@@ -43,21 +42,22 @@ const RegisterTrainer = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    // Only redirect if auth is finished loading and user is not found
     if (!authLoading && !user) {
       navigate('/login');
     }
   }, [user, authLoading, navigate]);
 
-  // Show loading spinner only briefly while checking auth
+  // Show loading only while auth is being checked
   if (authLoading) {
     return (
-      <>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         <AppHeader onLogout={signOut} />
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="flex items-center justify-center py-20">
           <LoadingSpinner size="lg" text="Loading..." />
         </div>
         <AppFooter />
-      </>
+      </div>
     );
   }
 

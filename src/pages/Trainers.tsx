@@ -12,9 +12,13 @@ import { Search, MapPin, Star, Award, Crown, Zap, Shield, User } from "lucide-re
 import { toast } from "sonner";
 import PageHero from "@/components/PageHero";
 import SEOHead from "@/components/SEOHead";
+import AppHeader from "@/components/AppHeader";
+import AppFooter from "@/components/AppFooter";
+import { useAuth } from "@/hooks/useAuth";
 
 const Trainers = () => {
   useScrollToTop();
+  const { signOut } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -47,16 +51,6 @@ const Trainers = () => {
     }
   };
 
-  const getTierPrice = (tier: string) => {
-    switch (tier) {
-      case 'elite': return "₹4,999";
-      case 'pro': return "₹3,999";
-      case 'intermediate': return "₹2,999";
-      case 'basic': return "₹1,700";
-      default: return "Contact";
-    }
-  };
-
   const handleBookNow = (trainerName: string) => {
     toast.success(`Booking session with ${trainerName}. Please sign in to complete your booking!`);
   };
@@ -64,6 +58,7 @@ const Trainers = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+        <AppHeader onLogout={signOut} />
         <SEOHead
           title="Personal Trainers - GymSpaYoga"
           description="Find the best personal trainers and fitness coaches near you"
@@ -77,12 +72,14 @@ const Trainers = () => {
             </Link>
           </div>
         </div>
+        <AppFooter />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+      <AppHeader onLogout={signOut} />
       <SEOHead
         title="Personal Trainers - GymSpaYoga"
         description="Find certified personal trainers and fitness coaches. Connect with elite, pro, and experienced trainers near you."
@@ -147,11 +144,12 @@ const Trainers = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-40 md:h-48 bg-gray-200"></div>
+              <Card key={i} className="animate-pulse border-0 shadow-lg">
+                <div className="h-40 md:h-48 bg-gray-200 rounded-t-lg"></div>
                 <CardContent className="p-4 md:p-6">
                   <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
                 </CardContent>
               </Card>
             ))}
@@ -159,14 +157,14 @@ const Trainers = () => {
         ) : trainers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {trainers.map((trainer) => (
-              <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                <div className="relative overflow-hidden h-40 md:h-48">
+              <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg">
+                <div className="relative overflow-hidden h-40 md:h-48 rounded-t-lg">
                   <img 
                     src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
                     alt={trainer.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <Badge className={`absolute top-3 md:top-4 right-3 md:right-4 bg-gradient-to-r ${getTierColor(trainer.trainer_tier)} text-white`}>
+                  <Badge className={`absolute top-3 md:top-4 right-3 md:right-4 bg-gradient-to-r ${getTierColor(trainer.trainer_tier)} text-white shadow-lg`}>
                     {getTierIcon(trainer.trainer_tier)}
                     <span className="ml-1 capitalize">{trainer.trainer_tier}</span>
                   </Badge>
@@ -215,7 +213,7 @@ const Trainers = () => {
                   <div className="flex gap-2">
                     <Button 
                       size="sm" 
-                      className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 touch-target text-xs md:text-sm flex-1"
+                      className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 touch-target text-xs md:text-sm flex-1 shadow-lg"
                       onClick={() => handleBookNow(trainer.name)}
                     >
                       Book Session
@@ -223,7 +221,7 @@ const Trainers = () => {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      className="touch-target text-xs md:text-sm"
+                      className="touch-target text-xs md:text-sm border-emerald-200 hover:bg-emerald-50"
                     >
                       View Profile
                     </Button>
@@ -246,12 +244,12 @@ const Trainers = () => {
             </p>
             <div className="flex gap-3 md:gap-4 justify-center flex-col sm:flex-row">
               <Link to="/register-trainer">
-                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 touch-target w-full sm:w-auto">
+                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 touch-target w-full sm:w-auto shadow-lg">
                   Register as Trainer
                 </Button>
               </Link>
               <Link to="/">
-                <Button variant="outline" className="touch-target w-full sm:w-auto">
+                <Button variant="outline" className="touch-target w-full sm:w-auto border-emerald-200 hover:bg-emerald-50">
                   Back to Home
                 </Button>
               </Link>
@@ -259,6 +257,7 @@ const Trainers = () => {
           </div>
         )}
       </div>
+      <AppFooter />
     </div>
   );
 };
