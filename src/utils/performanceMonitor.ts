@@ -31,12 +31,12 @@ export const performanceMonitor: PerformanceMonitor = {
     return metrics;
   },
 
-  getAverageMetric(metricName: string): number {
-    const values = metrics[metricName] || [];
-    if (values.length === 0) return 0;
-    const sum = values.reduce((a, b) => a + b, 0);
-    return sum / values.length;
-  },
+  getAverageMetric: (metricName: string) => {
+  const values = metrics[metricName] || [];
+  if (values.length === 0) return 0;
+  const sum = values.reduce((a, b) => a + b, 0);
+  return sum / values.length;
+},
 
   clearMetrics: () => {
     Object.keys(metrics).forEach((key) => {
