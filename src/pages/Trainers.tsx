@@ -31,6 +31,8 @@ const Trainers = () => {
     tierFilter
   );
 
+  console.log('Trainers data:', { trainers, loading, error });
+
   const getTierIcon = (tier: string) => {
     switch (tier) {
       case 'elite': return <Crown className="h-4 w-4" />;
@@ -56,6 +58,7 @@ const Trainers = () => {
   };
 
   if (error) {
+    console.error('Trainers page error:', error);
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
         <AppHeader onLogout={signOut} />
@@ -154,7 +157,7 @@ const Trainers = () => {
               </Card>
             ))}
           </div>
-        ) : trainers.length > 0 ? (
+        ) : trainers && trainers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {trainers.map((trainer) => (
               <Card key={trainer.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-lg">

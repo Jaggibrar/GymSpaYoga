@@ -52,11 +52,8 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
       setLoading(true);
       setError(null);
 
-      let data;
-      let error;
-
       if (businessOwnersView) {
-        // Fetch bookings for businesses owned by the current user with user profile data
+        // First get business profiles for the current user
         const { data: businessProfiles, error: businessError } = await supabase
           .from('business_profiles')
           .select('id')
@@ -65,52 +62,55 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
         if (businessError) {
           console.error('Error fetching business profiles:', businessError);
           setError('Failed to fetch business profiles');
+          setLoading(false);
           return;
         }
 
         if (businessProfiles && businessProfiles.length > 0) {
           const businessIds = businessProfiles.map(bp => bp.id);
 
-          // Build entire query with all clauses before calling order
-          const result = await supabase
+          // Fetch bookings for businesses owned by the current user
+          const { data, error } = await supabase
             .from('bookings')
             .select(`
               *,
-              user_profile:user_id(full_name, phone),
-              business_profile:business_id(business_name)
+              user_profile:user_profiles!bookings_user_id_fkey(full_name, phone),
+              business_profile:business_profiles!bookings_business_id_fkey(business_name)
             `)
             .in('business_id', businessIds)
             .order('created_at', { ascending: false });
 
-          data = result.data;
-          error = result.error;
+          if (error) {
+            console.error('Error fetching business bookings:', error);
+            setError(error.message);
+            setLoading(false);
+            return;
+          }
+
+          setBookings(data || []);
         } else {
           setBookings([]);
-          setLoading(false);
-          return;
         }
       } else {
-        // Fetch bookings for the current user with business profile data
-        const result = await supabase
+        // Fetch bookings for the current user
+        const { data, error } = await supabase
           .from('bookings')
           .select(`
             *,
-            business_profile:business_id(business_name)
+            business_profile:business_profiles!bookings_business_id_fkey(business_name)
           `)
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
 
-        data = result.data;
-        error = result.error;
-      }
+        if (error) {
+          console.error('Error fetching user bookings:', error);
+          setError(error.message);
+          setLoading(false);
+          return;
+        }
 
-      if (error) {
-        console.error('Error fetching bookings:', error);
-        setError(error.message);
-        return;
+        setBookings(data || []);
       }
-
-      setBookings(data || []);
     } catch (err) {
       console.error('Error in fetchBookings:', err);
       setError('Failed to fetch bookings');
@@ -134,6 +134,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
       }
 
       toast.success(`Booking ${status} successfully`);
+      fetchBookings(); // Refetch bookings after update
       return true;
     } catch (error) {
       console.error('Error updating booking status:', error);

@@ -199,7 +199,7 @@ const BusinessDashboard = () => {
         {/* Enhanced Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
-            <Card key={index} className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 shadow-lg">
+            <Card key={index} className="hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`p-3 rounded-xl ${stat.bgColor}`}>
