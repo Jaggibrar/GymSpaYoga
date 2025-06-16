@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Badge } from "@/components/ui/badge";
 import { Dumbbell, Menu, User, LogOut, Calendar, Building, Home, ChevronRight, Phone, HelpCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
@@ -153,10 +152,7 @@ const MainNavigation = () => {
                 </Link>
                 <Link to="/signup">
                   <Button size="sm" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 font-bold">
-                    Start Free Trial
-                    <Badge className="ml-2 bg-white text-emerald-600 px-2 py-0 text-xs">
-                      FREE
-                    </Badge>
+                    Sign Up
                   </Button>
                 </Link>
               </div>
@@ -247,7 +243,7 @@ const MainNavigation = () => {
                         </Link>
                         <Link to="/signup" onClick={() => setIsOpen(false)}>
                           <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 font-bold">
-                            Start Free Trial Today
+                            Sign Up
                           </Button>
                         </Link>
                       </>

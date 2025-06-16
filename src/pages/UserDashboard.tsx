@@ -1,395 +1,312 @@
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { Calendar, MapPin, Star, Clock, Phone, User, CreditCard, TrendingUp, BarChart3, Activity, Users, DollarSign, Target, Dumbbell, Download, Filter, CheckCircle, XCircle, Eye } from 'lucide-react';
-import { Link } from "react-router-dom";
-import { useRealTimeBookings } from "@/hooks/useRealTimeBookings";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
-import { getTierFromPricing } from "@/utils/businessUtils";
+import { useRealTimeBookings } from "@/hooks/useRealTimeBookings";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, MapPin, Clock, DollarSign, User, Building, Phone, Mail, Star, TrendingUp, Activity, Target } from "lucide-react";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { getTierFromPricing, getTierIcon, getTierColor } from "@/utils/businessUtils";
 
 const UserDashboard = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const { bookings, loading, updateBookingStatus } = useRealTimeBookings(false);
   const { user } = useAuth();
+  const { bookings, loading, error } = useRealTimeBookings(false);
 
-  // Filter bookings based on search and status
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = 
-      booking.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.business_id?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || booking.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-  // Calculate analytics from real data
-  const analyticsData = {
-    totalSpent: filteredBookings
-      .filter(b => b.status === 'confirmed' && b.total_amount)
-      .reduce((sum, b) => sum + (b.total_amount || 0), 0),
-    totalBookings: bookings.length,
-    confirmedBookings: bookings.filter(b => b.status === 'confirmed').length,
-    pendingBookings: bookings.filter(b => b.status === 'pending').length,
-    cancelledBookings: bookings.filter(b => b.status === 'cancelled').length,
-    avgBookingValue: bookings.length > 0 
-      ? bookings.reduce((sum, b) => sum + (b.total_amount || 0), 0) / bookings.length 
-      : 0
-  };
-
-  const handleCancel = async (bookingId: number) => {
-    const success = await updateBookingStatus(bookingId, 'cancelled', "Booking cancelled by user");
-    if (success) {
-      toast.success("Booking cancelled successfully");
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed": return "bg-green-500 hover:bg-green-600";
-      case "pending": return "bg-yellow-500 hover:bg-yellow-600";
-      case "cancelled": return "bg-red-500 hover:bg-red-600";
-      default: return "bg-gray-500 hover:bg-gray-600";
-    }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(amount);
-  };
-
-  if (!user) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <Card className="p-8 text-center shadow-2xl border-0">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <XCircle className="h-8 w-8 text-red-600" />
-          </div>
-          <h2 className="text-2xl font-bold mb-4 text-gray-800">Access Denied</h2>
-          <p className="text-gray-600 mb-6">Please log in to view your dashboard</p>
-          <Link to="/login">
-            <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-              Go to Login
-            </Button>
-          </Link>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <div className="text-red-500 mb-4">
+                <Activity className="h-12 w-12 mx-auto" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Connection Error</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
   }
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+  const upcomingBookings = bookings.filter(booking => 
+    booking.status === 'confirmed' && 
+    booking.booking_date && 
+    new Date(booking.booking_date) >= new Date()
+  );
+
+  const pastBookings = bookings.filter(booking => 
+    booking.booking_date && 
+    new Date(booking.booking_date) < new Date()
+  );
+
+  const pendingBookings = bookings.filter(booking => booking.status === 'pending');
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'confirmed': return 'bg-green-500';
+      case 'pending': return 'bg-yellow-500';
+      case 'cancelled': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
+  const formatCurrency = (amount: number | null) => {
+    if (!amount) return '$0';
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-6 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Header */}
         <div className="mb-8">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-              <User className="h-6 w-6 text-white" />
-            </div>
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                My Dashboard
+              <h1 className="text-3xl font-bold text-gray-900">
+                Welcome back! 👋
               </h1>
-              <p className="text-gray-600">Welcome back, {user.email}</p>
+              <p className="text-gray-600 mt-1">
+                {user?.email && `Signed in as ${user.email}`}
+              </p>
+            </div>
+            <div className="flex space-x-3">
+              <Link to="/explore">
+                <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                  <Target className="h-4 w-4 mr-2" />
+                  Find Services
+                </Button>
+              </Link>
+              <Link to="/profile">
+                <Button variant="outline">
+                  <User className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </Button>
+              </Link>
             </div>
           </div>
-          <p className="text-gray-600">Track your bookings and wellness journey</p>
         </div>
 
-        <Tabs defaultValue="analytics" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 bg-white shadow-sm border border-gray-200 p-1 rounded-xl">
-            <TabsTrigger 
-              value="analytics" 
-              className="text-base px-6 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all"
-            >
-              <BarChart3 className="h-5 w-5 mr-2" />
-              My Activity
-            </TabsTrigger>
-            <TabsTrigger 
-              value="bookings" 
-              className="text-base px-6 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all"
-            >
-              <Calendar className="h-5 w-5 mr-2" />
-              My Bookings
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Analytics Tab */}
-          <TabsContent value="analytics" className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-green-700 mb-1">Total Spent</p>
-                      <p className="text-3xl font-bold text-green-800">{formatCurrency(analyticsData.totalSpent)}</p>
-                      <p className="text-xs text-green-600 mt-1">On wellness services</p>
-                    </div>
-                    <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <DollarSign className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-blue-700 mb-1">Total Bookings</p>
-                      <p className="text-3xl font-bold text-blue-800">{analyticsData.totalBookings}</p>
-                      <p className="text-xs text-blue-600 mt-1">All time bookings</p>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Calendar className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-purple-700 mb-1">Confirmed</p>
-                      <p className="text-3xl font-bold text-purple-800">{analyticsData.confirmedBookings}</p>
-                      <p className="text-xs text-purple-600 mt-1">Successful sessions</p>
-                    </div>
-                    <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <CheckCircle className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-700 mb-1">Pending</p>
-                      <p className="text-3xl font-bold text-orange-800">{analyticsData.pendingBookings}</p>
-                      <p className="text-xs text-orange-600 mt-1">Awaiting confirmation</p>
-                    </div>
-                    <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Clock className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-teal-700 mb-1">Avg Booking Value</p>
-                      <p className="text-3xl font-bold text-teal-800">{formatCurrency(analyticsData.avgBookingValue)}</p>
-                      <p className="text-xs text-teal-600 mt-1">Per session</p>
-                    </div>
-                    <div className="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <TrendingUp className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-red-700 mb-1">Cancelled</p>
-                      <p className="text-3xl font-bold text-red-800">{analyticsData.cancelledBookings}</p>
-                      <p className="text-xs text-red-600 mt-1">Cancelled bookings</p>
-                    </div>
-                    <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <XCircle className="h-6 w-6 text-white" />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Bookings Tab */}
-          <TabsContent value="bookings" className="space-y-6">
-            {/* Elegant Filters */}
-            <Card className="border-0 shadow-lg bg-white">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative">
-                    <Input
-                      placeholder="Search bookings..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="h-12 pl-4 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl"
-                    />
-                  </div>
-                  
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="h-12 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl">
-                      <SelectValue placeholder="All Status" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
-                      <SelectItem value="all">All Status</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  
-                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 h-12 rounded-xl shadow-lg">
-                    <Filter className="h-5 w-5 mr-2" />
-                    Apply Filters
-                  </Button>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-blue-500 rounded-lg">
+                  <Calendar className="h-6 w-6 text-white" />
                 </div>
-              </CardContent>
-            </Card>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total Bookings</p>
+                  <p className="text-2xl font-bold text-gray-900">{bookings.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Bookings Table */}
-            <Card className="border-0 shadow-lg bg-white">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-semibold text-gray-800">
-                  My Bookings ({filteredBookings.length})
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-green-500 rounded-lg">
+                  <TrendingUp className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Upcoming</p>
+                  <p className="text-2xl font-bold text-gray-900">{upcomingBookings.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-yellow-500 rounded-lg">
+                  <Clock className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Pending</p>
+                  <p className="text-2xl font-bold text-gray-900">{pendingBookings.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-purple-500 rounded-lg">
+                  <DollarSign className="h-6 w-6 text-white" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total Spent</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {formatCurrency(bookings.reduce((sum, booking) => sum + (booking.total_amount || 0), 0))}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Upcoming Bookings */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Calendar className="h-5 w-5 mr-2 text-emerald-600" />
+                  Upcoming Bookings
                 </CardTitle>
+                <CardDescription>
+                  Your confirmed appointments and sessions
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                {filteredBookings.length === 0 ? (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="h-8 w-8 text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-600 mb-2">No bookings found</h3>
-                    <p className="text-gray-500">
-                      {bookings.length === 0 
-                        ? "You haven't made any bookings yet." 
-                        : "No bookings match your current filters."}
-                    </p>
+                {upcomingBookings.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No upcoming bookings</h3>
+                    <p className="text-gray-600 mb-4">Ready to book your next wellness session?</p>
+                    <Link to="/explore">
+                      <Button>Browse Services</Button>
+                    </Link>
                   </div>
                 ) : (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-gray-100">
-                          <TableHead className="font-semibold text-gray-700">Service Details</TableHead>
-                          <TableHead className="font-semibold text-gray-700">Business</TableHead>
-                          <TableHead className="font-semibold text-gray-700">Date & Time</TableHead>
-                          <TableHead className="font-semibold text-gray-700">Amount</TableHead>
-                          <TableHead className="font-semibold text-gray-700">Status</TableHead>
-                          <TableHead className="font-semibold text-gray-700">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredBookings.map((booking) => (
-                          <TableRow key={booking.id} className="border-gray-50 hover:bg-gray-50 transition-colors">
-                            <TableCell>
-                              <div>
-                                <p className="font-semibold text-gray-800">{booking.business_type?.toUpperCase()} Session</p>
-                                <p className="text-sm text-gray-500">Booking ID: {booking.id}</p>
-                                {booking.notes && (
-                                  <p className="text-sm text-gray-600 mt-1 max-w-xs truncate">{booking.notes}</p>
-                                )}
-                                <p className="text-xs text-gray-400 mt-1">
-                                  Duration: {booking.duration_minutes || 60} minutes
-                                </p>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div>
-                                <p className="font-medium text-gray-800">
+                  <div className="space-y-4">
+                    {upcomingBookings.slice(0, 3).map((booking) => {
+                      const tier = getTierFromPricing(booking);
+                      return (
+                        <div key={booking.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="flex items-center mb-2">
+                                <Building className="h-4 w-4 text-gray-500 mr-2" />
+                                <h4 className="font-semibold text-gray-900">
                                   {booking.business_profile?.business_name || 'Business Name'}
-                                </p>
-                                <Badge 
-                                  variant="outline" 
-                                  className={`text-xs ${
-                                    getTierFromPricing(booking) === 'luxury' ? 'border-yellow-500 text-yellow-700' :
-                                    getTierFromPricing(booking) === 'premium' ? 'border-blue-500 text-blue-700' :
-                                    'border-green-500 text-green-700'
-                                  }`}
-                                >
-                                  {getTierFromPricing(booking).charAt(0).toUpperCase() + getTierFromPricing(booking).slice(1)}
-                                </Badge>
+                                </h4>
+                                <span className="ml-2">{getTierIcon(tier)}</span>
                               </div>
-                            </TableCell>
-                            <TableCell>
-                              <div>
-                                <p className="font-medium text-gray-800">
-                                  {booking.booking_date ? new Date(booking.booking_date).toLocaleDateString() : 'Not set'}
-                                </p>
-                                <p className="text-sm text-gray-600">
-                                  {booking.booking_time || 'Time not set'}
-                                </p>
+                              
+                              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                                <div className="flex items-center">
+                                  <Calendar className="h-4 w-4 mr-1" />
+                                  {booking.booking_date && format(new Date(booking.booking_date), 'MMM dd, yyyy')}
+                                </div>
+                                <div className="flex items-center">
+                                  <Clock className="h-4 w-4 mr-1" />
+                                  {booking.booking_time || 'Time TBD'}
+                                </div>
+                                <div className="flex items-center">
+                                  <DollarSign className="h-4 w-4 mr-1" />
+                                  {formatCurrency(booking.total_amount)}
+                                </div>
+                                <div className="flex items-center">
+                                  <Badge className={`${getStatusColor(booking.status || 'pending')} text-white`}>
+                                    {booking.status}
+                                  </Badge>
+                                </div>
                               </div>
-                            </TableCell>
-                            <TableCell>
-                              <p className="font-semibold text-green-600 text-lg">
-                                {booking.total_amount ? formatCurrency(booking.total_amount) : 'Not set'}
-                              </p>
-                            </TableCell>
-                            <TableCell>
-                              <Badge className={`${getStatusColor(booking.status || 'pending')} text-white font-medium px-3 py-1 rounded-full`}>
-                                {(booking.status || 'pending').charAt(0).toUpperCase() + (booking.status || 'pending').slice(1)}
-                              </Badge>
-                              {booking.confirmed_at && (
-                                <p className="text-xs text-gray-500 mt-1">
-                                  Confirmed: {new Date(booking.confirmed_at).toLocaleString()}
-                                </p>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-2">
-                                {booking.status === "pending" && (
-                                  <Button 
-                                    size="sm" 
-                                    variant="destructive"
-                                    className="shadow-md"
-                                    onClick={() => handleCancel(booking.id)}
-                                    disabled={loading}
-                                  >
-                                    <XCircle className="h-4 w-4 mr-1" />
-                                    Cancel
-                                  </Button>
-                                )}
-                                <Button size="sm" variant="outline" className="shadow-md">
-                                  <Eye className="h-4 w-4 mr-1" />
-                                  View
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    
+                    {upcomingBookings.length > 3 && (
+                      <div className="text-center pt-4">
+                        <Link to="/user-bookings">
+                          <Button variant="outline">View All Bookings</Button>
+                        </Link>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+
+          {/* Quick Actions & Recent Activity */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Link to="/gyms" className="block">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Activity className="h-4 w-4 mr-2" />
+                    Find Gyms
+                  </Button>
+                </Link>
+                <Link to="/spas" className="block">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Star className="h-4 w-4 mr-2" />
+                    Book Spa
+                  </Button>
+                </Link>
+                <Link to="/yoga" className="block">
+                  <Button variant="outline" className="w-full justify-start">
+                    <Target className="h-4 w-4 mr-2" />
+                    Yoga Classes
+                  </Button>
+                </Link>
+                <Link to="/trainers" className="block">
+                  <Button variant="outline" className="w-full justify-start">
+                    <User className="h-4 w-4 mr-2" />
+                    Personal Trainers
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>Your latest bookings and updates</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {pastBookings.length === 0 ? (
+                  <div className="text-center py-4">
+                    <Activity className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">No recent activity</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {pastBookings.slice(0, 3).map((booking) => (
+                      <div key={booking.id} className="flex items-center space-x-3 text-sm">
+                        <div className={`w-2 h-2 rounded-full ${getStatusColor(booking.status || 'completed')}`}></div>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">
+                            {booking.business_profile?.business_name}
+                          </p>
+                          <p className="text-gray-600">
+                            {booking.booking_date && format(new Date(booking.booking_date), 'MMM dd')}
+                          </p>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {booking.status}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
