@@ -62,8 +62,8 @@ const UserDashboard = () => {
   };
 
   const formatCurrency = (amount: number | null) => {
-    if (!amount) return '$0';
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    if (!amount) return '₹0';
+    return `₹${amount.toLocaleString()}`;
   };
 
   return (
@@ -185,7 +185,13 @@ const UserDashboard = () => {
                 ) : (
                   <div className="space-y-4">
                     {upcomingBookings.slice(0, 3).map((booking) => {
-                      const tier = getTierFromPricing(booking);
+                      // Create a proper business object for tier calculation
+                      const businessForTier = {
+                        monthly_price: booking.business_profile?.monthly_price,
+                        session_price: booking.business_profile?.session_price
+                      };
+                      const tier = getTierFromPricing(businessForTier);
+                      
                       return (
                         <div key={booking.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                           <div className="flex items-start justify-between">
