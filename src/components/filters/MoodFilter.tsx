@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +8,7 @@ interface MoodFilterProps {
   onMoodChange: (mood: string | null) => void;
 }
 
-const MoodFilter = ({ selectedMood, onMoodChange }: MoodFilterProps) => {
+export const MoodFilter = ({ selectedMood, onMoodChange }: MoodFilterProps) => {
   const moods = [
     {
       id: 'relax',

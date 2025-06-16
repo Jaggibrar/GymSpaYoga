@@ -1,10 +1,9 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, MapPin, Star, Dumbbell, Sparkles, Heart } from 'lucide-react';
 import BusinessListings from '@/components/business/BusinessListings';
-import SmartFilters from '@/components/SmartFilters';
+import { SmartFilters } from '@/components/SmartFilters';
 
 const Explore = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -41,7 +40,6 @@ const Explore = () => {
         {/* Smart Filters */}
         <SmartFilters
           onFilterChange={setActiveFilter}
-          onSortChange={setActiveSort}
           activeFilter={activeFilter}
           activeSort={activeSort}
         />

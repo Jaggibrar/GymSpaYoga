@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import SmartFilters from "./SmartFilters";
+import { SmartFilters } from "./SmartFilters";
 import BookingModal from "./BookingModal";
 
 interface Listing {
@@ -139,7 +139,6 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
 
       <SmartFilters 
         onFilterChange={handleFilterChange}
-        onSortChange={handleSortChange}
         activeFilter={activeFilter}
         activeSort={activeSort}
       />
