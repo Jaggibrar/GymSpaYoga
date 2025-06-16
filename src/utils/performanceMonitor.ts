@@ -1,152 +1,108 @@
-import { supabase } from '@/integrations/supabase/client';
-import { errorTracker } from './errorTracking';
-import { rateLimiter } from './rateLimiter';
-import { performanceMonitor } from './performanceMonitor';
 
-interface ApiRequest {
-  endpoint: string;
-  method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-  data?: any;
-  rateLimitConfig?: {
-    maxRequests: number;
-    windowMs: number;
-  };
-  retries?: number;
-  timeout?: number;
+interface PerformanceMetric {
+  name: string;
+  value: number;
+  timestamp: number;
+  category: string;
 }
 
-interface ApiResponse<T = any> {
-  data: T | null;
-  error: string | null;
-  status: number;
-  metadata?: {
-    responseTime: number;
-    retryCount: number;
-  };
-}
-
-class ApiClient {
-  private async makeRequest<T>(request: ApiRequest): Promise<ApiResponse<T>> {
-    const timerLabel = `api_${request.endpoint}`;
-    performanceMonitor.startTimer(timerLabel);
-
-    let retryCount = 0;
-    const maxRetries = request.retries || 0;
-
-    // Rate limiting check
-    if (request.rateLimitConfig) {
-      const { data: userData } = await supabase.auth.getUser();
-      const isAllowed = rateLimiter.isAllowed(request.rateLimitConfig, {
-        endpoint: request.endpoint,
-        userId: userData?.user?.id
-      });
-
-      if (!isAllowed) {
-        const error = 'Rate limit exceeded';
-        errorTracker.logError(error, 'medium', { endpoint: request.endpoint });
-
-        performanceMonitor.stopTimer(timerLabel);
-        return {
-          data: null,
-          error,
-          status: 429,
-          metadata: { responseTime: 0, retryCount: 0 }
-        };
-      }
+class PerformanceMonitor {
+  private metrics: PerformanceMetric[] = [];
+  private timers: Map<string, number> = new Map();
+  
+  addMetric(name: string, value: number, category: string = 'general') {
+    this.metrics.push({
+      name,
+      value,
+      timestamp: Date.now(),
+      category
+    });
+    
+    // Keep only last 100 metrics to prevent memory issues
+    if (this.metrics.length > 100) {
+      this.metrics = this.metrics.slice(-100);
     }
-
-    while (retryCount <= maxRetries) {
+  }
+  
+  startTimer(name: string) {
+    this.timers.set(name, Date.now());
+  }
+  
+  endTimer(name: string, category: string = 'timing') {
+    const startTime = this.timers.get(name);
+    if (startTime) {
+      const duration = Date.now() - startTime;
+      this.addMetric(name, duration, category);
+      this.timers.delete(name);
+      return duration;
+    }
+    return 0;
+  }
+  
+  recordMetric(name: string, value: number, category: string = 'general') {
+    this.addMetric(name, value, category);
+  }
+  
+  getMetrics() {
+    return this.metrics;
+  }
+  
+  getAverageMetric(name: string): number {
+    const relevantMetrics = this.metrics.filter(m => m.name === name);
+    if (relevantMetrics.length === 0) return 0;
+    
+    const sum = relevantMetrics.reduce((acc, metric) => acc + metric.value, 0);
+    return sum / relevantMetrics.length;
+  }
+  
+  clearMetrics() {
+    this.metrics = [];
+  }
+  
+  // Track API response times
+  trackApiCall(endpoint: string, startTime: number) {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    this.addMetric('api_response_time', duration, 'api');
+    console.log(`API call to ${endpoint} took ${duration}ms`);
+  }
+  
+  // Track Core Web Vitals
+  trackWebVitals() {
+    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
+      // Largest Contentful Paint
       try {
-        const requestStart = performance.now();
-
-        // Simulated API call
-        let response;
-
-        switch (request.endpoint) {
-          case 'bookings':
-            if (request.method === 'GET') {
-              response = await supabase.from('bookings').select('*');
-            } else if (request.method === 'POST') {
-              response = await supabase.from('bookings').insert(request.data);
-            } else if (request.method === 'PUT') {
-              response = await supabase.from('bookings').update(request.data);
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            if (entry.entryType === 'largest-contentful-paint') {
+              this.addMetric('lcp', entry.startTime, 'web-vitals');
             }
-            break;
-          default:
-            throw new Error(`Unknown endpoint: ${request.endpoint}`);
-        }
-
-        const responseTime = performance.now() - requestStart;
-        performanceMonitor.stopTimer(timerLabel);
-
-        performanceMonitor.recordMetric(
-          `api_response_time_${request.endpoint}`,
-          responseTime,
-          'timing'
-        );
-
-        if (response?.error) {
-          throw new Error(response.error.message);
-        }
-
-        return {
-          data: response?.data || null,
-          error: null,
-          status: 200,
-          metadata: { responseTime, retryCount }
-        };
-
-      } catch (error) {
-        retryCount++;
-
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-        if (retryCount > maxRetries) {
-          errorTracker.logError(errorMessage, 'high', {
-            endpoint: request.endpoint,
-            method: request.method,
-            retryCount,
-            data: request.data
-          });
-
-          performanceMonitor.stopTimer(timerLabel);
-          return {
-            data: null,
-            error: errorMessage,
-            status: 500,
-            metadata: { responseTime: 0, retryCount }
-          };
-        }
-
-        // Exponential backoff
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+          }
+        }).observe({ entryTypes: ['largest-contentful-paint'] });
+      } catch (e) {
+        console.warn('LCP observer not supported');
+      }
+      
+      // First Input Delay
+      try {
+        new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            const fidEntry = entry as any;
+            if (fidEntry.processingStart) {
+              this.addMetric('fid', fidEntry.processingStart - entry.startTime, 'web-vitals');
+            }
+          }
+        }).observe({ entryTypes: ['first-input'] });
+      } catch (e) {
+        console.warn('FID observer not supported');
       }
     }
-
-    performanceMonitor.stopTimer(timerLabel);
-    return {
-      data: null,
-      error: 'Max retries exceeded',
-      status: 500,
-      metadata: { responseTime: 0, retryCount }
-    };
-  }
-
-  async get<T>(endpoint: string, options?: Omit<ApiRequest, 'endpoint' | 'method'>): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>({ ...options, endpoint, method: 'GET' });
-  }
-
-  async post<T>(endpoint: string, data: any, options?: Omit<ApiRequest, 'endpoint' | 'method' | 'data'>): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>({ ...options, endpoint, method: 'POST', data });
-  }
-
-  async put<T>(endpoint: string, data: any, options?: Omit<ApiRequest, 'endpoint' | 'method' | 'data'>): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>({ ...options, endpoint, method: 'PUT', data });
-  }
-
-  async delete<T>(endpoint: string, options?: Omit<ApiRequest, 'endpoint' | 'method'>): Promise<ApiResponse<T>> {
-    return this.makeRequest<T>({ ...options, endpoint, method: 'DELETE' });
   }
 }
 
-export const apiClient = new ApiClient();
+export const performanceMonitor = new PerformanceMonitor();
+
+// Initialize web vitals tracking
+if (typeof window !== 'undefined') {
+  performanceMonitor.trackWebVitals();
+}
