@@ -17,6 +17,40 @@ interface CategoryBusinessesProps {
   category: string;
 }
 
+// Type guard functions
+const isTrainer = (item: any): item is Trainer => {
+  return 'trainer_tier' in item && 'experience' in item;
+};
+
+const isBusiness = (item: any): item is Business => {
+  return 'business_type' in item && 'business_name' in item;
+};
+
+interface Trainer {
+  id: string;
+  name: string;
+  category: string;
+  trainer_tier: string;
+  experience: number;
+  specializations: string[];
+  hourly_rate: number;
+  location: string;
+  bio: string;
+  profile_image_url?: string;
+}
+
+interface Business {
+  id: string;
+  business_name: string;
+  business_type: string;
+  city: string;
+  state: string;
+  tier: string;
+  pricing_tier: string;
+  description: string;
+  images: string[];
+}
+
 const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
@@ -57,7 +91,12 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
     };
     
     const allowedCategories = moodMapping[selectedMood as keyof typeof moodMapping] || [];
-    return items.filter(item => allowedCategories.includes(item.business_type));
+    return items.filter(item => {
+      if (isBusiness(item)) {
+        return allowedCategories.includes(item.business_type);
+      }
+      return false;
+    });
   }, [items, selectedMood, isTrainerCategory]);
 
   // Debug logging with more detail
@@ -283,13 +322,14 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {moodFilteredItems.map((item) => (
-            isTrainerCategory ? (
-              <TrainerCard key={item.id} trainer={item} />
-            ) : (
-              <OptimizedBusinessCard key={item.id} business={item} />
-            )
-          ))}
+          {moodFilteredItems.map((item) => {
+            if (isTrainerCategory && isTrainer(item)) {
+              return <TrainerCard key={item.id} trainer={item} />;
+            } else if (!isTrainerCategory && isBusiness(item)) {
+              return <OptimizedBusinessCard key={item.id} business={item} />;
+            }
+            return null;
+          })}
         </div>
       )}
 
