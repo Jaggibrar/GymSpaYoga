@@ -37,11 +37,12 @@ export const useGyms = () => {
       setLoading(true);
       setError(null);
       
-      // Fetch all gym businesses regardless of status for debugging
+      // Fetch approved gym businesses
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
         .eq('business_type', 'gym')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -49,21 +50,27 @@ export const useGyms = () => {
         throw error;
       }
 
-      console.log(`Fetched ${data?.length || 0} gym listings:`, data);
+      console.log(`Successfully fetched ${data?.length || 0} approved gym listings:`, data);
+      setGyms(data || []);
       
-      // Filter approved gyms for display, but show count of all
-      const approvedGyms = data?.filter(gym => gym.status === 'approved') || [];
-      const pendingCount = (data?.length || 0) - approvedGyms.length;
-      
-      if (pendingCount > 0) {
-        console.log(`${pendingCount} gym(s) are pending approval and won't be displayed`);
+      if ((data?.length || 0) === 0) {
+        console.log('No approved gyms found. Checking for pending gyms...');
+        
+        // Check for pending gyms for debugging
+        const { data: pendingData } = await supabase
+          .from('business_profiles')
+          .select('*')
+          .eq('business_type', 'gym')
+          .eq('status', 'pending');
+          
+        console.log(`Found ${pendingData?.length || 0} pending gym listings`);
       }
       
-      setGyms(approvedGyms);
     } catch (err: any) {
       console.error('Failed to fetch gyms:', err);
       setError(err.message);
       toast.error('Failed to load gym listings');
+      setGyms([]);
     } finally {
       setLoading(false);
     }

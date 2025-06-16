@@ -1,4 +1,3 @@
-
 import React, { memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +27,12 @@ interface OptimizedBusinessCardProps {
 const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) => {
   // Determine tier based on pricing
   const getTier = () => {
+    // First check if category is already a tier
+    if (business.category && ['luxury', 'premium', 'budget'].includes(business.category.toLowerCase())) {
+      return business.category.toLowerCase();
+    }
+    
+    // Otherwise determine from pricing
     const price = business.monthly_price || business.session_price || 0;
     if (business.monthly_price) {
       if (price >= 5000) return 'luxury';
@@ -38,7 +43,7 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
       if (price >= 1000) return 'premium';
       return 'budget';
     }
-    return business.category || 'budget';
+    return 'budget';
   };
 
   const tier = getTier();
@@ -61,14 +66,30 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
 
   const imageUrl = business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
 
-  // Fix the link based on business type
+  // Fixed the link generation based on business type
   const getDetailLink = () => {
-    switch (business.business_type) {
+    const businessType = business.business_type.toLowerCase();
+    switch (businessType) {
       case 'gym': return `/gyms/${business.id}`;
       case 'spa': return `/spas/${business.id}`;
       case 'yoga': return `/yoga/${business.id}`;
       default: return `/gyms/${business.id}`;
     }
+  };
+
+  const formatPrice = () => {
+    if (business.monthly_price) {
+      return `₹${business.monthly_price.toLocaleString()}`;
+    } else if (business.session_price) {
+      return `₹${business.session_price.toLocaleString()}`;
+    }
+    return "Contact";
+  };
+
+  const getPriceSubtext = () => {
+    if (business.monthly_price) return "/month";
+    if (business.session_price) return "/session";
+    return "for pricing";
   };
 
   return (
@@ -79,6 +100,10 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
           alt={business.business_name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${getTierColor(tier)} text-white border-0 px-3 py-2 rounded-full`}>
@@ -100,7 +125,7 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
             {business.business_name}
           </h3>
           <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <MapPin className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span className="text-sm truncate">{business.city}, {business.state}</span>
           </div>
         </div>
@@ -117,10 +142,10 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-2xl font-bold text-red-600">
-              {business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : "Contact"}
+              {formatPrice()}
             </p>
             <p className="text-sm text-gray-500">
-              {business.monthly_price ? "/month" : business.session_price ? "/session" : "for pricing"}
+              {getPriceSubtext()}
             </p>
           </div>
           <Link to={getDetailLink()}>

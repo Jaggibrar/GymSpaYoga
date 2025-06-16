@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -40,6 +39,8 @@ export const useBusinessData = (
       setLoading(true);
       setError(null);
       
+      console.log(`Fetching businesses... Type: ${businessType || 'all'}`);
+      
       let query = supabase
         .from('business_profiles')
         .select('*')
@@ -58,12 +59,31 @@ export const useBusinessData = (
         throw error;
       }
 
-      console.log(`Fetched ${data?.length || 0} businesses`, data);
-      setBusinesses(data || []);
+      console.log(`Successfully fetched ${data?.length || 0} approved businesses:`, data);
+      
+      // Add tier information based on pricing
+      const processedData = (data || []).map(business => ({
+        ...business,
+        tier: getTier(business.monthly_price, business.session_price, business.category)
+      }));
+
+      setBusinesses(processedData);
+      
+      // Debug logging
+      if (businessType && (data?.length || 0) === 0) {
+        console.log(`No approved ${businessType} businesses found. Checking total count...`);
+        const { data: allData } = await supabase
+          .from('business_profiles')
+          .select('id, business_type, status')
+          .eq('business_type', businessType);
+        console.log(`Total ${businessType} records in database:`, allData?.length || 0);
+      }
+      
     } catch (err: any) {
       console.error('Failed to fetch businesses:', err);
       setError(err.message);
       toast.error('Failed to load businesses');
+      setBusinesses([]);
     } finally {
       setLoading(false);
     }
@@ -99,11 +119,13 @@ export const useBusinessData = (
 
     // Apply tier filter
     if (tierFilter && tierFilter !== 'all') {
-      filtered = filtered.filter(business => 
-        business.category?.toLowerCase() === tierFilter.toLowerCase()
-      );
+      filtered = filtered.filter(business => {
+        const businessTier = business.tier || business.category?.toLowerCase();
+        return businessTier === tierFilter.toLowerCase();
+      });
     }
 
+    console.log(`Filtered results: ${filtered.length} out of ${businesses.length} businesses`);
     return filtered;
   }, [businesses, searchTerm, locationFilter, tierFilter]);
 
@@ -115,4 +137,25 @@ export const useBusinessData = (
     totalCount: businesses.length,
     filteredCount: filteredBusinesses.length
   };
+};
+
+// Helper function to determine tier
+const getTier = (monthlyPrice?: number, sessionPrice?: number, category?: string): string => {
+  // First check if category is already a tier
+  if (category && ['luxury', 'premium', 'budget'].includes(category.toLowerCase())) {
+    return category.toLowerCase();
+  }
+  
+  // Otherwise determine from pricing
+  const price = monthlyPrice || sessionPrice || 0;
+  if (monthlyPrice) {
+    if (price >= 5000) return 'luxury';
+    if (price >= 3000) return 'premium';
+    return 'budget';
+  } else if (sessionPrice) {
+    if (price >= 2000) return 'luxury';
+    if (price >= 1000) return 'premium';
+    return 'budget';
+  }
+  return 'budget';
 };
