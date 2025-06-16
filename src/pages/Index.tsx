@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const { businesses, loading } = useBusinessData();
-  const { logout } = useAuth();
+  const { signOut } = useAuth();
   const recentBusinesses = businesses?.slice(0, 6) || [];
 
   const categories = [
@@ -56,7 +57,7 @@ const Index = () => {
       />
       
       <div className="min-h-screen bg-gray-50">
-        <AppHeader onLogout={logout} />
+        <AppHeader onLogout={signOut} />
         
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-emerald-600 via-blue-600 to-purple-600 text-white py-20">

@@ -10,15 +10,16 @@ import { MoodFilter } from './filters/MoodFilter';
 interface SmartFiltersProps {
   onFilterChange?: (filters: any) => void;
   showMoodFilter?: boolean;
+  activeFilter?: string;
+  activeSort?: string;
 }
 
-export const SmartFilters = ({ onFilterChange, showMoodFilter = true }: SmartFiltersProps) => {
+export const SmartFilters = ({ onFilterChange, showMoodFilter = true, activeFilter, activeSort }: SmartFiltersProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
-  const [category, setCategory] = useState('all');
+  const [category, setCategory] = useState(activeFilter || 'all');
   const [tier, setTier] = useState('all');
   const [mood, setMood] = useState('all');
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
   const handleFilterChange = () => {
     const filters = {
@@ -86,10 +87,10 @@ export const SmartFilters = ({ onFilterChange, showMoodFilter = true }: SmartFil
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent className="bg-white border border-gray-200 shadow-lg">
-            <SelectItem value="all" className="text-black font-medium">All Categories</SelectItem>
-            <SelectItem value="gym" className="text-black">Gyms</SelectItem>
-            <SelectItem value="spa" className="text-black">Spas</SelectItem>
-            <SelectItem value="yoga" className="text-black">Yoga Studios</SelectItem>
+            <SelectItem value="all" className="text-black font-bold">All Categories</SelectItem>
+            <SelectItem value="gym" className="text-black font-medium">Gyms</SelectItem>
+            <SelectItem value="spa" className="text-black font-medium">Spas</SelectItem>
+            <SelectItem value="yoga" className="text-black font-medium">Yoga Studios</SelectItem>
           </SelectContent>
         </Select>
 
