@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Toaster } from "@/components/ui/toaster"
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './hooks/useAuth';
 import Index from './pages/Index';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -16,7 +17,7 @@ import BusinessDashboard from './pages/BusinessDashboard';
 import RegisterBusiness from './pages/RegisterBusiness';
 import RegisterTrainer from './pages/RegisterTrainer';
 import BusinessBookings from './pages/BusinessBookings';
-import { Sonner } from './components/ui/sonner';
+import { Toaster as Sonner } from '@/components/ui/sonner';
 import { HelmetProvider } from 'react-helmet-async';
 import PlatformAuditPage from '@/pages/PlatformAuditPage';
 import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';

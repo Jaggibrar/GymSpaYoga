@@ -8,6 +8,8 @@ interface SEOHeadProps {
   image?: string;
   url?: string;
   type?: 'website' | 'article' | 'business';
+  noindex?: boolean;
+  structuredData?: any;
 }
 
 const SEOHead = ({ 
@@ -16,7 +18,9 @@ const SEOHead = ({
   keywords = 'gym, spa, yoga, fitness, wellness, booking, health', 
   image = '/api/placeholder/1200/630',
   url = typeof window !== 'undefined' ? window.location.href : '',
-  type = 'website' 
+  type = 'website',
+  noindex = false,
+  structuredData
 }: SEOHeadProps) => {
   const fullTitle = title.includes('GymSpaYoga') ? title : `${title} | GymSpaYoga`;
   
@@ -27,7 +31,7 @@ const SEOHead = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="GymSpaYoga" />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       
       {/* Open Graph Tags */}
@@ -48,49 +52,58 @@ const SEOHead = ({
       <meta name="theme-color" content="#10B981" />
       <link rel="canonical" href={url} />
       
-      {/* Structured Data for Local Business */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "name": "GymSpaYoga",
-          "description": description,
-          "url": url,
-          "logo": `${url}/logo.png`,
-          "serviceType": ["Fitness Center", "Spa", "Yoga Studio"],
-          "areaServed": "India",
-          "hasOfferCatalog": {
-            "@type": "OfferCatalog",
-            "name": "Wellness Services",
-            "itemListElement": [
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Gym Membership",
-                  "serviceType": "Fitness"
+      {/* Structured Data */}
+      {structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(structuredData)}
+        </script>
+      )}
+      
+      {/* Default Structured Data for Local Business */}
+      {!structuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "GymSpaYoga",
+            "description": description,
+            "url": url,
+            "logo": `${url}/logo.png`,
+            "serviceType": ["Fitness Center", "Spa", "Yoga Studio"],
+            "areaServed": "India",
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Wellness Services",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Gym Membership",
+                    "serviceType": "Fitness"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Spa Treatment",
+                    "serviceType": "Wellness"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Yoga Classes",
+                    "serviceType": "Fitness"
+                  }
                 }
-              },
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Spa Treatment",
-                  "serviceType": "Wellness"
-                }
-              },
-              {
-                "@type": "Offer",
-                "itemOffered": {
-                  "@type": "Service",
-                  "name": "Yoga Classes",
-                  "serviceType": "Fitness"
-                }
-              }
-            ]
-          }
-        })}
-      </script>
+              ]
+            }
+          })}
+        </script>
+      )}
     </Helmet>
   );
 };
