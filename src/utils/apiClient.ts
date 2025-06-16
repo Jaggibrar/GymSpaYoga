@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { errorTracker } from './errorTracking';
 import { rateLimiter } from './rateLimiter';
@@ -28,20 +27,25 @@ interface ApiResponse<T = any> {
 
 class ApiClient {
   private async makeRequest<T>(request: ApiRequest): Promise<ApiResponse<T>> {
-    const startTimer = performanceMonitor.startTimer(`api_${request.endpoint}`);
+    const timerLabel = `api_${request.endpoint}`;
+    performanceMonitor.startTimer(timerLabel);
+
     let retryCount = 0;
     const maxRetries = request.retries || 0;
-    
+
     // Rate limiting check
     if (request.rateLimitConfig) {
+      const { data: userData } = await supabase.auth.getUser();
       const isAllowed = rateLimiter.isAllowed(request.rateLimitConfig, {
         endpoint: request.endpoint,
-        userId: (await supabase.auth.getUser()).data.user?.id
+        userId: userData?.user?.id
       });
-      
+
       if (!isAllowed) {
         const error = 'Rate limit exceeded';
         errorTracker.logError(error, 'medium', { endpoint: request.endpoint });
+
+        performanceMonitor.stopTimer(timerLabel);
         return {
           data: null,
           error,
@@ -50,14 +54,14 @@ class ApiClient {
         };
       }
     }
-    
+
     while (retryCount <= maxRetries) {
       try {
         const requestStart = performance.now();
-        
-        // Simulate API call (in real implementation, this would be actual HTTP requests)
+
+        // Simulated API call
         let response;
-        
+
         switch (request.endpoint) {
           case 'bookings':
             if (request.method === 'GET') {
@@ -71,32 +75,32 @@ class ApiClient {
           default:
             throw new Error(`Unknown endpoint: ${request.endpoint}`);
         }
-        
+
         const responseTime = performance.now() - requestStart;
-        startTimer();
-        
+        performanceMonitor.stopTimer(timerLabel);
+
         performanceMonitor.recordMetric(
           `api_response_time_${request.endpoint}`,
           responseTime,
           'timing'
         );
-        
+
         if (response?.error) {
           throw new Error(response.error.message);
         }
-        
+
         return {
           data: response?.data || null,
           error: null,
           status: 200,
           metadata: { responseTime, retryCount }
         };
-        
+
       } catch (error) {
         retryCount++;
-        
+
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
+
         if (retryCount > maxRetries) {
           errorTracker.logError(errorMessage, 'high', {
             endpoint: request.endpoint,
@@ -104,9 +108,8 @@ class ApiClient {
             retryCount,
             data: request.data
           });
-          
-          startTimer();
-          
+
+          performanceMonitor.stopTimer(timerLabel);
           return {
             data: null,
             error: errorMessage,
@@ -114,13 +117,13 @@ class ApiClient {
             metadata: { responseTime: 0, retryCount }
           };
         }
-        
+
         // Exponential backoff
         await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
       }
     }
-    
-    startTimer();
+
+    performanceMonitor.stopTimer(timerLabel);
     return {
       data: null,
       error: 'Max retries exceeded',
@@ -128,19 +131,19 @@ class ApiClient {
       metadata: { responseTime: 0, retryCount }
     };
   }
-  
+
   async get<T>(endpoint: string, options?: Omit<ApiRequest, 'endpoint' | 'method'>): Promise<ApiResponse<T>> {
     return this.makeRequest<T>({ ...options, endpoint, method: 'GET' });
   }
-  
+
   async post<T>(endpoint: string, data: any, options?: Omit<ApiRequest, 'endpoint' | 'method' | 'data'>): Promise<ApiResponse<T>> {
     return this.makeRequest<T>({ ...options, endpoint, method: 'POST', data });
   }
-  
+
   async put<T>(endpoint: string, data: any, options?: Omit<ApiRequest, 'endpoint' | 'method' | 'data'>): Promise<ApiResponse<T>> {
     return this.makeRequest<T>({ ...options, endpoint, method: 'PUT', data });
   }
-  
+
   async delete<T>(endpoint: string, options?: Omit<ApiRequest, 'endpoint' | 'method'>): Promise<ApiResponse<T>> {
     return this.makeRequest<T>({ ...options, endpoint, method: 'DELETE' });
   }
