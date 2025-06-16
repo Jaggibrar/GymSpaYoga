@@ -32,6 +32,8 @@ interface Booking {
   } | null;
   business_profile?: {
     business_name: string | null;
+    monthly_price?: number | null;
+    session_price?: number | null;
   } | null;
 }
 
@@ -93,7 +95,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
             .select(`
               *,
               user_profile:user_profiles!bookings_user_id_fkey(full_name, phone),
-              business_profile:business_profiles!bookings_business_id_fkey(business_name)
+              business_profile:business_profiles!bookings_business_id_fkey(business_name, monthly_price, session_price)
             `)
             .in('business_id', businessIds)
             .order('created_at', { ascending: false });
@@ -115,12 +117,12 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
           setBookings([]);
         }
       } else {
-        // Fetch bookings for the current user
+        // Fetch bookings for the current user - include pricing info for tier calculation
         const { data, error } = await supabase
           .from('bookings')
           .select(`
             *,
-            business_profile:business_profiles!bookings_business_id_fkey(business_name)
+            business_profile:business_profiles!bookings_business_id_fkey(business_name, monthly_price, session_price)
           `)
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
