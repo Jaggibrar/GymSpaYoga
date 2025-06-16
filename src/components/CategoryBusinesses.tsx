@@ -1,7 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useBusinessData } from '@/hooks/useBusinessData';
+import { useTrainers } from '@/hooks/useTrainers';
 import OptimizedBusinessCard from './OptimizedBusinessCard';
+import TrainerCard from './TrainerCard';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
@@ -21,16 +23,32 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
   const [tierFilter, setTierFilter] = useState('all');
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
   
-  const { businesses, loading, error, filteredCount, totalCount, refetch } = useBusinessData(
-    category,
+  const isTrainerCategory = category === 'trainer';
+  
+  // Use appropriate hook based on category
+  const businessData = useBusinessData(
+    isTrainerCategory ? undefined : category,
     searchTerm,
     locationFilter,
     tierFilter
   );
+  
+  const trainerData = useTrainers(
+    searchTerm,
+    locationFilter,
+    tierFilter,
+    category
+  );
+  
+  const data = isTrainerCategory ? trainerData : businessData;
+  const { loading, error, refetch } = data;
+  const items = isTrainerCategory ? trainerData.trainers : businessData.businesses;
+  const totalCount = isTrainerCategory ? trainerData.totalCount : businessData.totalCount;
+  const filteredCount = isTrainerCategory ? trainerData.trainers.length : businessData.filteredCount;
 
-  // Filter businesses based on mood selection
-  const moodFilteredBusinesses = React.useMemo(() => {
-    if (!selectedMood) return businesses;
+  // Filter items based on mood selection for non-trainer categories
+  const moodFilteredItems = React.useMemo(() => {
+    if (isTrainerCategory || !selectedMood) return items;
     
     const moodMapping = {
       'relax': ['spa', 'yoga'],
@@ -39,16 +57,16 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
     };
     
     const allowedCategories = moodMapping[selectedMood as keyof typeof moodMapping] || [];
-    return businesses.filter(business => allowedCategories.includes(business.business_type));
-  }, [businesses, selectedMood]);
+    return items.filter(item => allowedCategories.includes(item.business_type));
+  }, [items, selectedMood, isTrainerCategory]);
 
   // Debug logging with more detail
   useEffect(() => {
     console.log(`CategoryBusinesses [${category}] - Loading: ${loading}, Total: ${totalCount}, Filtered: ${filteredCount}, Mood: ${selectedMood}, Error: ${error}`);
-    if (moodFilteredBusinesses.length > 0) {
-      console.log(`Sample business:`, moodFilteredBusinesses[0]);
+    if (moodFilteredItems.length > 0) {
+      console.log(`Sample item:`, moodFilteredItems[0]);
     }
-  }, [category, loading, totalCount, filteredCount, error, moodFilteredBusinesses, selectedMood]);
+  }, [category, loading, totalCount, filteredCount, error, moodFilteredItems, selectedMood]);
 
   const handleRefresh = async () => {
     console.log(`Manually refreshing ${category} data...`);
@@ -65,12 +83,14 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
     }
   };
 
+  const categoryDisplayName = isTrainerCategory ? 'Personal Trainers' : `${category.charAt(0).toUpperCase() + category.slice(1)}s`;
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">
-            Loading {category.charAt(0).toUpperCase() + category.slice(1)}s...
+            Loading {categoryDisplayName}...
           </h2>
           <div className="flex justify-center">
             <RefreshCw className="h-8 w-8 animate-spin text-emerald-500" />
@@ -97,7 +117,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
       <div className="container mx-auto px-4 py-16">
         <Card className="border-red-200 bg-red-50">
           <CardContent className="p-6 text-center">
-            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Businesses</h3>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading {categoryDisplayName}</h3>
             <p className="text-red-600 mb-4">{error}</p>
             <div className="flex gap-2 justify-center">
               <Button 
@@ -127,7 +147,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-4 mb-4">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-            Featured {category.charAt(0).toUpperCase() + category.slice(1)}s
+            Featured {categoryDisplayName}
           </h2>
           <Button
             onClick={handleRefresh}
@@ -144,7 +164,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             {totalCount} Total Listings
           </Badge>
           <Badge className="bg-emerald-500 text-sm">
-            {selectedMood ? moodFilteredBusinesses.length : filteredCount} Showing
+            {selectedMood && !isTrainerCategory ? moodFilteredItems.length : filteredCount} Showing
           </Badge>
           {totalCount === 0 && (
             <Badge variant="destructive" className="text-sm">
@@ -154,8 +174,10 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
         </div>
       </div>
 
-      {/* Mood Filter */}
-      <MoodFilter selectedMood={selectedMood} onMoodChange={handleMoodChange} />
+      {/* Mood Filter (only for non-trainer categories) */}
+      {!isTrainerCategory && (
+        <MoodFilter selectedMood={selectedMood} onMoodChange={handleMoodChange} />
+      )}
 
       {/* Filters */}
       <Card className="mb-8 shadow-lg">
@@ -170,7 +192,7 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder={`Search ${category}s...`}
+                placeholder={`Search ${categoryDisplayName.toLowerCase()}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -193,9 +215,20 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Tiers</SelectItem>
-                <SelectItem value="budget">Budget Friendly</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-                <SelectItem value="luxury">Luxury</SelectItem>
+                {isTrainerCategory ? (
+                  <>
+                    <SelectItem value="elite">Elite</SelectItem>
+                    <SelectItem value="pro">Pro</SelectItem>
+                    <SelectItem value="intermediate">Intermediate</SelectItem>
+                    <SelectItem value="basic">Basic</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="budget">Budget Friendly</SelectItem>
+                    <SelectItem value="premium">Premium</SelectItem>
+                    <SelectItem value="luxury">Luxury</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
             
@@ -215,26 +248,26 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
         </CardContent>
       </Card>
 
-      {/* Business Listings */}
-      {moodFilteredBusinesses.length === 0 ? (
+      {/* Listings */}
+      {moodFilteredItems.length === 0 ? (
         <Card className="border-yellow-200 bg-yellow-50">
           <CardContent className="p-8 text-center">
             <Star className="h-16 w-16 text-yellow-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-yellow-800 mb-2">
-              No {category}s found
+              No {categoryDisplayName.toLowerCase()} found
             </h3>
             <p className="text-yellow-700 mb-4">
               {totalCount === 0 
-                ? `No ${category}s have been registered yet. Be the first to list your business!`
-                : selectedMood 
-                  ? `No ${category}s match your current mood and filters. Try adjusting your selection.`
-                  : `No ${category}s match your current filters. Try adjusting your search criteria.`
+                ? `No ${categoryDisplayName.toLowerCase()} have been registered yet. Be the first to list your business!`
+                : selectedMood && !isTrainerCategory
+                  ? `No ${categoryDisplayName.toLowerCase()} match your current mood and filters. Try adjusting your selection.`
+                  : `No ${categoryDisplayName.toLowerCase()} match your current filters. Try adjusting your search criteria.`
               }
             </p>
             <div className="flex gap-2 justify-center">
               {totalCount === 0 && (
                 <Button className="bg-yellow-600 hover:bg-yellow-700">
-                  List Your {category.charAt(0).toUpperCase() + category.slice(1)}
+                  List Your {isTrainerCategory ? 'Profile' : 'Business'}
                 </Button>
               )}
               <Button 
@@ -250,11 +283,12 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {moodFilteredBusinesses.map((business) => (
-            <OptimizedBusinessCard
-              key={business.id}
-              business={business}
-            />
+          {moodFilteredItems.map((item) => (
+            isTrainerCategory ? (
+              <TrainerCard key={item.id} trainer={item} />
+            ) : (
+              <OptimizedBusinessCard key={item.id} business={item} />
+            )
           ))}
         </div>
       )}
@@ -266,9 +300,10 @@ const CategoryBusinesses = ({ category }: CategoryBusinessesProps) => {
             <h4 className="font-semibold text-gray-700 mb-2">Debug Info:</h4>
             <div className="text-sm text-gray-600 space-y-1">
               <div>Category: {category}</div>
-              <div>Total businesses: {totalCount}</div>
+              <div>Is Trainer: {isTrainerCategory ? 'Yes' : 'No'}</div>
+              <div>Total items: {totalCount}</div>
               <div>Filtered count: {filteredCount}</div>
-              <div>Mood filtered count: {moodFilteredBusinesses.length}</div>
+              <div>Mood filtered count: {moodFilteredItems.length}</div>
               <div>Selected mood: {selectedMood || 'None'}</div>
               <div>Loading: {loading ? 'Yes' : 'No'}</div>
               <div>Error: {error || 'None'}</div>
