@@ -1,9 +1,11 @@
 
-import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card } from "@/components/ui/card";
-import { Crown, Diamond, IndianRupee, TrendingUp, Star, Flame } from "lucide-react";
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, MapPin, Filter, SlidersHorizontal } from 'lucide-react';
+import MoodFilter from '@/components/filters/MoodFilter';
 
 interface SmartFiltersProps {
   onFilterChange: (filter: string) => void;
@@ -13,116 +15,166 @@ interface SmartFiltersProps {
 }
 
 const SmartFilters = ({ onFilterChange, onSortChange, activeFilter, activeSort }: SmartFiltersProps) => {
-  const filters = [
-    {
-      id: 'all',
-      label: 'All',
-      icon: null,
-      color: 'bg-gray-500 hover:bg-gray-600'
-    },
-    {
-      id: 'luxury',
-      label: 'Luxury',
-      icon: <Crown className="h-4 w-4" />,
-      color: 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700'
-    },
-    {
-      id: 'premium',
-      label: 'Premium',
-      icon: <Diamond className="h-4 w-4" />,
-      color: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
-    },
-    {
-      id: 'budget',
-      label: 'Budget',
-      icon: <IndianRupee className="h-4 w-4" />,
-      color: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700'
-    }
-  ];
+  const [searchTerm, setSearchTerm] = useState('');
+  const [location, setLocation] = useState('');
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
-  const sortOptions = [
-    {
-      id: 'popular',
-      label: 'Most Popular',
-      icon: <Flame className="h-4 w-4 text-orange-500" />
-    },
-    {
-      id: 'price-low',
-      label: 'Price: Low → High',
-      icon: <TrendingUp className="h-4 w-4 text-green-500" />
-    },
-    {
-      id: 'price-high',
-      label: 'Price: High → Low',
-      icon: <TrendingUp className="h-4 w-4 text-red-500 rotate-180" />
-    },
-    {
-      id: 'rating',
-      label: 'Highest Rated',
-      icon: <Star className="h-4 w-4 text-yellow-500" />
+  const handleMoodChange = (mood: string | null) => {
+    setSelectedMood(mood);
+    
+    // Map mood to business categories and tiers
+    const moodMapping = {
+      'relax': { categories: ['spa', 'yoga'], tiers: ['luxury', 'premium'] },
+      'energize': { categories: ['gym', 'fitness_center'], tiers: ['premium', 'budget'] },
+      'rejuvenate': { categories: ['spa', 'yoga', 'gym'], tiers: ['luxury', 'premium'] },
+      'strengthen': { categories: ['gym', 'fitness_center'], tiers: ['premium', 'budget'] }
+    };
+    
+    if (mood && moodMapping[mood as keyof typeof moodMapping]) {
+      const mapping = moodMapping[mood as keyof typeof moodMapping];
+      // Apply the first category as filter for now
+      onFilterChange(mapping.categories[0]);
+    } else {
+      onFilterChange('all');
     }
-  ];
+  };
 
   return (
-    <Card className="p-6 mb-8 bg-white/90 backdrop-blur-sm shadow-xl">
-      <div className="space-y-6">
-        {/* Filter Pills */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">Filter by Category</h3>
-          <div className="flex flex-wrap gap-3">
-            {filters.map((filter) => (
-              <Button
-                key={filter.id}
-                onClick={() => onFilterChange(filter.id)}
-                variant={activeFilter === filter.id ? "default" : "outline"}
-                className={`
-                  group relative overflow-hidden transition-all duration-300 transform hover:scale-105
-                  ${activeFilter === filter.id 
-                    ? filter.color + ' text-white shadow-lg' 
-                    : 'hover:shadow-md border-gray-200 hover:border-gray-300'
-                  }
-                  ${filter.id !== 'all' ? 'animate-pulse hover:animate-none' : ''}
-                `}
-              >
-                <div className="flex items-center space-x-2">
-                  {filter.icon}
-                  <span className="font-medium">{filter.label}</span>
-                </div>
-                {activeFilter === filter.id && (
-                  <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                )}
-              </Button>
-            ))}
-          </div>
-        </div>
+    <div className="space-y-6">
+      {/* Mood Filter */}
+      <MoodFilter selectedMood={selectedMood} onMoodChange={handleMoodChange} />
 
-        {/* Sort Options */}
-        <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-3">Sort Results</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {sortOptions.map((sort) => (
-              <Button
-                key={sort.id}
-                onClick={() => onSortChange(sort.id)}
-                variant={activeSort === sort.id ? "default" : "outline"}
-                className={`
-                  group transition-all duration-300 transform hover:scale-105
-                  ${activeSort === sort.id 
-                    ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white shadow-lg' 
-                    : 'hover:shadow-md'
-                  }
-                `}
-              >
-                <div className="flex items-center space-x-2">
-                  {sort.icon}
-                  <span className="text-sm font-medium">{sort.label}</span>
-                </div>
-              </Button>
-            ))}
+      {/* Main Filters */}
+      <Card>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search businesses..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Enter location..."
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <Select value={activeFilter} onValueChange={onFilterChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="gym">Gyms</SelectItem>
+                <SelectItem value="spa">Spas</SelectItem>
+                <SelectItem value="yoga">Yoga Studios</SelectItem>
+                <SelectItem value="fitness_center">Fitness Centers</SelectItem>
+              </SelectContent>
+            </Select>
+            
+            <Select value={activeSort} onValueChange={onSortChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="popular">Most Popular</SelectItem>
+                <SelectItem value="rating">Highest Rated</SelectItem>
+                <SelectItem value="price-low">Price: Low to High</SelectItem>
+                <SelectItem value="price-high">Price: High to Low</SelectItem>
+                <SelectItem value="newest">Newest First</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        </div>
-      </div>
-    </Card>
+
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="flex items-center gap-2"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Advanced Filters
+            </Button>
+            
+            <div className="flex gap-2">
+              <Button
+                variant={activeFilter === 'luxury' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => onFilterChange(activeFilter === 'luxury' ? 'all' : 'luxury')}
+              >
+                💎 Luxury
+              </Button>
+              <Button
+                variant={activeFilter === 'premium' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => onFilterChange(activeFilter === 'premium' ? 'all' : 'premium')}
+              >
+                ⭐ Premium
+              </Button>
+              <Button
+                variant={activeFilter === 'budget' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => onFilterChange(activeFilter === 'budget' ? 'all' : 'budget')}
+              >
+                💰 Budget
+              </Button>
+            </div>
+          </div>
+
+          {showAdvanced && (
+            <div className="mt-4 p-4 border rounded-lg bg-gray-50">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Price Range</label>
+                  <div className="flex gap-2">
+                    <Input placeholder="Min" type="number" />
+                    <Input placeholder="Max" type="number" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Distance</label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Within..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 km</SelectItem>
+                      <SelectItem value="5">5 km</SelectItem>
+                      <SelectItem value="10">10 km</SelectItem>
+                      <SelectItem value="25">25 km</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Amenities</label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Must have..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="parking">Parking</SelectItem>
+                      <SelectItem value="ac">Air Conditioning</SelectItem>
+                      <SelectItem value="shower">Shower Facilities</SelectItem>
+                      <SelectItem value="wifi">WiFi</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

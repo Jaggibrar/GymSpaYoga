@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -141,8 +140,9 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="GymSpaYoga - Find Premium Gyms, Spas & Yoga Studios"
-        description="Discover and book the best gyms, spas, and yoga studios near you. Connect with certified trainers and wellness experts."
+        title="GymSpaYoga - Find Your Perfect Wellness Destination"
+        description="Discover and book the best gyms, spas, and yoga studios near you. Choose from luxury, premium, and budget-friendly options. Start your wellness journey today!"
+        keywords="gym booking, spa booking, yoga classes, fitness center, wellness, health, meditation, massage, personal trainer"
       />
 
       {/* Hero Section */}
@@ -497,6 +497,16 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {process.env.NODE_ENV === 'development' && (
+        <div className="fixed top-4 right-4 z-50">
+          <Link to="/platform-audit">
+            <Button variant="outline" size="sm">
+              Platform Audit
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,241 +1,59 @@
-
 import React from 'react';
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Toaster } from "@/components/ui/toaster"
+import { AuthProvider } from './context/AuthContext';
+import Index from './pages/Index';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Profile from './pages/Profile';
+import Explore from './pages/Explore';
+import Gyms from './pages/Gyms';
+import Spas from './pages/Spas';
+import Yoga from './pages/Yoga';
+import BusinessDashboard from './pages/BusinessDashboard';
+import RegisterBusiness from './pages/RegisterBusiness';
+import RegisterTrainer from './pages/RegisterTrainer';
+import BusinessBookings from './pages/BusinessBookings';
+import { Sonner } from './components/ui/sonner';
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from "@/hooks/useAuth";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
-import BusinessDashboard from "./pages/BusinessDashboard";
-import UserDashboard from "./pages/UserDashboard";
-import Gyms from "./pages/Gyms";
-import GymDetails from "./pages/GymDetails";
-import Spas from "./pages/Spas";
-import SpaDetails from "./pages/SpaDetails";
-import Yoga from "./pages/Yoga";
-import YogaDetails from "./pages/YogaDetails";
-import Trainers from "./pages/Trainers";
-import UserBookings from "./pages/UserBookings";
-import BusinessBookings from "./pages/BusinessBookings";
-import RegisterBusiness from "./pages/RegisterBusiness";
-import RegisterTrainer from "./pages/RegisterTrainer";
-import AdminDashboard from "./pages/AdminDashboard";
-import ManageBookings from "./pages/ManageBookings";
-import Calendar from "./pages/Calendar";
-import About from "./pages/About";
-import Pricing from "./pages/Pricing";
-import Support from "./pages/Support";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import NotFound from "./pages/NotFound";
-import BlogList from "./pages/BlogList";
-import BlogPost from "./pages/BlogPost";
-import PasswordReset from "./components/auth/PasswordReset";
-import ResetPassword from "./pages/ResetPassword";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import SiteAudit from "./pages/SiteAudit";
-import ProtectedRoute from "./components/ProtectedRoute";
-import EnhancedNavigation from "./components/EnhancedNavigation";
-import AppFooter from "./components/AppFooter";
-import ScrollToTopButton from "./components/ScrollToTopButton";
-import "./App.css";
-import AnalyticsTracker from "./components/AnalyticsTracker";
-import BusinessLanding from "@/pages/BusinessLanding";
-import RoleBasedRedirect from "./components/RoleBasedRedirect";
-import { errorTracker } from "@/utils/errorTracking";
-import { performanceMonitor } from "@/utils/performanceMonitor";
+import PlatformAuditPage from '@/pages/PlatformAuditPage';
+import PerformanceMonitor from '@/components/monitoring/PerformanceMonitor';
+import AccessibilityHelper from '@/components/accessibility/AccessibilityHelper';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: (failureCount, error) => {
-        errorTracker.logError(
-          `Query failed (attempt ${failureCount + 1}): ${error}`,
-          'medium',
-          { failureCount, error: String(error) }
-        );
-        return failureCount < 2;
-      },
-      staleTime: 5 * 60 * 1000,
-      gcTime: 10 * 60 * 1000,
-    },
-    mutations: {
-      retry: false,
-      onError: (error) => {
-        errorTracker.logError(
-          `Mutation failed: ${error}`,
-          'high',
-          { error: String(error) }
-        );
-      },
-    },
-  },
-});
-
-const AppLayout = () => {
-  return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <ErrorBoundary>
-        <EnhancedNavigation />
-        <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/business" element={<BusinessLanding />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/password-reset" element={<PasswordReset />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/gyms" element={<Gyms />} />
-            <Route path="/gyms/:id" element={<GymDetails />} />
-            <Route path="/spas" element={<Spas />} />
-            <Route path="/spas/:id" element={<SpaDetails />} />
-            <Route path="/yoga" element={<Yoga />} />
-            <Route path="/yoga/:id" element={<YogaDetails />} />
-            <Route path="/trainers" element={<Trainers />} />
-            <Route path="/blogs" element={<BlogList />} />
-            <Route path="/blogs/:slug" element={<BlogPost />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/register-business" element={<RegisterBusiness />} />
-            <Route path="/register-trainer" element={<RegisterTrainer />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/support" element={<Support />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-            
-            <Route 
-              path="/dashboard" 
-              element={
-                <ProtectedRoute>
-                  <RoleBasedRedirect />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard/business" 
-              element={
-                <ProtectedRoute>
-                  <BusinessDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/dashboard/user" 
-              element={
-                <ProtectedRoute>
-                  <UserDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            
-            <Route 
-              path="/bookings" 
-              element={
-                <ProtectedRoute>
-                  <UserBookings />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/user-bookings" 
-              element={
-                <ProtectedRoute>
-                  <UserBookings />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/business-bookings" 
-              element={
-                <ProtectedRoute>
-                  <BusinessBookings />
-                </ProtectedRoute>
-              } 
-            />
-            
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin" 
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/manage-bookings" 
-              element={
-                <ProtectedRoute>
-                  <ManageBookings />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/calendar" 
-              element={
-                <ProtectedRoute>
-                  <Calendar />
-                </ProtectedRoute>
-              } 
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <AppFooter />
-      </ErrorBoundary>
-      <ScrollToTopButton />
-    </div>
-  );
-};
+const queryClient = new QueryClient();
 
 function App() {
-  React.useEffect(() => {
-    performanceMonitor.recordMetric('app_initialized', 1, 'counter');
-    
-    if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.entryType === 'largest-contentful-paint') {
-            performanceMonitor.recordMetric('lcp', entry.startTime, 'gauge');
-          }
-          if (entry.entryType === 'first-input') {
-            const eventEntry = entry as PerformanceEventTiming;
-            performanceMonitor.recordMetric('fid', eventEntry.processingStart - eventEntry.startTime, 'gauge');
-          }
-        }
-      });
-      
-      try {
-        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
-      } catch (e) {
-        // Browser doesn't support these entry types
-      }
-    }
-  }, []);
-
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <Toaster />
-          <Router>
-            <AnalyticsTracker />
+          <Sonner />
+          <BrowserRouter>
             <AuthProvider>
-              <AppLayout />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/gyms" element={<Gyms />} />
+                <Route path="/spas" element={<Spas />} />
+                <Route path="/yoga" element={<Yoga />} />
+                <Route path="/dashboard/business" element={<BusinessDashboard />} />
+                <Route path="/register-business" element={<RegisterBusiness />} />
+                <Route path="/register-trainer" element={<RegisterTrainer />} />
+                <Route path="/business-bookings" element={<BusinessBookings />} />
+                <Route path="/platform-audit" element={<PlatformAuditPage />} />
+              </Routes>
+              
+              {/* Global Monitoring Components */}
+              <PerformanceMonitor />
+              <AccessibilityHelper />
             </AuthProvider>
-          </Router>
+          </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
     </HelmetProvider>
