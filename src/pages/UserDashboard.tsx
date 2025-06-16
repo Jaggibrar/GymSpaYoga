@@ -1,520 +1,404 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { useBusinessData } from "@/hooks/useBusinessData";
-import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Search, 
-  Heart, 
-  History, 
-  MapPin, 
-  Star, 
-  Calendar,
-  Filter,
-  Bookmark,
-  User,
-  Camera,
-  Crown,
-  Diamond,
-  IndianRupee
-} from "lucide-react";
-import { toast } from "sonner";
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { Calendar, MapPin, Star, Clock, Phone, User, CreditCard, TrendingUp, BarChart3, Activity, Users, DollarSign, Target, ArrowLeft, Dumbbell, Download, Filter, CheckCircle, XCircle, Eye } from 'lucide-react';
 import { Link } from "react-router-dom";
-import SEOHead from "@/components/SEOHead";
-import EnhancedBusinessCard from "@/components/EnhancedBusinessCard";
+import { useRealTimeBookings } from "@/hooks/useRealTimeBookings";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
+import { getTierFromPricing } from "@/utils/businessUtils";
 
 const UserDashboard = () => {
-  const { user } = useAuth();
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const [wishlist, setWishlist] = useState<any[]>([]);
-  const [visitHistory, setVisitHistory] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [tierFilter, setTierFilter] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const { bookings, loading, updateBookingStatus } = useRealTimeBookings(false);
+  const { user } = useAuth();
 
-  const { businesses: nearbyBusinesses } = useBusinessData(undefined, searchTerm, locationFilter, tierFilter === 'all' ? undefined : tierFilter);
+  // Filter bookings based on search and status
+  const filteredBookings = bookings.filter(booking => {
+    const matchesSearch = 
+      booking.business_type?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.notes?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.business_id?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || booking.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
-  const getTierIcon = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return <Crown className="h-3 w-3" />;
-      case 'premium': return <Diamond className="h-3 w-3" />;
-      default: return <IndianRupee className="h-3 w-3" />;
+  // Calculate analytics from real data
+  const analyticsData = {
+    totalSpent: filteredBookings
+      .filter(b => b.status === 'confirmed' && b.total_amount)
+      .reduce((sum, b) => sum + (b.total_amount || 0), 0),
+    totalBookings: bookings.length,
+    confirmedBookings: bookings.filter(b => b.status === 'confirmed').length,
+    pendingBookings: bookings.filter(b => b.status === 'pending').length,
+    cancelledBookings: bookings.filter(b => b.status === 'cancelled').length,
+    avgBookingValue: bookings.length > 0 
+      ? bookings.reduce((sum, b) => sum + (b.total_amount || 0), 0) / bookings.length 
+      : 0
+  };
+
+  const handleCancel = async (bookingId: number) => {
+    const success = await updateBookingStatus(bookingId, 'cancelled', "Booking cancelled by user");
+    if (success) {
+      toast.success("Booking cancelled successfully");
     }
   };
 
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return "from-yellow-500 to-yellow-600";
-      case 'premium': return "from-blue-500 to-blue-600";
-      default: return "from-green-500 to-green-600";
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "confirmed": return "bg-green-500 hover:bg-green-600";
+      case "pending": return "bg-yellow-500 hover:bg-yellow-600";
+      case "cancelled": return "bg-red-500 hover:bg-red-600";
+      default: return "bg-gray-500 hover:bg-gray-600";
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchUserData();
-    }
-  }, [user]);
-
-  const fetchUserData = async () => {
-    try {
-      // Fetch user profile
-      const { data: profile } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user?.id)
-        .single();
-
-      setUserProfile(profile);
-
-      // Fetch wishlist
-      const { data: wishlistData } = await supabase
-        .from('user_wishlist')
-        .select(`
-          *,
-          business_profiles (
-            id,
-            business_name,
-            business_type,
-            description,
-            city,
-            state,
-            image_urls,
-            monthly_price,
-            session_price,
-            category,
-            status
-          )
-        `)
-        .eq('user_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      setWishlist(wishlistData || []);
-
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      toast.error('Failed to load dashboard data');
-    } finally {
-      setLoading(false);
-    }
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR'
+    }).format(amount);
   };
 
-  const toggleWishlist = async (businessId: string) => {
-    try {
-      const isInWishlist = wishlist.some(item => item.business_id === businessId);
-      
-      if (isInWishlist) {
-        const { error } = await supabase
-          .from('user_wishlist')
-          .delete()
-          .eq('user_id', user?.id)
-          .eq('business_id', businessId);
-
-        if (error) throw error;
-
-        setWishlist(prev => prev.filter(item => item.business_id !== businessId));
-        toast.success('Removed from wishlist');
-      } else {
-        const { error } = await supabase
-          .from('user_wishlist')
-          .insert({
-            user_id: user?.id,
-            business_id: businessId
-          });
-
-        if (error) throw error;
-
-        // Refetch wishlist to get complete data
-        fetchUserData();
-        toast.success('Added to wishlist');
-      }
-    } catch (error) {
-      console.error('Error updating wishlist:', error);
-      toast.error('Failed to update wishlist');
-    }
-  };
-
-  const handleBookNow = (business: any) => {
-    toast.info('Booking feature coming soon!');
-  };
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <Card className="p-8 text-center shadow-2xl border-0">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <XCircle className="h-8 w-8 text-red-600" />
+          </div>
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Access Denied</h2>
+          <p className="text-gray-600 mb-6">Please log in to view your dashboard</p>
+          <Link to="/login">
+            <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+              Go to Login
+            </Button>
+          </Link>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg text-gray-600">Loading your dashboard...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <SEOHead
-        title="My Dashboard - GymSpaYoga"
-        description="Discover gyms, spas, and yoga studios. Manage your wellness journey."
-      />
-
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Elegant Header */}
+      <header className="bg-white shadow-lg border-b border-gray-100">
+        <div className="container mx-auto px-6 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Welcome back, {userProfile?.full_name || 'User'}!
-              </h1>
-              <p className="text-gray-600 mt-1">Discover your next wellness destination</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link to="/profile">
-                <Button variant="outline" size="sm">
-                  <User className="h-4 w-4 mr-2" />
-                  Profile
-                </Button>
-              </Link>
+            <Link to="/" className="flex items-center space-x-3 text-gray-600 hover:text-emerald-600 transition-colors">
+              <ArrowLeft className="h-5 w-5" />
+              <span className="font-medium">Back to Home</span>
+            </Link>
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                <User className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  My Dashboard
+                </h1>
+                <p className="text-sm text-gray-500">Welcome back, {user.email}</p>
+              </div>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <Heart className="h-4 w-4" />
-                Wishlist
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{wishlist.length}</div>
-              <p className="text-xs text-gray-500 mt-1">Saved businesses</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <History className="h-4 w-4" />
-                Visited
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{visitHistory.length}</div>
-              <p className="text-xs text-gray-500 mt-1">Profiles viewed</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
-                <Star className="h-4 w-4" />
-                Reviews
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">0</div>
-              <p className="text-xs text-gray-500 mt-1">Reviews written</p>
-            </CardContent>
-          </Card>
+      <div className="container mx-auto px-6 py-8">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h2>
+          <p className="text-gray-600">Track your bookings and wellness journey</p>
         </div>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="discover" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="discover">Discover</TabsTrigger>
-            <TabsTrigger value="wishlist">Wishlist ({wishlist.length})</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
+        <Tabs defaultValue="analytics" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 bg-white shadow-sm border border-gray-200 p-1 rounded-xl">
+            <TabsTrigger 
+              value="analytics" 
+              className="text-base px-6 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all"
+            >
+              <BarChart3 className="h-5 w-5 mr-2" />
+              My Activity
+            </TabsTrigger>
+            <TabsTrigger 
+              value="bookings" 
+              className="text-base px-6 py-3 rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500 data-[state=active]:to-blue-500 data-[state=active]:text-white transition-all"
+            >
+              <Calendar className="h-5 w-5 mr-2" />
+              My Bookings
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="discover" className="space-y-6">
-            {/* Search Section */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Find Your Perfect Wellness Destination</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <div className="relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input
-                      placeholder="Search gyms, spas, yoga studios..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12"
-                    />
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-700 mb-1">Total Spent</p>
+                      <p className="text-3xl font-bold text-green-800">{formatCurrency(analyticsData.totalSpent)}</p>
+                      <p className="text-xs text-green-600 mt-1">On wellness services</p>
+                    </div>
+                    <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <DollarSign className="h-6 w-6 text-white" />
+                    </div>
                   </div>
-                  
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input
-                      placeholder="Location..."
-                      value={locationFilter}
-                      onChange={(e) => setLocationFilter(e.target.value)}
-                      className="pl-12"
-                    />
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-blue-50 to-cyan-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700 mb-1">Total Bookings</p>
+                      <p className="text-3xl font-bold text-blue-800">{analyticsData.totalBookings}</p>
+                      <p className="text-xs text-blue-600 mt-1">All time bookings</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <Calendar className="h-6 w-6 text-white" />
+                    </div>
                   </div>
-                  
-                  <Select value={tierFilter} onValueChange={setTierFilter}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Filter by tier" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Tiers</SelectItem>
-                      <SelectItem value="luxury">Luxury</SelectItem>
-                      <SelectItem value="premium">Premium</SelectItem>
-                      <SelectItem value="budget">Budget Friendly</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                </CardContent>
+              </Card>
 
-                {/* Quick Categories */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <Link to="/gyms">
-                    <Badge variant="outline" className="cursor-pointer hover:bg-red-100">
-                      Gyms
-                    </Badge>
-                  </Link>
-                  <Link to="/spas">
-                    <Badge variant="outline" className="cursor-pointer hover:bg-blue-100">
-                      Spas
-                    </Badge>
-                  </Link>
-                  <Link to="/yoga">
-                    <Badge variant="outline" className="cursor-pointer hover:bg-purple-100">
-                      Yoga Studios
-                    </Badge>
-                  </Link>
-                  <Link to="/trainers">
-                    <Badge variant="outline" className="cursor-pointer hover:bg-emerald-100">
-                      Trainers
-                    </Badge>
-                  </Link>
-                  <Badge 
-                    variant="outline" 
-                    className={`cursor-pointer ${tierFilter === 'luxury' ? 'bg-yellow-100' : 'hover:bg-yellow-100'}`}
-                    onClick={() => setTierFilter(tierFilter === 'luxury' ? 'all' : 'luxury')}
-                  >
-                    <Crown className="h-3 w-3 mr-1" />
-                    Luxury
-                  </Badge>
-                  <Badge 
-                    variant="outline" 
-                    className={`cursor-pointer ${tierFilter === 'premium' ? 'bg-blue-100' : 'hover:bg-blue-100'}`}
-                    onClick={() => setTierFilter(tierFilter === 'premium' ? 'all' : 'premium')}
-                  >
-                    <Diamond className="h-3 w-3 mr-1" />
-                    Premium
-                  </Badge>
-                  <Badge 
-                    variant="outline" 
-                    className={`cursor-pointer ${tierFilter === 'budget' ? 'bg-green-100' : 'hover:bg-green-100'}`}
-                    onClick={() => setTierFilter(tierFilter === 'budget' ? 'all' : 'budget')}
-                  >
-                    <IndianRupee className="h-3 w-3 mr-1" />
-                    Budget
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
+              <Card className="bg-gradient-to-br from-purple-50 to-indigo-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-700 mb-1">Confirmed</p>
+                      <p className="text-3xl font-bold text-purple-800">{analyticsData.confirmedBookings}</p>
+                      <p className="text-xs text-purple-600 mt-1">Successful sessions</p>
+                    </div>
+                    <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <CheckCircle className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-            {/* Nearby Businesses */}
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Discover Near You</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {nearbyBusinesses.slice(0, 6).map((business) => {
-                  const tier = business.tier || 'budget';
-                  return (
-                    <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                      <div className="relative h-48 overflow-hidden">
-                        <img 
-                          src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
-                          alt={business.business_name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white`}>
-                          {getTierIcon(tier)}
-                          <span className="ml-1 capitalize">{tier}</span>
-                        </Badge>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="absolute top-3 left-3 text-white hover:bg-white/20"
-                          onClick={() => toggleWishlist(business.id)}
-                        >
-                          <Heart className={`h-4 w-4 ${wishlist.some(item => item.business_id === business.id) ? 'fill-red-500 text-red-500' : ''}`} />
-                        </Button>
-                      </div>
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
-                          {business.business_name}
-                        </CardTitle>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                          <MapPin className="h-4 w-4" />
-                          <span>{business.city}, {business.state}</span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                          {business.description || "Premium wellness destination"}
-                        </p>
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center gap-1">
-                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                            <span className="text-sm font-medium">4.7</span>
-                            <span className="text-sm text-gray-500">(142)</span>
-                          </div>
-                          <Badge variant="outline" className="text-xs capitalize">
-                            {business.business_type}
-                          </Badge>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <p className="text-lg font-bold text-blue-600">
-                            {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
-                          </p>
-                          <Button 
-                            size="sm" 
-                            onClick={() => handleBookNow(business)}
-                          >
-                            Book Now
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+              <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-700 mb-1">Pending</p>
+                      <p className="text-3xl font-bold text-orange-800">{analyticsData.pendingBookings}</p>
+                      <p className="text-xs text-orange-600 mt-1">Awaiting confirmation</p>
+                    </div>
+                    <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <Clock className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-teal-700 mb-1">Avg Booking Value</p>
+                      <p className="text-3xl font-bold text-teal-800">{formatCurrency(analyticsData.avgBookingValue)}</p>
+                      <p className="text-xs text-teal-600 mt-1">Per session</p>
+                    </div>
+                    <div className="w-12 h-12 bg-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-red-50 to-pink-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-red-700 mb-1">Cancelled</p>
+                      <p className="text-3xl font-bold text-red-800">{analyticsData.cancelledBookings}</p>
+                      <p className="text-xs text-red-600 mt-1">Cancelled bookings</p>
+                    </div>
+                    <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center shadow-lg">
+                      <XCircle className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="wishlist" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Heart className="h-5 w-5" />
-                  Your Wishlist
+          {/* Bookings Tab */}
+          <TabsContent value="bookings" className="space-y-6">
+            {/* Elegant Filters */}
+            <Card className="border-0 shadow-lg bg-white">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="relative">
+                    <Input
+                      placeholder="Search bookings..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="h-12 pl-4 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl"
+                    />
+                  </div>
+                  
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="h-12 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl">
+                      <SelectValue placeholder="All Status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl">
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="confirmed">Confirmed</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 h-12 rounded-xl shadow-lg">
+                    <Filter className="h-5 w-5 mr-2" />
+                    Apply Filters
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bookings Table */}
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-semibold text-gray-800">
+                  My Bookings ({filteredBookings.length})
                 </CardTitle>
-                <p className="text-sm text-gray-600">Businesses you've saved for later</p>
               </CardHeader>
               <CardContent>
-                {wishlist.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {wishlist.map((item) => {
-                      const business = item.business_profiles;
-                      const tier = business.monthly_price >= 5000 || business.session_price >= 2000 ? 'luxury' :
-                                  business.monthly_price >= 3000 || business.session_price >= 1000 ? 'premium' : 'budget';
-                      
-                      return (
-                        <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                          <div className="relative h-48 overflow-hidden">
-                            <img 
-                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
-                              alt={business.business_name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white`}>
-                              {getTierIcon(tier)}
-                              <span className="ml-1 capitalize">{tier}</span>
-                            </Badge>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="absolute top-3 left-3 text-white hover:bg-white/20"
-                              onClick={() => toggleWishlist(business.id)}
-                            >
-                              <Heart className="h-4 w-4 fill-red-500 text-red-500" />
-                            </Button>
-                          </div>
-                          <CardHeader className="pb-2">
-                            <CardTitle className="text-lg group-hover:text-blue-600 transition-colors line-clamp-1">
-                              {business.business_name}
-                            </CardTitle>
-                            <div className="flex items-center gap-2 text-sm text-gray-600">
-                              <MapPin className="h-4 w-4" />
-                              <span>{business.city}, {business.state}</span>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                              {business.description || "Premium wellness destination"}
-                            </p>
-                            <div className="flex items-center justify-between">
-                              <p className="text-lg font-bold text-blue-600">
-                                {business.monthly_price ? `₹${business.monthly_price}/month` : business.session_price ? `₹${business.session_price}/session` : "Contact"}
-                              </p>
-                              <Button 
-                                size="sm" 
-                                onClick={() => handleBookNow(business)}
-                              >
-                                Book Now
-                              </Button>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
+                {filteredBookings.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="h-8 w-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-600 mb-2">No bookings found</h3>
+                    <p className="text-gray-500">
+                      {bookings.length === 0 
+                        ? "You haven't made any bookings yet." 
+                        : "No bookings match your current filters."}
+                    </p>
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No saved businesses yet</h3>
-                    <p className="text-gray-500 mb-6">Start exploring and save your favorite wellness destinations</p>
-                    <Button>
-                      <Search className="h-4 w-4 mr-2" />
-                      Discover Businesses
-                    </Button>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-gray-100">
+                          <TableHead className="font-semibold text-gray-700">Service Details</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Business</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Date & Time</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Amount</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Status</TableHead>
+                          <TableHead className="font-semibold text-gray-700">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredBookings.map((booking) => (
+                          <TableRow key={booking.id} className="border-gray-50 hover:bg-gray-50 transition-colors">
+                            <TableCell>
+                              <div>
+                                <p className="font-semibold text-gray-800">{booking.business_type?.toUpperCase()} Session</p>
+                                <p className="text-sm text-gray-500">Booking ID: {booking.id}</p>
+                                {booking.notes && (
+                                  <p className="text-sm text-gray-600 mt-1 max-w-xs truncate">{booking.notes}</p>
+                                )}
+                                <p className="text-xs text-gray-400 mt-1">
+                                  Duration: {booking.duration_minutes || 60} minutes
+                                </p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  {booking.business_profile?.business_name || 'Business Name'}
+                                </p>
+                                <Badge 
+                                  variant="outline" 
+                                  className={`text-xs ${
+                                    getTierFromPricing(booking) === 'luxury' ? 'border-yellow-500 text-yellow-700' :
+                                    getTierFromPricing(booking) === 'premium' ? 'border-blue-500 text-blue-700' :
+                                    'border-green-500 text-green-700'
+                                  }`}
+                                >
+                                  {getTierFromPricing(booking).charAt(0).toUpperCase() + getTierFromPricing(booking).slice(1)}
+                                </Badge>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="font-medium text-gray-800">
+                                  {booking.booking_date ? new Date(booking.booking_date).toLocaleDateString() : 'Not set'}
+                                </p>
+                                <p className="text-sm text-gray-600">
+                                  {booking.booking_time || 'Time not set'}
+                                </p>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <p className="font-semibold text-green-600 text-lg">
+                                {booking.total_amount ? formatCurrency(booking.total_amount) : 'Not set'}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <Badge className={`${getStatusColor(booking.status || 'pending')} text-white font-medium px-3 py-1 rounded-full`}>
+                                {(booking.status || 'pending').charAt(0).toUpperCase() + (booking.status || 'pending').slice(1)}
+                              </Badge>
+                              {booking.confirmed_at && (
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Confirmed: {new Date(booking.confirmed_at).toLocaleString()}
+                                </p>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                {booking.status === "pending" && (
+                                  <Button 
+                                    size="sm" 
+                                    variant="destructive"
+                                    className="shadow-md"
+                                    onClick={() => handleCancel(booking.id)}
+                                    disabled={loading}
+                                  >
+                                    <XCircle className="h-4 w-4 mr-1" />
+                                    Cancel
+                                  </Button>
+                                )}
+                                <Button size="sm" variant="outline" className="shadow-md">
+                                  <Eye className="h-4 w-4 mr-1" />
+                                  View
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="history" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  Your Activity
-                </CardTitle>
-                <p className="text-sm text-gray-600">Businesses you've recently viewed</p>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No activity yet</h3>
-                  <p className="text-gray-500 mb-6">Your viewing history will appear here as you explore</p>
-                  <Button>
-                    <Search className="h-4 w-4 mr-2" />
-                    Start Exploring
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="reviews" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5" />
-                  Your Reviews
-                </CardTitle>
-                <p className="text-sm text-gray-600">Share your experiences and help others discover great places</p>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <Star className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No reviews yet</h3>
-                  <p className="text-gray-500 mb-6">Visit some businesses and share your experiences</p>
-                  <Button>
-                    <Camera className="h-4 w-4 mr-2" />
-                    Write Your First Review
-                  </Button>
-                </div>
               </CardContent>
             </Card>
           </TabsContent>
