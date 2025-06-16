@@ -110,7 +110,11 @@ const Spas = () => {
         </section>
 
         {/* Category Businesses Component */}
-        <CategoryBusinesses category="spa" />
+        <CategoryBusinesses 
+          category="spa" 
+          title="Luxury Spas"
+          description="Indulge in ultimate relaxation with premium spa treatments and wellness services"
+        />
 
         {/* CTA Section */}
         <section className="bg-gradient-to-r from-blue-600 to-cyan-600 py-16">

@@ -111,7 +111,11 @@ const Gyms = () => {
         </section>
 
         {/* Category Businesses Component */}
-        <CategoryBusinesses category="gym" />
+        <CategoryBusinesses 
+          category="gym" 
+          title="Premium Gyms"
+          description="Discover state-of-the-art fitness centers with modern equipment and expert trainers"
+        />
 
         {/* CTA Section */}
         <section className="bg-gradient-to-r from-red-600 to-orange-600 py-16">
