@@ -41,28 +41,44 @@ export const useBusinessData = (
   }, [category, searchTerm, location, sortBy]);
 
   const fetchBusinesses = async () => {
-    console.log('Fetching businesses... Category:', category || 'all');
+    console.log('🔍 Fetching businesses... Category:', category || 'all');
+    console.log('📊 Search params:', { searchTerm, location, sortBy });
     setLoading(true);
     setError('');
     
     try {
       let query = supabase
         .from('business_profiles')
-        .select('*')
-        .eq('status', 'approved');
+        .select('*');
+
+      // First, let's check all businesses regardless of status for debugging
+      const { data: allBusinesses, error: allError } = await supabase
+        .from('business_profiles')
+        .select('business_type, status, business_name')
+        .order('created_at', { ascending: false });
+      
+      console.log('📋 All businesses in database:', allBusinesses);
+      console.log('🏋️ Gym businesses:', allBusinesses?.filter(b => b.business_type === 'gym'));
+      console.log('✅ Approved businesses:', allBusinesses?.filter(b => b.status === 'approved'));
+
+      // Now apply the approved filter
+      query = query.eq('status', 'approved');
 
       // Apply category filter
       if (category && category !== 'all') {
+        console.log('🎯 Filtering by category:', category);
         query = query.eq('business_type', category);
       }
 
       // Apply search term filter
       if (searchTerm) {
+        console.log('🔤 Applying search term:', searchTerm);
         query = query.or(`business_name.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
       }
 
       // Apply location filter
       if (location) {
+        console.log('📍 Applying location filter:', location);
         query = query.or(`city.ilike.%${location}%,state.ilike.%${location}%`);
       }
 
@@ -83,13 +99,14 @@ export const useBusinessData = (
       const { data, error: fetchError } = await query;
 
       if (fetchError) {
-        console.error('Error fetching businesses:', fetchError);
+        console.error('❌ Error fetching businesses:', fetchError);
         setError(fetchError.message);
         toast.error('Failed to fetch businesses');
         return;
       }
 
-      console.log('Fetched businesses:', data?.length || 0);
+      console.log('✅ Successfully fetched businesses:', data?.length || 0);
+      console.log('📊 Fetched business data:', data);
       
       // Ensure we have valid business objects
       const validBusinesses = (data || []).map(business => ({
@@ -101,10 +118,17 @@ export const useBusinessData = (
       }));
 
       setBusinesses(validBusinesses);
-      console.log('Filtered results:', validBusinesses.length, 'out of', data?.length || 0, 'businesses');
+      console.log('🎯 Final filtered results:', validBusinesses.length, 'businesses');
+      
+      if (validBusinesses.length === 0) {
+        console.log('⚠️ No businesses found with current filters');
+        if (category === 'gym') {
+          console.log('🏋️ Specifically no approved gyms found');
+        }
+      }
       
     } catch (err) {
-      console.error('Unexpected error:', err);
+      console.error('💥 Unexpected error:', err);
       setError('An unexpected error occurred');
       toast.error('Failed to load businesses');
     } finally {

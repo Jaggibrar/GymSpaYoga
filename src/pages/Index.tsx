@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Sparkles, Crown, Heart, Calendar, Star, Filter } from 'lucide-react';
+import { Search, MapPin, Sparkles, Crown, Heart, Calendar, Star, Filter, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBusinessData } from '@/hooks/useBusinessData';
 import BookingModal from '@/components/BookingModal';
@@ -14,7 +14,7 @@ const Index = () => {
   const [searchLocation, setSearchLocation] = useState('');
   const [selectedTier, setSelectedTier] = useState<string>('all');
   const [selectedMood, setSelectedMood] = useState<string>('all');
-  const { businesses, loading } = useBusinessData(undefined, '', searchLocation);
+  const { businesses, loading, error } = useBusinessData(undefined, '', searchLocation);
 
   // Filter businesses by tier and mood
   const filteredBusinesses = businesses.filter(business => {
@@ -231,6 +231,49 @@ const Index = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <div className="text-red-500 mb-4">
+                <span className="text-4xl">⚠️</span>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Businesses</h3>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          ) : filteredBusinesses.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-6">
+                <span className="text-6xl">🏢</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                {businesses.length === 0 ? "No Businesses Listed Yet" : "No Matching Results"}
+              </h3>
+              <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                {businesses.length === 0 
+                  ? "Be the first business to join our platform! Register your gym, spa, or yoga studio today."
+                  : "Try adjusting your filters to see more results."
+                }
+              </p>
+              
+              {businesses.length === 0 && (
+                <div className="flex flex-col md:flex-row gap-4 justify-center">
+                  <Link to="/register-business">
+                    <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 px-8 py-3">
+                      <Plus className="h-5 w-5 mr-2" />
+                      Register Your Business
+                    </Button>
+                  </Link>
+                  <Link to="/register-trainer">
+                    <Button variant="outline" className="px-8 py-3">
+                      <Plus className="h-5 w-5 mr-2" />
+                      Register as Trainer
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
