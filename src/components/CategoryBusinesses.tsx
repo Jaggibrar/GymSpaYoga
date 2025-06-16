@@ -11,29 +11,8 @@ import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import BookingModal from '@/components/BookingModal';
-
-interface Business {
-  id: string;
-  business_name: string;
-  business_type: string;
-  category: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  pin_code: string;
-  opening_time: string;
-  closing_time: string;
-  monthly_price?: number;
-  session_price?: number;
-  description: string;
-  amenities: string[];
-  image_urls: string[];
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+import SampleDataCreator from '@/components/SampleDataCreator';
+import type { Business } from '@/hooks/useBusinessData';
 
 interface CategoryBusinessesProps {
   category: string;
@@ -56,20 +35,6 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
     loading, 
     error 
   } = useBusinessData(category, searchTerm, selectedLocation, sortBy);
-
-  // Type guard to ensure we have a valid business
-  const isValidBusiness = (business: any): business is Business => {
-    return business && 
-           typeof business.id === 'string' &&
-           typeof business.business_name === 'string' &&
-           typeof business.business_type === 'string' &&
-           Array.isArray(business.image_urls) &&
-           typeof business.opening_time === 'string' &&
-           typeof business.closing_time === 'string';
-  };
-
-  // Filter and validate businesses
-  const validBusinesses = businesses.filter(isValidBusiness);
 
   // Load user wishlist
   useEffect(() => {
@@ -139,7 +104,7 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
     }
   };
 
-  const filteredBusinesses = validBusinesses.filter(business => {
+  const filteredBusinesses = businesses.filter(business => {
     const matchesSearch = business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          business.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          business.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -242,119 +207,130 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
           </p>
         </div>
 
+        {/* Show sample data creator if no businesses */}
+        {filteredBusinesses.length === 0 && businesses.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4">No businesses found</h3>
+            <p className="text-gray-600 mb-8">Create some sample data to get started</p>
+            <SampleDataCreator />
+          </div>
+        )}
+
         {/* Business Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredBusinesses.map((business) => (
-            <Card key={business.id} className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
-              <div className="relative">
-                <div className="aspect-video bg-gray-200 overflow-hidden">
-                  {business.image_urls && business.image_urls.length > 0 ? (
-                    <img
-                      src={business.image_urls[0]}
-                      alt={business.business_name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder.svg';
-                      }}
+        {filteredBusinesses.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredBusinesses.map((business) => (
+              <Card key={business.id} className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 group">
+                <div className="relative">
+                  <div className="aspect-video bg-gray-200 overflow-hidden">
+                    {business.image_urls && business.image_urls.length > 0 ? (
+                      <img
+                        src={business.image_urls[0]}
+                        alt={business.business_name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800';
+                        }}
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-100">
+                        <span className="text-gray-400">No image available</span>
+                      </div>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="absolute top-3 right-3 h-9 w-9 p-0 bg-white/80 hover:bg-white"
+                    onClick={() => toggleWishlist(business.id)}
+                  >
+                    <Heart 
+                      className={`h-4 w-4 ${wishlist.has(business.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-full bg-gray-100">
-                      <span className="text-gray-400">No image available</span>
-                    </div>
-                  )}
+                  </Button>
+                  <Badge className="absolute top-3 left-3 capitalize bg-blue-600">
+                    {business.category}
+                  </Badge>
                 </div>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="absolute top-3 right-3 h-9 w-9 p-0 bg-white/80 hover:bg-white"
-                  onClick={() => toggleWishlist(business.id)}
-                >
-                  <Heart 
-                    className={`h-4 w-4 ${wishlist.has(business.id) ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
-                  />
-                </Button>
-                <Badge className="absolute top-3 left-3 capitalize bg-blue-600">
-                  {business.category}
-                </Badge>
-              </div>
 
-              <CardHeader className="pb-3">
-                <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
-                  {business.business_name}
-                </CardTitle>
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="h-4 w-4 mr-1" />
-                  <span className="text-sm">{business.city}, {business.state}</span>
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                <p className="text-gray-600 text-sm line-clamp-2">{business.description}</p>
-
-                <div className="flex items-center justify-between">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-xl font-bold text-gray-900 line-clamp-2">
+                    {business.business_name}
+                  </CardTitle>
                   <div className="flex items-center text-gray-600">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span className="text-sm">
-                      {business.opening_time} - {business.closing_time}
-                    </span>
+                    <MapPin className="h-4 w-4 mr-1" />
+                    <span className="text-sm">{business.city}, {business.state}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span className="text-sm text-gray-600">4.5</span>
-                  </div>
-                </div>
+                </CardHeader>
 
-                {(business.monthly_price || business.session_price) && (
+                <CardContent className="space-y-4">
+                  <p className="text-gray-600 text-sm line-clamp-2">{business.description}</p>
+
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center text-green-600 font-semibold">
-                      <DollarSign className="h-4 w-4 mr-1" />
-                      <span>
-                        ₹{business.monthly_price || business.session_price}
-                        {business.monthly_price ? '/month' : '/session'}
+                    <div className="flex items-center text-gray-600">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span className="text-sm">
+                        {business.opening_time} - {business.closing_time}
                       </span>
                     </div>
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                      <span className="text-sm text-gray-600">4.5</span>
+                    </div>
                   </div>
-                )}
 
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {business.amenities.slice(0, 3).map((amenity, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs">
-                      {amenity}
-                    </Badge>
-                  ))}
-                  {business.amenities.length > 3 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{business.amenities.length - 3} more
-                    </Badge>
+                  {(business.monthly_price || business.session_price) && (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-green-600 font-semibold">
+                        <DollarSign className="h-4 w-4 mr-1" />
+                        <span>
+                          ₹{business.monthly_price || business.session_price}
+                          {business.monthly_price ? '/month' : '/session'}
+                        </span>
+                      </div>
+                    </div>
                   )}
-                </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => window.open(`tel:${business.phone}`, '_self')}
-                  >
-                    <Phone className="h-4 w-4 mr-1" />
-                    Call
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="w-full bg-blue-600 hover:bg-blue-700"
-                    onClick={() => handleBookNow(business)}
-                  >
-                    <Calendar className="h-4 w-4 mr-1" />
-                    Book Now
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {business.amenities.slice(0, 3).map((amenity, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {amenity}
+                      </Badge>
+                    ))}
+                    {business.amenities.length > 3 && (
+                      <Badge variant="secondary" className="text-xs">
+                        +{business.amenities.length - 3} more
+                      </Badge>
+                    )}
+                  </div>
 
-        {filteredBusinesses.length === 0 && (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full"
+                      onClick={() => window.open(`tel:${business.phone}`, '_self')}
+                    >
+                      <Phone className="h-4 w-4 mr-1" />
+                      Call
+                    </Button>
+                    <Button
+                      size="sm"
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleBookNow(business)}
+                    >
+                      <Calendar className="h-4 w-4 mr-1" />
+                      Book Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+
+        {filteredBusinesses.length === 0 && businesses.length > 0 && (
           <div className="text-center py-12">
             <p className="text-gray-600 text-lg">No businesses found matching your criteria.</p>
             <p className="text-gray-500 mt-2">Try adjusting your search filters.</p>

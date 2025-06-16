@@ -11,6 +11,7 @@ import { SmartFilters } from '@/components/SmartFilters';
 import { useBusinessData } from '@/hooks/useBusinessData';
 import SEOHead from '@/components/SEOHead';
 import { useAuth } from '@/hooks/useAuth';
+import SampleDataCreator from '@/components/SampleDataCreator';
 
 const Index = () => {
   const { businesses, loading } = useBusinessData();
@@ -91,6 +92,17 @@ const Index = () => {
           <SmartFilters showMoodFilter={true} activeFilter="all" activeSort="popular" onFilterChange={() => {}} />
         </section>
 
+        {/* Sample Data Creator - Show when no businesses */}
+        {!loading && businesses.length === 0 && (
+          <section className="container mx-auto px-4 py-16">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-4">No Business Data Found</h2>
+              <p className="text-gray-600 mb-8">Create some sample data to test the application</p>
+            </div>
+            <SampleDataCreator />
+          </section>
+        )}
+
         {/* Explore Categories Section */}
         <section className="container mx-auto px-4 py-16 bg-white">
           <div className="text-center mb-12">
@@ -143,7 +155,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Trending Destinations - Fixed routing */}
+        {/* Trending Destinations - Show only if we have businesses */}
         {!loading && trendingDestinations.length > 0 && (
           <section className="container mx-auto px-4 py-16 bg-gray-50">
             <div className="text-center mb-12">
@@ -197,7 +209,7 @@ const Index = () => {
                       <Badge variant="outline" className="text-xs">
                         {business.business_type?.replace('_', ' ').toUpperCase()}
                       </Badge>
-                      <Link to={`/${business.business_type}s/${business.id}`}>
+                      <Link to={`/${business.business_type}s`}>
                         <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600">
                           View Details
                         </Button>
