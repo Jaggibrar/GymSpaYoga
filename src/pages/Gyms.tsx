@@ -1,183 +1,148 @@
 
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
-import { useScrollToTop } from "@/hooks/useScrollToTop";
-import { useOptimizedBusinessData } from "@/hooks/useOptimizedBusinessData";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Search, MapPin, Dumbbell, Filter, Grid, Heart } from "lucide-react";
-import SEOHead from "@/components/SEOHead";
-import OptimizedBusinessCard from "@/components/OptimizedBusinessCard";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { MapPin, Star, ArrowRight, Dumbbell, Zap, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import CategoryBusinesses from '@/components/CategoryBusinesses';
+import { SmartFilters } from '@/components/SmartFilters';
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+import { useAuth } from '@/hooks/useAuth';
+import SEOHead from '@/components/SEOHead';
 
 const Gyms = () => {
-  useScrollToTop();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [tierFilter, setTierFilter] = useState("all");
-  
-  // Use optimized hook with debounced values
-  const debouncedFilters = useMemo(() => ({
-    searchTerm: searchTerm.trim(),
-    locationFilter: locationFilter.trim(),
-    tierFilter: tierFilter === 'all' ? undefined : tierFilter
-  }), [searchTerm, locationFilter, tierFilter]);
-
-  const { businesses: gyms, loading, error } = useOptimizedBusinessData(
-    'gym',
-    debouncedFilters.searchTerm,
-    debouncedFilters.locationFilter,
-    debouncedFilters.tierFilter
-  );
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-        <SEOHead
-          title="Gyms - GymSpaYoga"
-          description="Find the best gyms and fitness centers near you"
-        />
-        <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Error loading gyms</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <Link to="/">
-              <Button className="touch-target bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">Back to Home</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { signOut } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <>
       <SEOHead
-        title="Premium Gyms - GymSpaYoga"
-        description="Discover state-of-the-art fitness centers with modern equipment and expert trainers. Find luxury, premium, and budget-friendly gyms near you."
+        title="Premium Gyms - Find the Best Fitness Centers Near You"
+        description="Discover top-rated gyms and fitness centers. Modern equipment, expert trainers, and flexible memberships. Start your fitness journey today!"
+        keywords="gym, fitness center, workout, personal trainer, strength training, cardio"
       />
       
-      {/* Optimized Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-500/80 via-orange-500/80 to-yellow-500/80"></div>
-        <div className="relative mobile-container py-16 md:py-24">
-          <div className="text-center text-white">
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                <Dumbbell className="h-8 w-8 text-white" />
-              </div>
-              <h1 className="text-4xl md:text-6xl font-bold">Premium Gyms</h1>
+      <AppHeader onLogout={signOut} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-br from-red-600 via-orange-600 to-amber-600 text-white py-20">
+          <div className="container mx-auto px-4 text-center">
+            <div className="flex items-center justify-center mb-6">
+              <Dumbbell className="h-16 w-16 mr-4" />
+              <h1 className="text-4xl md:text-6xl font-bold">
+                Premium Gyms
+              </h1>
             </div>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto">
-              Discover state-of-the-art fitness centers with modern equipment and expert trainers
+            <p className="text-xl mb-8 text-orange-100 max-w-2xl mx-auto">
+              Discover state-of-the-art fitness centers with modern equipment and expert trainers. 
+              Transform your fitness journey with premium gym experiences.
             </p>
-            <div className="flex items-center justify-center gap-6 text-white/80">
-              <div className="flex items-center gap-2">
-                <Grid className="h-5 w-5" />
-                <span>{gyms.length} Premium Locations</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Heart className="h-5 w-5" />
-                <span>Trusted by 10K+ Members</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="mobile-container py-8 md:py-12">
-        {/* Optimized Search Section */}
-        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm rounded-3xl mb-8 overflow-hidden">
-          <CardContent className="relative p-6 md:p-8">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center">
-                <Filter className="h-5 w-5 text-white" />
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800">Find Your Perfect Gym</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  placeholder="Search gyms..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-14 text-lg border-0 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-500 rounded-xl"
-                />
-              </div>
-              <div className="relative">
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <Input
-                  placeholder="Enter location..."
-                  value={locationFilter}
-                  onChange={(e) => setLocationFilter(e.target.value)}
-                  className="pl-12 h-14 text-lg border-0 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-500 rounded-xl"
-                />
-              </div>
-              <Select value={tierFilter} onValueChange={setTierFilter}>
-                <SelectTrigger className="h-14 text-lg border-0 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-red-500 rounded-xl">
-                  <SelectValue placeholder="Filter by tier" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Tiers</SelectItem>
-                  <SelectItem value="luxury">Luxury</SelectItem>
-                  <SelectItem value="premium">Premium</SelectItem>
-                  <SelectItem value="budget">Budget Friendly</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Optimized Gyms Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse border-0 rounded-3xl">
-                <div className="h-48 bg-gray-200 rounded-t-3xl"></div>
-                <CardContent className="p-6">
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : gyms.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gyms.map((gym) => (
-              <OptimizedBusinessCard key={gym.id} business={gym} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gradient-to-r from-red-100 to-orange-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <Dumbbell className="h-12 w-12 text-red-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">No gyms found</h3>
-            <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              {searchTerm || locationFilter || tierFilter !== 'all'
-                ? "Try adjusting your search criteria or explore other locations."
-                : "Be the first! Register your gym and start attracting members."
-              }
-            </p>
-            <div className="flex gap-4 justify-center flex-col sm:flex-row">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-business">
-                <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-xl px-8 py-3 font-semibold w-full sm:w-auto">
-                  Register Your Gym
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-3 text-lg">
+                  List Your Gym
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link to="/">
-                <Button variant="outline" className="rounded-xl px-8 py-3 font-semibold w-full sm:w-auto border-2 hover:border-red-500 hover:text-red-600">
-                  Back to Home
+              <Link to="/explore">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-3 text-lg">
+                  Explore All
                 </Button>
               </Link>
             </div>
           </div>
-        )}
+        </section>
+
+        {/* Search Filters */}
+        <section className="container mx-auto px-4 -mt-10 relative z-10">
+          <SmartFilters />
+        </section>
+
+        {/* Features Section */}
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Why Choose Premium Gyms?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Experience the difference with our carefully selected fitness centers
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
+                  <Dumbbell className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Modern Equipment</h3>
+              <p className="text-gray-600">
+                State-of-the-art fitness equipment maintained to the highest standards for optimal performance
+              </p>
+            </Card>
+
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Expert Trainers</h3>
+              <p className="text-gray-600">
+                Certified personal trainers ready to help you achieve your fitness goals safely and effectively
+              </p>
+            </Card>
+
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Flexible Plans</h3>
+              <p className="text-gray-600">
+                Choose from various membership options that fit your schedule and budget perfectly
+              </p>
+            </Card>
+          </div>
+        </section>
+
+        {/* Category Businesses Component */}
+        <CategoryBusinesses category="gym" />
+
+        {/* CTA Section */}
+        <section className="bg-gradient-to-r from-red-600 to-orange-600 py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Start Your Fitness Journey?
+            </h2>
+            <p className="text-xl text-red-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of fitness enthusiasts who have transformed their lives with our premium gym partners
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/explore">
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-3 text-lg">
+                  Find Gyms Near Me
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link to="/register-business">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-3 text-lg">
+                  List Your Gym
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
+      
+      <AppFooter />
+    </>
   );
 };
 
 export default Gyms;
+

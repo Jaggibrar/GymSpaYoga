@@ -1,216 +1,147 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useScrollToTop } from "@/hooks/useScrollToTop";
-import { useBusinessData } from "@/hooks/useBusinessData";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, MapPin, Star, Clock, Heart, IndianRupee, Crown, Diamond } from "lucide-react";
-import { toast } from "sonner";
-import PageHero from "@/components/PageHero";
-import SEOHead from "@/components/SEOHead";
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Heart, Flower, Sun } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import CategoryBusinesses from '@/components/CategoryBusinesses';
+import { SmartFilters } from '@/components/SmartFilters';
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+import { useAuth } from '@/hooks/useAuth';
+import SEOHead from '@/components/SEOHead';
 
 const Yoga = () => {
-  useScrollToTop();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [tierFilter, setTierFilter] = useState("all");
-  
-  const { businesses: yogaStudios, loading, error } = useBusinessData('yoga', searchTerm, locationFilter, tierFilter);
-
-  const getTierIcon = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return <Crown className="h-4 w-4" />;
-      case 'premium': return <Diamond className="h-4 w-4" />;
-      default: return <IndianRupee className="h-4 w-4" />;
-    }
-  };
-
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return "from-yellow-500 to-yellow-600";
-      case 'premium': return "from-blue-500 to-blue-600";
-      default: return "from-green-500 to-green-600";
-    }
-  };
-
-  const handleBookNow = (studioName: string) => {
-    toast.success(`Booking ${studioName}. Please sign in to complete your booking!`);
-  };
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
-        <SEOHead
-          title="Yoga Studios - GymSpaYoga"
-          description="Find the best yoga studios and meditation centers near you"
-        />
-        <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
-          <div className="text-center">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">Error loading yoga studios</h2>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <Link to="/">
-              <Button className="touch-target">Back to Home</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { signOut } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
+    <>
       <SEOHead
-        title="Yoga Studios - GymSpaYoga"
-        description="Discover peaceful yoga studios and meditation centers for mind-body wellness. Find luxury, premium, and budget-friendly yoga studios near you."
+        title="Yoga Studios - Find Inner Peace & Strength"
+        description="Discover premium yoga studios with expert instructors. Practice yoga in serene environments and find your inner peace today!"
+        keywords="yoga, meditation, mindfulness, yoga studio, hatha yoga, vinyasa, peace"
       />
       
-      <PageHero
-        title="Yoga Studios"
-        subtitle="Mind & Body Harmony"
-        description="Find inner peace and strength through yoga practice in serene, welcoming environments."
-        backgroundImage="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-      />
-
-      <div className="mobile-container py-4 md:py-8">
-        {/* Search Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-4 md:p-6 shadow-xl mb-6 md:mb-8">
-          <div className="flex flex-col gap-3 md:flex-row md:gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
-              <Input
-                placeholder="Search yoga studios..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-purple-500"
-              />
+      <AppHeader onLogout={signOut} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-rose-50">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-br from-purple-600 via-pink-600 to-rose-600 text-white py-20">
+          <div className="container mx-auto px-4 text-center">
+            <div className="flex items-center justify-center mb-6">
+              <Heart className="h-16 w-16 mr-4" />
+              <h1 className="text-4xl md:text-6xl font-bold">
+                Yoga Studios
+              </h1>
             </div>
-            <div className="relative flex-1">
-              <MapPin className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 md:h-5 md:w-5" />
-              <Input
-                placeholder="Enter location..."
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="pl-10 md:pl-12 h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-purple-500"
-              />
-            </div>
-            <Select value={tierFilter} onValueChange={setTierFilter}>
-              <SelectTrigger className="h-12 md:h-14 mobile-text md:text-lg border-0 focus:ring-2 focus:ring-purple-500">
-                <SelectValue placeholder="Filter by tier" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tiers</SelectItem>
-                <SelectItem value="luxury">Luxury</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-                <SelectItem value="budget">Budget Friendly</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Yoga Studios Grid */}
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-40 md:h-48 bg-gray-200"></div>
-                <CardContent className="p-4 md:p-6">
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : yogaStudios.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {yogaStudios.map((studio) => (
-              <Card key={studio.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                <div className="relative overflow-hidden h-40 md:h-48">
-                  <img 
-                    src={studio.image_urls?.[0] || "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"} 
-                    alt={studio.business_name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <Badge className={`absolute top-3 md:top-4 right-3 md:right-4 bg-gradient-to-r ${getTierColor(studio.tier!)} text-white`}>
-                    {getTierIcon(studio.tier!)}
-                    <span className="ml-1 capitalize">{studio.tier}</span>
-                  </Badge>
-                </div>
-                <CardHeader className="pb-2 md:pb-3 p-4 md:p-6">
-                  <CardTitle className="text-base md:text-lg group-hover:text-purple-600 transition-colors line-clamp-1">
-                    {studio.business_name}
-                  </CardTitle>
-                  <div className="flex items-center gap-2 text-xs md:text-sm text-gray-600">
-                    <MapPin className="h-3 w-3 md:h-4 md:w-4 flex-shrink-0" />
-                    <span className="truncate">{studio.city}, {studio.state}</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0 p-4 md:p-6">
-                  <p className="text-gray-600 mobile-text mb-3 md:mb-4 line-clamp-2">
-                    {studio.description || "Peaceful yoga studio offering various styles of yoga practice and meditation."}
-                  </p>
-                  <div className="flex items-center justify-between mb-3 md:mb-4">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-3 w-3 md:h-4 md:w-4 text-yellow-400 fill-current" />
-                      <span className="text-xs md:text-sm font-medium">4.9</span>
-                      <span className="text-xs md:text-sm text-gray-500">(76)</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs md:text-sm text-gray-600">
-                      <Clock className="h-3 w-3 md:h-4 md:w-4" />
-                      <span>{studio.opening_time} - {studio.closing_time}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-right">
-                      <p className="text-lg md:text-xl font-bold text-purple-600">
-                        {studio.monthly_price ? `₹${studio.monthly_price}/month` : studio.session_price ? `₹${studio.session_price}/session` : "Contact for pricing"}
-                      </p>
-                    </div>
-                    <Link to={`/yoga/${studio.id}`}>
-                      <Button 
-                        size="sm" 
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 touch-target text-xs md:text-sm"
-                      >
-                        View Details
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8 md:py-12">
-            <div className="text-4xl md:text-6xl mb-3 md:mb-4">
-              <Heart className="h-16 w-16 md:h-24 md:w-24 mx-auto text-purple-400" />
-            </div>
-            <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-2">No yoga studios found</h3>
-            <p className="text-gray-600 mb-4 md:mb-6 mobile-text md:text-base">
-              {searchTerm || locationFilter || tierFilter !== 'all'
-                ? "Try adjusting your search criteria or explore other locations."
-                : "Be the first! Register your yoga studio and start building your community."
-              }
+            <p className="text-xl mb-8 text-pink-100 max-w-2xl mx-auto">
+              Find inner peace and strength through yoga practice in serene environments. 
+              Connect with your mind, body, and spirit.
             </p>
-            <div className="flex gap-3 md:gap-4 justify-center flex-col sm:flex-row">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-business">
-                <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 touch-target w-full sm:w-auto">
-                  Register Your Studio
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg">
+                  List Your Studio
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link to="/">
-                <Button variant="outline" className="touch-target w-full sm:w-auto">
-                  Back to Home
+              <Link to="/explore">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-3 text-lg">
+                  Explore All
                 </Button>
               </Link>
             </div>
           </div>
-        )}
+        </section>
+
+        {/* Search Filters */}
+        <section className="container mx-auto px-4 -mt-10 relative z-10">
+          <SmartFilters />
+        </section>
+
+        {/* Features Section */}
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              Why Choose Premium Yoga Studios?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Experience authentic yoga practice with our carefully selected studio partners
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Heart className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Mindful Practice</h3>
+              <p className="text-gray-600">
+                Authentic yoga practices that connect your mind, body, and spirit in peaceful environments
+              </p>
+            </Card>
+
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-pink-500 to-rose-500 rounded-full flex items-center justify-center">
+                  <Flower className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Expert Instructors</h3>
+              <p className="text-gray-600">
+                Certified yoga instructors with years of experience guiding students of all levels
+              </p>
+            </Card>
+
+            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 bg-gradient-to-r from-rose-500 to-purple-500 rounded-full flex items-center justify-center">
+                  <Sun className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Serene Spaces</h3>
+              <p className="text-gray-600">
+                Beautiful, peaceful studios designed to enhance your yoga practice and meditation
+              </p>
+            </Card>
+          </div>
+        </section>
+
+        {/* Category Businesses Component */}
+        <CategoryBusinesses category="yoga" />
+
+        {/* CTA Section */}
+        <section className="bg-gradient-to-r from-purple-600 to-pink-600 py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Ready to Begin Your Yoga Journey?
+            </h2>
+            <p className="text-xl text-purple-100 mb-8 max-w-2xl mx-auto">
+              Find the perfect yoga studio and start your path to inner peace and physical wellness
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/explore">
+                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 text-lg">
+                  Find Studios Near Me
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link to="/register-business">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600 px-8 py-3 text-lg">
+                  List Your Studio
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
-    </div>
+      
+      <AppFooter />
+    </>
   );
 };
 
 export default Yoga;
+

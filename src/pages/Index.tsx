@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -20,23 +21,29 @@ const Index = () => {
   const categories = [
     {
       title: "Premium Gyms",
-      description: "State-of-the-art fitness centers with modern equipment",
-      icon: Dumbbell,
-      color: "from-red-500 to-orange-500",
+      description: "State-of-the-art fitness centers with modern equipment and expert trainers.",
+      icon: "🏋️",
+      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      buttonText: "Explore Gyms",
+      buttonColor: "from-red-500 to-orange-500",
       link: "/gyms"
     },
     {
       title: "Luxury Spas",
-      description: "Rejuvenating spa experiences for complete relaxation",
-      icon: Waves,
-      color: "from-blue-500 to-cyan-500",
+      description: "Indulge in ultimate relaxation with premium spa treatments and wellness services.",
+      icon: "🌊",
+      image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      buttonText: "Explore Spas",
+      buttonColor: "from-blue-500 to-cyan-500",
       link: "/spas"
     },
     {
       title: "Yoga Studios",
-      description: "Find inner peace with expert yoga instructors",
-      icon: Heart,
-      color: "from-purple-500 to-pink-500",
+      description: "Find inner peace and strength through yoga practice in serene environments.",
+      icon: "💜",
+      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      buttonText: "Explore Yoga",
+      buttonColor: "from-purple-500 to-pink-500",
       link: "/yoga"
     }
   ];
@@ -105,41 +112,61 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Categories Section */}
-        <section className="container mx-auto px-4 py-16">
+        {/* Explore Categories Section - Updated Design */}
+        <section className="container mx-auto px-4 py-16 bg-white">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Explore by Category
+              Explore Categories
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Whether you want to build strength, find peace, or pamper yourself, we have the perfect place for you.
+              Choose your wellness journey
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {categories.map((category, index) => (
-              <Link key={index} to={category.link}>
-                <Card className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer h-full">
-                  <CardContent className="p-8 text-center">
-                    <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform`}>
-                      <category.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-3">{category.title}</h3>
-                    <p className="text-gray-600 mb-4">{category.description}</p>
-                    <Button variant="outline" className="group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                      Explore Now
-                      <ArrowRight className="ml-2 h-4 w-4" />
+              <Card key={index} className="group overflow-hidden hover:shadow-2xl transition-all duration-300">
+                {/* Image Section */}
+                <div className="relative h-64 overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  <div className="absolute top-4 left-4">
+                    <span className="text-3xl">{category.icon}</span>
+                  </div>
+                  <div className="absolute bottom-4 left-4">
+                    <h3 className="text-2xl font-bold text-white mb-1">
+                      {category.title}
+                    </h3>
+                  </div>
+                </div>
+                
+                {/* Content Section */}
+                <CardContent className="p-6">
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    {category.description}
+                  </p>
+                  
+                  <Link to={category.link} className="block">
+                    <Button 
+                      className={`w-full bg-gradient-to-r ${category.buttonColor} hover:opacity-90 text-white font-semibold py-3 px-6 transition-all duration-300 group-hover:scale-105`}
+                    >
+                      {category.buttonText}
+                      <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
-                  </CardContent>
-                </Card>
-              </Link>
+                  </Link>
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>
 
         {/* Recent Listings */}
         {recentBusinesses.length > 0 && (
-          <section className="container mx-auto px-4 py-16 bg-white">
+          <section className="container mx-auto px-4 py-16 bg-gray-50">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
                 Recently Added
@@ -214,3 +241,4 @@ const Index = () => {
 };
 
 export default Index;
+
