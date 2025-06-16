@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useBusinessImageUpload } from '@/hooks/useBusinessImageUpload';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 interface BusinessFormData {
   businessName: string;
@@ -28,6 +29,7 @@ export const useBusinessRegistration = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const { uploadMultipleImages } = useBusinessImageUpload();
+  const navigate = useNavigate();
 
   const validateFormData = (formData: BusinessFormData): string[] => {
     console.log('Validating form data:', formData);
@@ -117,11 +119,16 @@ export const useBusinessRegistration = () => {
     try {
       // Check if business profile already exists
       console.log('Checking for existing business profile...');
-      const { data: existingProfile } = await supabase
+      const { data: existingProfile, error: checkError } = await supabase
         .from('business_profiles')
         .select('id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (checkError) {
+        console.error('Error checking existing profile:', checkError);
+        throw checkError;
+      }
 
       if (existingProfile) {
         console.error('Business profile already exists for user');
@@ -197,8 +204,10 @@ export const useBusinessRegistration = () => {
       console.log('Business registration completed successfully');
       toast.success('🎉 Business registered successfully! Your listing is now live and ready to receive bookings.');
       
-      // Add a small delay to show the success message
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Navigate to explore page to see the listing
+      setTimeout(() => {
+        navigate('/explore', { replace: true });
+      }, 2000);
       
       setLoading(false);
       return true;

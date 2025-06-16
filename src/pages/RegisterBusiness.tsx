@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBusinessRegistration } from "@/hooks/useBusinessRegistration";
@@ -134,7 +133,7 @@ const RegisterBusiness = () => {
       const success = await registerBusiness(businessFormData);
       
       if (success) {
-        console.log('Registration successful, navigating to home...');
+        console.log('Registration successful');
         // Reset form
         setFormData({
           businessName: "",
@@ -155,8 +154,7 @@ const RegisterBusiness = () => {
         setBusinessImages([]);
         setSelectedTier("");
         
-        // Navigate to home page
-        navigate('/', { replace: true });
+        // Navigation is now handled in the hook
       } else {
         console.log('Registration failed');
         toast.error("Registration failed. Please check all fields and try again.");
