@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { performanceMonitor } from '@/utils/performanceMonitor';
 
 export interface Business {
   id: string;
@@ -36,18 +37,16 @@ export const useBusinessData = (
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-  useEffect(() => {
-    fetchBusinesses();
-  }, [category, searchTerm, location, sortBy]);
-
   const fetchBusinesses = async () => {
+    const startTime = Date.now();
     console.log('🔍 Fetching businesses... Category:', category || 'all');
     console.log('📊 Search params:', { searchTerm, location, sortBy });
+    
     setLoading(true);
     setError('');
     
     try {
-      // For trainer category, we need to fetch from trainer_profiles instead
+      // For trainer category, fetch from trainer_profiles
       if (category === 'trainer') {
         const { data: trainers, error: trainerError } = await supabase
           .from('trainer_profiles')
@@ -55,9 +54,11 @@ export const useBusinessData = (
           .eq('status', 'approved')
           .order('created_at', { ascending: false });
 
+        performanceMonitor.trackApiCall('trainer_profiles', startTime);
+
         if (trainerError) {
           console.error('❌ Error fetching trainers:', trainerError);
-          setError(trainerError.message);
+          setError('Failed to fetch trainers');
           toast.error('Failed to fetch trainers');
           return;
         }
@@ -91,22 +92,11 @@ export const useBusinessData = (
         return;
       }
 
-      // For regular businesses, use the existing logic
+      // For regular businesses, use existing logic with better error handling
       let query = supabase
         .from('business_profiles')
-        .select('*');
-
-      // Debug: Check all businesses in database
-      const { data: allBusinesses, error: allError } = await supabase
-        .from('business_profiles')
-        .select('business_type, status, business_name')
-        .order('created_at', { ascending: false });
-      
-      console.log('📋 All businesses in database:', allBusinesses);
-      console.log('✅ Approved businesses:', allBusinesses?.filter(b => b.status === 'approved'));
-
-      // Apply the approved filter
-      query = query.eq('status', 'approved');
+        .select('*')
+        .eq('status', 'approved');
 
       // Apply category filter (exclude trainer as it's handled above)
       if (category && category !== 'all' && category !== 'trainer') {
@@ -115,18 +105,18 @@ export const useBusinessData = (
       }
 
       // Apply search term filter
-      if (searchTerm) {
+      if (searchTerm?.trim()) {
         console.log('🔤 Applying search term:', searchTerm);
         query = query.or(`business_name.ilike.%${searchTerm}%,city.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
       }
 
       // Apply location filter
-      if (location) {
+      if (location?.trim()) {
         console.log('📍 Applying location filter:', location);
         query = query.or(`city.ilike.%${location}%,state.ilike.%${location}%`);
       }
 
-      // Apply sorting
+      // Apply sorting with fallback
       switch (sortBy) {
         case 'name':
           query = query.order('business_name', { ascending: true });
@@ -141,32 +131,31 @@ export const useBusinessData = (
       }
 
       const { data, error: fetchError } = await query;
+      
+      performanceMonitor.trackApiCall('business_profiles', startTime);
 
       if (fetchError) {
         console.error('❌ Error fetching businesses:', fetchError);
-        setError(fetchError.message);
+        setError('Failed to fetch businesses');
         toast.error('Failed to fetch businesses');
         return;
       }
 
       console.log('✅ Successfully fetched businesses:', data?.length || 0);
-      console.log('📊 Fetched business data:', data);
       
-      // Ensure we have valid business objects
+      // Ensure we have valid business objects with proper defaults
       const validBusinesses = (data || []).map(business => ({
         ...business,
         amenities: Array.isArray(business.amenities) ? business.amenities : [],
         image_urls: Array.isArray(business.image_urls) ? business.image_urls : [],
         monthly_price: business.monthly_price || undefined,
-        session_price: business.session_price || undefined
+        session_price: business.session_price || undefined,
+        description: business.description || 'No description available',
+        business_name: business.business_name || 'Unnamed Business'
       }));
 
       setBusinesses(validBusinesses);
       console.log('🎯 Final filtered results:', validBusinesses.length, 'businesses');
-      
-      if (validBusinesses.length === 0) {
-        console.log('⚠️ No businesses found with current filters');
-      }
       
     } catch (err) {
       console.error('💥 Unexpected error:', err);
@@ -177,5 +166,14 @@ export const useBusinessData = (
     }
   };
 
-  return { businesses, loading, error, refetch: fetchBusinesses };
+  useEffect(() => {
+    fetchBusinesses();
+  }, [category, searchTerm, location, sortBy]);
+
+  return { 
+    businesses, 
+    loading, 
+    error, 
+    refetch: fetchBusinesses 
+  };
 };

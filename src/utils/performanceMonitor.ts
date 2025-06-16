@@ -1,93 +1,76 @@
-
 interface PerformanceMetric {
   name: string;
   value: number;
   timestamp: number;
-  type: 'timing' | 'counter' | 'gauge';
-  tags?: Record<string, string>;
-}
-
-// Extend PerformanceEntry interfaces for proper typing
-interface PerformanceMeasure extends PerformanceEntry {
-  value?: number;
-}
-
-interface PerformanceNavigationTiming extends PerformanceEntry {
-  value?: number;
-}
-
-interface PerformancePaintTiming extends PerformanceEntry {
-  value?: number;
+  category: string;
 }
 
 class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
-  private observers: PerformanceObserver[] = [];
   
-  constructor() {
-    this.initializeObservers();
-  }
-  
-  private initializeObservers() {
-    // Observe Core Web Vitals
-    if ('PerformanceObserver' in window) {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const entryWithValue = entry as PerformanceMeasure;
-          this.recordMetric(
-            entry.name, 
-            entryWithValue.value || entry.duration || entry.startTime, 
-            'gauge', 
-            { entryType: entry.entryType }
-          );
-        }
-      });
-      
-      observer.observe({ entryTypes: ['measure', 'navigation', 'paint'] });
-      this.observers.push(observer);
-    }
-  }
-  
-  recordMetric(name: string, value: number, type: PerformanceMetric['type'] = 'gauge', tags?: Record<string, string>) {
-    const metric: PerformanceMetric = {
+  addMetric(name: string, value: number, category: string = 'general') {
+    this.metrics.push({
       name,
       value,
       timestamp: Date.now(),
-      type,
-      tags,
-    };
+      category
+    });
     
-    this.metrics.push(metric);
-    
-    // Log in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Performance metric:', metric);
+    // Keep only last 100 metrics to prevent memory issues
+    if (this.metrics.length > 100) {
+      this.metrics = this.metrics.slice(-100);
     }
-  }
-  
-  startTimer(name: string) {
-    const startTime = performance.now();
-    return () => {
-      const endTime = performance.now();
-      this.recordMetric(name, endTime - startTime, 'timing');
-    };
   }
   
   getMetrics() {
     return this.metrics;
   }
   
-  clearMetrics() {
-    this.metrics = [];
-  }
-  
-  getAverageMetric(name: string) {
+  getAverageMetric(name: string): number {
     const relevantMetrics = this.metrics.filter(m => m.name === name);
     if (relevantMetrics.length === 0) return 0;
     
     const sum = relevantMetrics.reduce((acc, metric) => acc + metric.value, 0);
     return sum / relevantMetrics.length;
   }
+  
+  clearMetrics() {
+    this.metrics = [];
+  }
+  
+  // Track API response times
+  trackApiCall(endpoint: string, startTime: number) {
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    this.addMetric('api_response_time', duration, 'api');
+    console.log(`API call to ${endpoint} took ${duration}ms`);
+  }
+  
+  // Track Core Web Vitals
+  trackWebVitals() {
+    // Largest Contentful Paint
+    if ('web-vital' in window) {
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'largest-contentful-paint') {
+            this.addMetric('lcp', entry.startTime, 'web-vitals');
+          }
+        }
+      }).observe({ entryTypes: ['largest-contentful-paint'] });
+      
+      // First Input Delay
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          this.addMetric('fid', entry.processingStart - entry.startTime, 'web-vitals');
+        }
+      }).observe({ entryTypes: ['first-input'] });
+    }
+  }
 }
 
 export const performanceMonitor = new PerformanceMonitor();
+
+// Initialize web vitals tracking
+if (typeof window !== 'undefined') {
+  performanceMonitor.trackWebVitals();
+}
