@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,9 @@ import { useAuth } from '@/hooks/useAuth';
 const Index = () => {
   const { businesses, loading } = useBusinessData();
   const { signOut } = useAuth();
-  const recentBusinesses = businesses?.slice(0, 6) || [];
+  
+  // Get trending destinations (recently added businesses)
+  const trendingDestinations = businesses?.slice(0, 6) || [];
 
   const categories = [
     {
@@ -46,13 +47,6 @@ const Index = () => {
       buttonColor: "from-purple-500 to-pink-500",
       link: "/yoga"
     }
-  ];
-
-  const stats = [
-    { number: "500+", label: "Verified Businesses", icon: Shield },
-    { number: "10K+", label: "Happy Customers", icon: Users },
-    { number: "50+", label: "Cities Covered", icon: MapPin },
-    { number: "4.8", label: "Average Rating", icon: Star }
   ];
 
   return (
@@ -94,25 +88,10 @@ const Index = () => {
 
         {/* Search Filters */}
         <section className="container mx-auto px-4 -mt-10 relative z-10">
-          <SmartFilters showMoodFilter={true} />
+          <SmartFilters showMoodFilter={true} activeFilter="all" activeSort="popular" onFilterChange={() => {}} />
         </section>
 
-        {/* Stats Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="pt-6">
-                  <stat.icon className="h-8 w-8 mx-auto mb-4 text-emerald-600" />
-                  <div className="text-3xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                  <div className="text-gray-600">{stat.label}</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Explore Categories Section - Updated Design */}
+        {/* Explore Categories Section */}
         <section className="container mx-auto px-4 py-16 bg-white">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
@@ -164,20 +143,23 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Recent Listings */}
-        {recentBusinesses.length > 0 && (
+        {/* Trending Destinations */}
+        {!loading && trendingDestinations.length > 0 && (
           <section className="container mx-auto px-4 py-16 bg-gray-50">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                Recently Added
-              </h2>
+              <div className="flex items-center justify-center mb-4">
+                <TrendingUp className="h-8 w-8 text-emerald-600 mr-3" />
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
+                  Trending Destinations
+                </h2>
+              </div>
               <p className="text-xl text-gray-600">
-                Check out the newest wellness destinations in your area
+                Discover the most popular wellness destinations right now
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {recentBusinesses.map((business) => (
+              {trendingDestinations.map((business) => (
                 <Card key={business.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
                   <div className="relative h-48 overflow-hidden">
                     <img 
@@ -185,8 +167,9 @@ const Index = () => {
                       alt={business.business_name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <Badge className="absolute top-3 right-3 bg-emerald-500 text-white">
-                      New
+                    <Badge className="absolute top-3 right-3 bg-red-500 text-white">
+                      <TrendingUp className="h-3 w-3 mr-1" />
+                      Trending
                     </Badge>
                   </div>
                   
@@ -226,7 +209,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Link to="/explore">
                 <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600">
-                  View All Listings
+                  View All Destinations
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
@@ -241,4 +224,3 @@ const Index = () => {
 };
 
 export default Index;
-
