@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -17,6 +16,8 @@ import BusinessDashboard from './pages/BusinessDashboard';
 import RegisterBusiness from './pages/RegisterBusiness';
 import RegisterTrainer from './pages/RegisterTrainer';
 import BusinessBookings from './pages/BusinessBookings';
+import UserBookings from './pages/UserBookings';
+import ManageBookings from './pages/ManageBookings';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { HelmetProvider } from 'react-helmet-async';
 import PlatformAuditPage from '@/pages/PlatformAuditPage';
@@ -47,6 +48,8 @@ function App() {
                 <Route path="/register-business" element={<RegisterBusiness />} />
                 <Route path="/register-trainer" element={<RegisterTrainer />} />
                 <Route path="/business-bookings" element={<BusinessBookings />} />
+                <Route path="/user-bookings" element={<UserBookings />} />
+                <Route path="/manage-bookings" element={<ManageBookings />} />
                 <Route path="/platform-audit" element={<PlatformAuditPage />} />
               </Routes>
               
