@@ -19,7 +19,8 @@ import {
   GitBranch,
   Server,
   Bug,
-  Clock
+  Clock,
+  Activity
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SystemHealthDashboard from '@/components/SystemHealthDashboard';
