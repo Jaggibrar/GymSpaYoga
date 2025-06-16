@@ -14,7 +14,7 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Calendar, MapPin, Star, Clock, Phone, User, CreditCard, TrendingUp, BarChart3, Activity, Users, DollarSign, Target, ArrowLeft, Dumbbell, Download, Filter, CheckCircle, XCircle, Eye } from 'lucide-react';
+import { Calendar, MapPin, Star, Clock, Phone, User, CreditCard, TrendingUp, BarChart3, Activity, Users, DollarSign, Target, Dumbbell, Download, Filter, CheckCircle, XCircle, Eye } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { useRealTimeBookings } from "@/hooks/useRealTimeBookings";
 import { useAuth } from "@/hooks/useAuth";
@@ -106,32 +106,19 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Elegant Header */}
-      <header className="bg-white shadow-lg border-b border-gray-100">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3 text-gray-600 hover:text-emerald-600 transition-colors">
-              <ArrowLeft className="h-5 w-5" />
-              <span className="font-medium">Back to Home</span>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                <User className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                  My Dashboard
-                </h1>
-                <p className="text-sm text-gray-500">Welcome back, {user.email}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="container mx-auto px-6 py-8">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-2">Dashboard Overview</h2>
+          <div className="flex items-center space-x-4 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
+              <User className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                My Dashboard
+              </h1>
+              <p className="text-gray-600">Welcome back, {user.email}</p>
+            </div>
+          </div>
           <p className="text-gray-600">Track your bookings and wellness journey</p>
         </div>
 
