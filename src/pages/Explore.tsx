@@ -18,22 +18,6 @@ const Explore = () => {
     <>
       <AppHeader onLogout={signOut} />
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50">
-        {/* Header */}
-        <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-center">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Search className="h-6 w-6 text-white" />
-                </div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                  Explore Wellness
-                </h1>
-              </div>
-            </div>
-          </div>
-        </header>
-
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8 text-center">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">
@@ -120,4 +104,3 @@ const Explore = () => {
 };
 
 export default Explore;
-
