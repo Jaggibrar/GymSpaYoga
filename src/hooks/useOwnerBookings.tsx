@@ -72,43 +72,58 @@ export const useOwnerBookings = (filter: "pending" | "confirmed" | "cancelled" |
 
         const businessIds = businessProfiles.map(bp => bp.id);
 
-        // Build query
-        let query = supabase
+        // Fetch bookings with separate queries to avoid join issues
+        let bookingsQuery = supabase
           .from('bookings')
-          .select(`
-            *,
-            user_profile:user_profiles!bookings_user_id_fkey(full_name, phone),
-            business_profile:business_profiles!bookings_business_id_fkey(business_name)
-          `)
+          .select('*')
           .in('business_id', businessIds)
           .order('created_at', { ascending: false });
 
         // Apply status filter
         if (filter !== "all") {
-          query = query.eq('status', filter);
+          bookingsQuery = bookingsQuery.eq('status', filter);
         }
 
-        const { data, error } = await query;
+        const { data: bookingsData, error: bookingsError } = await bookingsQuery;
 
-        if (error) {
-          console.error('Error fetching owner bookings:', error);
-          setError(error.message);
+        if (bookingsError) {
+          console.error('Error fetching bookings:', bookingsError);
+          setError(bookingsError.message);
           setLoading(false);
           return;
         }
 
-        // Normalize the data
-        const normalizedBookings = (data || []).map((booking: any) => ({
-          ...booking,
-          user_profile: booking.user_profile && !booking.user_profile.error 
-            ? booking.user_profile 
-            : null,
-          business_profile: booking.business_profile && !booking.business_profile.error 
-            ? booking.business_profile 
-            : null,
-        }));
+        // Fetch user profiles separately
+        const userIds = [...new Set(bookingsData?.map(b => b.user_id).filter(Boolean) || [])];
+        const { data: userProfiles } = await supabase
+          .from('user_profiles')
+          .select('user_id, full_name, phone')
+          .in('user_id', userIds);
 
-        setBookings(normalizedBookings);
+        // Fetch business profiles separately  
+        const { data: businessProfilesData } = await supabase
+          .from('business_profiles')
+          .select('id, business_name')
+          .in('id', businessIds);
+
+        // Combine the data
+        const enrichedBookings = (bookingsData || []).map((booking: any) => {
+          const userProfile = userProfiles?.find(up => up.user_id === booking.user_id);
+          const businessProfile = businessProfilesData?.find(bp => bp.id === booking.business_id);
+          
+          return {
+            ...booking,
+            user_profile: userProfile ? {
+              full_name: userProfile.full_name,
+              phone: userProfile.phone
+            } : null,
+            business_profile: businessProfile ? {
+              business_name: businessProfile.business_name
+            } : null
+          };
+        });
+
+        setBookings(enrichedBookings);
       } catch (err) {
         console.error('Error in fetchOwnerBookings:', err);
         setError('Failed to fetch bookings');

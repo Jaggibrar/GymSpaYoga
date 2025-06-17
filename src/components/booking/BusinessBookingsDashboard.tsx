@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, User, Phone, Calendar, Clock, CreditCard, BadgeCheck, XCircle, CheckCircle } from "lucide-react";
+import { Loader2, User, Phone, Calendar, Clock, CreditCard, CheckCircle, XCircle } from "lucide-react";
 import { useOwnerBookings } from "@/hooks/useOwnerBookings";
 import { BookingActionModal } from "./BookingActionModal";
 import { toast } from "sonner";
@@ -17,31 +17,59 @@ const statusLabels = {
 
 export default function BusinessBookingsDashboard() {
   const [filter, setFilter] = useState<"pending" | "confirmed" | "cancelled" | "all">("pending");
-  const { bookings, loading } = useOwnerBookings(filter);
+  const { bookings, loading, error } = useOwnerBookings(filter);
   const [modalInfo, setModalInfo] = useState<{id: number, action: "accept" | "cancel"}|null>(null);
 
   // Accept booking
   const handleAccept = async (bookingId: number) => {
-    const { error } = await supabase.rpc("update_booking_status", {
-      booking_id_param: bookingId,
-      new_status_param: "confirmed",
-    });
-    if (!error) toast.success("Booking accepted.");
-    else toast.error("Failed to accept booking: " + error.message);
-    // Could invoke edge function to send notification/email
+    try {
+      const { error } = await supabase.rpc("update_booking_status", {
+        booking_id_param: bookingId,
+        new_status_param: "confirmed",
+      });
+      if (!error) {
+        toast.success("Booking accepted.");
+        // Trigger a refresh by changing filter temporarily
+        setFilter(prev => prev);
+      } else {
+        toast.error("Failed to accept booking: " + error.message);
+      }
+    } catch (err) {
+      console.error('Error accepting booking:', err);
+      toast.error("Failed to accept booking");
+    }
   };
 
   // Cancel booking
   const handleCancel = async (bookingId: number, reason = "") => {
-    const { error } = await supabase.rpc("update_booking_status", {
-      booking_id_param: bookingId,
-      new_status_param: "cancelled",
-      notes_param: reason,
-    });
-    if (!error) toast.success("Booking cancelled.");
-    else toast.error("Failed to cancel booking: " + error.message);
-    // Could invoke edge function to send notification/email
+    try {
+      const { error } = await supabase.rpc("update_booking_status", {
+        booking_id_param: bookingId,
+        new_status_param: "cancelled",
+        notes_param: reason,
+      });
+      if (!error) {
+        toast.success("Booking cancelled.");
+        // Trigger a refresh by changing filter temporarily
+        setFilter(prev => prev);
+      } else {
+        toast.error("Failed to cancel booking: " + error.message);
+      }
+    } catch (err) {
+      console.error('Error cancelling booking:', err);
+      toast.error("Failed to cancel booking");
+    }
   };
+
+  if (error) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-red-500">
+          Error loading bookings: {error}
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div>
@@ -74,8 +102,8 @@ export default function BusinessBookingsDashboard() {
               <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <CardTitle>
                   {b.business_profile?.business_name || "Business"} 
-                  <Badge className={`ml-3 ${statusLabels[b.status]?.color || "bg-gray-100 text-gray-700"}`}>
-                    {statusLabels[b.status]?.label || b.status}
+                  <Badge className={`ml-3 ${statusLabels[b.status as keyof typeof statusLabels]?.color || "bg-gray-100 text-gray-700"}`}>
+                    {statusLabels[b.status as keyof typeof statusLabels]?.label || b.status}
                   </Badge>
                 </CardTitle>
                 <div className="flex flex-col md:flex-row gap-2 items-center mt-2 md:mt-0">
@@ -106,26 +134,26 @@ export default function BusinessBookingsDashboard() {
                     <div className="text-sm font-medium mb-1">Customer</div>
                     <div className="flex items-center gap-2 mb-1">
                       <User className="h-4 w-4" />
-                      {b.user_profile?.full_name || "-"}
+                      {b.user_profile?.full_name || "Unknown Customer"}
                     </div>
                     <div className="flex items-center gap-2 mb-1">
                       <Phone className="h-4 w-4" />
-                      {b.user_profile?.phone || "-"}
+                      {b.user_profile?.phone || "No phone provided"}
                     </div>
                   </div>
                   {/* Booking Details */}
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <Calendar className="h-4 w-4" />
-                      {b.booking_date}
+                      {b.booking_date || "Date not set"}
                     </div>
                     <div className="flex items-center gap-2 mb-1">
                       <Clock className="h-4 w-4"/>
-                      {b.booking_time} ({b.duration_minutes || 60}min)
+                      {b.booking_time || "Time not set"} ({b.duration_minutes || 60}min)
                     </div>
                     <div className="flex items-center gap-2 mb-1">
                       <CreditCard className="h-4 w-4"/>
-                      {b.total_amount ? "₹"+b.total_amount : "—"}
+                      {b.total_amount ? "₹"+b.total_amount : "Amount pending"}
                     </div>
                   </div>
                   {/* Status/Notes */}
