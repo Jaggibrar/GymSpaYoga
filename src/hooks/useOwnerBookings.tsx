@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 
-interface OwnerBooking {
+interface useOwnerBooking {
   id: number;
   user_id: string | null;
   business_type: string | null;
@@ -34,7 +34,7 @@ interface OwnerBooking {
 }
 
 export const useOwnerBookings = (filter: "pending" | "confirmed" | "cancelled" | "all" = "all") => {
-  const [bookings, setBookings] = useState<OwnerBooking[]>([]);
+  const [bookings, setBookings] = useState<useOwnerBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
