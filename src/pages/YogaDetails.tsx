@@ -10,7 +10,6 @@ import BookingModal from "@/components/BookingModal";
 
 const YogaDetails = () => {
   const { id } = useParams();
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Mock data - in real app this would come from API
   const yogaData = {
@@ -136,12 +135,17 @@ const YogaDetails = () => {
                 <Separator className="my-4" />
 
                 <div className="space-y-4">
-                  <Button 
-                    onClick={() => setIsBookingOpen(true)}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                  >
-                    Book Class
-                  </Button>
+                  <BookingModal
+                    businessName={studio.name}
+                    businessType="yoga"
+                    businessId={studio.id.toString()}
+                    price={studio.price}
+                    trigger={
+                      <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                        Book Class
+                      </Button>
+                    }
+                  />
                   <Button variant="outline" className="w-full border-green-500 text-green-600 hover:bg-green-50 text-lg py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                     Call Now
                   </Button>
@@ -227,14 +231,6 @@ const YogaDetails = () => {
           </div>
         </div>
       </div>
-
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        businessName={studio.name}
-        businessType="Yoga Class"
-        price={studio.price}
-      />
     </>
   );
 };

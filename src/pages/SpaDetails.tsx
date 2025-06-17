@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,7 +10,6 @@ import BookingModal from "@/components/BookingModal";
 
 const SpaDetails = () => {
   const { id } = useParams();
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   // Mock data - in real app this would come from API
   const spaData = {
@@ -129,12 +129,17 @@ const SpaDetails = () => {
               <Separator className="my-4" />
 
               <div className="space-y-4">
-                <Button 
-                  onClick={() => setIsBookingOpen(true)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-                >
-                  Book Treatment
-                </Button>
+                <BookingModal
+                  businessName={spa.name}
+                  businessType="spa"
+                  businessId={spa.id.toString()}
+                  price={spa.price}
+                  trigger={
+                    <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                      Book Treatment
+                    </Button>
+                  }
+                />
                 <Button variant="outline" className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 text-lg py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   Call Now
                 </Button>
@@ -198,14 +203,6 @@ const SpaDetails = () => {
           </div>
         </div>
       </div>
-
-      <BookingModal
-        isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
-        businessName={spa.name}
-        businessType="Spa Treatment"
-        price={spa.price}
-      />
     </div>
   );
 };

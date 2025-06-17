@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -203,6 +204,8 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
                 <BookingModal 
                   businessName={listing.name}
                   businessType={listing.type.toLowerCase()}
+                  businessId={listing.id.toString()}
+                  price={listing.price}
                   trigger={
                     <Button 
                       variant="outline" 
