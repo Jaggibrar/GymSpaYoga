@@ -5,7 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, MapPin, Star, Dumbbell, Sparkles, Heart } from 'lucide-react';
 import BusinessListings from '@/components/business/BusinessListings';
 import { SmartFilters } from '@/components/SmartFilters';
-import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -16,7 +15,6 @@ const Explore = () => {
 
   return (
     <>
-      <AppHeader onLogout={signOut} />
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8 text-center">
@@ -30,7 +28,8 @@ const Explore = () => {
 
           {/* Smart Filters */}
           <SmartFilters
-            onFilterChange={setActiveFilter}
+            onCategoryChange={setActiveFilter}
+            onSortChange={setActiveSort}
             activeFilter={activeFilter}
             activeSort={activeSort}
           />
