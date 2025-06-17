@@ -164,6 +164,32 @@ const BusinessDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Contact Owner Header */}
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4">
+        <div className="container mx-auto flex items-center justify-center space-x-6">
+          <div className="flex items-center space-x-2">
+            <Phone className="h-4 w-4" />
+            <span className="font-semibold">Talk Owner: 7596958097</span>
+          </div>
+          <div className="flex space-x-3">
+            <a 
+              href="tel:7596958097" 
+              className="bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full text-sm font-medium transition-colors"
+            >
+              Call Now
+            </a>
+            <a 
+              href="https://wa.me/917596958097" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="bg-green-500 hover:bg-green-600 px-3 py-1 rounded-full text-sm font-medium transition-colors"
+            >
+              WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Enhanced Header */}
       <header className="bg-white/95 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-6">
