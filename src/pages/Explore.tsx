@@ -1,8 +1,8 @@
 
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, MapPin, Star, Dumbbell, Sparkles, Heart } from 'lucide-react';
+import { Star, Dumbbell, Sparkles, Heart } from 'lucide-react';
 import BusinessListings from '@/components/business/BusinessListings';
 import { SmartFilters } from '@/components/SmartFilters';
 import AppFooter from '@/components/AppFooter';
@@ -18,10 +18,10 @@ const Explore = () => {
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8 text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">
-              Discover Your Perfect Wellness Destination
+            <h2 className="text-4xl font-black text-gray-900 mb-4">
+              Discover Your Perfect <span className="text-emerald-600">Wellness Destination</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium">
               Find the best gyms, spas, and yoga studios near you. Book instantly and start your wellness journey today.
             </p>
           </div>
@@ -71,30 +71,6 @@ const Explore = () => {
               <BusinessListings />
             </TabsContent>
           </Tabs>
-
-          {/* Stats Section */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center p-6 bg-white/80 backdrop-blur-sm">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-emerald-600 mb-2">500+</div>
-                <p className="text-gray-600">Verified Businesses</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center p-6 bg-white/80 backdrop-blur-sm">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-blue-600 mb-2">10K+</div>
-                <p className="text-gray-600">Happy Customers</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="text-center p-6 bg-white/80 backdrop-blur-sm">
-              <CardContent className="pt-6">
-                <div className="text-3xl font-bold text-purple-600 mb-2">50+</div>
-                <p className="text-gray-600">Cities Covered</p>
-              </CardContent>
-            </Card>
-          </div>
         </div>
       </div>
       <AppFooter />
