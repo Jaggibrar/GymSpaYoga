@@ -10,7 +10,7 @@ import { performanceMonitor } from '@/utils/performanceMonitor';
 const SystemHealthDashboard = () => {
   const [healthData, setHealthData] = useState({
     errors: [] as any[],
-    metrics: [] as any[],
+    metricsData: {} as Record<string, number[]>,
     overallHealth: 10,
     lastUpdated: new Date()
   });
@@ -18,7 +18,7 @@ const SystemHealthDashboard = () => {
   useEffect(() => {
     const updateHealthData = () => {
       const errors = errorTracker.getErrors();
-      const metrics = performanceMonitor.getMetrics();
+      const metricsData = performanceMonitor.getMetrics();
       
       // Calculate health score
       let healthScore = 10;
@@ -45,7 +45,7 @@ const SystemHealthDashboard = () => {
       
       setHealthData({
         errors: errors.slice(-10), // Last 10 errors
-        metrics: metrics.slice(-20), // Last 20 metrics
+        metricsData: metricsData,
         overallHealth: healthScore,
         lastUpdated: new Date()
       });

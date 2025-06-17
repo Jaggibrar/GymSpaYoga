@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Calendar, Search, Filter, Crown, Sparkles, Heart } from 'lucide-react';
+import { MapPin, Star, Calendar, Search, Filter, Crown, Sparkles, Heart, Eye } from 'lucide-react';
 import { useBusinessData } from '@/hooks/useBusinessData';
 import BookingModal from '@/components/BookingModal';
+import BusinessDetailsModal from '@/components/business/BusinessDetailsModal';
 import { getTierFromPricing } from '@/utils/businessUtils';
 
 interface CategoryBusinessesProps {
@@ -41,7 +42,7 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Page Header - No Logo */}
+      {/* Page Header */}
       <div className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-4">{title}</h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">{description}</p>
@@ -162,7 +163,7 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
                     {business.description || "Premium wellness destination offering excellent services"}
                   </p>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
                       {business.monthly_price && (
                         <p className="text-lg font-bold text-emerald-600">₹{business.monthly_price}/month</p>
@@ -174,16 +175,28 @@ const CategoryBusinesses = ({ category, title, description }: CategoryBusinesses
                         <p className="text-lg font-bold text-emerald-600">Contact for pricing</p>
                       )}
                     </div>
-                    
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 mb-4">
+                    <BusinessDetailsModal 
+                      business={business}
+                      trigger={
+                        <Button variant="outline" size="sm" className="flex-1">
+                          <Eye className="h-4 w-4 mr-1" />
+                          Details
+                        </Button>
+                      }
+                    />
                     <BookingModal
                       businessName={business.business_name}
                       businessType={business.business_type}
                       businessId={business.id}
                       price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
                       trigger={
-                        <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
                           <Calendar className="h-4 w-4 mr-2" />
-                          Book Now
+                          Book
                         </Button>
                       }
                     />

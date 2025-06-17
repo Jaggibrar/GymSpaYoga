@@ -6,8 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Clock, Phone, Mail, Crown, Diamond, IndianRupee, Search, Filter } from 'lucide-react';
+import { MapPin, Star, Clock, Phone, Mail, Crown, Diamond, IndianRupee, Search, Filter, Eye } from 'lucide-react';
 import BookingModal from '@/components/BookingModal';
+import BusinessDetailsModal from '@/components/business/BusinessDetailsModal';
 import { getTierFromPricing, getTierIcon, getTierColor } from '@/utils/businessUtils';
 
 const BusinessListings = () => {
@@ -63,7 +64,7 @@ const BusinessListings = () => {
 
   return (
     <div className="space-y-6">
-      {/* Filters */}
+      {/* Enhanced Filters */}
       <Card className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="relative">
@@ -120,7 +121,7 @@ const BusinessListings = () => {
             <Search className="h-16 w-16 mx-auto" />
           </div>
           <h3 className="text-xl font-semibold text-gray-600 mb-2">No businesses found</h3>
-          <p className="text-gray-500">Try adjusting your search filters</p>
+          <p className="text-gray-500">Try adjusting your search filters or explore different categories</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -177,7 +178,7 @@ const BusinessListings = () => {
                     <span>{business.opening_time} - {business.closing_time}</span>
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
                       {business.monthly_price && (
                         <p className="text-lg font-bold text-blue-600">₹{business.monthly_price}/month</p>
@@ -189,21 +190,33 @@ const BusinessListings = () => {
                         <p className="text-lg font-bold text-blue-600">Contact for pricing</p>
                       )}
                     </div>
-                    
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 mb-4">
+                    <BusinessDetailsModal 
+                      business={business}
+                      trigger={
+                        <Button variant="outline" size="sm" className="flex-1">
+                          <Eye className="h-4 w-4 mr-1" />
+                          View Details
+                        </Button>
+                      }
+                    />
                     <BookingModal
                       businessName={business.business_name}
                       businessType={business.business_type}
                       businessId={business.id}
                       price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
                       trigger={
-                        <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
                           Book Now
                         </Button>
                       }
                     />
                   </div>
                   
-                  <div className="flex items-center gap-4 mt-4 pt-4 border-t text-sm text-gray-500">
+                  <div className="flex items-center gap-4 pt-4 border-t text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Phone className="h-3 w-3" />
                       <span>{business.phone}</span>
