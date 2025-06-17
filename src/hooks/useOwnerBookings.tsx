@@ -40,7 +40,7 @@ export const useOwnerBookings = (filter: "pending" | "confirmed" | "cancelled" |
   const { user } = useAuth();
 
   useEffect(() => {
-    const fetchOwnerBookings = async () => {
+    const useOwnerBookings = async () => {
       if (!user) {
         setBookings([]);
         setLoading(false);
