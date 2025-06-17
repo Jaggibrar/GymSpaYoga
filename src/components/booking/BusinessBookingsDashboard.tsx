@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -89,7 +88,7 @@ export default function BusinessBookingsDashboard() {
           <Building2 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-gray-600 mb-2">No Business Profile Found</h3>
           <p className="text-gray-500 mb-6">You need to create a business listing first to receive bookings.</p>
-          <Link to="/create-listing">
+          <Link to="/register-business">
             <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600">
               Create Business Listing
             </Button>
