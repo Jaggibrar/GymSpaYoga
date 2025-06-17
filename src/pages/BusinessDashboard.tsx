@@ -11,7 +11,6 @@ import {
   Users, 
   DollarSign, 
   TrendingUp, 
-  Bell,
   Settings,
   BarChart3,
   Building,
@@ -24,11 +23,13 @@ import {
   Award,
   MessageCircle,
   MapPin,
-  Phone
+  Phone,
+  Plus,
+  Edit
 } from "lucide-react";
 import { NotificationCenter } from "@/components/NotificationCenter";
-import { BookingsList } from "@/components/booking/BookingsList";
 import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
+import BusinessListingsManager from "@/components/business/BusinessListingsManager";
 
 const BusinessDashboard = () => {
   const { user, userProfile } = useAuth();
@@ -139,10 +140,10 @@ const BusinessDashboard = () => {
       color: "from-blue-500 to-blue-600"
     },
     {
-      title: "Update Profile",
-      description: "Edit your business information",
+      title: "Manage Listings",
+      description: "Edit your business information and listings",
       icon: Building,
-      link: "/profile",
+      link: "#listings",
       color: "from-purple-500 to-purple-600"
     },
     {
@@ -175,18 +176,18 @@ const BusinessDashboard = () => {
                 <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                   Business Dashboard
                 </h1>
-                <p className="text-gray-600">Welcome back, {userProfile?.full_name || 'Business Owner'}</p>
+                <p className="text-gray-600 font-medium">Welcome back, {userProfile?.full_name || 'Business Owner'}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
               <Link to="/business-bookings">
-                <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 flex items-center gap-2 shadow-lg">
+                <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 flex items-center gap-2 shadow-lg font-bold">
                   <Calendar className="h-4 w-4" />
                   Manage Bookings
                 </Button>
               </Link>
               <Link to="/profile">
-                <Button variant="outline" className="border-indigo-200 hover:bg-indigo-50">
+                <Button variant="outline" className="border-indigo-200 hover:bg-indigo-50 font-bold">
                   <Settings className="h-4 w-4" />
                 </Button>
               </Link>
@@ -210,9 +211,9 @@ const BusinessDashboard = () => {
                   )}
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-                  <p className={`text-sm ${stat.trend === "up" ? "text-green-600" : stat.trend === "neutral" ? "text-orange-600" : "text-red-600"}`}>
+                  <p className="text-sm font-bold text-gray-600">{stat.title}</p>
+                  <p className="text-3xl font-black text-gray-900">{stat.value}</p>
+                  <p className={`text-sm font-medium ${stat.trend === "up" ? "text-green-600" : stat.trend === "neutral" ? "text-orange-600" : "text-red-600"}`}>
                     {stat.change}
                   </p>
                 </div>
@@ -223,17 +224,20 @@ const BusinessDashboard = () => {
 
         {/* Main Content */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">
+          <TabsList className="grid w-full grid-cols-5 bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-bold">
               Overview
             </TabsTrigger>
-            <TabsTrigger value="bookings" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">
-              Booking Requests
+            <TabsTrigger value="bookings" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-bold">
+              Bookings
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">
+            <TabsTrigger value="listings" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-bold">
+              Listings
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-bold">
               Notifications
             </TabsTrigger>
-            <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white">
+            <TabsTrigger value="analytics" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500 data-[state=active]:to-purple-500 data-[state=active]:text-white font-bold">
               Analytics
             </TabsTrigger>
           </TabsList>
@@ -243,7 +247,7 @@ const BusinessDashboard = () => {
               {/* Enhanced Recent Activity */}
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-lg">
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 font-black">
                     <Clock className="h-5 w-5" />
                     Recent Activity
                   </CardTitle>
@@ -256,9 +260,9 @@ const BusinessDashboard = () => {
                           <activity.icon className={`h-5 w-5 ${activity.color}`} />
                         </div>
                         <div className="flex-1">
-                          <p className="font-medium text-gray-900">{activity.title}</p>
-                          <p className="text-sm text-gray-600">{activity.description}</p>
-                          <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                          <p className="font-bold text-gray-900">{activity.title}</p>
+                          <p className="text-sm font-medium text-gray-600">{activity.description}</p>
+                          <p className="text-xs text-gray-500 mt-1 font-medium">{activity.time}</p>
                         </div>
                       </div>
                     ))}
@@ -269,7 +273,7 @@ const BusinessDashboard = () => {
               {/* Enhanced Quick Actions */}
               <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
                 <CardHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-t-lg">
-                  <CardTitle className="flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 font-black">
                     <Settings className="h-5 w-5" />
                     Quick Actions
                   </CardTitle>
@@ -284,10 +288,10 @@ const BusinessDashboard = () => {
                               <action.icon className="h-5 w-5" />
                             </div>
                             <div className="flex-1">
-                              <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                              <h3 className="font-black text-gray-900 group-hover:text-indigo-600 transition-colors">
                                 {action.title}
                               </h3>
-                              <p className="text-sm text-gray-600">{action.description}</p>
+                              <p className="text-sm font-medium text-gray-600">{action.description}</p>
                             </div>
                             <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-indigo-600 transition-colors" />
                           </div>
@@ -303,13 +307,27 @@ const BusinessDashboard = () => {
           <TabsContent value="bookings">
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-lg">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 font-black">
                   <Calendar className="h-5 w-5" />
                   Booking Requests
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-6">
                 <BusinessBookingsDashboard />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="listings">
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-t-lg">
+                <CardTitle className="flex items-center gap-2 font-black">
+                  <Building className="h-5 w-5" />
+                  Business Listings
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <BusinessListingsManager />
               </CardContent>
             </Card>
           </TabsContent>
@@ -321,7 +339,7 @@ const BusinessDashboard = () => {
           <TabsContent value="analytics">
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
               <CardHeader className="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-t-lg">
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 font-black">
                   <BarChart3 className="h-5 w-5" />
                   Business Analytics
                 </CardTitle>
@@ -331,22 +349,22 @@ const BusinessDashboard = () => {
                   <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                     <BarChart3 className="h-10 w-10 text-white" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-4">Advanced Analytics Coming Soon</h3>
-                  <p className="text-gray-600 text-lg mb-6">
+                  <h3 className="text-2xl font-black text-gray-800 mb-4">Advanced Analytics Coming Soon</h3>
+                  <p className="text-gray-600 text-lg mb-6 font-medium">
                     Get detailed insights into your business performance, customer behavior, and revenue trends.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
                     <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl">
                       <Award className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <p className="font-medium text-gray-800">Performance Metrics</p>
+                      <p className="font-bold text-gray-800">Performance Metrics</p>
                     </div>
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-xl">
                       <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <p className="font-medium text-gray-800">Revenue Analytics</p>
+                      <p className="font-bold text-gray-800">Revenue Analytics</p>
                     </div>
                     <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl">
                       <Users className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <p className="font-medium text-gray-800">Customer Insights</p>
+                      <p className="font-bold text-gray-800">Customer Insights</p>
                     </div>
                   </div>
                 </div>
