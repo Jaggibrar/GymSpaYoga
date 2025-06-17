@@ -120,6 +120,5 @@ import AppFooter from '@/components/AppFooter';
       </div>
     </footer>
   );
-};
 
 export default AppFooter;
