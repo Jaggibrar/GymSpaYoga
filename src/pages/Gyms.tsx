@@ -1,9 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, ArrowRight, Dumbbell, Zap, Users } from 'lucide-react';
+import { MapPin, Star, ArrowRight, Dumbbell, Zap, Users, Sparkles, Crown, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
 import { SmartFilters } from '@/components/SmartFilters';
@@ -14,6 +14,9 @@ import SEOHead from '@/components/SEOHead';
 
 const Gyms = () => {
   const { signOut } = useAuth();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [location, setLocation] = useState('');
+  const [sortBy, setSortBy] = useState('created_at');
 
   return (
     <>
@@ -25,86 +28,140 @@ const Gyms = () => {
       
       <AppHeader onLogout={signOut} />
       
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-red-600 via-orange-600 to-amber-600 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Dumbbell className="h-16 w-16 mr-4" />
-              <h1 className="text-4xl md:text-6xl font-bold">
-                Premium Gyms
-              </h1>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        {/* Premium Hero Section */}
+        <section className="relative bg-gradient-to-br from-red-600 via-orange-600 to-amber-600 text-white py-24 overflow-hidden">
+          {/* Background Pattern */}
+          <div className="absolute inset-0 bg-black/20">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
+          </div>
+          
+          {/* Floating Elements */}
+          <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-48 h-48 bg-orange-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <div className="flex items-center justify-center mb-8">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+                <Dumbbell className="h-20 w-20 mr-6 relative z-10 drop-shadow-2xl" />
+              </div>
+              <div>
+                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white to-orange-200 bg-clip-text text-transparent">
+                  Premium Gyms
+                </h1>
+                <div className="flex items-center justify-center mt-4 space-x-2">
+                  <Crown className="h-6 w-6 text-yellow-300" />
+                  <span className="text-xl text-orange-100 font-semibold">Elite Fitness Experience</span>
+                  <Crown className="h-6 w-6 text-yellow-300" />
+                </div>
+              </div>
             </div>
-            <p className="text-xl mb-8 text-orange-100 max-w-2xl mx-auto">
+            
+            <p className="text-xl mb-8 text-orange-100 max-w-3xl mx-auto leading-relaxed">
               Discover state-of-the-art fitness centers with modern equipment and expert trainers. 
-              Transform your fitness journey with premium gym experiences.
+              Transform your fitness journey with premium gym experiences designed for champions.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/register-business">
-                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-3 text-lg">
-                  List Your Gym
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105">
+                  <Award className="mr-3 h-5 w-5" />
+                  List Your Premium Gym
+                  <ArrowRight className="ml-3 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-3 text-lg">
-                  Explore All
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105">
+                  <Sparkles className="mr-3 h-5 w-5" />
+                  Explore All Categories
                 </Button>
               </Link>
+            </div>
+
+            {/* Stats Row */}
+            <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">500+</div>
+                <div className="text-orange-200 text-sm">Premium Gyms</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">50K+</div>
+                <div className="text-orange-200 text-sm">Active Members</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white mb-2">4.9★</div>
+                <div className="text-orange-200 text-sm">Average Rating</div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Search Filters */}
-        <section className="container mx-auto px-4 -mt-10 relative z-10">
-          <SmartFilters />
+        <section className="container mx-auto px-4 -mt-16 relative z-20">
+          <SmartFilters 
+            onSearchChange={setSearchTerm}
+            onLocationChange={setLocation}
+            onSortChange={setSortBy}
+            placeholder="Search premium gyms, equipment, trainers..."
+            category="gym"
+          />
         </section>
 
-        {/* Features Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+        {/* Premium Features Section */}
+        <section className="container mx-auto px-4 py-20">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
               Why Choose Premium Gyms?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Experience the difference with our carefully selected fitness centers
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Experience the difference with our carefully curated fitness centers that redefine excellence
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
-              <div className="flex justify-center mb-4">
-                <div className="h-16 w-16 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center">
-                  <Dumbbell className="h-8 w-8 text-white" />
+            <Card className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl transform hover:scale-105 hover:-translate-y-2">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500 to-orange-500 rounded-full blur-lg opacity-50"></div>
+                  <div className="h-20 w-20 bg-gradient-to-r from-red-500 to-orange-500 rounded-full flex items-center justify-center relative z-10">
+                    <Dumbbell className="h-10 w-10 text-white" />
+                  </div>
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Modern Equipment</h3>
-              <p className="text-gray-600">
-                State-of-the-art fitness equipment maintained to the highest standards for optimal performance
+              <h3 className="text-2xl font-bold mb-4 text-gray-800">State-of-the-Art Equipment</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Latest fitness technology and premium equipment maintained to perfection for optimal performance and safety
               </p>
             </Card>
 
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
-              <div className="flex justify-center mb-4">
-                <div className="h-16 w-16 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center">
-                  <Users className="h-8 w-8 text-white" />
+            <Card className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl transform hover:scale-105 hover:-translate-y-2">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full blur-lg opacity-50"></div>
+                  <div className="h-20 w-20 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full flex items-center justify-center relative z-10">
+                    <Users className="h-10 w-10 text-white" />
+                  </div>
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Expert Trainers</h3>
-              <p className="text-gray-600">
-                Certified personal trainers ready to help you achieve your fitness goals safely and effectively
+              <h3 className="text-2xl font-bold mb-4 text-gray-800">Elite Certified Trainers</h3>
+              <p className="text-gray-600 leading-relaxed">
+                World-class personal trainers with international certifications ready to guide your transformation journey
               </p>
             </Card>
 
-            <Card className="text-center p-6 hover:shadow-lg transition-shadow border-0 bg-white/80 backdrop-blur-sm">
-              <div className="flex justify-center mb-4">
-                <div className="h-16 w-16 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center">
-                  <Zap className="h-8 w-8 text-white" />
+            <Card className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl transform hover:scale-105 hover:-translate-y-2">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full blur-lg opacity-50"></div>
+                  <div className="h-20 w-20 bg-gradient-to-r from-yellow-500 to-red-500 rounded-full flex items-center justify-center relative z-10">
+                    <Zap className="h-10 w-10 text-white" />
+                  </div>
                 </div>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Flexible Plans</h3>
-              <p className="text-gray-600">
-                Choose from various membership options that fit your schedule and budget perfectly
+              <h3 className="text-2xl font-bold mb-4 text-gray-800">Flexible Premium Plans</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Tailored membership options with exclusive benefits that adapt to your lifestyle and fitness goals
               </p>
             </Card>
           </div>
@@ -115,27 +172,39 @@ const Gyms = () => {
           category="gym" 
           title="Premium Gyms"
           description="Discover state-of-the-art fitness centers with modern equipment and expert trainers"
+          searchTerm={searchTerm}
+          location={location}
+          sortBy={sortBy}
         />
 
-        {/* CTA Section */}
-        <section className="bg-gradient-to-r from-red-600 to-orange-600 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Start Your Fitness Journey?
+        {/* Premium CTA Section */}
+        <section className="relative bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-48 h-48 bg-orange-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+          </div>
+          
+          <div className="container mx-auto px-4 text-center relative z-10">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to Transform Your Life?
             </h2>
-            <p className="text-xl text-red-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of fitness enthusiasts who have transformed their lives with our premium gym partners
+            <p className="text-xl text-red-100 mb-10 max-w-3xl mx-auto leading-relaxed">
+              Join thousands of fitness enthusiasts who have achieved their goals with our premium gym partners. 
+              Your transformation journey starts here.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/explore">
-                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-8 py-3 text-lg">
-                  Find Gyms Near Me
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105">
+                  <MapPin className="mr-3 h-5 w-5" />
+                  Find Premium Gyms Near Me
+                  <ArrowRight className="ml-3 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-600 px-8 py-3 text-lg">
-                  List Your Gym
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105">
+                  <Crown className="mr-3 h-5 w-5" />
+                  List Your Premium Gym
                 </Button>
               </Link>
             </div>

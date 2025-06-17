@@ -1,213 +1,212 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import React from 'react';
+import { useBusinessData } from '@/hooks/useBusinessData';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Calendar, Search, Filter, Crown, Sparkles, Heart, Eye } from 'lucide-react';
-import { useBusinessData } from '@/hooks/useBusinessData';
+import { MapPin, Star, Phone, Clock, Users, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import BookingModal from '@/components/BookingModal';
 import BusinessDetailsModal from '@/components/business/BusinessDetailsModal';
-import { getTierFromPricing } from '@/utils/businessUtils';
 
 interface CategoryBusinessesProps {
   category: string;
   title: string;
   description: string;
+  searchTerm?: string;
+  location?: string;
+  sortBy?: string;
 }
 
-const CategoryBusinesses = ({ category, title, description }: CategoryBusinessesProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [sortBy, setSortBy] = useState('created_at');
-  
-  const { businesses, loading, error } = useBusinessData(category, searchTerm, locationFilter, sortBy);
+const CategoryBusinesses = ({ 
+  category, 
+  title, 
+  description, 
+  searchTerm = '', 
+  location = '', 
+  sortBy = 'created_at' 
+}: CategoryBusinessesProps) => {
+  const { businesses, loading, error } = useBusinessData(category, searchTerm, location, sortBy);
 
-  const getTierIcon = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return <Crown className="h-4 w-4" />;
-      case 'premium': return <Sparkles className="h-4 w-4" />;
-      default: return <Heart className="h-4 w-4" />;
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="flex justify-center">
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center">
+          <p className="text-red-600 text-lg mb-4">Error loading businesses: {error}</p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const getDetailPath = (business: any) => {
+    switch (business.business_type) {
+      case 'gym':
+        return `/gym/${business.id}`;
+      case 'spa':
+        return `/spa/${business.id}`;
+      case 'yoga':
+        return `/yoga/${business.id}`;
+      default:
+        return '#';
     }
   };
 
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return 'from-yellow-500 to-orange-500';
-      case 'premium': return 'from-purple-500 to-pink-500';
-      default: return 'from-green-500 to-blue-500';
-    }
+  const formatPrice = (business: any) => {
+    if (business.monthly_price) return `₹${business.monthly_price}/month`;
+    if (business.session_price) return `₹${business.session_price}/session`;
+    return 'Contact for pricing';
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Page Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">{title}</h1>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">{description}</p>
+    <section className="container mx-auto px-4 py-16">
+      {/* Section Header */}
+      <div className="text-center mb-12">
+        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
+          {title}
+        </h2>
+        <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
+          {description}
+        </p>
+        <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 backdrop-blur-sm text-lg px-4 py-2">
+          {businesses.length} Premium {category === 'all' ? 'Businesses' : title} Available
+        </Badge>
       </div>
 
-      {/* Search and Filters */}
-      <Card className="mb-8">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder={`Search ${category === 'trainer' ? 'trainers' : title.toLowerCase()}...`}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <div className="relative">
-              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Location..."
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger>
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="created_at">Newest First</SelectItem>
-                <SelectItem value="name">Name A-Z</SelectItem>
-                <SelectItem value="price">Price Low to High</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Business Grid */}
+      {businesses.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {businesses.map((business) => (
+            <Card 
+              key={business.id} 
+              className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl"
+            >
+              <div className="relative overflow-hidden">
+                <img 
+                  src={business.image_urls?.[0] || "/placeholder.svg"} 
+                  alt={business.business_name}
+                  className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <Badge className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-sm hover:bg-emerald-600">
+                  {business.category || 'Premium'}
+                </Badge>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center text-white text-sm">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
+                    <span className="font-semibold">4.8</span>
+                    <span className="ml-1 opacity-90">(127 reviews)</span>
+                  </div>
+                </div>
+              </div>
 
-      {/* Business Listings */}
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <div className="h-48 bg-gray-200 rounded-t-lg"></div>
-              <CardContent className="p-6">
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded mb-4"></div>
-                <div className="h-8 bg-gray-200 rounded"></div>
+              <CardHeader className="pb-3">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300 line-clamp-1">
+                      {business.business_name}
+                    </CardTitle>
+                    <p className="text-emerald-600 font-semibold text-sm capitalize">
+                      {business.business_type}
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+
+              <CardContent className="pt-0">
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-3 text-emerald-600 flex-shrink-0" />
+                    <span className="text-sm line-clamp-1">{business.city}, {business.state}</span>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <Clock className="h-4 w-4 mr-3 text-emerald-600 flex-shrink-0" />
+                    <span className="text-sm">
+                      {business.opening_time?.slice(0, 5)} - {business.closing_time?.slice(0, 5)}
+                    </span>
+                  </div>
+                  <div className="flex items-center text-emerald-600 font-bold text-lg">
+                    <span>{formatPrice(business)}</span>
+                  </div>
+                </div>
+
+                {/* Amenities */}
+                {business.amenities && business.amenities.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {business.amenities.slice(0, 3).map((amenity: string) => (
+                      <Badge key={amenity} variant="outline" className="text-xs">
+                        {amenity}
+                      </Badge>
+                    ))}
+                    {business.amenities.length > 3 && (
+                      <Badge variant="outline" className="text-xs">
+                        +{business.amenities.length - 3}
+                      </Badge>
+                    )}
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <BusinessDetailsModal
+                    business={business}
+                    trigger={
+                      <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm shadow-lg hover:shadow-xl transition-all duration-300">
+                        View Details
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                  
+                  <BookingModal 
+                    businessName={business.business_name}
+                    businessType={business.business_type}
+                    businessId={business.id}
+                    price={formatPrice(business)}
+                    trigger={
+                      <Button 
+                        variant="outline" 
+                        className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm shadow-lg hover:shadow-xl transition-all duration-300"
+                      >
+                        Book Now
+                      </Button>
+                    }
+                  />
+                </div>
               </CardContent>
             </Card>
           ))}
         </div>
-      ) : error ? (
-        <div className="text-center py-12">
-          <div className="text-red-500 mb-4">
-            <span className="text-4xl">⚠️</span>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">Error Loading Data</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => window.location.reload()}>
-            Try Again
-          </Button>
-        </div>
-      ) : businesses.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-gray-400 mb-6">
-            <span className="text-6xl">🏢</span>
-          </div>
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
-            No {category === 'trainer' ? 'Trainers' : title} Found
-          </h3>
-          <p className="text-gray-600 mb-8 max-w-md mx-auto">
-            Try adjusting your search filters or check back later for new listings.
-          </p>
-        </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {businesses.map((business) => {
-            const tier = getTierFromPricing(business);
-            return (
-              <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"} 
-                    alt={business.business_name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white border-0`}>
-                    {getTierIcon(tier)}
-                    <span className="ml-1 capitalize">{tier}</span>
-                  </Badge>
-                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-                </div>
-                
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold group-hover:text-emerald-600 transition-colors line-clamp-1">
-                      {business.business_name}
-                    </h3>
-                    <div className="flex items-center gap-1 text-sm text-yellow-600">
-                      <Star className="h-4 w-4 fill-current" />
-                      <span className="font-medium">4.7</span>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-gray-600 mb-3">
-                    <MapPin className="h-4 w-4" />
-                    <span className="text-sm">{business.city}, {business.state}</span>
-                  </div>
-                  
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {business.description || "Premium wellness destination offering excellent services"}
-                  </p>
-                  
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      {business.monthly_price && (
-                        <p className="text-lg font-bold text-emerald-600">₹{business.monthly_price}/month</p>
-                      )}
-                      {business.session_price && (
-                        <p className="text-lg font-bold text-emerald-600">₹{business.session_price}/session</p>
-                      )}
-                      {!business.monthly_price && !business.session_price && (
-                        <p className="text-lg font-bold text-emerald-600">Contact for pricing</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex gap-2 mb-4">
-                    <BusinessDetailsModal 
-                      business={business}
-                      trigger={
-                        <Button variant="outline" size="sm" className="flex-1">
-                          <Eye className="h-4 w-4 mr-1" />
-                          Details
-                        </Button>
-                      }
-                    />
-                    <BookingModal
-                      businessName={business.business_name}
-                      businessType={business.business_type}
-                      businessId={business.id}
-                      price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
-                      trigger={
-                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          Book
-                        </Button>
-                      }
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+        <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-2xl font-bold text-white mb-4">No Results Found</h3>
+            <p className="text-gray-300 mb-6">
+              No {category === 'all' ? 'businesses' : title.toLowerCase()} found for your search criteria. 
+              Try adjusting your filters or search terms.
+            </p>
+            <Button 
+              onClick={() => window.location.reload()}
+              className="bg-emerald-500 hover:bg-emerald-600"
+            >
+              Clear Filters & Retry
+            </Button>
+          </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

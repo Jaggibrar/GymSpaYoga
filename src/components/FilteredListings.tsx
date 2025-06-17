@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,8 +6,8 @@ import { Link } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { SmartFilters } from "./SmartFilters";
 import BookingModal from "./BookingModal";
+import BusinessDetailsModal from "./business/BusinessDetailsModal";
 
 interface Listing {
   id: number;
@@ -26,9 +25,11 @@ interface Listing {
 interface FilteredListingsProps {
   listings: Listing[];
   pageType: 'gym' | 'spa' | 'yoga';
+  searchTerm?: string;
+  location?: string;
 }
 
-const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
+const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }: FilteredListingsProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filteredListings, setFilteredListings] = useState(listings);
   const [activeFilter, setActiveFilter] = useState('all');
@@ -38,7 +39,25 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
   useEffect(() => {
     let filtered = [...listings];
 
-    // Apply filters
+    // Apply search term filter
+    if (searchTerm?.trim()) {
+      filtered = filtered.filter(listing => 
+        listing.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        listing.amenities.some(amenity => 
+          amenity.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+
+    // Apply location filter
+    if (location?.trim()) {
+      filtered = filtered.filter(listing => 
+        listing.location.toLowerCase().includes(location.toLowerCase())
+      );
+    }
+
+    // Apply category filters
     if (activeFilter !== 'all') {
       filtered = filtered.filter(listing => {
         const category = listing.category.toLowerCase();
@@ -81,7 +100,7 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
     }
 
     setFilteredListings(filtered);
-  }, [activeFilter, activeSort, listings]);
+  }, [activeFilter, activeSort, listings, searchTerm, location]);
 
   useEffect(() => {
     if (filter) {
@@ -91,13 +110,11 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
 
   const handleFilterChange = (newFilter: string) => {
     setActiveFilter(newFilter);
-    // Save to localStorage
     localStorage.setItem(`lastFilter_${pageType}`, newFilter);
   };
 
   const handleSortChange = (newSort: string) => {
     setActiveSort(newSort);
-    // Save to localStorage
     localStorage.setItem(`lastSort_${pageType}`, newSort);
   };
 
@@ -123,30 +140,43 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
     }
   };
 
-  const handleBookNow = (listingName: string) => {
-    toast.success(`Booking initiated for ${listingName}!`);
-  };
+  // Convert listing to business format for modals
+  const convertToBusinessFormat = (listing: Listing) => ({
+    id: listing.id.toString(),
+    business_name: listing.name,
+    business_type: listing.type,
+    category: listing.category,
+    city: listing.location.split(',')[0] || listing.location,
+    state: listing.location.split(',')[1]?.trim() || 'India',
+    address: listing.location,
+    phone: '+91 98765 43210',
+    email: `info@${listing.name.toLowerCase().replace(/\s+/g, '')}.com`,
+    opening_time: '09:00:00',
+    closing_time: '21:00:00',
+    description: `Premium ${listing.type} facility offering world-class services and amenities.`,
+    amenities: listing.amenities,
+    image_urls: [listing.image],
+    monthly_price: listing.type === 'gym' ? parseInt(listing.price.replace(/[^\d]/g, '')) : undefined,
+    session_price: listing.type !== 'gym' ? parseInt(listing.price.replace(/[^\d]/g, '')) : undefined,
+    status: 'approved',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  });
 
   return (
     <div className="px-4">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
           {getFilterTitle()} - {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s
         </h2>
-        <Badge className="mb-4 bg-emerald-500">
-          Showing {filteredListings.length} results
+        <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30 backdrop-blur-sm text-lg px-4 py-2">
+          Showing {filteredListings.length} premium results
         </Badge>
       </div>
 
-      <SmartFilters 
-        onFilterChange={handleFilterChange}
-        activeFilter={activeFilter}
-        activeSort={activeSort}
-      />
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredListings.map((listing) => (
-          <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105">
+          <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl">
             <div className="relative overflow-hidden">
               <img 
                 src={listing.image} 
@@ -154,7 +184,7 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              <Badge className="absolute top-4 right-4 bg-emerald-500 hover:bg-emerald-600">
+              <Badge className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-sm hover:bg-emerald-600">
                 {listing.category}
               </Badge>
             </div>
@@ -195,12 +225,15 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
                 )}
               </div>
               <div className="flex flex-col sm:flex-row gap-2">
-                <Link to={listing.link} className="flex-1">
-                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
-                    View Details
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
+                <BusinessDetailsModal
+                  business={convertToBusinessFormat(listing)}
+                  trigger={
+                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
+                      View Details
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  }
+                />
                 <BookingModal 
                   businessName={listing.name}
                   businessType={listing.type.toLowerCase()}
@@ -222,17 +255,23 @@ const FilteredListings = ({ listings, pageType }: FilteredListingsProps) => {
       </div>
 
       {filteredListings.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-600 text-lg">No {pageType}s found for the selected filters.</p>
-          <Button 
-            className="mt-4"
-            onClick={() => {
-              setActiveFilter('all');
-              setActiveSort('popular');
-            }}
-          >
-            Clear Filters
-          </Button>
+        <div className="text-center py-16">
+          <div className="max-w-md mx-auto">
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-2xl font-bold text-white mb-4">No Results Found</h3>
+            <p className="text-gray-300 mb-6">
+              No {pageType}s found for the selected filters or search criteria.
+            </p>
+            <Button 
+              className="mt-4 bg-emerald-500 hover:bg-emerald-600"
+              onClick={() => {
+                setActiveFilter('all');
+                setActiveSort('popular');
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
         </div>
       )}
     </div>
