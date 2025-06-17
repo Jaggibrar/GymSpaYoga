@@ -162,9 +162,9 @@ const CategoryBusinesses = ({
                   <BusinessDetailsModal
                     business={business}
                     trigger={
-                      <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm shadow-lg hover:shadow-xl transition-all duration-300">
-                        View Details
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                      <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-3 min-h-[48px]">
+                        <span className="block mr-2">View Details</span>
+                        <ArrowRight className="h-4 w-4 flex-shrink-0" />
                       </Button>
                     }
                   />
@@ -177,9 +177,9 @@ const CategoryBusinesses = ({
                     trigger={
                       <Button 
                         variant="outline" 
-                        className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-3 min-h-[48px]"
                       >
-                        Book Now
+                        <span className="block">Book Now</span>
                       </Button>
                     }
                   />

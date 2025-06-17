@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -149,6 +150,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
     city: listing.location.split(',')[0] || listing.location,
     state: listing.location.split(',')[1]?.trim() || 'India',
     address: listing.location,
+    pin_code: '110001', // Adding default pin_code to fix the error
     phone: '+91 98765 43210',
     email: `info@${listing.name.toLowerCase().replace(/\s+/g, '')}.com`,
     opening_time: '09:00:00',
@@ -228,9 +230,9 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                 <BusinessDetailsModal
                   business={convertToBusinessFormat(listing)}
                   trigger={
-                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
-                      View Details
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm px-4 py-2 min-h-[40px]">
+                      <span className="block">View Details</span>
+                      <ArrowRight className="ml-2 h-4 w-4 flex-shrink-0" />
                     </Button>
                   }
                 />
@@ -242,9 +244,9 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                   trigger={
                     <Button 
                       variant="outline" 
-                      className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm"
+                      className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-sm px-4 py-2 min-h-[40px]"
                     >
-                      Book Now
+                      <span className="block">Book Now</span>
                     </Button>
                   }
                 />

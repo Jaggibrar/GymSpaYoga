@@ -7,7 +7,6 @@ import { MapPin, Star, ArrowRight, Dumbbell, Zap, Users, Sparkles, Crown, Award 
 import { Link } from 'react-router-dom';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
 import { SmartFilters } from '@/components/SmartFilters';
-import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import { useAuth } from '@/hooks/useAuth';
 import SEOHead from '@/components/SEOHead';
@@ -25,8 +24,6 @@ const Gyms = () => {
         description="Discover top-rated gyms and fitness centers. Modern equipment, expert trainers, and flexible memberships. Start your fitness journey today!"
         keywords="gym, fitness center, workout, personal trainer, strength training, cardio"
       />
-      
-      <AppHeader onLogout={signOut} />
       
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         {/* Premium Hero Section */}
@@ -65,34 +62,18 @@ const Gyms = () => {
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/register-business">
-                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105">
-                  <Award className="mr-3 h-5 w-5" />
-                  List Your Premium Gym
-                  <ArrowRight className="ml-3 h-5 w-5" />
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
+                  <Award className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <span className="block">List Your Premium Gym</span>
+                  <ArrowRight className="ml-3 h-5 w-5 flex-shrink-0" />
                 </Button>
               </Link>
               <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105">
-                  <Sparkles className="mr-3 h-5 w-5" />
-                  Explore All Categories
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
+                  <Sparkles className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <span className="block">Explore All Categories</span>
                 </Button>
               </Link>
-            </div>
-
-            {/* Stats Row */}
-            <div className="grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">500+</div>
-                <div className="text-orange-200 text-sm">Premium Gyms</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">50K+</div>
-                <div className="text-orange-200 text-sm">Active Members</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">4.9★</div>
-                <div className="text-orange-200 text-sm">Average Rating</div>
-              </div>
             </div>
           </div>
         </section>
@@ -195,16 +176,16 @@ const Gyms = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/explore">
-                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105">
-                  <MapPin className="mr-3 h-5 w-5" />
-                  Find Premium Gyms Near Me
-                  <ArrowRight className="ml-3 h-5 w-5" />
+                <Button size="lg" className="bg-white text-red-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
+                  <MapPin className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <span className="block">Find Premium Gyms Near Me</span>
+                  <ArrowRight className="ml-3 h-5 w-5 flex-shrink-0" />
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105">
-                  <Crown className="mr-3 h-5 w-5" />
-                  List Your Premium Gym
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-red-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
+                  <Crown className="mr-3 h-5 w-5 flex-shrink-0" />
+                  <span className="block">List Your Premium Gym</span>
                 </Button>
               </Link>
             </div>

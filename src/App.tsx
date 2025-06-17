@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -50,9 +51,9 @@ function App() {
         <TooltipProvider>
           <BrowserRouter>
             <AuthProvider>
-              <div className="min-h-screen bg-background">
+              <div className="min-h-screen bg-background w-full">
                 <MainNavigation />
-                <main>
+                <main className="w-full">
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/login" element={<Login />} />
