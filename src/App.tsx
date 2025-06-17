@@ -5,12 +5,15 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { HelmetProvider } from "react-helmet-async";
+
 import ProtectedRoute from "@/components/ProtectedRoute";
 import RoleBasedRedirect from "@/components/RoleBasedRedirect";
+
+// Public Pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Profile from "./pages/Profile";
+import ResetPassword from "./pages/ResetPassword";
 import Gyms from "./pages/Gyms";
 import GymDetails from "./pages/GymDetails";
 import Spas from "./pages/Spas";
@@ -18,15 +21,27 @@ import SpaDetails from "./pages/SpaDetails";
 import Yoga from "./pages/Yoga";
 import YogaDetails from "./pages/YogaDetails";
 import Trainers from "./pages/Trainers";
-import CreateListing from "./pages/CreateListing";
-import RegisterBusiness from "./pages/RegisterBusiness";
-import RegisterTrainer from "./pages/RegisterTrainer";
 import About from "./pages/About";
 import Support from "./pages/Support";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Pricing from "./pages/Pricing";
 import Explore from "./pages/Explore";
+import Blogs from "./pages/Blogs";
+import BlogPost from "./pages/BlogPost";
+import BlogList from "./pages/BlogList";
+import BusinessLanding from "./pages/BusinessLanding";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import CTOTestPage from "./pages/CTOTestPage";
+import SiteAudit from "./pages/SiteAudit";
+import PlatformAuditPage from "./pages/PlatformAuditPage";
+import NotFound from "./pages/NotFound";
+
+// Protected Pages
+import Profile from "./pages/Profile";
+import CreateListing from "./pages/CreateListing";
+import RegisterBusiness from "./pages/RegisterBusiness";
+import RegisterTrainer from "./pages/RegisterTrainer";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import BusinessDashboard from "./pages/BusinessDashboard";
@@ -34,16 +49,6 @@ import UserBookings from "./pages/UserBookings";
 import ManageBookings from "./pages/ManageBookings";
 import BusinessBookings from "./pages/BusinessBookings";
 import Calendar from "./pages/Calendar";
-import ResetPassword from "./pages/ResetPassword";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import NotFound from "./pages/NotFound";
-import Blogs from "./pages/Blogs";
-import BlogPost from "./pages/BlogPost";
-import BlogList from "./pages/BlogList";
-import CTOTestPage from "./pages/CTOTestPage";
-import SiteAudit from "./pages/SiteAudit";
-import PlatformAuditPage from "./pages/PlatformAuditPage";
-import BusinessLanding from "./pages/BusinessLanding";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +61,7 @@ function App() {
             <Toaster />
             <BrowserRouter>
               <Routes>
+                {/* Public Routes */}
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
@@ -81,7 +87,7 @@ function App() {
                 <Route path="/cto-test" element={<CTOTestPage />} />
                 <Route path="/site-audit" element={<SiteAudit />} />
                 <Route path="/platform-audit" element={<PlatformAuditPage />} />
-                
+
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>
                   <Route path="/profile" element={<Profile />} />
@@ -96,11 +102,11 @@ function App() {
                   <Route path="/business-bookings" element={<BusinessBookings />} />
                   <Route path="/calendar" element={<Calendar />} />
                 </Route>
-                
-                {/* Role-based redirects */}
+
+                {/* Role-Based Redirect */}
                 <Route path="/dashboard" element={<RoleBasedRedirect />} />
-                
-                {/* 404 Page */}
+
+                {/* 404 Not Found */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
@@ -112,3 +118,4 @@ function App() {
 }
 
 export default App;
+
