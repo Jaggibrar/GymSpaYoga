@@ -49,11 +49,16 @@ const RegisterTrainer = () => {
     }
   }, [user, authLoading, navigate]);
 
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
+
   // Show loading only while auth is being checked
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        <AppHeader onLogout={signOut} />
+        <AppHeader />
         <div className="flex items-center justify-center py-20">
           <LoadingSpinner size="lg" text="Loading..." />
         </div>

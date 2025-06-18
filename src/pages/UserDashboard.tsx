@@ -1,8 +1,6 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
-import AppHeader from "@/components/AppHeader";
-import AppFooter from "@/components/AppFooter";
 import { EnhancedProfile } from "@/components/EnhancedProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +13,6 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <AppHeader />
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
@@ -91,7 +88,6 @@ export default function UserDashboard() {
         {/* Enhanced Profile Component */}
         <EnhancedProfile />
       </div>
-      <AppFooter />
     </div>
   );
 }
