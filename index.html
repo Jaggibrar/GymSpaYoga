@@ -1,193 +1,52 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>GymSpaYoga - Find Best Gyms, Spas & Yoga Studios Near You | Book Online</title>
-    <meta name="title" content="GymSpaYoga - Find Best Gyms, Spas & Yoga Studios Near You | Book Online" />
-    <meta name="description" content="Discover and book the best gyms, luxury spas, and yoga studios in Mumbai, Delhi, Bangalore. Compare prices, read reviews, and find certified trainers. Start your wellness journey today!" />
-    <meta name="keywords" content="gym near me, spa booking, yoga classes, fitness center, wellness, personal trainer, Mumbai gyms, spa treatments, yoga studio, fitness membership" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>GymSpaYoga - Your Ultimate Wellness Platform</title>
+    <meta name="description" content="Discover premium gyms, spas, and yoga centers across India. Book your wellness journey with GymSpaYoga - the complete fitness and wellness platform." />
+    <meta name="keywords" content="gym, spa, yoga, fitness, wellness, booking, health, exercise, meditation, India" />
     <meta name="author" content="GymSpaYoga" />
-    <meta name="robots" content="index, follow" />
-    <meta name="language" content="English" />
-    <meta name="revisit-after" content="7 days" />
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://gymspayoga.com/" />
-
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://gymspayoga.com/" />
-    <meta property="og:site_name" content="GymSpaYoga" />
-    <meta property="og:title" content="GymSpaYoga - Find Best Gyms, Spas & Yoga Studios Near You" />
-    <meta property="og:description" content="Discover and book the best gyms, luxury spas, and yoga studios in India. Compare prices, read reviews, and find certified trainers. Start your wellness journey today!" />
-    <meta property="og:image" content="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Modern gym interior with fitness equipment" />
-    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content="GymSpaYoga - Your Ultimate Wellness Platform" />
+    <meta property="og:description" content="Discover premium gyms, spas, and yoga centers across India. Book your wellness journey with GymSpaYoga." />
+    <meta property="og:image" content="/og-image.jpg" />
 
     <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://gymspayoga.com/" />
-    <meta name="twitter:site" content="@gymspayoga" />
-    <meta name="twitter:creator" content="@gymspayoga" />
-    <meta name="twitter:title" content="GymSpaYoga - Find Best Gyms, Spas & Yoga Studios Near You" />
-    <meta name="twitter:description" content="Discover and book the best gyms, luxury spas, and yoga studios in India. Compare prices, read reviews, and find certified trainers." />
-    <meta name="twitter:image" content="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630&q=80" />
-    <meta name="twitter:image:alt" content="Modern gym interior with fitness equipment" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://gymspayoga.com/" />
+    <meta property="twitter:title" content="GymSpaYoga - Your Ultimate Wellness Platform" />
+    <meta property="twitter:description" content="Discover premium gyms, spas, and yoga centers across India. Book your wellness journey with GymSpaYoga." />
+    <meta property="twitter:image" content="/og-image.jpg" />
 
-    <!-- Additional Meta Tags for Indian Market -->
-    <meta name="geo.region" content="IN" />
-    <meta name="geo.placename" content="India" />
-    <meta name="geo.position" content="20.5937;78.9629" />
-    <meta name="ICBM" content="20.5937, 78.9629" />
-
-    <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://images.unsplash.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <!-- Favicon and Icons -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏋️</text></svg>" />
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏋️</text></svg>" />
-    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏋️</text></svg>" />
-    <link rel="icon" type="image/png" sizes="16x16" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏋️</text></svg>" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#10b981" />
-    <meta name="theme-color" content="#10b981" />
-
-    <!-- Structured Data for SEO -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "GymSpaYoga",
-      "description": "Find and book the best gyms, spas, and yoga studios across India",
-      "url": "https://gymspayoga.com",
-      "telephone": "+91-98765-43210",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "IN",
-        "addressRegion": "West Bengal",
-        "addressLocality": "Kolkata"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "22.5726",
-        "longitude": "88.3639"
-      },
-      "openingHours": "Mo-Su 06:00-22:00",
-      "serviceArea": {
-        "@type": "Country",
-        "name": "India"
-      },
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Fitness and Wellness Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Gym Membership",
-              "description": "Access to premium fitness centers and gyms"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Spa Treatments",
-              "description": "Luxury spa and wellness treatments"
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Yoga Classes",
-              "description": "Professional yoga instruction and classes"
-            }
-          }
-        ]
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.7",
-        "reviewCount": "1250",
-        "bestRating": "5",
-        "worstRating": "1"
-      },
-      "sameAs": [
-        "https://www.facebook.com/gymspayoga",
-        "https://www.instagram.com/gymspayoga",
-        "https://www.twitter.com/gymspayoga",
-        "https://www.linkedin.com/company/gymspayoga"
-      ]
-    }
-    </script>
-
-    <!-- Organization Schema -->
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gymspayoga.com/" />
+    
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "GymSpaYoga",
-      "alternateName": "GSY",
       "url": "https://gymspayoga.com",
       "logo": "https://gymspayoga.com/logo.png",
+      "description": "Premium wellness platform connecting users with gyms, spas, and yoga centers across India",
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "+91-98765-43210",
-        "contactType": "customer service",
-        "availableLanguage": ["English", "Hindi"]
-      },
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "IN"
-      },
-      "founder": {
-        "@type": "Person",
-        "name": "GymSpaYoga Team"
-      },
-      "foundingDate": "2024",
-      "slogan": "Your Wellness Journey Starts Here"
-    }
-    </script>
-
-    <!-- Website Schema -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "GymSpaYoga",
-      "url": "https://gymspayoga.com",
-      "description": "Find and book the best gyms, spas, and yoga studios in India",
-      "publisher": {
-        "@type": "Organization",
-        "name": "GymSpaYoga"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://gymspayoga.com/search?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
+        "telephone": "+91-7596958097",
+        "contactType": "customer service"
       }
     }
     </script>
-
-    <!-- Additional Performance Optimizations -->
-    <link rel="dns-prefetch" href="//images.unsplash.com" />
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <meta http-equiv="x-dns-prefetch-control" content="on" />
   </head>
-
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

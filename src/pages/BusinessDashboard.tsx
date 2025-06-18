@@ -1,8 +1,8 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
-import { AppHeader } from "@/components/AppHeader";
-import { AppFooter } from "@/components/AppFooter";
+import AppHeader from "@/components/AppHeader";
+import AppFooter from "@/components/AppFooter";
 import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

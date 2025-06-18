@@ -2,7 +2,7 @@
 import { Dumbbell, MapPin, Phone, Mail, Facebook, Instagram, Linkedin, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import AppFooter from '@/components/AppFooter';
+const AppFooter = () => {
   return (
     <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full">
       <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
@@ -120,5 +120,6 @@ import AppFooter from '@/components/AppFooter';
       </div>
     </footer>
   );
+};
 
 export default AppFooter;

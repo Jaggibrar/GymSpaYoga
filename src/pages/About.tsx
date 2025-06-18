@@ -83,62 +83,36 @@ const About = () => {
     }
   ];
 
-  const stats = [
-    { number: "10,000+", label: "Happy Customers", color: "text-blue-600" },
-    { number: "500+", label: "Partner Businesses", color: "text-green-600" },
-    { number: "50+", label: "Cities Covered", color: "text-purple-600" },
-    { number: "4.9/5", label: "Customer Rating", color: "text-orange-600" }
-  ];
-
   return (
-    <div className="min-h-screen bg-white">
-      {/* Enhanced Navigation */}
-      <header className="fixed top-6 left-6 right-6 bg-white/95 backdrop-blur-2xl border border-gray-200/50 rounded-3xl z-50 shadow-2xl">
-        <div className="container mx-auto px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3 text-gray-600 hover:text-gray-900 transition-all duration-300 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
-                <ArrowLeft className="h-5 w-5 text-white group-hover:-translate-x-1 transition-transform" />
-              </div>
-              <span className="font-bold text-lg">Back to Home</span>
-            </Link>
-            
-            {/* Contact Info */}
-            <div className="hidden md:flex items-center space-x-4 bg-gradient-to-r from-emerald-50 to-blue-50 px-4 py-2 rounded-2xl">
-              <Phone className="h-4 w-4 text-emerald-600" />
-              <span className="text-sm font-semibold text-gray-700">Talk to Owner: 7596958097</span>
-              <div className="flex space-x-2">
-                <a 
-                  href="tel:7596958097" 
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
-                >
-                  Call
-                </a>
-                <a 
-                  href="https://wa.me/917596958097" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
-                >
-                  WhatsApp
-                </a>
-              </div>
+    <div className="min-h-screen bg-white font-inter">
+      {/* Contact Bar */}
+      <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border-b border-gray-200 py-3">
+        <div className="container mx-auto px-6 text-center">
+          <div className="flex items-center justify-center space-x-4">
+            <Phone className="h-5 w-5 text-emerald-600" />
+            <span className="text-lg font-semibold text-gray-700">Talk to Owner: 7596958097</span>
+            <div className="flex space-x-3">
+              <a 
+                href="tel:7596958097" 
+                className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Call
+              </a>
+              <a 
+                href="https://wa.me/917596958097" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                WhatsApp
+              </a>
             </div>
-
-            <Link to="/" className="flex items-center space-x-4">
-              <div className="h-14 w-14 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-xl">
-                <Dumbbell className="h-7 w-7 text-white" />
-              </div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Gym<span className="text-emerald-600">Spa</span><span className="text-blue-600">Yoga</span>
-              </h1>
-            </Link>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Revolutionary Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+      {/* Hero Section */}
+      <section className="pt-20 pb-20 px-6 relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400/10 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute top-40 right-20 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
@@ -162,18 +136,6 @@ const About = () => {
             We're revolutionizing how people discover, connect with, and experience wellness. From AI-powered recommendations to seamless bookings, we're building the platform that transforms lives.
           </p>
 
-          {/* Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className={`text-3xl md:text-4xl font-black ${stat.color} mb-2`}>
-                  {stat.number}
-                </div>
-                <div className="text-sm font-medium text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-
           <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
             <Link to="/">
               <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white px-12 py-6 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 text-xl font-bold transform hover:scale-105">
@@ -189,7 +151,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Interactive Story Section */}
+      {/* Story Section */}
       <section className="py-32 px-6 bg-white">
         <div className="container mx-auto max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
@@ -239,7 +201,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Interactive Features Section */}
+      {/* Features Section */}
       <section className="py-32 px-6 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-24">
@@ -276,7 +238,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Enhanced Founder Section */}
+      {/* Founder Section */}
       <section className="py-32 px-6 bg-gradient-to-br from-white via-gray-50 to-emerald-50/20" ref={founderRef}>
         <div className="container mx-auto max-w-6xl">
           <div className={`transition-all duration-1000 ${isFounderInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
@@ -331,7 +293,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Enhanced CTA Section */}
+      {/* CTA Section */}
       <section className="py-32 px-6 bg-gradient-to-br from-emerald-600 via-blue-600 to-purple-700 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse"></div>

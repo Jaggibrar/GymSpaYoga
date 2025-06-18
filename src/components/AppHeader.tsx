@@ -2,12 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Dumbbell, LogOut, Calendar, Building } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
-interface AppHeaderProps {
-  onLogout: () => void;
-}
+const AppHeader = () => {
+  const { signOut } = useAuth();
 
-const AppHeader = ({ onLogout }: AppHeaderProps) => {
+  const handleLogout = async () => {
+    await signOut();
+  };
+
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -35,7 +38,7 @@ const AppHeader = ({ onLogout }: AppHeaderProps) => {
               </Button>
             </Link>
             <Button 
-              onClick={onLogout}
+              onClick={handleLogout}
               variant="outline" 
               className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
             >
