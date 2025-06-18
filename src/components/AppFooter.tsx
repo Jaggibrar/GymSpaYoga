@@ -92,7 +92,7 @@ const AppFooter = () => {
                 </div>
                 <div className="flex items-start justify-start">
                   <MapPin className="h-4 w-4 lg:h-5 lg:w-5 mr-2 lg:mr-3 text-purple-400 flex-shrink-0 mt-0.5" />
-                  <span>Mumbai, Delhi, Bangalore, India</span>
+                  <span>Kolkata, India</span>
                 </div>
                 <div className="flex items-start justify-start">
                   <Mail className="h-4 w-4 lg:h-5 lg:w-5 mr-2 lg:mr-3 text-purple-400 flex-shrink-0 mt-0.5" />
@@ -107,7 +107,7 @@ const AppFooter = () => {
         <div className="border-t border-gray-700 mt-8 lg:mt-12 pt-6 lg:pt-8 w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-left">
             <p className="text-gray-400 mb-4 md:mb-0 text-sm lg:text-base">
-              © 2025 GymSpaYoga. All rights reserved. Connecting India with premium wellness experiences.
+              © 2025 GymSpaYoga. All rights reserved. Connecting World with premium wellness experiences❤️.
             </p>
             <div className="flex flex-wrap justify-start md:justify-end space-x-4 lg:space-x-6 text-sm lg:text-base">
               <Link to="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
