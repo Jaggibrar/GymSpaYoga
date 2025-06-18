@@ -200,7 +200,7 @@ const About = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white text-white hover:bg-white/10 font-semibold px-8 py-4 text-lg"
+                  className="border-white text-white hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
                   onClick={() => window.location.href = '/register-business'}
                 >
                   Partner With Us
