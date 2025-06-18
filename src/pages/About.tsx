@@ -204,6 +204,11 @@ const About = () => {
                   onClick={() => window.location.href = '/register-business'}
                 >
                   Partner With Us
+                  <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
+                  onClick={() => window.location.href = '/register-business'}
                 </Button>
               </div>
             </div>
