@@ -192,8 +192,6 @@ const Gyms = () => {
           </div>
         </section>
       </div>
-      
-      <AppFooter />
     </>
   );
 };
