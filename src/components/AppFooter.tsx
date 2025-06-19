@@ -77,7 +77,7 @@ const AppFooter = () => {
               <ul className="space-y-2 lg:space-y-3 text-gray-300 text-sm lg:text-base">
                 <li><Link to="/register-business" className="hover:text-blue-400 transition-colors duration-300">List Your Business</Link></li>
                 <li><Link to="/register-trainer" className="hover:text-blue-400 transition-colors duration-300">Become a Trainer</Link></li>
-                <li><Link to="/manage-bookings" className="hover:text-blue-400 transition-colors duration-300">Manage Bookings</Link></li>
+                <li><Link to="/business-dashboard" className="hover:text-blue-400 transition-colors duration-300">Manage Bookings</Link></li>
                 <li><Link to="/pricing" className="hover:text-blue-400 transition-colors duration-300">Pricing Plans</Link></li>
                 <li><Link to="/support" className="hover:text-blue-400 transition-colors duration-300">Support</Link></li>
               </ul>

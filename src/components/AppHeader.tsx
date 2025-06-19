@@ -21,12 +21,10 @@ const AppHeader = () => {
   };
 
   const navItems = [
-    { name: "Home", href: "/" },
     { name: "Gyms", href: "/gyms" },
     { name: "Spas", href: "/spas" },
     { name: "Yoga", href: "/yoga" },
     { name: "Trainers", href: "/trainers" },
-    { name: "About", href: "/about" },
   ];
 
   return (

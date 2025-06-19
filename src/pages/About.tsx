@@ -13,13 +13,6 @@ const About = () => {
     window.location.href = "https://wa.me/917596958097";
   };
 
-  const stats = [
-    { number: "10,000+", label: "Happy Customers", icon: Users },
-    { number: "500+", label: "Partner Businesses", icon: Target },
-    { number: "50+", label: "Cities Covered", icon: Award },
-    { number: "24/7", label: "Customer Support", icon: Clock },
-  ];
-
   const values = [
     {
       icon: Heart,
@@ -92,23 +85,6 @@ const About = () => {
                 We're building India's most trusted wellness platform, connecting millions of people 
                 with premium gyms, rejuvenating spas, and transformative yoga experiences.
               </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="py-16 bg-white/50">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                    <stat.icon className="h-8 w-8 md:h-10 md:w-10 text-white" />
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{stat.number}</h3>
-                  <p className="text-gray-600 font-medium">{stat.label}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -200,15 +176,10 @@ const About = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-white text-white hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
+                  className="border-white text-white hover:bg-white hover:text-emerald-600 font-semibold px-8 py-4 text-lg"
                   onClick={() => window.location.href = '/register-business'}
                 >
                   Partner With Us
-                  <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-white text-white hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-                  onClick={() => window.location.href = '/register-business'}
                 </Button>
               </div>
             </div>
