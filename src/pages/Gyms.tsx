@@ -6,16 +6,14 @@ import { Button } from '@/components/ui/button';
 import { MapPin, Star, ArrowRight, Dumbbell, Zap, Users, Sparkles, Crown, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
-import { SmartFilters } from '@/components/SmartFilters';
 import AppFooter from '@/components/AppFooter';
 import { useAuth } from '@/hooks/useAuth';
 import SEOHead from '@/components/SEOHead';
 
 const Gyms = () => {
   const { signOut } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
+  const [priceFilter, setPriceFilter] = useState('');
 
   return (
     <>
@@ -78,15 +76,55 @@ const Gyms = () => {
           </div>
         </section>
 
-        {/* Search Filters */}
-        <section className="container mx-auto px-4 -mt-16 relative z-20">
-          <SmartFilters 
-            onSearchChange={setSearchTerm}
-            onLocationChange={setLocation}
-            onSortChange={setSortBy}
-            placeholder="Search premium gyms, equipment, trainers..."
-            category="gym"
-          />
+        {/* Filter Section */}
+        <section className="container mx-auto px-4 py-8 -mt-8 relative z-20">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/20">
+            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant={priceFilter === '' ? 'default' : 'outline'}
+                  onClick={() => setPriceFilter('')}
+                  className="rounded-full"
+                >
+                  All Gyms
+                </Button>
+                <Button
+                  variant={priceFilter === 'budget' ? 'default' : 'outline'}
+                  onClick={() => setPriceFilter('budget')}
+                  className="rounded-full"
+                >
+                  Budget Friendly
+                </Button>
+                <Button
+                  variant={priceFilter === 'premium' ? 'default' : 'outline'}
+                  onClick={() => setPriceFilter('premium')}
+                  className="rounded-full"
+                >
+                  Premium
+                </Button>
+                <Button
+                  variant={priceFilter === 'luxury' ? 'default' : 'outline'}
+                  onClick={() => setPriceFilter('luxury')}
+                  className="rounded-full"
+                >
+                  Luxury
+                </Button>
+              </div>
+              
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">Sort by:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  <option value="created_at">Newest First</option>
+                  <option value="session_price">Price: Low to High</option>
+                  <option value="-session_price">Price: High to Low</option>
+                </select>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Premium Features Section */}
@@ -153,9 +191,10 @@ const Gyms = () => {
           category="gym" 
           title="Premium Gyms"
           description="Discover state-of-the-art fitness centers with modern equipment and expert trainers"
-          searchTerm={searchTerm}
-          location={location}
+          searchTerm=""
+          location=""
           sortBy={sortBy}
+          priceFilter={priceFilter}
         />
 
         {/* Premium CTA Section */}
@@ -192,6 +231,7 @@ const Gyms = () => {
           </div>
         </section>
       </div>
+      <AppFooter />
     </>
   );
 };
