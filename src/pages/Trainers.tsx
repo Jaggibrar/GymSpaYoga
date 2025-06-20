@@ -27,7 +27,7 @@ interface Trainer {
 const Trainers = () => {
   const [trainers, setTrainers] = useState<Trainer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setS­ortBy] = useState('created_at');
+  const [sortBy, setSortBy] = useState('created_at');
   const [priceFilter, setPriceFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
 
@@ -113,26 +113,28 @@ const Trainers = () => {
         <AppHeader />
         
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-16">
+        <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20">
           <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <User className="h-12 w-12 mr-4" />
-              <h1 className="text-4xl md:text-5xl font-bold">
+            <div className="flex items-center justify-center mb-8">
+              <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mr-4">
+                <User className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-gray-900">
                 Personal Trainers
               </h1>
             </div>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Connect with certified personal trainers who will guide you towards achieving your fitness goals.
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Connect with certified personal trainers who will guide you towards achieving your fitness goals with personalized training programs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-trainer">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
                   <Award className="mr-2 h-5 w-5" />
                   Become a Trainer
                 </Button>
               </Link>
               <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                <Button size="lg" variant="outline" className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-4 rounded-xl font-semibold">
                   Explore All Categories
                 </Button>
               </Link>
@@ -142,44 +144,44 @@ const Trainers = () => {
 
         {/* Filter Section */}
         <section className="container mx-auto px-4 py-8">
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
+          <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+            <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
               <div className="flex flex-wrap gap-3">
                 <Button
                   variant={priceFilter === '' ? 'default' : 'outline'}
                   onClick={() => setPriceFilter('')}
-                  className="rounded-full"
+                  className="rounded-full px-6 py-2 font-medium"
                 >
                   All Trainers
                 </Button>
                 <Button
                   variant={priceFilter === 'budget' ? 'default' : 'outline'}
                   onClick={() => setPriceFilter('budget')}
-                  className="rounded-full"
+                  className="rounded-full px-6 py-2 font-medium"
                 >
                   Budget Friendly
                 </Button>
                 <Button
                   variant={priceFilter === 'premium' ? 'default' : 'outline'}
                   onClick={() => setPriceFilter('premium')}
-                  className="rounded-full"
+                  className="rounded-full px-6 py-2 font-medium"
                 >
                   Premium
                 </Button>
                 <Button
                   variant={priceFilter === 'luxury' ? 'default' : 'outline'}
                   onClick={() => setPriceFilter('luxury')}
-                  className="rounded-full"
+                  className="rounded-full px-6 py-2 font-medium"
                 >
                   Luxury
                 </Button>
               </div>
               
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-4">
                 <select
                   value={categoryFilter}
                   onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="">All Categories</option>
                   <option value="gym">Gym Trainer</option>
@@ -191,7 +193,7 @@ const Trainers = () => {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
                 >
                   <option value="created_at">Newest First</option>
                   <option value="hourly_rate">Price: Low to High</option>
@@ -203,43 +205,43 @@ const Trainers = () => {
         </section>
 
         {/* Features Section */}
-        <section className="container mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
               Why Choose Our Trainers?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Work with certified professionals who are passionate about helping you achieve your fitness goals
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Dumbbell className="h-8 w-8 text-blue-600" />
+            <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Dumbbell className="h-10 w-10 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Personalized Training</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Personalized Training</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Customized workout plans tailored to your specific goals and fitness level
               </p>
             </div>
 
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-blue-600" />
+            <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Users className="h-10 w-10 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Expert Guidance</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Expert Guidance</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Certified trainers with years of experience and proven track records
               </p>
             </div>
 
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-blue-600" />
+            <div className="text-center p-8 bg-white rounded-2xl border border-gray-200 hover:shadow-lg transition-all duration-300">
+              <div className="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Zap className="h-10 w-10 text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Flexible Scheduling</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Flexible Scheduling</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Training sessions that fit your schedule and lifestyle preferences
               </p>
             </div>
@@ -247,39 +249,39 @@ const Trainers = () => {
         </section>
 
         {/* Trainers Listing */}
-        <section className="container mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+        <section className="container mx-auto px-4 py-16">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">
               Featured Personal Trainers
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Connect with certified trainers who will guide you towards your fitness goals
             </p>
           </div>
 
           {loading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-6"></div>
-              <p className="text-lg text-gray-600">Loading trainers...</p>
+            <div className="text-center py-20">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-8"></div>
+              <p className="text-xl text-gray-600">Loading trainers...</p>
             </div>
           ) : trainers.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <User className="h-12 w-12 text-gray-400" />
+            <div className="text-center py-20">
+              <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <User className="h-16 w-16 text-gray-400" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">No Trainers Found</h3>
-              <p className="text-gray-600 mb-8 max-w-xl mx-auto">
+              <h3 className="text-3xl font-bold text-gray-800 mb-6">No Trainers Found</h3>
+              <p className="text-gray-600 mb-10 max-w-2xl mx-auto text-lg leading-relaxed">
                 We're working hard to onboard more certified trainers in your area. 
                 Check back soon or become a trainer yourself!
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/register-trainer">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl">
                     Become a Trainer
                   </Button>
                 </Link>
                 <Link to="/explore">
-                  <Button size="lg" variant="outline">
+                  <Button size="lg" variant="outline" className="border-2 border-gray-300 px-8 py-4 rounded-xl">
                     Explore Other Categories
                   </Button>
                 </Link>
@@ -291,9 +293,9 @@ const Trainers = () => {
                 const priceTier = getPriceTier(trainer.hourly_rate);
                 
                 return (
-                  <Card key={trainer.id} className="group hover:shadow-lg transition-all duration-300 border border-gray-200 bg-white overflow-hidden">
+                  <Card key={trainer.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white rounded-2xl overflow-hidden">
                     <div className="relative">
-                      <div className="h-48 overflow-hidden">
+                      <div className="h-56 overflow-hidden">
                         {trainer.profile_image_url ? (
                           <img 
                             src={trainer.profile_image_url} 
@@ -304,26 +306,26 @@ const Trainers = () => {
                             }}
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                            <User className="h-16 w-16 text-gray-400" />
+                          <div className="w-full h-full bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+                            <User className="h-20 w-20 text-blue-300" />
                           </div>
                         )}
                       </div>
-                      <div className="absolute top-3 right-3 flex gap-2">
-                        <Badge className={priceTier.color}>
+                      <div className="absolute top-4 right-4">
+                        <Badge className={`${priceTier.color} border-0 px-3 py-1 font-semibold`}>
                           {priceTier.tier}
                         </Badge>
                       </div>
                     </div>
 
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors font-bold">
                         {trainer.name}
                       </CardTitle>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center text-gray-500">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          {trainer.location}
+                          <MapPin className="h-4 w-4 mr-2" />
+                          <span className="text-sm">{trainer.location}</span>
                         </div>
                         <div className="text-sm text-gray-500">
                           {getTierIcon(trainer.trainer_tier)} {trainer.trainer_tier}
@@ -331,40 +333,40 @@ const Trainers = () => {
                       </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="capitalize">
+                        <Badge variant="outline" className="capitalize border-gray-200 text-gray-700">
                           {trainer.category}
                         </Badge>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-gray-500 font-medium">
                           {trainer.experience} years exp
                         </span>
                       </div>
 
-                      <p className="text-gray-600 text-sm line-clamp-2">
+                      <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
                         {trainer.bio}
                       </p>
 
                       {trainer.specializations && trainer.specializations.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2">
                           {trainer.specializations.slice(0, 3).map((spec, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
+                            <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
                               {spec}
                             </Badge>
                           ))}
                           {trainer.specializations.length > 3 && (
-                            <Badge variant="secondary" className="text-xs">
+                            <Badge variant="secondary" className="text-xs bg-gray-100 text-gray-700">
                               +{trainer.specializations.length - 3}
                             </Badge>
                           )}
                         </div>
                       )}
 
-                      <div className="border-t pt-4">
-                        <div className="flex justify-between items-center mb-4">
+                      <div className="border-t pt-6">
+                        <div className="flex justify-between items-center mb-6">
                           <div>
                             <span className="text-gray-500 text-sm">Hourly Rate</span>
-                            <div className="font-bold text-lg text-blue-600">
+                            <div className="font-bold text-2xl text-blue-600">
                               ₹{trainer.hourly_rate}
                             </div>
                           </div>
@@ -374,7 +376,7 @@ const Trainers = () => {
                           </div>
                         </div>
 
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold">
                           View Profile
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
@@ -387,12 +389,12 @@ const Trainers = () => {
           )}
 
           {trainers.length > 0 && (
-            <div className="text-center mt-12">
-              <p className="text-gray-600 mb-6">
+            <div className="text-center mt-16">
+              <p className="text-gray-600 mb-8 text-lg">
                 Showing {trainers.length} certified trainers • Ready to start your fitness journey?
               </p>
               <Link to="/register-trainer">
-                <Button size="lg" variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                <Button size="lg" variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold">
                   Become a Trainer
                 </Button>
               </Link>
@@ -401,24 +403,24 @@ const Trainers = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gradient-to-r from-blue-500 to-indigo-600 py-16">
+        <section className="bg-gradient-to-br from-blue-600 to-indigo-700 py-20">
           <div className="container mx-auto px-4 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="text-4xl font-bold mb-6">
               Ready to Transform Your Fitness?
             </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto">
+            <p className="text-xl mb-10 max-w-3xl mx-auto leading-relaxed">
               Connect with certified personal trainers who will create customized plans for your success.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/explore">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold">
                   <MapPin className="mr-2 h-5 w-5" />
                   Find Trainers Near Me
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/register-trainer">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold">
                   Become a Trainer
                 </Button>
               </Link>
