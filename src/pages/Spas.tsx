@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, ArrowRight, Sparkles, Zap, Users, Crown, Award } from 'lucide-react';
+import { MapPin, ArrowRight, Sparkles, Zap, Users, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
+import AppHeader from '@/components/AppHeader';
 import AppFooter from '@/components/AppFooter';
 import SEOHead from '@/components/SEOHead';
 
@@ -20,52 +20,31 @@ const Spas = () => {
         keywords="spa, wellness center, massage, relaxation, luxury spa, beauty treatments"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-pink-900 to-slate-900">
-        {/* Premium Hero Section */}
-        <section className="relative bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-600 text-white py-24 overflow-hidden">
-          <div className="absolute inset-0 bg-black/20">
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
-          </div>
-          
-          {/* Floating Elements */}
-          <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-48 h-48 bg-pink-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <div className="flex items-center justify-center mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
-                <Sparkles className="h-20 w-20 mr-6 relative z-10 drop-shadow-2xl" />
-              </div>
-              <div>
-                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent">
-                  Luxury Spas
-                </h1>
-                <div className="flex items-center justify-center mt-4 space-x-2">
-                  <Crown className="h-6 w-6 text-yellow-300" />
-                  <span className="text-xl text-pink-100 font-semibold">Premium Wellness Experience</span>
-                  <Crown className="h-6 w-6 text-yellow-300" />
-                </div>
-              </div>
+      <div className="min-h-screen bg-white">
+        <AppHeader />
+        
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-pink-500 to-purple-600 text-white py-16">
+          <div className="container mx-auto px-4 text-center">
+            <div className="flex items-center justify-center mb-6">
+              <Sparkles className="h-12 w-12 mr-4" />
+              <h1 className="text-4xl md:text-5xl font-bold">
+                Luxury Spas
+              </h1>
             </div>
-            
-            <p className="text-xl mb-8 text-pink-100 max-w-3xl mx-auto leading-relaxed">
-              Indulge in world-class spa treatments and wellness experiences. 
-              Discover rejuvenating therapies designed to restore your mind, body, and soul.
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Indulge in world-class spa treatments and wellness experiences designed to restore your mind, body, and soul.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-business">
-                <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
-                  <Award className="mr-3 h-5 w-5 flex-shrink-0" />
-                  <span className="block">List Your Luxury Spa</span>
-                  <ArrowRight className="ml-3 h-5 w-5 flex-shrink-0" />
+                <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-100">
+                  <Award className="mr-2 h-5 w-5" />
+                  List Your Spa
                 </Button>
               </Link>
               <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
-                  <Sparkles className="mr-3 h-5 w-5 flex-shrink-0" />
-                  <span className="block">Explore All Categories</span>
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-pink-600">
+                  Explore All Categories
                 </Button>
               </Link>
             </div>
@@ -73,8 +52,8 @@ const Spas = () => {
         </section>
 
         {/* Filter Section */}
-        <section className="container mx-auto px-4 py-8 -mt-8 relative z-20">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6 border border-white/20">
+        <section className="container mx-auto px-4 py-8">
+          <div className="bg-gray-50 rounded-lg p-6">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               <div className="flex flex-wrap gap-3">
                 <Button
@@ -123,59 +102,44 @@ const Spas = () => {
           </div>
         </section>
 
-        {/* Premium Features Section */}
-        <section className="container mx-auto px-4 py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
+        {/* Features Section */}
+        <section className="container mx-auto px-4 py-12">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Why Choose Premium Spas?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Experience the ultimate in luxury and wellness with our carefully selected spa partners
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-2xl transform hover:scale-105 hover:-translate-y-2">
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full blur-lg opacity-50"></div>
-                  <div className="h-20 w-20 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center relative z-10">
-                    <Sparkles className="h-10 w-10 text-white" />
-                  </div>
-                </div>
+            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
+              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="h-8 w-8 text-pink-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-800">Luxury Treatments</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Experience world-class spa treatments with premium products and techniques for ultimate relaxation
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Luxury Treatments</h3>
+              <p className="text-gray-600">
+                World-class spa treatments with premium products and techniques for ultimate relaxation
               </p>
             </div>
 
-            <div className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-2xl transform hover:scale-105 hover:-translate-y-2">
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full blur-lg opacity-50"></div>
-                  <div className="h-20 w-20 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center relative z-10">
-                    <Users className="h-10 w-10 text-white" />
-                  </div>
-                </div>
+            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
+              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="h-8 w-8 text-pink-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-800">Expert Therapists</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Expert Therapists</h3>
+              <p className="text-gray-600">
                 Certified wellness professionals with years of experience in various therapeutic techniques
               </p>
             </div>
 
-            <div className="text-center p-8 hover:shadow-2xl transition-all duration-500 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl rounded-2xl transform hover:scale-105 hover:-translate-y-2">
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full blur-lg opacity-50"></div>
-                  <div className="h-20 w-20 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full flex items-center justify-center relative z-10">
-                    <Zap className="h-10 w-10 text-white" />
-                  </div>
-                </div>
+            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
+              <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-pink-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-800">Premium Facilities</h3>
-              <p className="text-gray-600 leading-relaxed">
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Premium Facilities</h3>
+              <p className="text-gray-600">
                 State-of-the-art spa facilities with luxury amenities for a complete wellness experience
               </p>
             </div>
@@ -193,41 +157,34 @@ const Spas = () => {
           priceFilter={priceFilter}
         />
 
-        {/* Premium CTA Section */}
-        <section className="relative bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-black/30"></div>
-          <div className="absolute top-0 left-0 w-full h-full">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
-            <div className="absolute bottom-10 right-10 w-48 h-48 bg-pink-300/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
-          </div>
-          
-          <div className="container mx-auto px-4 text-center relative z-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        {/* CTA Section */}
+        <section className="bg-gradient-to-r from-pink-500 to-purple-600 py-16">
+          <div className="container mx-auto px-4 text-center text-white">
+            <h2 className="text-3xl font-bold mb-4">
               Ready to Rejuvenate Your Soul?
             </h2>
-            <p className="text-xl text-pink-100 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Discover the perfect spa experience tailored to your wellness needs. 
-              Book your luxury treatment today and embark on a journey of relaxation.
+            <p className="text-lg mb-8 max-w-2xl mx-auto">
+              Discover the perfect spa experience tailored to your wellness needs.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/explore">
-                <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold rounded-xl shadow-2xl hover:shadow-white/20 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
-                  <MapPin className="mr-3 h-5 w-5 flex-shrink-0" />
-                  <span className="block">Find Luxury Spas Near Me</span>
-                  <ArrowRight className="ml-3 h-5 w-5 flex-shrink-0" />
+                <Button size="lg" className="bg-white text-pink-600 hover:bg-gray-100">
+                  <MapPin className="mr-2 h-5 w-5" />
+                  Find Spas Near Me
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <Link to="/register-business">
-                <Button size="lg" variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-pink-600 px-10 py-4 text-lg font-semibold rounded-xl backdrop-blur-sm bg-white/10 transition-all duration-300 transform hover:scale-105 min-h-[60px]">
-                  <Crown className="mr-3 h-5 w-5 flex-shrink-0" />
-                  <span className="block">List Your Luxury Spa</span>
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-pink-600">
+                  List Your Spa
                 </Button>
               </Link>
             </div>
           </div>
         </section>
+        
+        <AppFooter />
       </div>
-      <AppFooter />
     </>
   );
 };

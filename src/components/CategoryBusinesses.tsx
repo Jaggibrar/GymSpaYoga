@@ -91,10 +91,10 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
         }
       }
 
-      // Apply sorting
+      // Apply sorting - Fixed nullsLast to nullsFirst
       if (sortBy === 'session_price' || sortBy === '-session_price') {
         const ascending = sortBy === 'session_price';
-        query = query.order('session_price', { ascending, nullsLast: true });
+        query = query.order('session_price', { ascending, nullsFirst: false });
       } else {
         query = query.order('created_at', { ascending: false });
       }
@@ -149,10 +149,10 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
 
   if (loading) {
     return (
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-12 bg-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-500 mx-auto mb-8"></div>
-          <p className="text-xl text-gray-600">Loading {title.toLowerCase()}...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-500 mx-auto mb-6"></div>
+          <p className="text-lg text-gray-600">Loading {title.toLowerCase()}...</p>
         </div>
       </section>
     );
@@ -160,9 +160,9 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
 
   if (error) {
     return (
-      <section className="container mx-auto px-4 py-20">
+      <section className="container mx-auto px-4 py-12 bg-white">
         <div className="text-center">
-          <p className="text-xl text-red-600 mb-4">Error loading businesses: {error}</p>
+          <p className="text-lg text-red-600 mb-4">Error loading businesses: {error}</p>
           <Button onClick={fetchBusinesses} variant="outline">
             Try Again
           </Button>
@@ -172,29 +172,29 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
   }
 
   return (
-    <section className="container mx-auto px-4 py-20">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
+    <section className="container mx-auto px-4 py-12 bg-white">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">
           {title}
         </h2>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
           {description}
         </p>
       </div>
 
       {businesses.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
-            <Dumbbell className="h-16 w-16 text-gray-400" />
+        <div className="text-center py-16">
+          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Dumbbell className="h-12 w-12 text-gray-400" />
           </div>
           <h3 className="text-2xl font-bold text-gray-800 mb-4">No {title} Found</h3>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-600 mb-8 max-w-xl mx-auto">
             We're working hard to onboard more {category} businesses in your area. 
             Check back soon or help us grow by recommending your favorite {category}!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/register-business">
-              <Button size="lg" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700">
+              <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
                 List Your {category.charAt(0).toUpperCase() + category.slice(1)}
               </Button>
             </Link>
@@ -211,23 +211,23 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
             const priceTier = getPriceTier(business.session_price, business.monthly_price);
             
             return (
-              <Card key={business.id} className="group hover:shadow-2xl transition-all duration-500 border-0 bg-white/95 backdrop-blur-xl overflow-hidden">
+              <Card key={business.id} className="group hover:shadow-lg transition-all duration-300 border border-gray-200 bg-white overflow-hidden">
                 <div className="relative h-48 overflow-hidden">
                   {business.image_urls && business.image_urls.length > 0 ? (
                     <img 
                       src={business.image_urls[0]} 
                       alt={business.business_name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         e.currentTarget.src = '/placeholder.svg';
                       }}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                      <Dumbbell className="h-16 w-16 text-gray-400" />
+                    <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                      <Dumbbell className="h-12 w-12 text-gray-400" />
                     </div>
                   )}
-                  <div className="absolute top-4 right-4 flex gap-2">
+                  <div className="absolute top-3 right-3 flex gap-2">
                     {priceTier && (
                       <Badge className={priceTier.color}>
                         {priceTier.tier}
@@ -237,10 +237,10 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                 </div>
 
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-xl group-hover:text-emerald-600 transition-colors">
+                  <CardTitle className="text-xl text-gray-900 group-hover:text-emerald-600 transition-colors">
                     {business.business_name}
                   </CardTitle>
-                  <div className="flex items-center text-gray-600 text-sm">
+                  <div className="flex items-center text-gray-500">
                     <MapPin className="h-4 w-4 mr-1" />
                     {business.city}, {business.state}
                   </div>
@@ -267,14 +267,14 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                       {business.amenities.slice(0, 3).map((amenity, index) => {
                         const IconComponent = getAmenityIcon(amenity);
                         return (
-                          <div key={index} className="flex items-center text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-full">
+                          <div key={index} className="flex items-center text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded-full">
                             <IconComponent className="h-3 w-3 mr-1" />
                             {amenity}
                           </div>
                         );
                       })}
                       {business.amenities.length > 3 && (
-                        <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-full">
                           +{business.amenities.length - 3} more
                         </div>
                       )}
@@ -282,7 +282,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                   )}
 
                   <div className="border-t pt-4">
-                    <div className="flex justify-between items-center mb-3">
+                    <div className="flex justify-between items-center mb-4">
                       {business.session_price && (
                         <div className="text-sm">
                           <span className="text-gray-500">Session from</span>
@@ -301,14 +301,12 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                       )}
                     </div>
 
-                    <div className="flex gap-2">
-                      <Link to={`/${category}/${business.id}`} className="flex-1">
-                        <Button className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700">
-                          View Details
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
-                    </div>
+                    <Link to={`/${category}/${business.id}`} className="block">
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                        View Details
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -318,12 +316,12 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
       )}
 
       {businesses.length > 0 && (
-        <div className="text-center mt-16">
-          <p className="text-gray-300 mb-6">
+        <div className="text-center mt-12">
+          <p className="text-gray-600 mb-6">
             Showing {businesses.length} {title.toLowerCase()} • Want to see your business here?
           </p>
           <Link to="/register-business">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-800">
+            <Button size="lg" variant="outline" className="border-emerald-600 text-emerald-600 hover:bg-emerald-50">
               List Your Business
             </Button>
           </Link>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { X, Plus, Upload, User, Award, Clock, MapPin, Phone, Mail, Heart, Star, Dumbbell, Calendar } from 'lucide-react';
+import { X, Plus, User, Award, Clock, MapPin, Phone, Mail, Heart, Star, Dumbbell, Calendar } from 'lucide-react';
 import { useTrainerRegistration } from '@/hooks/useTrainerRegistration';
 import { TrainerProfileImageUpload } from '@/components/registration/TrainerProfileImageUpload';
 import AppHeader from '@/components/AppHeader';
@@ -31,12 +32,13 @@ const RegisterTrainer = () => {
     bio: '',
     certifications: ''
   });
-  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [newSpecialization, setNewSpecialization] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const { submitTrainerRegistration } = useTrainerRegistration();
+  // Fixed: Use the correct method name from the hook
+  const { registerTrainer, loading } = useTrainerRegistration();
 
   const addSpecialization = () => {
     const trimmed = newSpecialization.trim();
@@ -118,10 +120,10 @@ const RegisterTrainer = () => {
         bio: bioData.bio,
         certifications: bioData.certifications,
         experience: parseInt(professionalDetails.experience),
-        profile_image_url: profileImageUrl
+        profile_image: profileImage || undefined
       };
 
-      const success = await submitTrainerRegistration(formData);
+      const success = await registerTrainer(formData);
       
       if (success) {
         setShowSuccessMessage(true);
@@ -135,12 +137,19 @@ const RegisterTrainer = () => {
           specializations: [] 
         });
         setBioData({ bio: '', certifications: '' });
-        setProfileImageUrl('');
+        setProfileImage(null);
       }
     } catch (error) {
       console.error('Registration failed:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfileImage(file);
     }
   };
 
@@ -151,7 +160,7 @@ const RegisterTrainer = () => {
           title="Trainer Registration Successful - GymSpaYoga"
           description="Thank you for registering as a trainer with GymSpaYoga. Your application is being reviewed."
         />
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50">
+        <div className="min-h-screen bg-white">
           <AppHeader />
           <div className="container mx-auto px-4 py-20">
             <div className="max-w-2xl mx-auto text-center">
@@ -187,18 +196,18 @@ const RegisterTrainer = () => {
         keywords="personal trainer registration, fitness trainer, yoga instructor, gym trainer"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-white">
         <AppHeader />
         
         <div className="container mx-auto px-4 py-8">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <div className="flex items-center justify-center mb-6">
-              <div className="h-16 w-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center mr-4">
+              <div className="h-16 w-16 bg-emerald-600 rounded-2xl flex items-center justify-center mr-4">
                 <Dumbbell className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
                   Become a Trainer
                 </h1>
                 <p className="text-xl text-gray-600 mt-2">Join India's fastest-growing wellness platform</p>
@@ -210,7 +219,7 @@ const RegisterTrainer = () => {
           <div className="max-w-4xl mx-auto">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Personal Information */}
-              <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <Card className="shadow-sm border border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl">
                     <User className="h-6 w-6 text-emerald-600" />
@@ -218,10 +227,7 @@ const RegisterTrainer = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <TrainerProfileImageUpload 
-                    onImageUploaded={setProfileImageUrl}
-                    currentImageUrl={profileImageUrl}
-                  />
+                  <TrainerProfileImageUpload onFileChange={handleImageChange} />
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -274,7 +280,7 @@ const RegisterTrainer = () => {
               </Card>
 
               {/* Professional Details */}
-              <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <Card className="shadow-sm border border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl">
                     <Award className="h-6 w-6 text-blue-600" />
@@ -369,7 +375,7 @@ const RegisterTrainer = () => {
               </Card>
 
               {/* Bio and Certifications */}
-              <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+              <Card className="shadow-sm border border-gray-200">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl">
                     <Heart className="h-6 w-6 text-purple-600" />
@@ -406,10 +412,10 @@ const RegisterTrainer = () => {
                 <Button 
                   type="submit" 
                   size="lg"
-                  disabled={isSubmitting}
-                  className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 px-12 py-4 text-lg font-semibold"
+                  disabled={isSubmitting || loading}
+                  className="bg-emerald-600 hover:bg-emerald-700 px-12 py-4 text-lg font-semibold"
                 >
-                  {isSubmitting ? 'Submitting...' : 'Register as Trainer'}
+                  {isSubmitting || loading ? 'Submitting...' : 'Register as Trainer'}
                 </Button>
               </div>
             </form>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTrainerProfileImageUpload } from "@/hooks/useTrainerProfileImageUpload";
 
 interface TrainerProfileImageUploadProps {
-  onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFileChange: (e: React.ChangeEvent<HTMLInputElement>)=> void;
 }
 
 export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageUploadProps) => {
@@ -62,17 +62,17 @@ export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageU
 
   return (
     <div className="space-y-6">
-      <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
+      <h3 className="text-xl font-semibold text-gray-800">
         Profile Photo
       </h3>
       
-      <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-blue-400 transition-colors">
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors">
         {previewUrl ? (
           <div className="relative inline-block">
             <img
               src={previewUrl}
               alt="Profile preview"
-              className="w-32 h-32 object-cover rounded-full mx-auto border-4 border-gray-200"
+              className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-gray-200"
             />
             <button
               type="button"
@@ -84,9 +84,9 @@ export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageU
           </div>
         ) : (
           <>
-            <Upload className="h-16 w-16 mx-auto text-gray-400 mb-6" />
-            <p className="text-xl text-gray-600 mb-4">Upload your professional photo</p>
-            <p className="text-gray-500 mb-6">JPG, PNG, WebP up to 2MB</p>
+            <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+            <p className="text-lg text-gray-600 mb-2">Upload your professional photo</p>
+            <p className="text-gray-500 mb-4">JPG, PNG, WebP up to 2MB</p>
             
             <div className="flex items-center justify-center gap-2 mb-4 text-sm text-gray-600">
               <AlertCircle className="h-4 w-4" />
@@ -100,7 +100,7 @@ export const TrainerProfileImageUpload = ({ onFileChange }: TrainerProfileImageU
           type="file"
           accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
           onChange={handleFileSelect}
-          className="max-w-xs mx-auto text-lg"
+          className="max-w-xs mx-auto"
         />
       </div>
       
