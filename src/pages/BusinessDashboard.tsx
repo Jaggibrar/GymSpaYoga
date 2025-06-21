@@ -2,14 +2,17 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
 import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
+import BusinessListingsManager from "@/components/business/BusinessListingsManager";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Users, Calendar, TrendingUp, Loader2, Plus, BarChart3 } from "lucide-react";
+import { Building2, Users, Calendar, TrendingUp, Loader2, Plus, BarChart3, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
   const { hasProfiles, loading } = useHasBusinessProfiles();
+  const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'bookings'>('overview');
 
   if (loading) {
     return (
@@ -60,92 +63,128 @@ export default function BusinessDashboard() {
                 Add New Listing
               </Button>
             </Link>
-            <Link to="/business-bookings">
-              <Button variant="outline">
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Analytics
-              </Button>
-            </Link>
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Total Bookings</p>
-                  <p className="text-2xl font-bold text-gray-800">--</p>
-                  <p className="text-xs text-green-600">Live data coming soon</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Pending Requests</p>
-                  <p className="text-2xl font-bold text-yellow-600">--</p>
-                  <p className="text-xs text-green-600">Real-time updates</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
-                  <Users className="h-6 w-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">This Month</p>
-                  <p className="text-2xl font-bold text-green-600">--</p>
-                  <p className="text-xs text-green-600">Monthly revenue</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                  <TrendingUp className="h-6 w-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Profile Views</p>
-                  <p className="text-2xl font-bold text-purple-600">--</p>
-                  <p className="text-xs text-green-600">Weekly analytics</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                  <Building2 className="h-6 w-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Navigation Tabs */}
+        <div className="flex gap-2 mb-8 bg-white rounded-lg p-2 shadow-sm">
+          <Button
+            variant={activeTab === 'overview' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('overview')}
+            className="flex-1"
+          >
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Overview
+          </Button>
+          <Button
+            variant={activeTab === 'listings' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('listings')}
+            className="flex-1"
+          >
+            <Building2 className="h-4 w-4 mr-2" />
+            My Listings
+          </Button>
+          <Button
+            variant={activeTab === 'bookings' ? 'default' : 'ghost'}
+            onClick={() => setActiveTab('bookings')}
+            className="flex-1"
+          >
+            <Calendar className="h-4 w-4 mr-2" />
+            Bookings
+          </Button>
         </div>
 
-        {/* Main Dashboard Content */}
-        <Card className="border-0 shadow-xl">
-          <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-t-lg">
-            <CardTitle className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-white" />
-              </div>
-              Booking Management
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <BusinessBookingsDashboard />
-          </CardContent>
-        </Card>
+        {/* Content based on active tab */}
+        {activeTab === 'overview' && (
+          <>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Total Bookings</p>
+                      <p className="text-2xl font-bold text-gray-800">--</p>
+                      <p className="text-xs text-green-600">Live data coming soon</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                      <Calendar className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Pending Requests</p>
+                      <p className="text-2xl font-bold text-yellow-600">--</p>
+                      <p className="text-xs text-green-600">Real-time updates</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                      <Users className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">This Month</p>
+                      <p className="text-2xl font-bold text-green-600">--</p>
+                      <p className="text-xs text-green-600">Monthly revenue</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">Profile Views</p>
+                      <p className="text-2xl font-bold text-purple-600">--</p>
+                      <p className="text-xs text-green-600">Weekly analytics</p>
+                    </div>
+                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-white" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
+
+        {activeTab === 'listings' && (
+          <Card className="border-0 shadow-xl">
+            <CardContent className="p-6">
+              <BusinessListingsManager />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'bookings' && (
+          <Card className="border-0 shadow-xl">
+            <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-t-lg">
+              <CardTitle className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-white" />
+                </div>
+                Booking Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <BusinessBookingsDashboard />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

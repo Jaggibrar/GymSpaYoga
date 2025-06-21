@@ -12,10 +12,12 @@ import BusinessDetailsModal from '@/components/business/BusinessDetailsModal';
 interface Business {
   id: string;
   business_name: string;
+  business_type: string;
   category: string;
   address: string;
   city: string;
   state: string;
+  pin_code: string;
   phone: string;
   email: string;
   description: string;
@@ -26,6 +28,7 @@ interface Business {
   session_price: number;
   monthly_price: number;
   created_at: string;
+  updated_at: string;
   status: string;
 }
 
