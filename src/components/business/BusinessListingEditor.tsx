@@ -441,4 +441,4 @@ const BusinessListingEditor = ({ listingId, onSave, onCancel }: BusinessListingE
   );
 };
 
-export default BusinessListing Editor;
+export default BusinessListingEditor;
