@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { MapPin, ArrowRight, Sparkles, Zap, Users, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
-import AppHeader from '@/components/AppHeader';
-import AppFooter from '@/components/AppFooter';
 import SEOHead from '@/components/SEOHead';
 
 const Spas = () => {
@@ -21,8 +19,6 @@ const Spas = () => {
       />
       
       <div className="min-h-screen bg-white">
-        <AppHeader />
-        
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-pink-500 to-purple-600 text-white py-16">
           <div className="container mx-auto px-4 text-center">
@@ -182,8 +178,6 @@ const Spas = () => {
             </div>
           </div>
         </section>
-        
-        <AppFooter />
       </div>
     </>
   );

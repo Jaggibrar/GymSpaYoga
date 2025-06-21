@@ -4,9 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, Clock, Users, Phone, Mail, ArrowRight, Wifi, Car, Coffee, Dumbbell } from 'lucide-react';
+import { MapPin, Star, Clock, Users, Phone, Mail, ArrowRight, Wifi, Car, Coffee, Dumbbell, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import BusinessDetailsModal from '@/components/business/BusinessDetailsModal';
 
 interface Business {
   id: string;
@@ -76,14 +77,14 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
         query = query.or(`city.ilike.%${location}%,state.ilike.%${location}%,address.ilike.%${location}%`);
       }
 
-      // Apply price filter
+      // Apply price filter - Fixed SQL syntax
       if (priceFilter) {
         switch (priceFilter) {
           case 'budget':
             query = query.or('session_price.lt.1000,monthly_price.lt.3000');
             break;
           case 'premium':
-            query = query.or('session_price.gte.1000.and.session_price.lt.2000,monthly_price.gte.3000.and.monthly_price.lt.5000');
+            query = query.or('and(session_price.gte.1000,session_price.lt.2000),and(monthly_price.gte.3000,monthly_price.lt.5000)');
             break;
           case 'luxury':
             query = query.or('session_price.gte.2000,monthly_price.gte.5000');
@@ -91,7 +92,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
         }
       }
 
-      // Apply sorting - Fixed nullsLast to nullsFirst
+      // Apply sorting
       if (sortBy === 'session_price' || sortBy === '-session_price') {
         const ascending = sortBy === 'session_price';
         query = query.order('session_price', { ascending, nullsFirst: false });
@@ -301,12 +302,16 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                       )}
                     </div>
 
-                    <Link to={`/${category}/${business.id}`} className="block">
-                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                        View Details
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
+                    <BusinessDetailsModal 
+                      business={business}
+                      trigger={
+                        <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      }
+                    />
                   </div>
                 </CardContent>
               </Card>
