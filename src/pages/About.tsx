@@ -1,187 +1,142 @@
 
-import { Phone, MessageCircle, Users, Target, Award, Heart, Shield, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import SEOHead from "@/components/SEOHead";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Users, Target, Award, Heart } from 'lucide-react';
+import SEOHead from '@/components/SEOHead';
 
 const About = () => {
-  const handleCall = () => {
-    window.location.href = "tel:+917596958097";
-  };
-
-  const handleWhatsApp = () => {
-    window.location.href = "https://wa.me/917596958097";
-  };
-
-  const values = [
-    {
-      icon: Heart,
-      title: "Wellness First",
-      description: "Your health and wellness journey is our top priority. We connect you with the best facilities and professionals.",
-    },
-    {
-      icon: Shield,
-      title: "Trust & Safety",
-      description: "All our partner businesses are verified and maintain the highest standards of safety and hygiene.",
-    },
-    {
-      icon: Target,
-      title: "Personalized Experience",
-      description: "Find exactly what you need with our smart matching system that understands your preferences.",
-    },
-    {
-      icon: Award,
-      title: "Quality Assurance",
-      description: "We ensure only the best gyms, spas, and yoga centers join our platform through rigorous quality checks.",
-    },
-  ];
-
   return (
     <>
-      <SEOHead 
-        title="About GymSpaYoga - Your Wellness Journey Partner"
-        description="Learn about GymSpaYoga's mission to connect you with the best wellness facilities across India. Discover our story, values, and commitment to your health."
+      <SEOHead
+        title="About Us - GymSpaYoga | Your Wellness Journey Starts Here"
+        description="Learn about GymSpaYoga's mission to make fitness and wellness accessible to everyone. Discover our story, values, and commitment to your health."
+        keywords="about gymspaYoga, wellness platform, fitness mission, health commitment"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50">
-        {/* Contact Section */}
-        <div className="bg-gradient-to-r from-emerald-600 to-blue-600 text-white py-6">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-              <h2 className="text-lg md:text-xl font-semibold">Talk to Owner: 7596958097</h2>
-              <div className="flex gap-4">
-                <Button 
-                  onClick={handleCall}
-                  variant="outline" 
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <Phone className="h-4 w-4 mr-2" />
-                  Call
-                </Button>
-                <Button 
-                  onClick={handleWhatsApp}
-                  variant="outline" 
-                  className="bg-white/10 border-white/20 text-white hover:bg-white/20 transition-all duration-300"
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  WhatsApp
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         {/* Hero Section */}
-        <section className="py-20">
+        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <div className="max-w-4xl mx-auto">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">
-                Transforming Wellness
-                <span className="block bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-                  Across India
-                </span>
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-                We're building India's most trusted wellness platform, connecting millions of people 
-                with premium gyms, rejuvenating spas, and transformative yoga experiences.
-              </p>
-            </div>
+            <h1 className="text-5xl font-bold mb-6">About GymSpaYoga</h1>
+            <p className="text-xl max-w-3xl mx-auto">
+              We're on a mission to make fitness and wellness accessible to everyone, 
+              connecting you with the best gyms, spas, yoga studios, and personal trainers in your area.
+            </p>
           </div>
         </section>
 
-        {/* Story Section */}
-        <section className="py-20">
+        {/* Mission Section */}
+        <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-8">Our Story</h2>
-              <div className="space-y-6 text-lg md:text-xl text-gray-600 leading-relaxed">
-                <p>
-                  GymSpaYoga was born from a simple yet powerful vision: to make wellness accessible, 
-                  convenient, and personalized for everyone across India. We recognized that finding 
-                  the right fitness center, spa, or yoga studio shouldn't be a challenge.
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
+                <p className="text-lg text-gray-600 mb-6">
+                  At GymSpaYoga, we believe that everyone deserves access to quality fitness and wellness services. 
+                  Our platform bridges the gap between fitness enthusiasts and premium wellness facilities, 
+                  making it easier than ever to find and book your perfect workout or relaxation session.
                 </p>
-                <p>
-                  Today, we're proud to be India's fastest-growing wellness platform, trusted by 
-                  thousands of users and hundreds of premium wellness businesses. Our technology-driven 
-                  approach ensures you always find the perfect match for your wellness journey.
+                <p className="text-lg text-gray-600">
+                  Whether you're looking for a high-intensity gym session, a relaxing spa treatment, 
+                  or a peaceful yoga class, we've got you covered with verified, high-quality options in your area.
                 </p>
-                <p>
-                  From busy professionals seeking quick spa treatments to fitness enthusiasts looking 
-                  for the perfect gym, we're here to connect you with experiences that transform your 
-                  life, one booking at a time.
-                </p>
+              </div>
+              <div className="relative">
+                <img 
+                  src="/placeholder.svg" 
+                  alt="Wellness journey"
+                  className="rounded-2xl shadow-2xl"
+                />
               </div>
             </div>
           </div>
         </section>
 
         {/* Values Section */}
-        <section className="py-20 bg-white/50">
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Our Values</h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                The principles that guide everything we do and every decision we make
-              </p>
-            </div>
+            <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">Our Values</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <Card className="text-center hover:shadow-xl transition-shadow duration-300">
+                <CardHeader>
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Heart className="h-8 w-8 text-emerald-600" />
+                  </div>
+                  <CardTitle>Wellness First</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Your health and wellness are our top priority. We carefully vet all our partners to ensure quality.
+                  </p>
+                </CardContent>
+              </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              {values.map((value, index) => (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-2xl transition-all duration-300 group bg-white/80 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                      <value.icon className="h-8 w-8 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-4">{value.title}</h3>
-                    <p className="text-gray-600 leading-relaxed text-lg">{value.description}</p>
+              <Card className="text-center hover:shadow-xl transition-shadow duration-300">
+                <CardHeader>
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <CardTitle>Community</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Building a strong wellness community where everyone supports each other's fitness journey.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-xl transition-shadow duration-300">
+                <CardHeader>
+                  <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Award className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <CardTitle>Excellence</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    We maintain the highest standards for all facilities and trainers on our platform.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="text-center hover:shadow-xl transition-shadow duration-300">
+                <CardHeader>
+                  <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Target className="h-8 w-8 text-orange-600" />
+                  </div>
+                  <CardTitle>Accessibility</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    Making fitness and wellness accessible to everyone, regardless of their location or budget.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Team Section */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Team</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-12">
+              We're a passionate team of fitness enthusiasts, wellness experts, and technology professionals 
+              dedicated to revolutionizing how you discover and book wellness services.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="hover:shadow-xl transition-shadow duration-300">
+                  <CardContent className="p-6">
+                    <div className="w-24 h-24 bg-gradient-to-r from-emerald-400 to-blue-500 rounded-full mx-auto mb-4"></div>
+                    <h3 className="text-xl font-bold mb-2">Team Member {i}</h3>
+                    <p className="text-gray-600 mb-2">Wellness Expert</p>
+                    <p className="text-sm text-gray-500">
+                      Dedicated to helping you achieve your fitness and wellness goals.
+                    </p>
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Mission Section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-8">Our Mission</h2>
-              <div className="bg-gradient-to-r from-emerald-500 to-blue-500 rounded-3xl p-8 md:p-12 text-white">
-                <p className="text-xl md:text-2xl leading-relaxed font-medium">
-                  To revolutionize the wellness industry in India by creating a seamless, 
-                  technology-driven platform that connects people with transformative wellness 
-                  experiences, empowering both consumers and businesses to thrive in the digital age.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-emerald-600 to-blue-600">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto text-white">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Start Your Wellness Journey?</h2>
-              <p className="text-xl md:text-2xl mb-8 opacity-90">
-                Join thousands of satisfied customers who trust GymSpaYoga for their wellness needs
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  size="lg" 
-                  className="bg-white text-emerald-600 hover:bg-gray-50 font-semibold px-8 py-4 text-lg"
-                  onClick={() => window.location.href = '/explore'}
-                >
-                  Explore Services
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline" 
-                  className="border-white text-white hover:bg-white hover:text-emerald-600 font-semibold px-8 py-4 text-lg"
-                  onClick={() => window.location.href = '/register-business'}
-                >
-                  Partner With Us
-                </Button>
-              </div>
             </div>
           </div>
         </section>

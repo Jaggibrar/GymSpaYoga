@@ -18,6 +18,13 @@ import Blogs from "./pages/Blogs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Login from "./pages/Login";
+import About from "./pages/About";
+import Support from "./pages/Support";
+import Pricing from "./pages/Pricing";
+import RegisterBusiness from "./pages/RegisterBusiness";
+import RegisterTrainer from "./pages/RegisterTrainer";
+import Explore from "./pages/Explore";
+import BusinessDashboard from "./pages/BusinessDashboard";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +45,13 @@ const App = () => (
                 <Route path="/trainers" element={<Trainers />} />
                 <Route path="/blogs" element={<Blogs />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/register-business" element={<RegisterBusiness />} />
+                <Route path="/register-trainer" element={<RegisterTrainer />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/business-dashboard" element={<BusinessDashboard />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 {navItems.map(({ to, page }) => (
