@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, ArrowRight, Users, Award, Target, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import CategoryTrainers from '@/components/CategoryTrainers';
+import TrainerListings from '@/components/TrainerListings';
 import SEOHead from '@/components/SEOHead';
 
 const Trainers = () => {
@@ -46,16 +46,6 @@ const Trainers = () => {
             </div>
           </div>
         </section>
-
-        {/* Trainers Listings - First Priority */}
-        <CategoryTrainers 
-          title="Expert Personal Trainers"
-          description="Connect with certified fitness coaches who will guide you to achieve your goals"
-          searchTerm=""
-          location=""
-          sortBy={sortBy}
-          priceFilter={priceFilter}
-        />
 
         {/* Filter Section */}
         <section className="container mx-auto px-4 py-8">
@@ -107,6 +97,14 @@ const Trainers = () => {
             </div>
           </div>
         </section>
+
+        {/* Trainers Listings - First Priority */}
+        <TrainerListings 
+          searchTerm=""
+          location=""
+          sortBy={sortBy}
+          priceFilter={priceFilter}
+        />
 
         {/* Features Section - Below Listings */}
         <section className="container mx-auto px-4 py-12">
