@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { MapPin, ArrowRight, Users, Zap, Award, Star } from 'lucide-react';
+import { MapPin, ArrowRight, Users, Award, Target, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import CategoryBusinesses from '@/components/CategoryBusinesses';
+import CategoryTrainers from '@/components/CategoryTrainers';
 import SEOHead from '@/components/SEOHead';
 
 const Trainers = () => {
@@ -13,9 +13,9 @@ const Trainers = () => {
   return (
     <>
       <SEOHead
-        title="Personal Trainers - Find Expert Fitness Coaches"
-        description="Connect with certified personal trainers and fitness coaches. Expert guidance, personalized workouts, and professional training sessions."
-        keywords="personal trainer, fitness coach, workout coach, fitness instructor"
+        title="Expert Personal Trainers - Find the Best Fitness Coaches"
+        description="Connect with certified personal trainers and fitness coaches. Achieve your fitness goals with expert guidance and personalized training programs."
+        keywords="personal trainer, fitness coach, strength training, weight loss, fitness guidance"
       />
       
       <div className="min-h-screen bg-white">
@@ -25,11 +25,11 @@ const Trainers = () => {
             <div className="flex items-center justify-center mb-6">
               <Users className="h-12 w-12 mr-4" />
               <h1 className="text-4xl md:text-5xl font-bold">
-                Personal Trainers
+                Expert Personal Trainers
               </h1>
             </div>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Connect with certified personal trainers and fitness coaches for personalized training sessions.
+              Connect with certified fitness coaches who will guide you to achieve your goals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-trainer">
@@ -46,6 +46,16 @@ const Trainers = () => {
             </div>
           </div>
         </section>
+
+        {/* Trainers Listings - First Priority */}
+        <CategoryTrainers 
+          title="Expert Personal Trainers"
+          description="Connect with certified fitness coaches who will guide you to achieve your goals"
+          searchTerm=""
+          location=""
+          sortBy={sortBy}
+          priceFilter={priceFilter}
+        />
 
         {/* Filter Section */}
         <section className="container mx-auto px-4 py-8">
@@ -78,7 +88,7 @@ const Trainers = () => {
                   onClick={() => setPriceFilter('luxury')}
                   className="rounded-full"
                 >
-                  Expert
+                  Elite Trainers
                 </Button>
               </div>
               
@@ -98,14 +108,14 @@ const Trainers = () => {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features Section - Below Listings */}
         <section className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose Our Trainers?
+              Why Choose Our Expert Trainers?
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Connect with certified fitness professionals for personalized training
+              Experience personalized fitness coaching with certified professionals
             </p>
           </div>
           
@@ -116,17 +126,17 @@ const Trainers = () => {
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-900">Certified Professionals</h3>
               <p className="text-gray-600">
-                All trainers are certified and experienced fitness professionals
+                All trainers are certified with proven track records in fitness coaching
               </p>
             </div>
 
             <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-purple-600" />
+                <Target className="h-8 w-8 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Personalized Training</h3>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Personalized Programs</h3>
               <p className="text-gray-600">
-                Customized workout plans tailored to your fitness goals
+                Custom fitness plans tailored to your specific goals and fitness level
               </p>
             </div>
 
@@ -134,33 +144,22 @@ const Trainers = () => {
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="h-8 w-8 text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Flexible Sessions</h3>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Proven Results</h3>
               <p className="text-gray-600">
-                Book sessions that fit your schedule and lifestyle
+                Track record of helping clients achieve their fitness transformation goals
               </p>
             </div>
           </div>
         </section>
 
-        {/* Category Businesses Component */}
-        <CategoryBusinesses 
-          category="trainer" 
-          title="Personal Trainers"
-          description="Connect with certified personal trainers for personalized fitness coaching"
-          searchTerm=""
-          location=""
-          sortBy={sortBy}
-          priceFilter={priceFilter}
-        />
-
         {/* CTA Section */}
         <section className="bg-gradient-to-r from-purple-500 to-indigo-600 py-16">
           <div className="container mx-auto px-4 text-center text-white">
             <h2 className="text-3xl font-bold mb-4">
-              Ready to Transform Your Fitness?
+              Ready to Transform Your Fitness Journey?
             </h2>
             <p className="text-lg mb-8 max-w-2xl mx-auto">
-              Start your fitness journey with professional trainers who care about your success.
+              Connect with expert trainers who will guide you every step of the way to achieve your goals.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/explore">

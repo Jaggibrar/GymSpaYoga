@@ -44,15 +44,16 @@ export const useBusinessImageUpload = () => {
           continue;
         }
 
-        // Generate unique filename
+        // Generate unique filename with user ID folder structure
+        const { data: { user } } = await supabase.auth.getUser();
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `business-images/${fileName}`;
+        const filePath = user ? `${user.id}/${fileName}` : fileName;
 
         console.log('Uploading to path:', filePath);
 
         const { data, error } = await supabase.storage
-          .from('business-logos')
+          .from('business-images')
           .upload(filePath, file, {
             cacheControl: '3600',
             upsert: false
@@ -68,7 +69,7 @@ export const useBusinessImageUpload = () => {
 
         // Get public URL
         const { data: urlData } = supabase.storage
-          .from('business-logos')
+          .from('business-images')
           .getPublicUrl(filePath);
 
         if (urlData?.publicUrl) {
@@ -97,8 +98,36 @@ export const useBusinessImageUpload = () => {
     }
   };
 
+  const deleteImage = async (imageUrl: string): Promise<boolean> => {
+    try {
+      // Extract the file path from the URL
+      const urlParts = imageUrl.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      const userId = urlParts[urlParts.length - 2];
+      const filePath = `${userId}/${fileName}`;
+
+      const { error } = await supabase.storage
+        .from('business-images')
+        .remove([filePath]);
+
+      if (error) {
+        console.error('Delete error:', error);
+        toast.error(`Failed to delete image: ${error.message}`);
+        return false;
+      }
+
+      toast.success('Image deleted successfully');
+      return true;
+    } catch (error) {
+      console.error('Unexpected delete error:', error);
+      toast.error('Failed to delete image');
+      return false;
+    }
+  };
+
   return {
     uploadMultipleImages,
+    deleteImage,
     uploading,
     validateFile
   };
