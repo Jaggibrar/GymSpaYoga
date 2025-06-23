@@ -32,11 +32,11 @@ const Login = () => {
     try {
       if (isLogin) {
         const result = await signIn(formData.email, formData.password);
-        if (result.success) {
+        if (result && !result.error) {
           toast.success('Welcome back! Successfully logged in.');
           navigate('/');
         } else {
-          toast.error(result.error || 'Login failed. Please try again.');
+          toast.error(result?.error?.message || 'Login failed. Please try again.');
         }
       } else {
         if (formData.password !== formData.confirmPassword) {
@@ -45,15 +45,13 @@ const Login = () => {
           return;
         }
 
-        const result = await signUp(formData.email, formData.password, {
-          full_name: formData.fullName
-        });
+        const result = await signUp(formData.email, formData.password, formData.fullName);
         
-        if (result.success) {
+        if (result && !result.error) {
           toast.success('Account created successfully! Please check your email to verify your account.');
           setIsLogin(true);
         } else {
-          toast.error(result.error || 'Registration failed. Please try again.');
+          toast.error(result?.error?.message || 'Registration failed. Please try again.');
         }
       }
     } catch (error) {
@@ -79,14 +77,14 @@ const Login = () => {
         keywords="login, sign up, account, gym booking, spa booking, yoga classes, personal trainer"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
+          <Card className="shadow-xl border border-gray-100 bg-white">
             <CardHeader className="space-y-2 text-center pb-6">
               <div className="mx-auto w-16 h-16 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mb-4">
                 <User className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <CardTitle className="text-3xl font-bold text-gray-900">
                 {isLogin ? 'Welcome Back' : 'Join GymSpaYoga'}
               </CardTitle>
               <p className="text-gray-600 text-lg">

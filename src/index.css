@@ -34,22 +34,6 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -80,14 +64,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 
@@ -97,320 +73,169 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* YesMadam-inspired typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-poppins font-bold;
+    letter-spacing: -0.025em;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
   }
 }
 
-/* Enhanced Mobile Responsive Design */
 @layer components {
-  /* Hide scrollbars while maintaining functionality */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  /* Clean button styles inspired by YesMadam */
+  .btn-primary {
+    @apply bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg;
   }
 
-  /* Mobile-first responsive design utilities - full width on mobile */
-  .mobile-container {
-    @apply w-full mx-auto;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+  .btn-secondary {
+    @apply bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-semibold px-6 py-3 rounded-full transition-all duration-300;
   }
 
-  @screen sm {
-    .mobile-container {
-      @apply px-4 max-w-none;
-    }
+  /* Card styles */
+  .card-modern {
+    @apply bg-white rounded-xl shadow-soft border border-gray-100 hover:shadow-medium transition-all duration-300;
   }
 
-  @screen md {
-    .mobile-container {
-      @apply px-6 max-w-7xl;
-    }
+  /* Input styles */
+  .input-modern {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:outline-none transition-colors duration-200 bg-white;
   }
 
-  @screen lg {
-    .mobile-container {
-      @apply px-8;
-    }
+  /* Section spacing */
+  .section-padding {
+    @apply py-16 lg:py-24;
   }
 
-  /* Touch-friendly button sizes for all mobile devices */
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px] relative;
+  /* Container */
+  .container-modern {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Responsive text sizing optimized for all screen sizes */
-  .mobile-text {
-    @apply text-xs leading-relaxed;
+  /* Hover effects */
+  .hover-lift {
+    @apply transition-transform duration-300 hover:-translate-y-2;
   }
 
-  @screen sm {
-    .mobile-text {
-      @apply text-sm;
-    }
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
   }
 
-  @screen md {
-    .mobile-text {
-      @apply text-base;
-    }
+  /* Text gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent;
   }
 
-  /* Enhanced horizontal scrolling for mobile with better UX */
-  .horizontal-scroll {
-    @apply overflow-x-auto overflow-y-hidden;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  .horizontal-scroll > * {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
-
-  /* Mobile navigation improvements */
-  .mobile-nav {
-    @apply flex overflow-x-auto space-x-2 scrollbar-hide;
-  }
-
-  .mobile-nav > * {
-    @apply flex-shrink-0;
-  }
-
-  /* Mobile horizontal card layout */
-  .mobile-horizontal-cards {
-    @apply flex gap-3 sm:gap-4 overflow-x-auto pb-4 scrollbar-hide;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-
-  .mobile-horizontal-cards > * {
-    @apply flex-shrink-0;
-    scroll-snap-align: start;
-  }
-
-  /* Responsive card sizing for all devices */
-  .mobile-card {
-    @apply min-w-[250px] max-w-[280px];
-  }
-
-  @screen sm {
-    .mobile-card {
-      @apply min-w-[280px] max-w-[320px];
-    }
-  }
-
-  .mobile-card-sm {
-    @apply min-w-[200px] max-w-[220px];
-  }
-
-  @screen sm {
-    .mobile-card-sm {
-      @apply min-w-[240px] max-w-[260px];
-    }
-  }
-
-  /* Text truncation utilities */
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  /* Responsive grid utilities */
-  .responsive-grid {
-    @apply grid grid-cols-1 gap-4;
-  }
-
-  @screen sm {
-    .responsive-grid {
-      @apply grid-cols-2 gap-6;
-    }
-  }
-
-  @screen md {
-    .responsive-grid {
-      @apply grid-cols-3 gap-8;
-    }
-  }
-
-  /* Mobile-first spacing utilities - full width on mobile */
-  .mobile-section {
-    @apply py-8 px-3 w-full;
-  }
-
-  @screen sm {
-    .mobile-section {
-      @apply py-12 px-4;
-    }
-  }
-
-  @screen md {
-    .mobile-section {
-      @apply py-16 px-6;
-    }
+  /* Glass effect */
+  .glass-effect {
+    @apply bg-white/95 backdrop-blur-sm border border-white/20;
   }
 }
 
-/* Performance optimizations */
 @layer utilities {
-  /* GPU acceleration for smooth animations */
-  .gpu-accelerated {
-    @apply transform-gpu;
+  /* Custom shadows inspired by YesMadam */
+  .shadow-soft {
+    box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
   }
 
-  /* Optimized image loading */
-  .optimized-image {
-    @apply object-cover will-change-transform;
+  .shadow-medium {
+    box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   }
 
-  /* Smooth touch scrolling */
-  .smooth-scroll {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+  .shadow-strong {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
-  /* Enhanced mobile horizontal scroll indicators */
-  .scroll-indicator::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8));
-    pointer-events: none;
+  /* Animations */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out;
   }
 
-  /* Mobile-specific responsive utilities - full width on mobile */
-  .mobile-w-full {
-    @apply w-full;
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
   }
 
-  @screen sm {
-    .mobile-w-full {
-      @apply w-auto;
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  /* Responsive flexbox utilities */
-  .mobile-flex-col {
-    @apply flex flex-col;
-  }
-
-  @screen sm {
-    .mobile-flex-col {
-      @apply flex-row;
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
-  /* Full width utility for mobile */
-  .mobile-full-width {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    .container-modern {
+      @apply px-4;
+    }
+
+    .section-padding {
+      @apply py-12;
+    }
   }
 }
 
-/* Mobile viewport fixes */
-@supports (-webkit-touch-callout: none) {
-  .ios-scroll-fix {
-    -webkit-overflow-scrolling: touch;
-  }
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Accessibility improvements */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
 }
 
-/* Focus management for mobile */
-@media (pointer: coarse) {
-  .focus\:outline-mobile:focus {
-    @apply outline-2 outline-blue-500 outline-offset-2;
-  }
+::-webkit-scrollbar-thumb {
+  background: #10b981;
+  border-radius: 3px;
 }
 
-/* Mobile-specific improvements for all screen sizes */
-@media (max-width: 640px) {
-  /* Extra small mobile devices - full width */
-  .mobile-section {
-    @apply px-3 py-6 w-full;
-  }
-
-  .mobile-container {
-    @apply px-3 w-full max-w-none;
-  }
-
-  button, .touch-target {
-    @apply min-h-[44px] min-w-[44px];
-  }
-
-  h1 {
-    @apply text-2xl leading-tight;
-  }
-
-  h2 {
-    @apply text-xl leading-tight;
-  }
-
-  .mobile-optimized-card {
-    @apply rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200;
-  }
-
-  /* Ensure full width for all containers on mobile */
-  .container {
-    @apply px-3 w-full max-w-none;
-  }
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-  /* Small tablets and large mobile devices */
-  .mobile-section {
-    @apply px-4 py-8;
-  }
+/* Selection styling */
+::selection {
+  background-color: #10b981;
+  color: white;
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  /* Tablets */
-  .mobile-section {
-    @apply px-6 py-12;
-  }
-}
-
-/* Ultra-wide and large screen optimizations */
-@media (min-width: 1440px) {
-  .mobile-container {
-    @apply max-w-7xl;
-  }
-}
-
-/* Portrait and landscape orientation handling */
-@media (orientation: portrait) {
-  .portrait-optimized {
-    @apply flex-col;
-  }
-}
-
-@media (orientation: landscape) {
-  .landscape-optimized {
-    @apply flex-row;
-  }
+::-moz-selection {
+  background-color: #10b981;
+  color: white;
 }
