@@ -1,441 +1,333 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Loader2, Edit, Save, Plus, X } from 'lucide-react';
+import { Loader2, Save, X } from 'lucide-react';
 import ImageManager from './ImageManager';
 
 interface BusinessListing {
-  id: string;
+  id?: string;
   business_name: string;
   business_type: string;
   category: string;
-  description: string;
+  email: string;
+  phone: string;
   address: string;
   city: string;
   state: string;
   pin_code: string;
-  phone: string;
-  email: string;
   opening_time: string;
   closing_time: string;
+  monthly_price?: number;
+  session_price?: number;
+  description: string;
   amenities: string[];
   image_urls: string[];
-  session_price: number;
-  monthly_price: number;
-  status: string;
+  status?: string;
 }
 
 interface BusinessListingEditorProps {
-  listingId?: string;
-  onSave?: () => void;
-  onCancel?: () => void;
+  listing?: BusinessListing;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
-const BusinessListingEditor = ({ listingId, onSave, onCancel }: BusinessListingEditorProps) => {
+const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
+  listing,
+  onSave,
+  onCancel
+}) => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [listing, setListing] = useState<BusinessListing>({
-    id: '',
+  const [formData, setFormData] = useState<BusinessListing>({
     business_name: '',
     business_type: 'gym',
-    category: 'gym',
-    description: '',
+    category: 'fitness',
+    email: '',
+    phone: '',
     address: '',
     city: '',
     state: '',
     pin_code: '',
-    phone: '',
-    email: '',
-    opening_time: '09:00',
-    closing_time: '21:00',
+    opening_time: '06:00',
+    closing_time: '22:00',
+    monthly_price: undefined,
+    session_price: undefined,
+    description: '',
     amenities: [],
     image_urls: [],
-    session_price: 0,
-    monthly_price: 0,
-    status: 'pending'
+    ...listing
   });
-  const [newAmenity, setNewAmenity] = useState('');
 
-  useEffect(() => {
-    if (listingId) {
-      fetchListing();
+  const amenitiesList = [
+    'AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service',
+    'Personal Training', 'Group Classes', 'Nutrition Counseling', 'Steam Room',
+    'Sauna', 'Swimming Pool', 'Cardio Equipment', 'Weight Training', 'Yoga Classes'
+  ];
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAmenityToggle = (amenity: string) => {
+    setFormData(prev => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(a => a !== amenity)
+        : [...prev.amenities, amenity]
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) {
+      toast.error('You must be logged in');
+      return;
     }
-  }, [listingId]);
-
-  const fetchListing = async () => {
-    if (!listingId) return;
 
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('business_profiles')
-        .select('*')
-        .eq('id', listingId)
-        .eq('user_id', user?.id)
-        .single();
+      const businessData = {
+        ...formData,
+        user_id: user.id,
+        status: 'approved'
+      };
 
-      if (error) {
-        toast.error('Failed to fetch listing');
-        return;
+      if (listing?.id) {
+        // Update existing listing
+        const { error } = await supabase
+          .from('business_profiles')
+          .update(businessData)
+          .eq('id', listing.id);
+
+        if (error) throw error;
+        toast.success('Business profile updated successfully!');
+      } else {
+        // Create new listing
+        const { error } = await supabase
+          .from('business_profiles')
+          .insert(businessData);
+
+        if (error) throw error;
+        toast.success('Business profile created successfully!');
       }
 
-      if (data) {
-        setListing({
-          id: data.id,
-          business_name: data.business_name,
-          business_type: data.business_type,
-          category: data.category,
-          description: data.description || '',
-          address: data.address,
-          city: data.city,
-          state: data.state,
-          pin_code: data.pin_code,
-          phone: data.phone,
-          email: data.email,
-          opening_time: data.opening_time,
-          closing_time: data.closing_time,
-          amenities: data.amenities || [],
-          image_urls: data.image_urls || [],
-          session_price: data.session_price || 0,
-          monthly_price: data.monthly_price || 0,
-          status: data.status
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching listing:', error);
-      toast.error('Failed to fetch listing');
+      onSave();
+    } catch (error: any) {
+      console.error('Error saving business:', error);
+      toast.error(error.message || 'Failed to save business profile');
     } finally {
       setLoading(false);
     }
   };
 
-  const addAmenity = () => {
-    if (newAmenity.trim() && !listing.amenities.includes(newAmenity.trim())) {
-      setListing(prev => ({
-        ...prev,
-        amenities: [...prev.amenities, newAmenity.trim()]
-      }));
-      setNewAmenity('');
-    }
-  };
-
-  const removeAmenity = (amenityToRemove: string) => {
-    setListing(prev => ({
-      ...prev,
-      amenities: prev.amenities.filter(amenity => amenity !== amenityToRemove)
-    }));
-  };
-
-  const handleImagesUpdate = (newImages: string[]) => {
-    setListing(prev => ({
-      ...prev,
-      image_urls: newImages
-    }));
-  };
-
-  const handleSave = async () => {
-    if (!user) return;
-
-    setSaving(true);
-    try {
-      const listingData = {
-        user_id: user.id,
-        business_name: listing.business_name,
-        business_type: listing.business_type,
-        category: listing.business_type, // Set category same as business_type
-        description: listing.description,
-        address: listing.address,
-        city: listing.city,
-        state: listing.state,
-        pin_code: listing.pin_code,
-        phone: listing.phone,
-        email: listing.email,
-        opening_time: listing.opening_time,
-        closing_time: listing.closing_time,
-        amenities: listing.amenities,
-        image_urls: listing.image_urls,
-        session_price: listing.session_price || null,
-        monthly_price: listing.monthly_price || null,
-        updated_at: new Date().toISOString()
-      };
-
-      let error;
-      if (listingId) {
-        // Update existing listing
-        const { error: updateError } = await supabase
-          .from('business_profiles')
-          .update(listingData)
-          .eq('id', listingId)
-          .eq('user_id', user.id);
-        error = updateError;
-      } else {
-        // Create new listing
-        const { error: insertError } = await supabase
-          .from('business_profiles')
-          .insert([listingData]);
-        error = insertError;
-      }
-
-      if (error) {
-        toast.error('Failed to save listing');
-        return;
-      }
-
-      toast.success(listingId ? 'Listing updated successfully' : 'Listing created successfully');
-      onSave?.();
-    } catch (error) {
-      console.error('Error saving listing:', error);
-      toast.error('Failed to save listing');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <Card className="border-0 shadow-xl bg-white">
-      <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-t-lg">
-        <CardTitle className="flex items-center gap-2">
-          <Edit className="h-5 w-5" />
-          {listingId ? 'Edit Listing' : 'Create New Listing'}
+    <Card className="w-full max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle>
+          {listing ? 'Edit Business Profile' : 'Create New Business Profile'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6 space-y-6">
-        {/* Basic Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="business_name">Business Name *</Label>
-            <Input
-              id="business_name"
-              value={listing.business_name}
-              onChange={(e) => setListing(prev => ({ ...prev, business_name: e.target.value }))}
-              placeholder="Enter business name"
-            />
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="business_name">Business Name *</Label>
+              <Input
+                id="business_name"
+                value={formData.business_name}
+                onChange={(e) => handleInputChange('business_name', e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="business_type">Business Type *</Label>
+              <Select value={formData.business_type} onValueChange={(value) => handleInputChange('business_type', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="gym">Gym</SelectItem>
+                  <SelectItem value="spa">Spa</SelectItem>
+                  <SelectItem value="yoga">Yoga Studio</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="business_type">Business Type *</Label>
-            <Select 
-              value={listing.business_type} 
-              onValueChange={(value) => setListing(prev => ({ 
-                ...prev, 
-                business_type: value, 
-                category: value // Update category when business_type changes
-              }))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="gym">Gym</SelectItem>
-                <SelectItem value="spa">Spa</SelectItem>
-                <SelectItem value="yoga">Yoga Studio</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="phone">Phone *</Label>
-            <Input
-              id="phone"
-              value={listing.phone}
-              onChange={(e) => setListing(prev => ({ ...prev, phone: e.target.value }))}
-              placeholder="Enter phone number"
-            />
+          {/* Contact Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="phone">Phone *</Label>
+              <Input
+                id="phone"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                required
+              />
+            </div>
           </div>
-          <div>
-            <Label htmlFor="email">Email *</Label>
-            <Input
-              id="email"
-              type="email"
-              value={listing.email}
-              onChange={(e) => setListing(prev => ({ ...prev, email: e.target.value }))}
-              placeholder="Enter email address"
-            />
-          </div>
-        </div>
 
-        <div>
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={listing.description}
-            onChange={(e) => setListing(prev => ({ ...prev, description: e.target.value }))}
-            placeholder="Describe your business"
-            rows={3}
-          />
-        </div>
-
-        {/* Address Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Address Information</h3>
+          {/* Address */}
           <div>
             <Label htmlFor="address">Address *</Label>
             <Input
               id="address"
-              value={listing.address}
-              onChange={(e) => setListing(prev => ({ ...prev, address: e.target.value }))}
-              placeholder="Enter full address"
+              value={formData.address}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              required
             />
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="city">City *</Label>
               <Input
                 id="city"
-                value={listing.city}
-                onChange={(e) => setListing(prev => ({ ...prev, city: e.target.value }))}
-                placeholder="City"
+                value={formData.city}
+                onChange={(e) => handleInputChange('city', e.target.value)}
+                required
               />
             </div>
             <div>
               <Label htmlFor="state">State *</Label>
               <Input
                 id="state"
-                value={listing.state}
-                onChange={(e) => setListing(prev => ({ ...prev, state: e.target.value }))}
-                placeholder="State"
+                value={formData.state}
+                onChange={(e) => handleInputChange('state', e.target.value)}
+                required
               />
             </div>
             <div>
               <Label htmlFor="pin_code">PIN Code *</Label>
               <Input
                 id="pin_code"
-                value={listing.pin_code}
-                onChange={(e) => setListing(prev => ({ ...prev, pin_code: e.target.value }))}
-                placeholder="PIN Code"
+                value={formData.pin_code}
+                onChange={(e) => handleInputChange('pin_code', e.target.value)}
+                required
               />
             </div>
           </div>
-        </div>
 
-        {/* Timing and Pricing */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Operating Hours</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="opening_time">Opening Time</Label>
-                <Input
-                  id="opening_time"
-                  type="time"
-                  value={listing.opening_time}
-                  onChange={(e) => setListing(prev => ({ ...prev, opening_time: e.target.value }))}
-                />
-              </div>
-              <div>
-                <Label htmlFor="closing_time">Closing Time</Label>
-                <Input
-                  id="closing_time"
-                  type="time"
-                  value={listing.closing_time}
-                  onChange={(e) => setListing(prev => ({ ...prev, closing_time: e.target.value }))}
-                />
-              </div>
+          {/* Timing */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="opening_time">Opening Time *</Label>
+              <Input
+                id="opening_time"
+                type="time"
+                value={formData.opening_time}
+                onChange={(e) => handleInputChange('opening_time', e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="closing_time">Closing Time *</Label>
+              <Input
+                id="closing_time"
+                type="time"
+                value={formData.closing_time}
+                onChange={(e) => handleInputChange('closing_time', e.target.value)}
+                required
+              />
             </div>
           </div>
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Pricing</h3>
-            <div className="space-y-3">
-              <div>
-                <Label htmlFor="session_price">Session Price (₹)</Label>
-                <Input
-                  id="session_price"
-                  type="number"
-                  value={listing.session_price}
-                  onChange={(e) => setListing(prev => ({ ...prev, session_price: parseInt(e.target.value) || 0 }))}
-                  placeholder="Price per session"
-                />
-              </div>
-              <div>
-                <Label htmlFor="monthly_price">Monthly Price (₹)</Label>
-                <Input
-                  id="monthly_price"
-                  type="number"
-                  value={listing.monthly_price}
-                  onChange={(e) => setListing(prev => ({ ...prev, monthly_price: parseInt(e.target.value) || 0 }))}
-                  placeholder="Monthly membership price"
-                />
-              </div>
+
+          {/* Pricing */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="monthly_price">Monthly Price (₹)</Label>
+              <Input
+                id="monthly_price"
+                type="number"
+                value={formData.monthly_price || ''}
+                onChange={(e) => handleInputChange('monthly_price', e.target.value ? parseInt(e.target.value) : undefined)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="session_price">Session Price (₹)</Label>
+              <Input
+                id="session_price"
+                type="number"
+                value={formData.session_price || ''}
+                onChange={(e) => handleInputChange('session_price', e.target.value ? parseInt(e.target.value) : undefined)}
+              />
             </div>
           </div>
-        </div>
 
-        {/* Amenities */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Amenities</h3>
-          <div className="flex gap-2">
-            <Input
-              value={newAmenity}
-              onChange={(e) => setNewAmenity(e.target.value)}
-              placeholder="Add amenity"
-              onKeyPress={(e) => e.key === 'Enter' && addAmenity()}
+          {/* Description */}
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => handleInputChange('description', e.target.value)}
+              rows={4}
             />
-            <Button onClick={addAmenity} disabled={!newAmenity.trim()}>
-              <Plus className="h-4 w-4" />
+          </div>
+
+          {/* Amenities */}
+          <div>
+            <Label>Amenities</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+              {amenitiesList.map((amenity) => (
+                <div key={amenity} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={amenity}
+                    checked={formData.amenities.includes(amenity)}
+                    onCheckedChange={() => handleAmenityToggle(amenity)}
+                  />
+                  <Label htmlFor={amenity} className="text-sm">{amenity}</Label>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Image Management */}
+          <div>
+            <Label>Business Images</Label>
+            <div className="mt-2">
+              <ImageManager
+                images={formData.image_urls}
+                onImagesUpdate={(images) => handleInputChange('image_urls', images)}
+                maxImages={5}
+              />
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 pt-6">
+            <Button type="submit" disabled={loading} className="flex-1">
+              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              <Save className="h-4 w-4 mr-2" />
+              {listing ? 'Update Business' : 'Create Business'}
+            </Button>
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="h-4 w-4 mr-2" />
+              Cancel
             </Button>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {listing.amenities.map((amenity) => (
-              <Badge key={amenity} variant="secondary" className="flex items-center gap-1">
-                {amenity}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => removeAmenity(amenity)}
-                />
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        {/* Image Management */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Business Images</h3>
-          <ImageManager
-            images={listing.image_urls}
-            onImagesUpdate={handleImagesUpdate}
-            maxImages={5}
-          />
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-4 pt-6">
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
-          >
-            {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            <Save className="h-4 w-4 mr-2" />
-            {listingId ? 'Update Listing' : 'Create Listing'}
-          </Button>
-          <Button
-            onClick={onCancel}
-            variant="outline"
-            disabled={saving}
-            className="flex-1"
-          >
-            Cancel
-          </Button>
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

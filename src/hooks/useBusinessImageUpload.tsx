@@ -8,8 +8,9 @@ export const useBusinessImageUpload = () => {
 
   const validateFile = (file: File): string | null => {
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      return `Invalid file type: ${file.name}. Only image files are allowed.`;
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      return `Invalid file type: ${file.name}. Only JPEG, PNG, and WebP files are allowed.`;
     }
 
     // Validate file size (max 5MB)
@@ -23,6 +24,11 @@ export const useBusinessImageUpload = () => {
   const uploadMultipleImages = async (files: File[]): Promise<string[]> => {
     if (!files || files.length === 0) {
       console.log('No files to upload');
+      return [];
+    }
+
+    if (files.length > 5) {
+      toast.error('Maximum 5 images allowed');
       return [];
     }
 

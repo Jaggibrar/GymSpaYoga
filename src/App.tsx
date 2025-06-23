@@ -15,6 +15,7 @@ import Spas from "./pages/Spas";
 import Yoga from "./pages/Yoga";
 import Trainers from "./pages/Trainers";
 import Blogs from "./pages/Blogs";
+import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Login from "./pages/Login";
@@ -45,6 +46,7 @@ const App = () => (
                 <Route path="/yoga" element={<Yoga />} />
                 <Route path="/trainers" element={<Trainers />} />
                 <Route path="/blogs" element={<Blogs />} />
+                <Route path="/blogs/:slug" element={<BlogPost />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/support" element={<Support />} />

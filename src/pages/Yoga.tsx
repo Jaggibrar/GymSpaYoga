@@ -1,183 +1,40 @@
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { MapPin, ArrowRight, Heart, Zap, Users, Award } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
+import CategoryTrainers from '@/components/CategoryTrainers';
 import SEOHead from '@/components/SEOHead';
 
 const Yoga = () => {
-  const [sortBy, setSortBy] = useState('created_at');
-  const [priceFilter, setPriceFilter] = useState('');
-
   return (
     <>
       <SEOHead
-        title="Yoga Studios - Find Inner Peace & Wellness"
-        description="Discover authentic yoga studios and experienced instructors. From Hatha to Vinyasa, find your perfect practice. Book your session today!"
-        keywords="yoga studio, yoga classes, meditation, wellness, mindfulness, yoga instructor"
+        title="Yoga Studios & Classes Near You - GymSpaYoga | Find Inner Peace"
+        description="Discover authentic yoga studios and certified instructors. From Hatha to Vinyasa, find the perfect yoga practice for your mind, body, and soul."
+        keywords="yoga classes, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness"
       />
       
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-green-500 to-blue-600 text-white py-16">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Heart className="h-12 w-12 mr-4" />
-              <h1 className="text-4xl md:text-5xl font-bold">
-                Yoga Studios
-              </h1>
-            </div>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Find your inner peace with authentic yoga practices and experienced instructors in serene environments.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register-business">
-                <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
-                  <Award className="mr-2 h-5 w-5" />
-                  List Your Studio
-                </Button>
-              </Link>
-              <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-green-600">
-                  Explore All Categories
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Filter Section */}
-        <section className="container mx-auto px-4 py-8">
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  variant={priceFilter === '' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('')}
-                  className="rounded-full"
-                >
-                  All Studios
-                </Button>
-                <Button
-                  variant={priceFilter === 'budget' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('budget')}
-                  className="rounded-full"
-                >
-                  Budget Friendly
-                </Button>
-                <Button
-                  variant={priceFilter === 'premium' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('premium')}
-                  className="rounded-full"
-                >
-                  Premium
-                </Button>
-                <Button
-                  variant={priceFilter === 'luxury' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('luxury')}
-                  className="rounded-full"
-                >
-                  Luxury
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  <option value="created_at">Newest First</option>
-                  <option value="session_price">Price: Low to High</option>
-                  <option value="-session_price">Price: High to Low</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="container mx-auto px-4 py-12">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Why Choose Our Yoga Studios?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experience authentic yoga practices in peaceful environments with certified instructors
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Heart className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Authentic Practice</h3>
-              <p className="text-gray-600">
-                Traditional yoga practices with modern approaches for holistic wellness
-              </p>
-            </div>
-
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Expert Instructors</h3>
-              <p className="text-gray-600">
-                Certified yoga instructors with deep knowledge of various yoga styles and techniques
-              </p>
-            </div>
-
-            <div className="text-center p-6 hover:shadow-lg transition-shadow border border-gray-200 rounded-lg">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Peaceful Environment</h3>
-              <p className="text-gray-600">
-                Serene spaces designed to enhance your practice and promote inner peace
+        <section className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-5xl font-bold mb-6">Yoga Studios & Classes</h1>
+              <p className="text-xl mb-8">
+                Find inner peace and balance with certified yoga instructors and serene studio spaces
               </p>
             </div>
           </div>
         </section>
 
-        {/* Category Businesses Component */}
-        <CategoryBusinesses 
-          category="yoga" 
+        {/* Business Listings */}
+        <CategoryBusinesses
+          category="yoga"
           title="Yoga Studios"
-          description="Discover authentic yoga studios with experienced instructors and peaceful environments"
-          searchTerm=""
-          location=""
-          sortBy={sortBy}
-          priceFilter={priceFilter}
+          description="Embark on a transformative yoga journey with our network of authentic yoga studios and certified instructors. Whether you're a beginner seeking gentle Hatha classes or an experienced practitioner looking for dynamic Vinyasa flows, find the perfect studio that aligns with your spiritual and physical wellness goals. Experience the ancient art of yoga in modern, peaceful environments."
         />
 
-        {/* CTA Section */}
-        <section className="bg-gradient-to-r from-green-500 to-blue-600 py-16">
-          <div className="container mx-auto px-4 text-center text-white">
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to Find Your Inner Peace?
-            </h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto">
-              Begin your yoga journey with experienced instructors in beautiful, peaceful environments.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/explore">
-                <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
-                  <MapPin className="mr-2 h-5 w-5" />
-                  Find Studios Near Me
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link to="/register-business">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-green-600">
-                  List Your Studio
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
+        {/* Expert Instructors */}
+        <CategoryTrainers category="yoga" />
       </div>
     </>
   );

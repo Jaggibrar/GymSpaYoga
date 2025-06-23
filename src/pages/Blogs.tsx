@@ -1,137 +1,160 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar, User, ArrowRight, BookOpen } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useAuth } from '@/hooks/useAuth';
+import { useBlogs, Blog } from '@/hooks/useBlogs';
+import { Calendar, Clock, User, Plus, Eye, Edit } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import BlogEditor from '@/components/blog/BlogEditor';
 import SEOHead from '@/components/SEOHead';
 
 const Blogs = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: "10 Essential Tips for Starting Your Fitness Journey",
-      excerpt: "Discover the fundamental principles that will set you up for success in your fitness transformation.",
-      author: "GymSpaYoga Team",
-      date: "2024-01-15",
-      category: "Fitness",
-      image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&h=400&fit=crop"
-    },
-    {
-      id: 2,
-      title: "The Ultimate Guide to Yoga for Beginners",
-      excerpt: "Learn the basics of yoga practice and discover how to start your mindfulness journey.",
-      author: "Sarah Johnson",
-      date: "2024-01-12",
-      category: "Yoga",
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&h=400&fit=crop"
-    },
-    {
-      id: 3,
-      title: "Spa Treatments: Your Path to Ultimate Relaxation",
-      excerpt: "Explore different spa treatments and their benefits for both body and mind wellness.",
-      author: "Michael Chen",
-      date: "2024-01-10",
-      category: "Wellness",
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=400&fit=crop"
+  const { user } = useAuth();
+  const { blogs, loading, fetchBlogs } = useBlogs();
+  const [showEditor, setShowEditor] = useState(false);
+  const [selectedBlog, setSelectedBlog] = useState<Blog | undefined>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchBlogs('published');
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const handleCreateBlog = () => {
+    if (!user) {
+      navigate('/login');
+      return;
     }
-  ];
+    setSelectedBlog(undefined);
+    setShowEditor(true);
+  };
 
   return (
     <>
       <SEOHead
-        title="Fitness & Wellness Blog - Expert Tips & Guides"
-        description="Stay updated with the latest fitness trends, wellness tips, and expert advice from our team of professionals."
-        keywords="fitness blog, wellness tips, gym advice, yoga guides, spa treatments"
+        title="Health & Wellness Blog - GymSpaYoga | Fitness Tips & Guides"
+        description="Discover expert health and wellness tips, fitness guides, and lifestyle advice from top trainers and wellness professionals."
+        keywords="health blog, fitness tips, wellness guide, yoga advice, gym workouts, spa treatments"
       />
       
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-emerald-50 to-blue-50 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <BookOpen className="h-12 w-12 mr-4 text-emerald-600" />
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-                Fitness & Wellness Blog
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Health & Wellness Blog
               </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Expert insights, tips, and guides for your fitness and wellness journey
+              </p>
+              
+              {user && (
+                <Button onClick={handleCreateBlog} size="lg" className="mb-8">
+                  <Plus className="h-5 w-5 mr-2" />
+                  Write New Blog Post
+                </Button>
+              )}
             </div>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Discover expert tips, guides, and insights to enhance your fitness and wellness journey.
-            </p>
           </div>
         </section>
 
         {/* Blog Posts */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
-              <Card key={post.id} className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg overflow-hidden">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={post.image} 
-                    alt={post.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      {post.category}
-                    </span>
-                  </div>
-                </div>
-                
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-xl text-gray-900 hover:text-emerald-600 transition-colors line-clamp-2">
-                    {post.title}
-                  </CardTitle>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <p className="text-gray-600 text-sm line-clamp-3">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center">
-                      <User className="h-4 w-4 mr-1" />
-                      {post.author}
-                    </div>
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      {new Date(post.date).toLocaleDateString()}
-                    </div>
-                  </div>
-                  
-                  <Button className="w-full bg-emerald-600 hover:bg-emerald-700">
-                    Read More
-                    <ArrowRight className="ml-2 h-4 w-4" />
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            {loading ? (
+              <div className="flex justify-center items-center py-16">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+                <span className="ml-2 text-gray-600">Loading blog posts...</span>
+              </div>
+            ) : blogs.length === 0 ? (
+              <div className="text-center py-16">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">No Blog Posts Yet</h3>
+                <p className="text-gray-600 mb-8">Be the first to share your wellness insights!</p>
+                {user && (
+                  <Button onClick={handleCreateBlog}>
+                    <Plus className="h-5 w-5 mr-2" />
+                    Write First Blog Post
                   </Button>
-                </CardContent>
-              </Card>
-            ))}
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {blogs.map((blog) => (
+                  <Card key={blog.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <CardHeader className="p-0">
+                      {blog.featured_image_url && (
+                        <img
+                          src={blog.featured_image_url}
+                          alt={blog.title}
+                          className="w-full h-48 object-cover rounded-t-lg"
+                        />
+                      )}
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Badge variant="outline" className="text-xs">
+                          {blog.tags?.[0] || 'Health'}
+                        </Badge>
+                        <div className="flex items-center text-xs text-gray-500">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {blog.read_time_minutes} min read
+                        </div>
+                      </div>
+                      
+                      <CardTitle className="text-xl font-bold mb-3 group-hover:text-emerald-600 transition-colors">
+                        {blog.title}
+                      </CardTitle>
+                      
+                      <p className="text-gray-600 mb-4 line-clamp-3">
+                        {blog.excerpt}
+                      </p>
+                      
+                      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                        <div className="flex items-center">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          {formatDate(blog.published_at || blog.created_at)}
+                        </div>
+                      </div>
+                      
+                      <Link to={`/blogs/${blog.slug}`}>
+                        <Button variant="outline" className="w-full group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                          <Eye className="h-4 w-4 mr-2" />
+                          Read More
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Newsletter Signup */}
-        <section className="bg-gray-50 py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Stay Updated
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Subscribe to our newsletter for the latest fitness tips, wellness guides, and exclusive content.
-            </p>
-            <div className="max-w-md mx-auto flex gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              />
-              <Button className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* Blog Editor Dialog */}
+        <Dialog open={showEditor} onOpenChange={setShowEditor}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <BlogEditor
+              blog={selectedBlog}
+              onSave={() => {
+                setShowEditor(false);
+                fetchBlogs('published');
+              }}
+              onCancel={() => setShowEditor(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );

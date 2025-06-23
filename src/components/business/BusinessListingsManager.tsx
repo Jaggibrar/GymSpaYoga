@@ -34,50 +34,42 @@ const BusinessListingsManager = () => {
   const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
-    fetchListings();
+    if (user) {
+      fetchListings();
+    }
   }, [user]);
 
   const fetchListings = async () => {
-    if (!user) return;
-
-    setLoading(true);
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        toast.error('Failed to fetch listings');
-        return;
-      }
-
+      if (error) throw error;
       setListings(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching listings:', error);
-      toast.error('Failed to fetch listings');
+      toast.error('Failed to fetch business listings');
     } finally {
       setLoading(false);
     }
   };
 
-  const deleteListing = async (listingId: string) => {
+  const handleDelete = async (listingId: string) => {
     try {
       const { error } = await supabase
         .from('business_profiles')
         .delete()
-        .eq('id', listingId)
-        .eq('user_id', user?.id);
+        .eq('id', listingId);
 
-      if (error) {
-        toast.error('Failed to delete listing');
-        return;
-      }
-
-      toast.success('Listing deleted successfully');
+      if (error) throw error;
+      
+      toast.success('Business listing deleted successfully');
       fetchListings();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting listing:', error);
       toast.error('Failed to delete listing');
     }
@@ -85,40 +77,32 @@ const BusinessListingsManager = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'approved':
-        return 'bg-green-100 text-green-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'rejected':
-        return 'bg-red-100 text-red-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+      case 'approved': return 'bg-green-100 text-green-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'rejected': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const handleCreateNew = () => {
-    setSelectedListing(null);
-    setIsCreating(true);
-    setShowEditor(true);
-  };
-
-  const handleEdit = (listingId: string) => {
-    setSelectedListing(listingId);
-    setIsCreating(false);
-    setShowEditor(true);
-  };
-
-  const handleEditorClose = () => {
-    setShowEditor(false);
-    setSelectedListing(null);
-    setIsCreating(false);
-    fetchListings();
+  const getTierLabel = (monthlyPrice?: number, sessionPrice?: number) => {
+    if (monthlyPrice) {
+      if (monthlyPrice >= 5000) return 'Luxury';
+      if (monthlyPrice >= 3000) return 'Premium';
+      return 'Budget';
+    }
+    if (sessionPrice) {
+      if (sessionPrice >= 2000) return 'Luxury';
+      if (sessionPrice >= 1000) return 'Premium';
+      return 'Budget';
+    }
+    return 'Budget';
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="h-6 w-6 animate-spin mr-2" />
+        <span>Loading your business listings...</span>
       </div>
     );
   }
@@ -126,28 +110,33 @@ const BusinessListingsManager = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Your Listings</h2>
-          <p className="text-gray-600">Manage your business listings and track their status</p>
-        </div>
+        <h2 className="text-2xl font-bold">My Business Listings</h2>
         <Button 
-          onClick={handleCreateNew}
-          className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+          onClick={() => {
+            setIsCreating(true);
+            setSelectedListing(null);
+            setShowEditor(true);
+          }}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Add New Listing
+          Add New Business
         </Button>
       </div>
 
       {listings.length === 0 ? (
-        <Card className="border-0 shadow-lg">
-          <CardContent className="p-12 text-center">
+        <Card>
+          <CardContent className="py-8 text-center">
             <Building className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No listings yet</h3>
-            <p className="text-gray-500 mb-6">Create your first business listing to get started</p>
+            <h3 className="text-lg font-semibold mb-2">No Business Listings Yet</h3>
+            <p className="text-gray-600 mb-4">
+              Create your first business listing to start receiving bookings
+            </p>
             <Button 
-              onClick={handleCreateNew}
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600"
+              onClick={() => {
+                setIsCreating(true);
+                setSelectedListing(null);
+                setShowEditor(true);
+              }}
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Your First Listing
@@ -157,76 +146,84 @@ const BusinessListingsManager = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {listings.map((listing) => (
-            <Card key={listing.id} className="hover:shadow-xl transition-all duration-300 border-0 shadow-lg">
-              <div className="relative">
-                {listing.image_urls.length > 0 ? (
+            <Card key={listing.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-lg">{listing.business_name}</CardTitle>
+                  <Badge className={getStatusColor(listing.status)}>
+                    {listing.status}
+                  </Badge>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Building className="h-4 w-4 mr-1" />
+                  {listing.business_type}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {listing.image_urls && listing.image_urls.length > 0 && (
                   <img 
                     src={listing.image_urls[0]} 
                     alt={listing.business_name}
-                    className="w-full h-48 object-cover rounded-t-lg"
+                    className="w-full h-32 object-cover rounded-lg"
                   />
-                ) : (
-                  <div className="w-full h-48 bg-gradient-to-r from-gray-200 to-gray-300 rounded-t-lg flex items-center justify-center">
-                    <Building className="h-12 w-12 text-gray-400" />
-                  </div>
                 )}
-                <Badge className={`absolute top-3 right-3 ${getStatusColor(listing.status)}`}>
-                  {listing.status.charAt(0).toUpperCase() + listing.status.slice(1)}
-                </Badge>
-              </div>
-              
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">{listing.business_name}</CardTitle>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Badge variant="outline" className="capitalize">
-                    {listing.business_type}
-                  </Badge>
-                  <Badge variant="outline" className="capitalize">
-                    {listing.category}
-                  </Badge>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <MapPin className="h-4 w-4" />
+                
+                <div className="flex items-center text-sm text-gray-600">
+                  <MapPin className="h-4 w-4 mr-1" />
                   {listing.city}, {listing.state}
                 </div>
-                
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <DollarSign className="h-4 w-4" />
-                  {listing.session_price > 0 && `₹${listing.session_price}/session`}
-                  {listing.session_price > 0 && listing.monthly_price > 0 && ' • '}
-                  {listing.monthly_price > 0 && `₹${listing.monthly_price}/month`}
+
+                <div className="flex items-center justify-between text-sm">
+                  <Badge variant="outline">
+                    {getTierLabel(listing.monthly_price, listing.session_price)}
+                  </Badge>
+                  {listing.monthly_price && (
+                    <div className="flex items-center text-green-600 font-semibold">
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      ₹{listing.monthly_price}/month
+                    </div>
+                  )}
+                  {listing.session_price && !listing.monthly_price && (
+                    <div className="flex items-center text-green-600 font-semibold">
+                      <DollarSign className="h-4 w-4 mr-1" />
+                      ₹{listing.session_price}/session
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex gap-2 pt-3">
+                <div className="flex gap-2 pt-2">
                   <Button 
                     size="sm" 
-                    onClick={() => handleEdit(listing.id)}
+                    variant="outline" 
                     className="flex-1"
+                    onClick={() => {
+                      setSelectedListing(listing.id);
+                      setIsCreating(false);
+                      setShowEditor(true);
+                    }}
                   >
-                    <Edit className="h-3 w-3 mr-1" />
+                    <Edit className="h-4 w-4 mr-1" />
                     Edit
                   </Button>
+                  
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button size="sm" variant="destructive">
-                        <Trash2 className="h-3 w-3" />
+                      <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                        <AlertDialogTitle>Delete Business Listing</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Are you sure you want to delete "{listing.business_name}"? This action cannot be undone.
+                          Are you sure you want to delete this business listing? This action cannot be undone.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction 
-                          onClick={() => deleteListing(listing.id)}
-                          className="bg-red-500 hover:bg-red-600"
+                          onClick={() => handleDelete(listing.id)}
+                          className="bg-red-600 hover:bg-red-700"
                         >
                           Delete
                         </AlertDialogAction>
@@ -244,9 +241,12 @@ const BusinessListingsManager = () => {
       <Dialog open={showEditor} onOpenChange={setShowEditor}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <BusinessListingEditor
-            listingId={selectedListing || undefined}
-            onSave={handleEditorClose}
-            onCancel={handleEditorClose}
+            listing={selectedListing ? listings.find(l => l.id === selectedListing) : undefined}
+            onSave={() => {
+              setShowEditor(false);
+              fetchListings();
+            }}
+            onCancel={() => setShowEditor(false)}
           />
         </DialogContent>
       </Dialog>

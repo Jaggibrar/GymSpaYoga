@@ -1,14 +1,59 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Star, Clock, Users, Building2, Sparkles, Heart, TrendingUp, Shield, Award, ArrowRight, CheckCircle } from 'lucide-react';
+import { Search, MapPin, Star, Clock, Users, Building2, Sparkles, Heart, TrendingUp, Shield, Award, ArrowRight, CheckCircle, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
 import FunctionalSearch from '@/components/FunctionalSearch';
 import SEOHead from '@/components/SEOHead';
 
 const Index = () => {
+  const [featuredListings, setFeaturedListings] = useState([]);
+
+  useEffect(() => {
+    fetchFeaturedListings();
+  }, []);
+
+  const fetchFeaturedListings = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('business_profiles')
+        .select('*')
+        .eq('status', 'approved')
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      if (error) throw error;
+      setFeaturedListings(data || []);
+    } catch (error) {
+      console.error('Error fetching featured listings:', error);
+    }
+  };
+
+  const getTierLabel = (monthlyPrice, sessionPrice) => {
+    if (monthlyPrice) {
+      if (monthlyPrice >= 5000) return 'Luxury';
+      if (monthlyPrice >= 3000) return 'Premium';
+      return 'Budget';
+    }
+    if (sessionPrice) {
+      if (sessionPrice >= 2000) return 'Luxury';
+      if (sessionPrice >= 1000) return 'Premium';
+      return 'Budget';
+    }
+    return 'Budget';
+  };
+
+  const getTierColor = (tier) => {
+    switch (tier) {
+      case 'Luxury': return 'bg-purple-100 text-purple-800';
+      case 'Premium': return 'bg-blue-100 text-blue-800';
+      case 'Budget': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const categories = [
     {
       title: "Premium Gyms",
@@ -175,6 +220,103 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Featured Listings */}
+        {featuredListings.length > 0 && (
+          <section className="py-16 lg:py-24 bg-gray-50">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Featured Wellness Centers
+                </h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  Discover hand-picked premium facilities trusted by thousands of satisfied customers
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredListings.map((listing) => {
+                  const tier = getTierLabel(listing.monthly_price, listing.session_price);
+                  
+                  return (
+                    <Card key={listing.id} className="group hover:shadow-medium transition-all duration-300 hover:-translate-y-2 cursor-pointer border border-gray-100 bg-white">
+                      <div className="relative">
+                        {listing.image_urls && listing.image_urls.length > 0 ? (
+                          <img
+                            src={listing.image_urls[0]}
+                            alt={listing.business_name}
+                            className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-gradient-to-r from-emerald-100 to-blue-100 rounded-t-lg flex items-center justify-center">
+                            <span className="text-2xl font-bold text-emerald-600">
+                              {listing.business_name[0]}
+                            </span>
+                          </div>
+                        )}
+                        
+                        <div className="absolute top-4 right-4">
+                          <Badge className={getTierColor(tier)}>
+                            {tier}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <CardHeader className="pb-3">
+                        <div className="flex justify-between items-start">
+                          <CardTitle className="text-lg font-bold group-hover:text-emerald-600 transition-colors">
+                            {listing.business_name}
+                          </CardTitle>
+                          <div className="flex items-center">
+                            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            <span className="ml-1 text-sm font-medium">4.8</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {listing.city}, {listing.state}
+                        </div>
+                      </CardHeader>
+
+                      <CardContent>
+                        <div className="space-y-3">
+                          {(listing.monthly_price || listing.session_price) && (
+                            <div className="flex items-center text-emerald-600 font-semibold">
+                              <DollarSign className="h-4 w-4 mr-1" />
+                              {listing.monthly_price ? (
+                                <span>₹{listing.monthly_price}/month</span>
+                              ) : (
+                                <span>₹{listing.session_price}/session</span>
+                              )}
+                            </div>
+                          )}
+
+                          <p className="text-gray-600 text-sm line-clamp-2">
+                            {listing.description}
+                          </p>
+
+                          <Button className="w-full group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                            View Details
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <div className="text-center mt-12">
+                <Link to="/explore">
+                  <Button size="lg" className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105">
+                    View All Listings
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Categories Section - Grid Layout */}
         <section className="py-16 lg:py-24 bg-gray-50">

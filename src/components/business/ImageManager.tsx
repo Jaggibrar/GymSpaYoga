@@ -105,7 +105,7 @@ const ImageManager: React.FC<ImageManagerProps> = ({
                     </Button>
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
                       multiple
                       className="hidden"
                       onChange={(e) => {
