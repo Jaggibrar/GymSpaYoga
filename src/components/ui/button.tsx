@@ -10,15 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 font-bold border-0",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border-2 border-input bg-background text-gray-900 hover:bg-accent hover:text-accent-foreground hover:border-primary",
+          "border-2 border-emerald-500 bg-transparent text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-600",
         secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "text-gray-900 hover:bg-accent hover:text-accent-foreground shadow-none hover:shadow-none hover:scale-100",
-        link: "text-primary underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
+          "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300",
+        ghost: "text-gray-900 hover:bg-gray-100 hover:text-gray-900 shadow-none hover:shadow-md hover:scale-102",
+        link: "text-emerald-600 underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
         gradient: "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 font-black border-0",
         urgent: "bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 font-black animate-pulse border-0",
       },

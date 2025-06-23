@@ -25,6 +25,7 @@ import RegisterBusiness from "./pages/RegisterBusiness";
 import RegisterTrainer from "./pages/RegisterTrainer";
 import Explore from "./pages/Explore";
 import BusinessDashboard from "./pages/BusinessDashboard";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,8 @@ const App = () => (
                 {navItems.map(({ to, page }) => (
                   <Route key={to} path={to} element={page} />
                 ))}
+                {/* Catch all route for 404 */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <AppFooter />
