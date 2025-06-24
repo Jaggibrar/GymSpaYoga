@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Save, Upload, X, Eye } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import ImageManager from './ImageManager';
 
 interface BusinessListing {
   id: string;
@@ -44,7 +45,6 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
   onCancel 
 }) => {
   const [loading, setLoading] = useState(false);
-  const [uploadingImages, setUploadingImages] = useState(false);
   const [formData, setFormData] = useState({
     business_name: listing?.business_name || '',
     business_type: listing?.business_type || '',
@@ -68,52 +68,8 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
-
-    setUploadingImages(true);
-    const uploadedUrls: string[] = [];
-
-    try {
-      for (const file of Array.from(files)) {
-        if (file.size > 5 * 1024 * 1024) {
-          toast.error(`File ${file.name} is too large. Maximum size is 5MB.`);
-          continue;
-        }
-
-        if (!file.type.startsWith('image/')) {
-          toast.error(`File ${file.name} is not a valid image.`);
-          continue;
-        }
-
-        // For demo purposes, we'll create a mock URL
-        // In production, you would upload to your storage service
-        const mockUrl = `https://images.unsplash.com/photo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}?w=800&h=600&fit=crop`;
-        uploadedUrls.push(mockUrl);
-      }
-
-      if (uploadedUrls.length > 0) {
-        setFormData(prev => ({
-          ...prev,
-          image_urls: [...prev.image_urls, ...uploadedUrls]
-        }));
-        toast.success(`Successfully uploaded ${uploadedUrls.length} image(s)`);
-      }
-    } catch (error) {
-      console.error('Error uploading images:', error);
-      toast.error('Failed to upload images');
-    } finally {
-      setUploadingImages(false);
-    }
-  };
-
-  const removeImage = (indexToRemove: number) => {
-    setFormData(prev => ({
-      ...prev,
-      image_urls: prev.image_urls.filter((_, index) => index !== indexToRemove)
-    }));
-    toast.success('Image removed');
+  const handleImagesUpdate = (images: string[]) => {
+    setFormData(prev => ({ ...prev, image_urls: images }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -315,74 +271,15 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
             />
           </div>
 
-          {/* Image Upload Section */}
+          {/* Image Management */}
           <div>
             <Label>Business Images</Label>
-            <div className="mt-2 space-y-4">
-              {/* Upload Button */}
-              <div>
-                <input
-                  type="file"
-                  id="image-upload"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => document.getElementById('image-upload')?.click()}
-                  disabled={uploadingImages}
-                  className="w-full"
-                >
-                  {uploadingImages ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Uploading...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Images
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {/* Image Preview Grid */}
-              {formData.image_urls.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {formData.image_urls.map((url, index) => (
-                    <div key={index} className="relative group">
-                      <img
-                        src={url}
-                        alt={`Business image ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => removeImage(index)}
-                          className="mr-2"
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => window.open(url, '_blank')}
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="mt-2">
+              <ImageManager 
+                images={formData.image_urls}
+                onImagesUpdate={handleImagesUpdate}
+                maxImages={5}
+              />
             </div>
           </div>
 

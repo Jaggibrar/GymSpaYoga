@@ -13,7 +13,11 @@ import NearbyListings from "@/components/NearbyListings";
 const Index = () => {
   return (
     <>
-      <SEOHead />
+      <SEOHead 
+        title="Find Your Perfect Wellness Partner - GymSpaYoga"
+        description="Discover premium gyms, luxury spas, authentic yoga studios, and certified personal trainers - all in one place. Book your wellness journey today."
+        keywords="gym, spa, yoga, fitness, wellness, booking, health, personal trainer"
+      />
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 py-20 lg:py-32">

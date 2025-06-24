@@ -39,7 +39,10 @@ const EnhancedBusinessCard = ({
 }: EnhancedBusinessCardProps) => {
   const navigate = useNavigate();
 
-  const handleViewDetails = () => {
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Navigating to business details:', id);
     navigate(`/business/${id}`);
   };
 
@@ -47,7 +50,10 @@ const EnhancedBusinessCard = ({
     e.preventDefault();
     e.stopPropagation();
     if (phone) {
+      console.log('Calling:', phone);
       window.open(`tel:${phone}`, '_self');
+    } else {
+      console.warn('No phone number available');
     }
   };
 
