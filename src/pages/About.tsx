@@ -214,8 +214,8 @@ const About = () => {
                     <MapPin className="h-12 w-12 text-emerald-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Visit Us</h3>
                     <p className="text-gray-600">
-                      Kolkata <br />
-                      India
+                      Kolkata , India <br />
+                  
                     </p>
                   </CardContent>
                 </Card>
