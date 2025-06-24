@@ -39,32 +39,13 @@ const EnhancedBusinessCard = ({
 }: EnhancedBusinessCardProps) => {
   const navigate = useNavigate();
 
-  const handleViewDetails = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    console.log('Navigating to business details:', id);
+  const handleViewDetails = () => {
     navigate(`/business/${id}`);
   };
 
-  const handleCall = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleCall = () => {
     if (phone) {
-      console.log('Calling:', phone);
-      window.open(`tel:${phone}`, '_self');
-    } else {
-      console.warn('No phone number available');
-    }
-  };
-
-  const handleBookNow = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (onBookNow) {
-      onBookNow();
-    } else {
-      // Default booking behavior - navigate to business details
-      navigate(`/business/${id}`);
+      window.location.href = `tel:${phone}`;
     }
   };
 
@@ -182,7 +163,7 @@ const EnhancedBusinessCard = ({
               variant="outline" 
               size="sm" 
               className="text-xs"
-              onClick={handleBookNow}
+              onClick={onBookNow}
             >
               <MessageCircle className="h-3 w-3 mr-1" />
               Book Now

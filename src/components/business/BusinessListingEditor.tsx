@@ -7,13 +7,15 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Save, Upload, X, Eye } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { Loader2, Save, X } from 'lucide-react';
 import ImageManager from './ImageManager';
 
 interface BusinessListing {
-  id: string;
+  id?: string;
   business_name: string;
   business_type: string;
   category: string;
@@ -30,75 +32,99 @@ interface BusinessListing {
   description: string;
   amenities: string[];
   image_urls: string[];
-  status: string;
+  status?: string;
 }
 
 interface BusinessListingEditorProps {
   listing?: BusinessListing;
-  onSave?: () => void;
-  onCancel?: () => void;
+  onSave: () => void;
+  onCancel: () => void;
 }
 
-const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({ 
-  listing, 
-  onSave, 
-  onCancel 
+const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
+  listing,
+  onSave,
+  onCancel
 }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    business_name: listing?.business_name || '',
-    business_type: listing?.business_type || '',
-    category: listing?.category || '',
-    email: listing?.email || '',
-    phone: listing?.phone || '',
-    address: listing?.address || '',
-    city: listing?.city || '',
-    state: listing?.state || '',
-    pin_code: listing?.pin_code || '',
-    opening_time: listing?.opening_time || '09:00',
-    closing_time: listing?.closing_time || '21:00',
-    monthly_price: listing?.monthly_price || '',
-    session_price: listing?.session_price || '',
-    description: listing?.description || '',
-    amenities: listing?.amenities?.join(', ') || '',
-    image_urls: listing?.image_urls || []
+  const [formData, setFormData] = useState<BusinessListing>({
+    business_name: '',
+    business_type: 'gym',
+    category: 'fitness',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    pin_code: '',
+    opening_time: '06:00',
+    closing_time: '22:00',
+    monthly_price: undefined,
+    session_price: undefined,
+    description: '',
+    amenities: [],
+    image_urls: [],
+    ...listing
   });
+
+  const amenitiesList = [
+    'AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service',
+    'Personal Training', 'Group Classes', 'Nutrition Counseling', 'Steam Room',
+    'Sauna', 'Swimming Pool', 'Cardio Equipment', 'Weight Training', 'Yoga Classes'
+  ];
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleImagesUpdate = (images: string[]) => {
-    setFormData(prev => ({ ...prev, image_urls: images }));
+  const handleAmenityToggle = (amenity: string) => {
+    setFormData(prev => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter(a => a !== amenity)
+        : [...prev.amenities, amenity]
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    if (!user) {
+      toast.error('You must be logged in');
+      return;
+    }
 
+    setLoading(true);
     try {
-      const updateData = {
+      const businessData = {
         ...formData,
-        amenities: formData.amenities.split(',').map(a => a.trim()).filter(Boolean),
-        monthly_price: formData.monthly_price ? parseInt(formData.monthly_price.toString()) : null,
-        session_price: formData.session_price ? parseInt(formData.session_price.toString()) : null,
-        updated_at: new Date().toISOString()
+        user_id: user.id,
+        status: 'approved'
       };
 
       if (listing?.id) {
+        // Update existing listing
         const { error } = await supabase
           .from('business_profiles')
-          .update(updateData)
+          .update(businessData)
           .eq('id', listing.id);
 
         if (error) throw error;
-        
-        toast.success('Business listing updated successfully!');
-        onSave?.();
+        toast.success('Business profile updated successfully!');
+      } else {
+        // Create new listing
+        const { error } = await supabase
+          .from('business_profiles')
+          .insert(businessData);
+
+        if (error) throw error;
+        toast.success('Business profile created successfully!');
       }
+
+      onSave();
     } catch (error: any) {
-      console.error('Error updating listing:', error);
-      toast.error('Failed to update listing');
+      console.error('Error saving business:', error);
+      toast.error(error.message || 'Failed to save business profile');
     } finally {
       setLoading(false);
     }
@@ -108,7 +134,7 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>
-          {listing ? 'Edit Business Listing' : 'Create Business Listing'}
+          {listing ? 'Edit Business Profile' : 'Create New Business Profile'}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -128,7 +154,7 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
               <Label htmlFor="business_type">Business Type *</Label>
               <Select value={formData.business_type} onValueChange={(value) => handleInputChange('business_type', value)}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select business type" />
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="gym">Gym</SelectItem>
@@ -165,7 +191,7 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
           {/* Address */}
           <div>
             <Label htmlFor="address">Address *</Label>
-            <Textarea
+            <Input
               id="address"
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
@@ -203,7 +229,7 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
             </div>
           </div>
 
-          {/* Operating Hours */}
+          {/* Timing */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="opening_time">Opening Time *</Label>
@@ -234,8 +260,8 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
               <Input
                 id="monthly_price"
                 type="number"
-                value={formData.monthly_price}
-                onChange={(e) => handleInputChange('monthly_price', e.target.value)}
+                value={formData.monthly_price || ''}
+                onChange={(e) => handleInputChange('monthly_price', e.target.value ? parseInt(e.target.value) : undefined)}
               />
             </div>
             <div>
@@ -243,8 +269,8 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
               <Input
                 id="session_price"
                 type="number"
-                value={formData.session_price}
-                onChange={(e) => handleInputChange('session_price', e.target.value)}
+                value={formData.session_price || ''}
+                onChange={(e) => handleInputChange('session_price', e.target.value ? parseInt(e.target.value) : undefined)}
               />
             </div>
           </div>
@@ -262,22 +288,28 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
 
           {/* Amenities */}
           <div>
-            <Label htmlFor="amenities">Amenities (comma separated)</Label>
-            <Input
-              id="amenities"
-              value={formData.amenities}
-              onChange={(e) => handleInputChange('amenities', e.target.value)}
-              placeholder="WiFi, Parking, AC, Locker Room"
-            />
+            <Label>Amenities</Label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+              {amenitiesList.map((amenity) => (
+                <div key={amenity} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={amenity}
+                    checked={formData.amenities.includes(amenity)}
+                    onCheckedChange={() => handleAmenityToggle(amenity)}
+                  />
+                  <Label htmlFor={amenity} className="text-sm">{amenity}</Label>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Image Management */}
           <div>
             <Label>Business Images</Label>
             <div className="mt-2">
-              <ImageManager 
+              <ImageManager
                 images={formData.image_urls}
-                onImagesUpdate={handleImagesUpdate}
+                onImagesUpdate={(images) => handleInputChange('image_urls', images)}
                 maxImages={5}
               />
             </div>
@@ -288,13 +320,12 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
             <Button type="submit" disabled={loading} className="flex-1">
               {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               <Save className="h-4 w-4 mr-2" />
-              {listing ? 'Update Listing' : 'Create Listing'}
+              {listing ? 'Update Business' : 'Create Business'}
             </Button>
-            {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel}>
-                Cancel
-              </Button>
-            )}
+            <Button type="button" variant="outline" onClick={onCancel}>
+              <X className="h-4 w-4 mr-2" />
+              Cancel
+            </Button>
           </div>
         </form>
       </CardContent>

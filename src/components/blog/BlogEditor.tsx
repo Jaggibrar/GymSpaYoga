@@ -14,17 +14,9 @@ interface BlogEditorProps {
   blog?: Blog;
   onSave?: () => void;
   onCancel?: () => void;
-  onSubmit?: (blogData: any) => Promise<void>;
-  isSubmitting?: boolean;
 }
 
-const BlogEditor: React.FC<BlogEditorProps> = ({ 
-  blog, 
-  onSave, 
-  onCancel, 
-  onSubmit: customOnSubmit,
-  isSubmitting: customIsSubmitting 
-}) => {
+const BlogEditor: React.FC<BlogEditorProps> = ({ blog, onSave, onCancel }) => {
   const { createBlog, updateBlog } = useBlogs();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,20 +30,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
     read_time_minutes: blog?.read_time_minutes || 5
   });
 
-  const isSubmitting = customIsSubmitting || loading;
-
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (customOnSubmit) {
-      await customOnSubmit(formData);
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -185,8 +169,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-6">
-            <Button type="submit" disabled={isSubmitting} className="flex-1">
-              {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+            <Button type="submit" disabled={loading} className="flex-1">
+              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               <Save className="h-4 w-4 mr-2" />
               {blog ? 'Update Blog' : 'Create Blog'}
             </Button>
