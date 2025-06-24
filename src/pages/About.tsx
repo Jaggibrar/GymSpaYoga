@@ -214,7 +214,7 @@ const About = () => {
                     <MapPin className="h-12 w-12 text-emerald-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Visit Us</h3>
                     <p className="text-gray-600">
-                      Bangalore, Karnataka<br />
+                      Kolkata <br />
                       India
                     </p>
                   </CardContent>
@@ -225,7 +225,7 @@ const About = () => {
                     <Phone className="h-12 w-12 text-emerald-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Call Us</h3>
                     <p className="text-gray-600">
-                      +91 98765 43210<br />
+                      +91 7596958097<br />
                       Mon-Fri 9AM-6PM
                     </p>
                   </CardContent>
@@ -236,8 +236,8 @@ const About = () => {
                     <Mail className="h-12 w-12 text-emerald-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">Email Us</h3>
                     <p className="text-gray-600">
-                      hello@gymspa yoga.com<br />
-                      support@gymspa yoga.com
+                      GymSpaYoga@Gmail.com<br />
+                    
                     </p>
                   </CardContent>
                 </Card>
