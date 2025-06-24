@@ -43,9 +43,22 @@ const EnhancedBusinessCard = ({
     navigate(`/business/${id}`);
   };
 
-  const handleCall = () => {
+  const handleCall = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (phone) {
-      window.location.href = `tel:${phone}`;
+      window.open(`tel:${phone}`, '_self');
+    }
+  };
+
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onBookNow) {
+      onBookNow();
+    } else {
+      // Default booking behavior - navigate to business details
+      navigate(`/business/${id}`);
     }
   };
 
@@ -163,7 +176,7 @@ const EnhancedBusinessCard = ({
               variant="outline" 
               size="sm" 
               className="text-xs"
-              onClick={onBookNow}
+              onClick={handleBookNow}
             >
               <MessageCircle className="h-3 w-3 mr-1" />
               Book Now
