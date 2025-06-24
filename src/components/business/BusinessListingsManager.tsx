@@ -3,12 +3,12 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { Loader2, Plus, Edit, Trash2, MapPin, DollarSign, Building } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Loader2, Plus, Edit, Trash2, MapPin, DollarSign, Building, ExternalLink } from 'lucide-react';
 
 interface BusinessListing {
   id: string;
@@ -37,11 +37,9 @@ interface BusinessListing {
 
 const BusinessListingsManager = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [listings, setListings] = useState<BusinessListing[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedListing, setSelectedListing] = useState<string | null>(null);
-  const [showEditor, setShowEditor] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -74,6 +72,14 @@ const BusinessListingsManager = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (listingId: string) => {
+    navigate(`/edit-listing/${listingId}`);
+  };
+
+  const handleViewDetails = (listingId: string) => {
+    navigate(`/business/${listingId}`);
   };
 
   const handleDelete = async (listingId: string) => {
@@ -130,11 +136,7 @@ const BusinessListingsManager = () => {
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">My Business Listings</h2>
         <Button 
-          onClick={() => {
-            setIsCreating(true);
-            setSelectedListing(null);
-            setShowEditor(true);
-          }}
+          onClick={() => navigate('/create-listing')}
         >
           <Plus className="h-4 w-4 mr-2" />
           Add New Business
@@ -150,11 +152,7 @@ const BusinessListingsManager = () => {
               Create your first business listing to start receiving bookings
             </p>
             <Button 
-              onClick={() => {
-                setIsCreating(true);
-                setSelectedListing(null);
-                setShowEditor(true);
-              }}
+              onClick={() => navigate('/create-listing')}
             >
               <Plus className="h-4 w-4 mr-2" />
               Create Your First Listing
@@ -183,6 +181,9 @@ const BusinessListingsManager = () => {
                     src={listing.image_urls[0]} 
                     alt={listing.business_name}
                     className="w-full h-32 object-cover rounded-lg"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400';
+                    }}
                   />
                 )}
                 
@@ -214,11 +215,17 @@ const BusinessListingsManager = () => {
                     size="sm" 
                     variant="outline" 
                     className="flex-1"
-                    onClick={() => {
-                      setSelectedListing(listing.id);
-                      setIsCreating(false);
-                      setShowEditor(true);
-                    }}
+                    onClick={() => handleViewDetails(listing.id)}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    View
+                  </Button>
+                  
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="flex-1"
+                    onClick={() => handleEdit(listing.id)}
                   >
                     <Edit className="h-4 w-4 mr-1" />
                     Edit
@@ -254,23 +261,6 @@ const BusinessListingsManager = () => {
           ))}
         </div>
       )}
-
-      {/* Mock Editor Dialog */}
-      <Dialog open={showEditor} onOpenChange={setShowEditor}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4">
-              {isCreating ? 'Create New Business' : 'Edit Business'}
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Business editing functionality is being enhanced. Please use the main registration form for now.
-            </p>
-            <Button onClick={() => setShowEditor(false)}>
-              Close
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

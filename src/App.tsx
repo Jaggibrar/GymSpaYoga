@@ -26,6 +26,9 @@ import RegisterBusiness from "./pages/RegisterBusiness";
 import RegisterTrainer from "./pages/RegisterTrainer";
 import Explore from "./pages/Explore";
 import BusinessDashboard from "./pages/BusinessDashboard";
+import EditListing from "./pages/EditListing";
+import BusinessDetails from "./pages/BusinessDetails";
+import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +58,10 @@ const App = () => (
                 <Route path="/register-trainer" element={<RegisterTrainer />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/business-dashboard" element={<BusinessDashboard />} />
+                <Route path="/create-listing" element={<CreateListing />} />
+                <Route path="/edit-listing/:id" element={<EditListing />} />
+                <Route path="/business/:id" element={<BusinessDetails />} />
+                <Route path="/listing/:id" element={<BusinessDetails />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 {navItems.map(({ to, page }) => (

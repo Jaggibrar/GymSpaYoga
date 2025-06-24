@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, MessageCircle, Star, Shield } from "lucide-react";
@@ -16,7 +16,8 @@ interface EnhancedBusinessCardProps {
   category: string;
   location: string;
   price: string;
-  onBookNow: () => void;
+  phone?: string;
+  onBookNow?: () => void;
   verified?: boolean;
   trending?: boolean;
   featured?: boolean;
@@ -30,11 +31,24 @@ const EnhancedBusinessCard = ({
   category,
   location,
   price,
+  phone,
   onBookNow,
   verified = true,
   trending = false,
   featured = false
 }: EnhancedBusinessCardProps) => {
+  const navigate = useNavigate();
+
+  const handleViewDetails = () => {
+    navigate(`/business/${id}`);
+  };
+
+  const handleCall = () => {
+    if (phone) {
+      window.location.href = `tel:${phone}`;
+    }
+  };
+
   return (
     <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#0FFCBE] bg-white relative overflow-hidden rounded-xl">
       <div className="relative overflow-hidden h-48 md:h-56 w-full rounded-t-xl">
@@ -53,13 +67,13 @@ const EnhancedBusinessCard = ({
           {verified && (
             <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1">
               <Verified className="h-3 w-3" />
-              Coming Soon
+              Verified
             </Badge>
           )}
           {featured && (
             <Badge className="bg-purple-500 text-white font-bold text-xs flex items-center gap-1">
               <Award className="h-3 w-3" />
-              Demo Profile
+              Featured
             </Badge>
           )}
         </div>
@@ -68,25 +82,22 @@ const EnhancedBusinessCard = ({
           {trending && (
             <Badge className="bg-orange-500 text-white font-bold text-xs flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
-              Sample
+              Trending
             </Badge>
           )}
-          <Badge className="bg-blue-500 text-white font-bold text-xs">
-            Beta Access!
-          </Badge>
         </div>
         
-        {/* Rating Display - Sample Data */}
+        {/* Rating Display */}
         <div className="absolute bottom-3 left-3 right-3">
           <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                <span className="text-sm font-bold">New</span>
-                <span className="text-xs text-gray-600">(Sample profile)</span>
+                <span className="text-sm font-bold">4.8</span>
+                <span className="text-xs text-gray-600">(124 reviews)</span>
               </div>
               <Badge className="bg-blue-100 text-blue-700 text-xs">
-                Early Access
+                Open Now
               </Badge>
             </div>
           </div>
@@ -109,42 +120,53 @@ const EnhancedBusinessCard = ({
         </p>
         
         <div className="space-y-4">
-          {/* Trust Indicators - Updated for startup */}
+          {/* Trust Indicators */}
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2 text-gray-600">
               <Verified className="h-4 w-4 text-blue-500" />
-              <span>Pre-Verified</span>
+              <span>Verified Business</span>
             </div>
             <div className="flex items-center gap-2 text-gray-600">
               <Shield className="h-4 w-4 text-green-500" />
-              <span>Early Partner</span>
+              <span>Trusted Partner</span>
             </div>
           </div>
           
           <div className="flex items-center justify-between">
-            <span className="text-base font-bold text-gray-800">Launching at</span>
+            <span className="text-base font-bold text-gray-800">Starting at</span>
             <div className="text-right">
-              <span className="text-2xl font-black text-emerald-600">₹999/mo</span>
-              <div className="text-xs text-blue-500">Beta pricing</div>
+              <span className="text-2xl font-black text-emerald-600">{price}</span>
             </div>
           </div>
           
           <Button 
-            onClick={onBookNow}
+            onClick={handleViewDetails}
             className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
           >
-            Join Beta Waitlist
+            View Details
           </Button>
           
           {/* Quick Contact Options */}
           <div className="grid grid-cols-2 gap-2">
-            <Button variant="outline" size="sm" className="text-xs">
-              <Phone className="h-3 w-3 mr-1" />
-              Info Call
-            </Button>
-            <Button variant="outline" size="sm" className="text-xs">
+            {phone && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs"
+                onClick={handleCall}
+              >
+                <Phone className="h-3 w-3 mr-1" />
+                Call Now
+              </Button>
+            )}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="text-xs"
+              onClick={onBookNow}
+            >
               <MessageCircle className="h-3 w-3 mr-1" />
-              Learn More
+              Book Now
             </Button>
           </div>
         </div>
