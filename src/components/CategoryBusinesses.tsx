@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MapPin, Star, Clock, Phone, Mail, Search, MessageCircle, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BookingModal from '@/components/BookingModal';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { getTierFromPricing, getTierColor } from '@/utils/businessUtils';
 
 interface CategoryBusinessesProps {

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -33,15 +34,7 @@ import CreateListing from "./pages/CreateListing";
 import NotFound from "./pages/NotFound";
 import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Admin from "./pages/Admin";
 import Profile from "./pages/Profile";
-import TrainerDashboard from "./pages/TrainerDashboard";
-import Bookings from "./pages/Bookings";
-import Calendar from "./pages/Calendar";
-import Notifications from "./pages/Notifications";
-import Chat from "./pages/Chat";
-import Blog from "./pages/Blog";
-import WriteBlog from "./pages/WriteBlog";
 
 const queryClient = new QueryClient();
 
@@ -72,52 +65,21 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/support" element={<Support />} />
-              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog" element={<Blogs />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/write-blog" element={<WriteBlog />} />
-              <Route path="/admin" element={
-                <ProtectedRoute requiredRole="admin">
-                  <Admin />
-                </ProtectedRoute>
-              } />
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
                 </ProtectedRoute>
               } />
               <Route path="/business-dashboard" element={
-                <ProtectedRoute requiredRole="business_owner">
+                <ProtectedRoute>
                   <BusinessDashboard />
                 </ProtectedRoute>
               } />
-              <Route path="/trainer-dashboard" element={
-                <ProtectedRoute requiredRole="trainer">
-                  <TrainerDashboard />
-                </ProtectedRoute>
-              } />
               <Route path="/edit-listing/:id" element={
-                <ProtectedRoute requiredRole="business_owner">
+                <ProtectedRoute>
                   <EditListing />
-                </ProtectedRoute>
-              } />
-              <Route path="/bookings" element={
-                <ProtectedRoute>
-                  <Bookings />
-                </ProtectedRoute>
-              } />
-              <Route path="/calendar" element={
-                <ProtectedRoute>
-                  <Calendar />
-                </ProtectedRoute>
-              } />
-              <Route path="/notifications" element={
-                <ProtectedRoute>
-                  <Notifications />
-                </ProtectedRoute>
-              } />
-              <Route path="/chat" element={
-                <ProtectedRoute>
-                  <Chat />
                 </ProtectedRoute>
               } />
             </Routes>

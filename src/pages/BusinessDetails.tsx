@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, MessageCircle } from 'lucide-react';
 import BookingModal from '@/components/BookingModal';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 

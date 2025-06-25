@@ -49,6 +49,7 @@ const EnhancedBusinessCard = ({
         navigate(`/spas/${id}`);
         break;
       case 'yoga':
+      case 'yoga_studio':
         navigate(`/yoga/${id}`);
         break;
       case 'gym':
