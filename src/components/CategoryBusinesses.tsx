@@ -1,286 +1,257 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useBusinessData } from '@/hooks/useBusinessData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Filter, Search, Phone, Mail, Clock, DollarSign } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-
-interface Business {
-  id: string;
-  business_name: string;
-  category: string;
-  city: string;
-  state: string;
-  address: string;
-  phone: string;
-  email: string;
-  monthly_price?: number;
-  session_price?: number;
-  description: string;
-  image_urls: string[];
-  opening_time: string;
-  closing_time: string;
-  amenities: string[];
-  status: string;
-}
+import { MapPin, Star, Clock, Phone, Mail, Search, MessageCircle, Eye } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import BookingModal from '@/components/BookingModal';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { getTierFromPricing, getTierColor } from '@/utils/businessUtils';
 
 interface CategoryBusinessesProps {
   category: string;
   title: string;
-  description?: string;
+  description: string;
 }
 
-const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({ 
-  category, 
-  title, 
-  description 
+const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
+  category,
+  title,
+  description
 }) => {
-  const [businesses, setBusinesses] = useState<Business[]>([]);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [tierFilter, setTierFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState('');
+  const [sortBy, setSortBy] = useState('created_at');
+  
+  const { businesses, loading, error } = useBusinessData(
+    category,
+    searchTerm,
+    locationFilter,
+    sortBy
+  );
 
-  useEffect(() => {
-    fetchBusinesses();
-  }, [category]);
-
-  const fetchBusinesses = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('business_profiles')
-        .select('*')
-        .eq('category', category)
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setBusinesses(data || []);
-    } catch (error) {
-      console.error('Error fetching businesses:', error);
-      setBusinesses([]);
-    } finally {
-      setLoading(false);
+  const handleViewDetails = (businessId: string, businessType: string) => {
+    const type = businessType.toLowerCase();
+    switch (type) {
+      case 'spa':
+        navigate(`/spas/${businessId}`);
+        break;
+      case 'yoga':
+        navigate(`/yoga/${businessId}`);
+        break;
+      case 'gym':
+      default:
+        navigate(`/gyms/${businessId}`);
+        break;
     }
   };
 
-  const getTier = (business: Business) => {
-    const price = business.monthly_price || business.session_price || 0;
-    if (price >= 5000) return 'luxury';
-    if (price >= 3000) return 'premium';
-    return 'budget';
-  };
-
-  const getTierColor = (tier: string) => {
-    switch (tier) {
-      case 'luxury': return 'bg-purple-100 text-purple-800 border-purple-200';
-      case 'premium': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'budget': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+  const handleCall = (phone: string) => {
+    if (phone) {
+      window.location.href = `tel:${phone}`;
     }
   };
 
-  const filteredBusinesses = businesses.filter(business => {
-    const matchesSearch = business.business_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         business.city.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesTier = tierFilter === 'all' || getTier(business) === tierFilter;
-    const matchesLocation = !locationFilter || business.city.toLowerCase().includes(locationFilter.toLowerCase());
-    
-    return matchesSearch && matchesTier && matchesLocation;
-  });
+  const handleBookNow = (phone: string, businessName: string) => {
+    if (phone) {
+      const message = `Hi, I'm interested in booking your services at ${businessName}. Could you please provide more details?`;
+      const whatsappUrl = `https://wa.me/${phone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+  };
 
   if (loading) {
     return (
-      <section className="py-8 px-4 bg-white">
-        <div className="container mx-auto">
-          <div className="flex justify-center items-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500 mr-3"></div>
-            <span className="text-gray-600">Loading {title.toLowerCase()}...</span>
-          </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <LoadingSpinner />
+          <p className="mt-4 text-gray-600">Loading {title.toLowerCase()}...</p>
         </div>
-      </section>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">
+          <p className="text-red-600">Error loading {title.toLowerCase()}: {error}</p>
+        </div>
+      </div>
     );
   }
 
   return (
-    <section className="py-8 px-4 bg-white">
-      <div className="container mx-auto">
-        {/* Search and Filters */}
-        <div className="mb-8 bg-gray-50 rounded-xl p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder={`Search ${title.toLowerCase()}...`}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            
-            <Select value={tierFilter} onValueChange={setTierFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="All Tiers" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tiers</SelectItem>
-                <SelectItem value="budget">Budget</SelectItem>
-                <SelectItem value="premium">Premium</SelectItem>
-                <SelectItem value="luxury">Luxury</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Input
-              placeholder="Filter by location..."
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-            />
-
-            <Button variant="outline" onClick={() => {
-              setSearchTerm('');
-              setTierFilter('all');
-              setLocationFilter('');
-            }}>
-              <Filter className="h-4 w-4 mr-2" />
-              Clear Filters
-            </Button>
-          </div>
+    <section className="py-16 bg-white">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">{title}</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            {description}
+          </p>
         </div>
 
-        {/* Business Listings Grid */}
-        {filteredBusinesses.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="max-w-md mx-auto">
-              <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <MapPin className="h-12 w-12 text-emerald-600" />
+        {/* Search and Filter Controls */}
+        <Card className="mb-8">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder={`Search ${title.toLowerCase()}...`}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">No {title} Found</h3>
-              <p className="text-gray-500 mb-6">
-                {searchTerm || tierFilter !== 'all' || locationFilter 
-                  ? 'Try adjusting your search criteria'
-                  : `No ${title.toLowerCase()} available in your area yet`
-                }
-              </p>
-              <Button onClick={() => window.location.href = '/register-business'}>
-                List Your {category === 'gym' ? 'Gym' : category === 'spa' ? 'Spa' : 'Studio'}
-              </Button>
+              
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Location..."
+                  value={locationFilter}
+                  onChange={(e) => setLocationFilter(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at">Newest First</SelectItem>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="price">Price</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Business Cards */}
+        {businesses.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 mb-4">
+              <Search className="h-16 w-16 mx-auto" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No {title.toLowerCase()} found</h3>
+            <p className="text-gray-500">Try adjusting your search filters or check back later</p>
           </div>
         ) : (
-          <>
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {filteredBusinesses.length} {title} Found
-              </h2>
-              <p className="text-gray-600">
-                Discover the best {title.toLowerCase()} in your area
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-              {filteredBusinesses.map((business) => {
-                const tier = getTier(business);
-                return (
-                  <Card key={business.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 bg-white border-0 shadow-md">
-                    <div className="relative">
-                      {business.image_urls && business.image_urls.length > 0 ? (
-                        <img
-                          src={business.image_urls[0]}
-                          alt={business.business_name}
-                          className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-t-lg flex items-center justify-center">
-                          <MapPin className="h-12 w-12 text-emerald-600" />
-                        </div>
-                      )}
-                      
-                      <Badge className={`absolute top-3 right-3 ${getTierColor(tier)} font-semibold`}>
-                        {tier.charAt(0).toUpperCase() + tier.slice(1)}
-                      </Badge>
-                    </div>
-
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg font-bold group-hover:text-emerald-600 transition-colors">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {businesses.map((business) => {
+              const tier = getTierFromPricing(business);
+              const imageUrl = business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48";
+              
+              return (
+                <Card key={business.id} className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={imageUrl} 
+                      alt={business.business_name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <Badge className={`absolute top-3 right-3 bg-gradient-to-r ${getTierColor(tier)} text-white border-0 capitalize`}>
+                      {tier}
+                    </Badge>
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
+                  </div>
+                  
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-bold group-hover:text-blue-600 transition-colors line-clamp-1">
                         {business.business_name}
-                      </CardTitle>
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        <span>{business.city}, {business.state}</span>
+                      </h3>
+                      <div className="flex items-center gap-1 text-sm text-yellow-600">
+                        <Star className="h-4 w-4 fill-current" />
+                        <span className="font-medium">4.7</span>
                       </div>
-                    </CardHeader>
-
-                    <CardContent className="space-y-4">
-                      <p className="text-gray-600 text-sm line-clamp-2">
-                        {business.description}
-                      </p>
-
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center text-gray-500">
-                          <Clock className="h-4 w-4 mr-1" />
-                          <span>{business.opening_time} - {business.closing_time}</span>
-                        </div>
-                        
-                        {(business.monthly_price || business.session_price) && (
-                          <div className="flex items-center text-emerald-600 font-semibold">
-                            <DollarSign className="h-4 w-4 mr-1" />
-                            <span>
-                              ₹{business.monthly_price || business.session_price}
-                              {business.monthly_price ? '/month' : '/session'}
-                            </span>
-                          </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-gray-600 mb-3">
+                      <MapPin className="h-4 w-4" />
+                      <span className="text-sm">{business.city}, {business.state}</span>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {business.description || "Premium wellness destination offering excellent services"}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <Badge variant="outline" className="text-xs">
+                        {business.business_type?.replace('_', ' ').toUpperCase()}
+                      </Badge>
+                      {business.amenities?.slice(0, 2).map((amenity, index) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {amenity}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mb-4 text-sm text-gray-600">
+                      <Clock className="h-4 w-4" />
+                      <span>{business.opening_time} - {business.closing_time}</span>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        {business.monthly_price && (
+                          <p className="text-lg font-bold text-blue-600">₹{business.monthly_price}/month</p>
+                        )}
+                        {business.session_price && (
+                          <p className="text-lg font-bold text-blue-600">₹{business.session_price}/session</p>
+                        )}
+                        {!business.monthly_price && !business.session_price && (
+                          <p className="text-lg font-bold text-blue-600">Contact for pricing</p>
                         )}
                       </div>
+                    </div>
 
-                      {business.amenities && business.amenities.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
-                          {business.amenities.slice(0, 3).map((amenity, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {amenity}
-                            </Badge>
-                          ))}
-                          {business.amenities.length > 3 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{business.amenities.length - 3} more
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex gap-2 pt-2">
-                        <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                          View Details
-                        </Button>
-                        <Button variant="outline" size="icon">
-                          <Phone className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="icon">
-                          <Mail className="h-4 w-4" />
-                        </Button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 mb-4">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => handleViewDetails(business.id, business.business_type)}
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        View Details
+                      </Button>
+                      <Button 
+                        className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm"
+                        onClick={() => handleBookNow(business.phone, business.business_name)}
+                      >
+                        <MessageCircle className="h-4 w-4 mr-1" />
+                        Book Now
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 pt-4 border-t text-sm text-gray-500">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-0 h-auto text-gray-500 hover:text-blue-600"
+                        onClick={() => handleCall(business.phone)}
+                      >
+                        <Phone className="h-3 w-3 mr-1" />
+                        {business.phone}
+                      </Button>
+                      <div className="flex items-center gap-1">
+                        <Mail className="h-3 w-3" />
+                        <span className="truncate">{business.email}</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-          </>
-        )}
-
-        {/* Description Section - Now Below Listings */}
-        {description && (
-          <div className="mt-16 max-w-4xl mx-auto text-center">
-            <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Why Choose Our {title}?
-              </h3>
-              <p className="text-gray-700 leading-relaxed">
-                {description}
-              </p>
-            </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>
