@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,9 +13,17 @@ interface BlogEditorProps {
   blog?: Blog;
   onSave?: () => void;
   onCancel?: () => void;
+  onSubmit?: (blogData: any) => Promise<void>;
+  isSubmitting?: boolean;
 }
 
-const BlogEditor: React.FC<BlogEditorProps> = ({ blog, onSave, onCancel }) => {
+const BlogEditor: React.FC<BlogEditorProps> = ({ 
+  blog, 
+  onSave, 
+  onCancel, 
+  onSubmit, 
+  isSubmitting = false 
+}) => {
   const { createBlog, updateBlog } = useBlogs();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -36,6 +43,12 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, onSave, onCancel }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (onSubmit) {
+      await onSubmit(formData);
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -169,8 +182,8 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ blog, onSave, onCancel }) => {
 
           {/* Action Buttons */}
           <div className="flex gap-4 pt-6">
-            <Button type="submit" disabled={loading} className="flex-1">
-              {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+            <Button type="submit" disabled={loading || isSubmitting} className="flex-1">
+              {(loading || isSubmitting) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               <Save className="h-4 w-4 mr-2" />
               {blog ? 'Update Blog' : 'Create Blog'}
             </Button>

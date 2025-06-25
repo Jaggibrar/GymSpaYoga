@@ -43,9 +43,23 @@ const EnhancedBusinessCard = ({
     navigate(`/business/${id}`);
   };
 
-  const handleCall = () => {
+  const handleCall = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (phone) {
       window.location.href = `tel:${phone}`;
+    }
+  };
+
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onBookNow) {
+      onBookNow();
+    } else if (phone) {
+      const message = `Hi, I'm interested in booking your services at ${name}. Could you please provide more details?`;
+      const whatsappUrl = `https://wa.me/${phone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
     }
   };
 
@@ -163,7 +177,7 @@ const EnhancedBusinessCard = ({
               variant="outline" 
               size="sm" 
               className="text-xs"
-              onClick={onBookNow}
+              onClick={handleBookNow}
             >
               <MessageCircle className="h-3 w-3 mr-1" />
               Book Now
