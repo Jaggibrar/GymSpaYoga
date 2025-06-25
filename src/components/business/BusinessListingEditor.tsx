@@ -10,9 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useBusinessImageUpload } from '@/hooks/useBusinessImageUpload';
 import { toast } from 'sonner';
 import { Loader2, Save, X } from 'lucide-react';
-import ImageManager from './ImageManager';
+import ImageUploadSection from './ImageUploadSection';
 
 interface BusinessListing {
   id?: string;
@@ -47,7 +48,10 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
   onCancel
 }) => {
   const { user } = useAuth();
+  const { uploadMultipleImages } = useBusinessImageUpload();
   const [loading, setLoading] = useState(false);
+  const [newImages, setNewImages] = useState<File[]>([]);
+  const [existingImageUrls, setExistingImageUrls] = useState<string[]>([]);
   const [formData, setFormData] = useState<BusinessListing>({
     business_name: '',
     business_type: 'gym',
@@ -67,6 +71,12 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
     image_urls: [],
     ...listing
   });
+
+  useEffect(() => {
+    if (listing?.image_urls) {
+      setExistingImageUrls(listing.image_urls);
+    }
+  }, [listing]);
 
   const amenitiesList = [
     'AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service',
@@ -96,9 +106,19 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
 
     setLoading(true);
     try {
+      // Upload new images if any
+      let newImageUrls: string[] = [];
+      if (newImages.length > 0) {
+        newImageUrls = await uploadMultipleImages(newImages);
+      }
+
+      // Combine existing and new image URLs
+      const allImageUrls = [...existingImageUrls, ...newImageUrls];
+
       const businessData = {
         ...formData,
         user_id: user.id,
+        image_urls: allImageUrls,
         status: 'approved'
       };
 
@@ -121,6 +141,8 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
         toast.success('Business profile created successfully!');
       }
 
+      // Clear new images after successful save
+      setNewImages([]);
       onSave();
     } catch (error: any) {
       console.error('Error saving business:', error);
@@ -303,16 +325,15 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
             </div>
           </div>
 
-          {/* Image Management */}
+          {/* Image Upload Section */}
           <div>
-            <Label>Business Images</Label>
-            <div className="mt-2">
-              <ImageManager
-                images={formData.image_urls}
-                onImagesUpdate={(images) => handleInputChange('image_urls', images)}
-                maxImages={5}
-              />
-            </div>
+            <ImageUploadSection
+              images={newImages}
+              onImagesChange={setNewImages}
+              maxImages={5}
+              existingImageUrls={existingImageUrls}
+              onExistingImagesChange={setExistingImageUrls}
+            />
           </div>
 
           {/* Action Buttons */}

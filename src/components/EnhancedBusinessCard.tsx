@@ -21,6 +21,7 @@ interface EnhancedBusinessCardProps {
   verified?: boolean;
   trending?: boolean;
   featured?: boolean;
+  businessType?: string;
 }
 
 const EnhancedBusinessCard = ({ 
@@ -35,12 +36,26 @@ const EnhancedBusinessCard = ({
   onBookNow,
   verified = true,
   trending = false,
-  featured = false
+  featured = false,
+  businessType = 'gym'
 }: EnhancedBusinessCardProps) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/business/${id}`);
+    // Ensure proper routing based on business type
+    const type = businessType.toLowerCase();
+    switch (type) {
+      case 'spa':
+        navigate(`/spas/${id}`);
+        break;
+      case 'yoga':
+        navigate(`/yoga/${id}`);
+        break;
+      case 'gym':
+      default:
+        navigate(`/gyms/${id}`);
+        break;
+    }
   };
 
   const handleCall = (e: React.MouseEvent) => {

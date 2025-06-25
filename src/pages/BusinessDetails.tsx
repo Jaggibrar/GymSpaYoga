@@ -1,42 +1,40 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Phone, Clock, Star, ArrowLeft, MessageCircle, Calendar, Heart } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, MessageCircle } from 'lucide-react';
+import BookingModal from '@/components/BookingModal';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 
-interface BusinessProfile {
+interface Business {
   id: string;
   business_name: string;
   business_type: string;
-  category: string;
-  description: string;
+  description?: string;
   address: string;
   city: string;
   state: string;
-  pin_code: string;
   phone: string;
   email: string;
   opening_time: string;
   closing_time: string;
-  monthly_price?: number;
+  amenities?: string[];
+  image_urls?: string[];
   session_price?: number;
-  amenities: string[];
-  image_urls: string[];
-  status: string;
-  created_at: string;
+  monthly_price?: number;
+  category: string;
 }
 
 const BusinessDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [business, setBusiness] = useState<BusinessProfile | null>(null);
+  const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     if (id) {
@@ -45,7 +43,10 @@ const BusinessDetails = () => {
   }, [id]);
 
   const fetchBusinessDetails = async () => {
+    if (!id) return;
+    
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('business_profiles')
         .select('*')
@@ -53,14 +54,31 @@ const BusinessDetails = () => {
         .eq('status', 'approved')
         .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === 'PGRST116') {
+          setError('Business not found');
+        } else {
+          throw error;
+        }
+        return;
+      }
+
       setBusiness(data);
-    } catch (error) {
-      console.error('Error fetching business details:', error);
+    } catch (err: any) {
+      console.error('Error fetching business details:', err);
+      setError('Failed to load business details');
       toast.error('Failed to load business details');
     } finally {
       setLoading(false);
     }
+  };
+
+  const formatTime = (time: string) => {
+    return new Date(`2000-01-01T${time}`).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
   };
 
   const handleCall = () => {
@@ -74,43 +92,30 @@ const BusinessDetails = () => {
       const message = `Hi, I'm interested in booking your services at ${business.business_name}. Could you please provide more details?`;
       const whatsappUrl = `https://wa.me/${business.phone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
-    } else {
-      toast.info('Please call the business directly to make a booking');
-    }
-  };
-
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
-
-  const getTierColor = (category: string) => {
-    switch (category?.toLowerCase()) {
-      case 'luxury': return 'bg-purple-100 text-purple-800';
-      case 'premium': return 'bg-blue-100 text-blue-800';
-      case 'budget': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }
 
-  if (!business) {
+  if (error || !business) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Business Not Found</h1>
-          <p className="text-gray-600 mb-6">The business you're looking for doesn't exist or has been removed.</p>
-          <Button onClick={() => navigate('/')}>Go Back Home</Button>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            {error || 'Business not found'}
+          </h1>
+          <Link to="/explore">
+            <Button variant="outline">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Explore
+            </Button>
+          </Link>
         </div>
       </div>
     );
@@ -120,183 +125,180 @@ const BusinessDetails = () => {
     <>
       <SEOHead
         title={`${business.business_name} - ${business.business_type} | GymSpaYoga`}
-        description={business.description || `Book ${business.business_name} - ${business.business_type} in ${business.city}`}
-        keywords={`${business.business_name}, ${business.business_type}, ${business.city}, booking, fitness, wellness`}
+        description={business.description || `Book ${business.business_name} - Professional ${business.business_type} services in ${business.city}, ${business.state}`}
+        keywords={`${business.business_type}, ${business.city}, fitness, wellness, booking`}
       />
       
       <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow-sm">
-          <div className="container mx-auto px-4 py-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate(-1)}
-              className="mb-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-          </div>
-        </div>
-
         <div className="container mx-auto px-4 py-8">
+          <div className="mb-6">
+            <Link to="/explore">
+              <Button variant="outline" className="mb-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Explore
+              </Button>
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Images */}
+              {/* Header */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                        {business.business_name}
+                      </h1>
+                      <div className="flex items-center gap-3 mb-4">
+                        <Badge variant="secondary" className="capitalize">
+                          {business.business_type}
+                        </Badge>
+                        <Badge variant="outline" className="capitalize">
+                          {business.category} Tier
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span>4.7 (124 reviews)</span>
+                    </div>
+                  </div>
+
+                  {business.description && (
+                    <p className="text-gray-600 leading-relaxed mb-6">
+                      {business.description}
+                    </p>
+                  )}
+
+                  {/* Contact Info */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-start gap-3">
+                      <MapPin className="h-5 w-5 text-gray-500 mt-0.5" />
+                      <div>
+                        <p className="font-medium">Address</p>
+                        <p className="text-gray-600">
+                          {business.address}, {business.city}, {business.state}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Clock className="h-5 w-5 text-gray-500" />
+                      <div>
+                        <p className="font-medium">Operating Hours</p>
+                        <p className="text-gray-600">
+                          {formatTime(business.opening_time)} - {formatTime(business.closing_time)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-gray-500" />
+                      <div>
+                        <p className="font-medium">Phone</p>
+                        <p className="text-gray-600">{business.phone}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-5 w-5 text-gray-500" />
+                      <div>
+                        <p className="font-medium">Email</p>
+                        <p className="text-gray-600">{business.email}</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Images Gallery */}
               {business.image_urls && business.image_urls.length > 0 && (
                 <Card>
-                  <CardContent className="p-0">
-                    <div className="relative">
-                      <img
-                        src={business.image_urls[currentImageIndex]}
-                        alt={business.business_name}
-                        className="w-full h-96 object-cover rounded-t-lg"
-                      />
-                      {business.image_urls.length > 1 && (
-                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                          {business.image_urls.map((_, index) => (
-                            <button
-                              key={index}
-                              onClick={() => setCurrentImageIndex(index)}
-                              className={`w-3 h-3 rounded-full ${
-                                currentImageIndex === index ? 'bg-white' : 'bg-white/50'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      )}
+                  <CardContent className="p-6">
+                    <h2 className="text-xl font-semibold mb-4">Gallery</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {business.image_urls.slice(0, 6).map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`${business.business_name} ${index + 1}`}
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
               )}
 
-              {/* Business Info */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-2xl">{business.business_name}</CardTitle>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Badge className={getTierColor(business.category)}>
-                          {business.category?.charAt(0).toUpperCase() + business.category?.slice(1)}
+              {/* Amenities */}
+              {business.amenities && business.amenities.length > 0 && (
+                <Card>
+                  <CardContent className="p-6">
+                    <h2 className="text-xl font-semibold mb-4">Amenities</h2>
+                    <div className="flex flex-wrap gap-2">
+                      {business.amenities.map((amenity, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {amenity}
                         </Badge>
-                        <Badge variant="outline">{business.business_type}</Badge>
-                      </div>
+                      ))}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                      <span className="font-semibold">4.8</span>
-                      <span className="text-gray-600">(124)</span>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="h-5 w-5" />
-                    <span>{business.address}, {business.city}, {business.state} - {business.pin_code}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="h-5 w-5" />
-                    <span>
-                      {formatTime(business.opening_time)} - {formatTime(business.closing_time)}
-                    </span>
-                    <Badge className="bg-green-100 text-green-800 ml-2">Open Now</Badge>
-                  </div>
-
-                  {business.description && (
-                    <div>
-                      <h3 className="font-semibold mb-2">About</h3>
-                      <p className="text-gray-700 leading-relaxed">{business.description}</p>
-                    </div>
-                  )}
-
-                  {business.amenities && business.amenities.length > 0 && (
-                    <div>
-                      <h3 className="font-semibold mb-2">Amenities</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {business.amenities.map((amenity, index) => (
-                          <Badge key={index} variant="outline">{amenity}</Badge>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* Sidebar */}
             <div className="space-y-6">
-              {/* Pricing */}
+              {/* Pricing Card */}
               <Card>
-                <CardHeader>
-                  <CardTitle>Pricing</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {business.monthly_price && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Monthly</span>
-                      <span className="text-2xl font-bold text-green-600">₹{business.monthly_price}</span>
-                    </div>
-                  )}
-                  {business.session_price && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Per Session</span>
-                      <span className="text-2xl font-bold text-green-600">₹{business.session_price}</span>
-                    </div>
-                  )}
-                  {!business.monthly_price && !business.session_price && (
-                    <p className="text-gray-600">Contact for pricing details</p>
-                  )}
+                <CardContent className="p-6">
+                  <h3 className="font-semibold mb-4">Pricing</h3>
+                  <div className="space-y-3">
+                    {business.monthly_price && (
+                      <div className="flex justify-between items-center">
+                        <span>Monthly Membership</span>
+                        <span className="font-semibold text-emerald-600 text-lg">
+                          ₹{business.monthly_price.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {business.session_price && (
+                      <div className="flex justify-between items-center">
+                        <span>Per Session</span>
+                        <span className="font-semibold text-emerald-600 text-lg">
+                          ₹{business.session_price.toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    {!business.monthly_price && !business.session_price && (
+                      <p className="text-gray-600">Contact for pricing</p>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Action Buttons */}
-              <Card>
-                <CardContent className="p-4 space-y-3">
-                  <Button 
-                    onClick={handleBookNow}
-                    className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400"
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Book Now
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    onClick={handleCall}
-                    className="w-full"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    Call Now
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => toast.info('Message feature coming soon!')}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Send Message
-                  </Button>
-                </CardContent>
-              </Card>
-
-              {/* Contact Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contact Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
-                    <span>{business.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MessageCircle className="h-4 w-4 text-gray-500" />
-                    <span>{business.email}</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="space-y-3">
+                <Button 
+                  onClick={handleBookNow}
+                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                  size="lg"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Book Now via WhatsApp
+                </Button>
+                <Button 
+                  onClick={handleCall}
+                  variant="outline" 
+                  className="w-full"
+                  size="lg"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </Button>
+              </div>
             </div>
           </div>
         </div>
