@@ -3,13 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Search, MapPin, Star, Clock, Users, Building2, Sparkles, Heart, TrendingUp, Shield, Award, ArrowRight, CheckCircle, DollarSign } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import FunctionalSearch from '@/components/FunctionalSearch';
 import SEOHead from '@/components/SEOHead';
 
 const Index = () => {
   const [featuredListings, setFeaturedListings] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFeaturedListings();
@@ -51,6 +52,23 @@ const Index = () => {
       case 'Premium': return 'bg-blue-100 text-blue-800';
       case 'Budget': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleViewDetails = (businessId, businessType) => {
+    const type = businessType.toLowerCase();
+    switch (type) {
+      case 'spa':
+        navigate(`/spas/${businessId}`);
+        break;
+      case 'yoga':
+      case 'yoga_studio':
+        navigate(`/yoga/${businessId}`);
+        break;
+      case 'gym':
+      default:
+        navigate(`/gyms/${businessId}`);
+        break;
     }
   };
 
@@ -295,7 +313,10 @@ const Index = () => {
                             {listing.description}
                           </p>
 
-                          <Button className="w-full group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                          <Button 
+                            className="w-full group-hover:bg-emerald-500 group-hover:text-white transition-colors"
+                            onClick={() => handleViewDetails(listing.id, listing.business_type)}
+                          >
                             View Details
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </Button>
