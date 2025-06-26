@@ -8,6 +8,7 @@ import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import { AuthProvider } from "./hooks/useAuth";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Import all pages
 import Index from "./pages/Index";
@@ -38,70 +39,78 @@ import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const AppContent = () => {
   useScrollToTop();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
-          <Router>
-            <div className="min-h-screen bg-background font-sans antialiased">
-              <AppHeader />
-              <MainNavigation />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/gyms" element={<Gyms />} />
-                  <Route path="/spas" element={<Spas />} />
-                  <Route path="/yoga" element={<Yoga />} />
-                  <Route path="/trainers" element={<Trainers />} />
-                  <Route path="/business/:id" element={<BusinessDetails />} />
-                  <Route path="/gyms/:id" element={<BusinessDetails />} />
-                  <Route path="/spas/:id" element={<BusinessDetails />} />
-                  <Route path="/yoga/:id" element={<BusinessDetails />} />
-                  <Route path="/register-business" element={<RegisterBusiness />} />
-                  <Route path="/register-trainer" element={<RegisterTrainer />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/support" element={<Support />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/blog" element={<Blogs />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/terms-of-service" element={<TermsOfService />} />
-                  <Route path="/profile" element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/business-dashboard" element={
-                    <ProtectedRoute>
-                      <BusinessDashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/create-listing" element={
-                    <ProtectedRoute>
-                      <CreateListing />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/edit-listing/:id" element={
-                    <ProtectedRoute>
-                      <EditListing />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <AppFooter />
-              <Toaster />
-            </div>
-          </Router>
-        </TooltipProvider>
-      </AuthProvider>
-    </QueryClientProvider>
+    <div className="min-h-screen bg-background font-sans antialiased">
+      <AppHeader />
+      <MainNavigation />
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/gyms" element={<Gyms />} />
+          <Route path="/spas" element={<Spas />} />
+          <Route path="/yoga" element={<Yoga />} />
+          <Route path="/trainers" element={<Trainers />} />
+          <Route path="/business/:id" element={<BusinessDetails />} />
+          <Route path="/gyms/:id" element={<BusinessDetails />} />
+          <Route path="/spas/:id" element={<BusinessDetails />} />
+          <Route path="/yoga/:id" element={<BusinessDetails />} />
+          <Route path="/register-business" element={<RegisterBusiness />} />
+          <Route path="/register-trainer" element={<RegisterTrainer />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/blog" element={<Blogs />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/business-dashboard" element={
+            <ProtectedRoute>
+              <BusinessDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/create-listing" element={
+            <ProtectedRoute>
+              <CreateListing />
+            </ProtectedRoute>
+          } />
+          <Route path="/edit-listing/:id" element={
+            <ProtectedRoute>
+              <EditListing />
+            </ProtectedRoute>
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <AppFooter />
+      <Toaster />
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Router>
+              <AppContent />
+            </Router>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 };
 
