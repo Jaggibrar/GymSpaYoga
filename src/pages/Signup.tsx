@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -11,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, User, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import { supabase } from "@/integrations/supabase/client";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -45,12 +45,8 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const { error } = await signUp(
-        formData.email, 
-        formData.password, 
-        formData.fullName,
-        formData.role
-      );
+      // First, sign up the user
+      const { error } = await signUp(formData.email, formData.password);
 
       if (error) {
         if (error.message.includes("already registered")) {
@@ -59,6 +55,18 @@ const Signup = () => {
           setError(error.message);
         }
         return;
+      }
+
+      // Then create user profile with additional information
+      const { error: profileError } = await supabase
+        .from('user_profiles')
+        .insert({
+          full_name: formData.fullName,
+          role: formData.role
+        });
+
+      if (profileError) {
+        console.error('Error creating user profile:', profileError);
       }
 
       toast.success("Account created successfully! Please check your email to verify your account.");
