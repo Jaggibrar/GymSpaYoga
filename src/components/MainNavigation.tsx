@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building } from 'lucide-react';
@@ -11,11 +11,13 @@ const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const isActive = (path: string) => location.pathname === path;
 
   const handleSignOut = async () => {
     await signOut();
+    navigate('/');
     setIsMenuOpen(false);
   };
 
@@ -105,25 +107,11 @@ const MainNavigation = () => {
                         <span>Profile</span>
                       </Link>
                       <Link 
-                        to="/user-bookings" 
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                      >
-                        <Calendar className="h-4 w-4" />
-                        <span>My Bookings</span>
-                      </Link>
-                      <Link 
-                        to="/business-bookings" 
+                        to="/business-dashboard" 
                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
                       >
                         <Building className="h-4 w-4" />
-                        <span>Business Bookings</span>
-                      </Link>
-                      <Link 
-                        to="/user-dashboard" 
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                      >
-                        <Settings className="h-4 w-4" />
-                        <span>Dashboard</span>
+                        <span>Business Dashboard</span>
                       </Link>
                       <hr className="my-2" />
                       <button 
@@ -207,19 +195,25 @@ const MainNavigation = () => {
                 <>
                   <hr className="my-2" />
                   <Link 
-                    to="/user-bookings" 
+                    to="/profile" 
                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    My Bookings
+                    Profile
                   </Link>
                   <Link 
-                    to="/business-bookings" 
+                    to="/business-dashboard" 
                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Business Bookings
+                    Business Dashboard
                   </Link>
+                  <button 
+                    onClick={handleSignOut}
+                    className="text-red-600 hover:text-red-700 font-medium px-2 py-1 text-left"
+                  >
+                    Sign Out
+                  </button>
                 </>
               )}
             </div>

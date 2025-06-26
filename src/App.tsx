@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
-import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 import { AuthProvider } from "./hooks/useAuth";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
@@ -44,7 +43,6 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
-      <AppHeader />
       <MainNavigation />
       <main className="flex-1">
         <Routes>
