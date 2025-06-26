@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,13 +13,15 @@ import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
 
+type UserRole = "business_owner" | "end_user";
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "end_user"
+    role: "end_user" as UserRole
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -62,7 +65,8 @@ const Signup = () => {
         .from('user_profiles')
         .insert({
           full_name: formData.fullName,
-          role: formData.role
+          role: formData.role,
+          user_id: (await supabase.auth.getUser()).data.user?.id || ''
         });
 
       if (profileError) {
@@ -88,6 +92,13 @@ const Signup = () => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleRoleChange = (value: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      role: value as UserRole 
     }));
   };
 
@@ -117,7 +128,7 @@ const Signup = () => {
               <Label className="text-sm font-medium">I am a:</Label>
               <RadioGroup
                 value={formData.role}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, role: value }))}
+                onValueChange={handleRoleChange}
                 className="grid grid-cols-1 gap-3"
               >
                 <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
