@@ -2,11 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -14,6 +11,9 @@ import { useBusinessImageUpload } from '@/hooks/useBusinessImageUpload';
 import { toast } from 'sonner';
 import { Loader2, Save, X } from 'lucide-react';
 import ImageUploadSection from './ImageUploadSection';
+import BusinessBasicInfo from './BusinessBasicInfo';
+import BusinessAddressInfo from './BusinessAddressInfo';
+import BusinessTimingPricing from './BusinessTimingPricing';
 
 interface BusinessListing {
   id?: string;
@@ -162,140 +162,22 @@ const BusinessListingEditor: React.FC<BusinessListingEditorProps> = ({
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="business_name">Business Name *</Label>
-              <Input
-                id="business_name"
-                value={formData.business_name}
-                onChange={(e) => handleInputChange('business_name', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="business_type">Business Type *</Label>
-              <Select value={formData.business_type} onValueChange={(value) => handleInputChange('business_type', value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="gym">Gym</SelectItem>
-                  <SelectItem value="spa">Spa</SelectItem>
-                  <SelectItem value="yoga">Yoga Studio</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
+          <BusinessBasicInfo 
+            formData={formData} 
+            onInputChange={handleInputChange} 
+          />
 
-          {/* Contact Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">Phone *</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                required
-              />
-            </div>
-          </div>
+          {/* Address Information */}
+          <BusinessAddressInfo 
+            formData={formData} 
+            onInputChange={handleInputChange} 
+          />
 
-          {/* Address */}
-          <div>
-            <Label htmlFor="address">Address *</Label>
-            <Input
-              id="address"
-              value={formData.address}
-              onChange={(e) => handleInputChange('address', e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <Label htmlFor="city">City *</Label>
-              <Input
-                id="city"
-                value={formData.city}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="state">State *</Label>
-              <Input
-                id="state"
-                value={formData.state}
-                onChange={(e) => handleInputChange('state', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="pin_code">PIN Code *</Label>
-              <Input
-                id="pin_code"
-                value={formData.pin_code}
-                onChange={(e) => handleInputChange('pin_code', e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Timing */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="opening_time">Opening Time *</Label>
-              <Input
-                id="opening_time"
-                type="time"
-                value={formData.opening_time}
-                onChange={(e) => handleInputChange('opening_time', e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="closing_time">Closing Time *</Label>
-              <Input
-                id="closing_time"
-                type="time"
-                value={formData.closing_time}
-                onChange={(e) => handleInputChange('closing_time', e.target.value)}
-                required
-              />
-            </div>
-          </div>
-
-          {/* Pricing */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="monthly_price">Monthly Price (₹)</Label>
-              <Input
-                id="monthly_price"
-                type="number"
-                value={formData.monthly_price || ''}
-                onChange={(e) => handleInputChange('monthly_price', e.target.value ? parseInt(e.target.value) : undefined)}
-              />
-            </div>
-            <div>
-              <Label htmlFor="session_price">Session Price (₹)</Label>
-              <Input
-                id="session_price"
-                type="number"
-                value={formData.session_price || ''}
-                onChange={(e) => handleInputChange('session_price', e.target.value ? parseInt(e.target.value) : undefined)}
-              />
-            </div>
-          </div>
+          {/* Timing and Pricing */}
+          <BusinessTimingPricing 
+            formData={formData} 
+            onInputChange={handleInputChange} 
+          />
 
           {/* Description */}
           <div>
