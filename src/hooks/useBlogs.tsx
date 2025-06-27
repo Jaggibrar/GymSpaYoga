@@ -43,7 +43,7 @@ export const useBlogs = () => {
     try {
       setLoading(true);
       
-      let query = supabase
+      let query = (supabase as any)
         .from('blogs')
         .select(`
           *,
@@ -68,11 +68,11 @@ export const useBlogs = () => {
 
       const blogsWithMeta = data?.map((blog: any) => ({
         ...blog,
-        read_time_minutes: Math.ceil((blog.content || '').length / 200),
+        read_time_minutes: Math.ceil((blog.content || '').length / 200) || 5,
         is_liked: false,
         author_name: blog.author?.full_name || 'GymSpaYoga Author',
         author_avatar: blog.author?.avatar_url,
-        meta_description: blog.excerpt || blog.content?.substring(0, 160),
+        meta_description: blog.excerpt || blog.content?.substring(0, 160) || '',
         featured_image_url: blog.image_url,
         status: blog.published ? 'published' : 'draft',
         tags: Array.isArray(blog.tags) ? blog.tags : []
@@ -99,7 +99,7 @@ export const useBlogs = () => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '') || '';
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('blogs')
         .insert({
           title: blogData.title,
@@ -113,7 +113,8 @@ export const useBlogs = () => {
           published: true,
           featured: false,
           views_count: 0,
-          likes_count: 0
+          likes_count: 0,
+          meta_description: blogData.meta_description || blogData.excerpt
         })
         .select()
         .single();
@@ -136,7 +137,7 @@ export const useBlogs = () => {
 
   const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('blogs')
         .select(`
           *,
@@ -155,18 +156,18 @@ export const useBlogs = () => {
       }
 
       // Increment view count
-      await supabase
+      await (supabase as any)
         .from('blogs')
         .update({ views_count: (data.views_count || 0) + 1 })
         .eq('id', data.id);
 
       return {
         ...data,
-        read_time_minutes: Math.ceil((data.content || '').length / 200),
+        read_time_minutes: Math.ceil((data.content || '').length / 200) || 5,
         is_liked: false,
         author_name: data.author?.full_name || 'GymSpaYoga Author',
         author_avatar: data.author?.avatar_url,
-        meta_description: data.excerpt || data.content?.substring(0, 160),
+        meta_description: data.excerpt || data.content?.substring(0, 160) || '',
         featured_image_url: data.image_url,
         status: data.published ? 'published' : 'draft',
         tags: Array.isArray(data.tags) ? data.tags : []
@@ -178,35 +179,81 @@ export const useBlogs = () => {
   };
 
   const likeBlog = async (id: string) => {
+    if (!user) {
+      toast.error('Please log in to like blogs');
+      return;
+    }
+
     try {
-      const { data: currentBlog } = await supabase
-        .from('blogs')
-        .select('likes_count')
-        .eq('id', id)
+      // Check if user already liked this blog
+      const { data: existingLike } = await (supabase as any)
+        .from('blog_likes')
+        .select('id')
+        .eq('blog_id', id)
+        .eq('user_id', user.id)
         .single();
 
-      if (currentBlog) {
-        await supabase
+      if (existingLike) {
+        // Unlike the blog
+        await (supabase as any)
+          .from('blog_likes')
+          .delete()
+          .eq('blog_id', id)
+          .eq('user_id', user.id);
+
+        // Decrement likes count
+        const { data: currentBlog } = await (supabase as any)
           .from('blogs')
-          .update({ likes_count: (currentBlog.likes_count || 0) + 1 })
-          .eq('id', id);
+          .select('likes_count')
+          .eq('id', id)
+          .single();
+
+        if (currentBlog) {
+          await (supabase as any)
+            .from('blogs')
+            .update({ likes_count: Math.max(0, (currentBlog.likes_count || 0) - 1) })
+            .eq('id', id);
+        }
+
+        toast.success('Blog unliked!');
+      } else {
+        // Like the blog
+        await (supabase as any)
+          .from('blog_likes')
+          .insert({ blog_id: id, user_id: user.id });
+
+        // Increment likes count
+        const { data: currentBlog } = await (supabase as any)
+          .from('blogs')
+          .select('likes_count')
+          .eq('id', id)
+          .single();
+
+        if (currentBlog) {
+          await (supabase as any)
+            .from('blogs')
+            .update({ likes_count: (currentBlog.likes_count || 0) + 1 })
+            .eq('id', id);
+        }
 
         toast.success('Blog liked!');
-        fetchBlogs();
       }
+
+      fetchBlogs();
     } catch (error: any) {
       console.error('Error liking blog:', error);
-      toast.error('Failed to like blog');
+      toast.error('Failed to update like status');
     }
   };
 
   const updateBlog = async (id: string, blogData: Partial<Blog>) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('blogs')
         .update({
           ...blogData,
-          tags: Array.isArray(blogData.tags) ? blogData.tags : []
+          tags: Array.isArray(blogData.tags) ? blogData.tags : [],
+          updated_at: new Date().toISOString()
         })
         .eq('id', id);
 
@@ -228,7 +275,7 @@ export const useBlogs = () => {
 
   const deleteBlog = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('blogs')
         .delete()
         .eq('id', id);
@@ -249,9 +296,13 @@ export const useBlogs = () => {
 
   const publishBlog = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('blogs')
-        .update({ published: true })
+        .update({ 
+          published: true, 
+          status: 'published',
+          published_at: new Date().toISOString() 
+        })
         .eq('id', id);
 
       if (error) {

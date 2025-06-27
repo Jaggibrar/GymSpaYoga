@@ -58,10 +58,10 @@ const BlogGrid: React.FC<BlogGridProps> = ({ blogs, onLike }) => {
           className="group hover:shadow-xl transition-all duration-300 cursor-pointer overflow-hidden border-0 shadow-md bg-white/80 backdrop-blur-sm"
           onClick={() => navigate(`/blog/${blog.slug}`)}
         >
-          {blog.image_url && (
+          {(blog.image_url || blog.featured_image_url) && (
             <div className="relative h-44 sm:h-48 overflow-hidden">
               <img
-                src={blog.image_url}
+                src={blog.image_url || blog.featured_image_url || ''}
                 alt={blog.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => {

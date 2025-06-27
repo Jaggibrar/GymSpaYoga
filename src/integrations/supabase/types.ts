@@ -33,6 +33,149 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_comments: {
+        Row: {
+          blog_id: string
+          content: string
+          created_at: string
+          id: string
+          parent_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blog_id: string
+          content: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blog_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_comments_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_comments_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "blog_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_likes: {
+        Row: {
+          blog_id: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          blog_id: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          blog_id?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_likes_blog_id_fkey"
+            columns: ["blog_id"]
+            isOneToOne: false
+            referencedRelation: "blogs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blogs: {
+        Row: {
+          author_id: string
+          category: string
+          content: string
+          created_at: string
+          excerpt: string | null
+          featured: boolean
+          featured_image_url: string | null
+          id: string
+          image_url: string | null
+          likes_count: number
+          meta_description: string | null
+          published: boolean
+          published_at: string | null
+          read_time_minutes: number | null
+          slug: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          views_count: number
+        }
+        Insert: {
+          author_id: string
+          category?: string
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          featured_image_url?: string | null
+          id?: string
+          image_url?: string | null
+          likes_count?: number
+          meta_description?: string | null
+          published?: boolean
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          views_count?: number
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          featured?: boolean
+          featured_image_url?: string | null
+          id?: string
+          image_url?: string | null
+          likes_count?: number
+          meta_description?: string | null
+          published?: boolean
+          published_at?: string | null
+          read_time_minutes?: number | null
+          slug?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          views_count?: number
+        }
+        Relationships: []
+      }
       booking_status_history: {
         Row: {
           booking_id: number | null
