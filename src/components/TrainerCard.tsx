@@ -1,128 +1,120 @@
 
-import React, { memo } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, User, Award, Crown, Diamond, IndianRupee } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-interface Trainer {
-  id: string;
-  name: string;
-  category: string;
-  trainer_tier: string;
-  experience: number;
-  specializations: string[];
-  hourly_rate: number;
-  location: string;
-  bio: string;
-  profile_image_url?: string;
-}
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Star, Phone, Mail, Users, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Trainer } from '@/hooks/useTrainers';
 
 interface TrainerCardProps {
   trainer: Trainer;
 }
 
-const TrainerCard = memo(({ trainer }: TrainerCardProps) => {
-  const getTierIcon = (tierType: string) => {
-    switch (tierType.toLowerCase()) {
-      case 'elite': return <Crown className="h-4 w-4" />;
-      case 'pro': return <Diamond className="h-4 w-4" />;
-      case 'intermediate': return <Award className="h-4 w-4" />;
-      default: return <IndianRupee className="h-4 w-4" />;
-    }
+const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
+  const navigate = useNavigate();
+
+  const handleViewDetails = () => {
+    navigate(`/trainers/${trainer.id}`);
   };
 
-  const getTierColor = (tierType: string) => {
-    switch (tierType.toLowerCase()) {
-      case 'elite': return "from-yellow-500 to-yellow-600";
-      case 'pro': return "from-purple-500 to-purple-600";
-      case 'intermediate': return "from-blue-500 to-blue-600";
-      default: return "from-green-500 to-green-600";
-    }
+  const handleBookNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/book-trainer/${trainer.id}`);
   };
 
-  const imageUrl = trainer.profile_image_url || "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+  const getTierColor = (tier: string) => {
+    const colors = {
+      certified: 'bg-blue-100 text-blue-700',
+      expert: 'bg-purple-100 text-purple-700',
+      elite: 'bg-gold-100 text-gold-700'
+    };
+    return colors[tier as keyof typeof colors] || 'bg-gray-100 text-gray-700';
+  };
 
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 rounded-3xl overflow-hidden bg-white">
-      <div className="relative overflow-hidden h-48">
+    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 bg-white cursor-pointer">
+      <div className="relative" onClick={handleViewDetails}>
         <img 
-          src={imageUrl}
+          src={trainer.profile_image_url || "/placeholder.svg"} 
           alt={trainer.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
           onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
+            e.currentTarget.src = "/placeholder.svg";
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${getTierColor(trainer.trainer_tier)} text-white border-0 px-3 py-2 rounded-full`}>
-          {getTierIcon(trainer.trainer_tier)}
-          <span className="ml-1 capitalize font-semibold">{trainer.trainer_tier}</span>
-        </Badge>
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center gap-2 text-white">
-            <Star className="h-4 w-4 fill-current text-yellow-400" />
-            <span className="font-medium">4.8</span>
-            <span className="text-sm opacity-90">({trainer.experience}+ years exp)</span>
+        <div className="absolute top-4 right-4">
+          <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
+            <div className="flex items-center space-x-1">
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="font-semibold">{trainer.rating || 4.8}</span>
+              <span className="text-sm text-gray-500">({trainer.reviews_count || 12})</span>
+            </div>
           </div>
+        </div>
+        <div className="absolute top-4 left-4">
+          <Badge className={`${getTierColor(trainer.trainer_tier)} border-0 font-medium`}>
+            {trainer.trainer_tier}
+          </Badge>
         </div>
       </div>
       
-      <CardContent className="p-6">
-        <div className="mb-4">
-          <h3 className="text-xl font-bold group-hover:text-red-600 transition-colors mb-2 line-clamp-1">
-            {trainer.name}
-          </h3>
-          <div className="flex items-center gap-2 text-gray-600 mb-2">
-            <User className="h-4 w-4 flex-shrink-0" />
-            <span className="text-sm capitalize">{trainer.category} Trainer</span>
+      <CardHeader>
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
+              {trainer.name}
+            </CardTitle>
+            <p className="text-gray-600 mb-2">{trainer.experience} years experience</p>
+            <div className="flex items-center text-gray-500 mb-2">
+              <MapPin className="h-4 w-4 mr-1" />
+              <span className="text-sm">{trainer.location}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
-            <span className="text-sm truncate">{trainer.location}</span>
+          <div className="text-right">
+            <p className="text-2xl font-bold text-purple-600">₹{trainer.hourly_rate}</p>
+            <p className="text-sm text-gray-500">per session</p>
           </div>
         </div>
-        
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+      </CardHeader>
+      
+      <CardContent>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
           {trainer.bio}
         </p>
         
-        {trainer.specializations && trainer.specializations.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {trainer.specializations.slice(0, 3).map((spec, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {spec}
-              </Badge>
-            ))}
-            {trainer.specializations.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{trainer.specializations.length - 3} more
-              </Badge>
-            )}
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {trainer.specializations.slice(0, 3).map((spec, index) => (
+            <Badge key={index} variant="outline" className="text-xs">
+              {spec}
+            </Badge>
+          ))}
+          {trainer.specializations.length > 3 && (
+            <Badge variant="outline" className="text-xs">
+              +{trainer.specializations.length - 3} more
+            </Badge>
+          )}
+        </div>
         
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-2xl font-bold text-red-600">
-              ₹{trainer.hourly_rate.toLocaleString()}
-            </p>
-            <p className="text-sm text-gray-500">per hour</p>
-          </div>
-          <Link to={`/trainers/${trainer.id}`}>
-            <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-xl px-6 py-3 font-semibold transform hover:scale-105 transition-all duration-300">
-              Book Session
-            </Button>
-          </Link>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            className="flex-1"
+            onClick={handleViewDetails}
+          >
+            View Details
+            <ArrowRight className="h-4 w-4 ml-1" />
+          </Button>
+          <Button 
+            className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
+            onClick={handleBookNow}
+          >
+            Book Now
+          </Button>
         </div>
       </CardContent>
     </Card>
   );
-});
-
-TrainerCard.displayName = 'TrainerCard';
+};
 
 export default TrainerCard;

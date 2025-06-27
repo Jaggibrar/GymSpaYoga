@@ -7,14 +7,20 @@ import { Badge } from '@/components/ui/badge';
 import { useBlogs } from '@/hooks/useBlogs';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Search, Calendar, Clock, User, Heart, Eye, Plus } from 'lucide-react';
+import { Search, Plus, BookOpen, TrendingUp } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import BlogGrid from '@/components/BlogGrid';
+import BlogEditor from '@/components/BlogEditor';
 import SEOHead from '@/components/SEOHead';
 
 const Blogs = () => {
-  const { blogs, loading } = useBlogs();
+  const { blogs, loading, createBlog, likeBlog } = useBlogs();
   const { user } = useAuth();
   const navigate = useNavigate();
+  
   const [searchTerm, setSearchTerm] = useState('');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const filteredBlogs = blogs.filter(blog =>
     blog.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -22,9 +28,26 @@ const Blogs = () => {
     blog.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleBlogClick = (slug: string) => {
-    navigate(`/blogs/${slug}`);
+  const handleCreateBlog = async (blogData: any) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const slug = await createBlog(blogData);
+      if (slug) {
+        setIsCreateModalOpen(false);
+        navigate(`/blog/${slug}`);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const featuredBlogs = blogs.filter(blog => blog.featured).slice(0, 3);
+  const totalViews = blogs.reduce((sum, blog) => sum + (blog.views_count || 0), 0);
 
   return (
     <>
@@ -34,7 +57,7 @@ const Blogs = () => {
         keywords="health blog, fitness tips, wellness guide, yoga advice, spa treatments, exercise tips"
       />
       
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50/80 via-blue-50/60 to-teal-50/80">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-16">
           <div className="container mx-auto px-4">
@@ -61,111 +84,71 @@ const Blogs = () => {
         {/* Main Content */}
         <section className="container mx-auto px-4 py-12">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Latest Articles ({filteredBlogs.length})
-            </h2>
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Latest Articles ({filteredBlogs.length})
+              </h2>
+              <div className="flex items-center gap-6 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4 text-emerald-600" />
+                  <span>{blogs.length} Total Articles</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-blue-600" />
+                  <span>{totalViews.toLocaleString()} Total Views</span>
+                </div>
+              </div>
+            </div>
             
             {user && (
-              <Button onClick={() => navigate('/create-blog')}>
+              <Button 
+                onClick={() => setIsCreateModalOpen(true)}
+                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Write Article
               </Button>
             )}
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
-            </div>
-          ) : filteredBlogs.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredBlogs.map((blog) => (
-                <Card 
-                  key={blog.id} 
-                  className="hover:shadow-xl transition-all duration-300 cursor-pointer group"
-                  onClick={() => handleBlogClick(blog.slug)}
-                >
-                  {blog.image_url && (
-                    <div className="relative h-48 overflow-hidden rounded-t-lg">
-                      <img
-                        src={blog.image_url}
-                        alt={blog.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                      {blog.featured && (
-                        <Badge className="absolute top-3 right-3 bg-purple-500 text-white">
-                          Featured
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                  
-                  <CardHeader>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(blog.created_at).toLocaleDateString()}</span>
-                      <Clock className="h-4 w-4 ml-2" />
-                      <span>{blog.read_time_minutes} min read</span>
-                    </div>
-                    
-                    <CardTitle className="text-xl group-hover:text-emerald-600 transition-colors line-clamp-2">
-                      {blog.title}
-                    </CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <p className="text-gray-600 line-clamp-3 mb-4">
-                      {blog.excerpt}
-                    </p>
-                    
-                    {blog.tags && blog.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {blog.tags.slice(0, 3).map((tag, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1">
-                          <Eye className="h-4 w-4" />
-                          <span>{blog.views_count || 0}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Heart className={`h-4 w-4 ${blog.is_liked ? 'text-red-500 fill-current' : ''}`} />
-                          <span>Like</span>
-                        </div>
-                      </div>
-                      
-                      <Badge variant="secondary">
-                        {blog.category}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  No articles found
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {searchTerm ? 'Try adjusting your search terms' : 'Be the first to write an article!'}
-                </p>
-                {user && (
-                  <Button onClick={() => navigate('/create-blog')}>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Write First Article
-                  </Button>
-                )}
+          {/* Featured Blogs Section */}
+          {featuredBlogs.length > 0 && !searchTerm && (
+            <div className="mb-12">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full"></div>
+                <h2 className="text-2xl font-bold text-gray-800">Featured Articles</h2>
               </div>
+              <BlogGrid blogs={featuredBlogs} onLike={user ? likeBlog : undefined} />
             </div>
           )}
+
+          {/* All Blogs Section */}
+          <div>
+            {!searchTerm && featuredBlogs.length > 0 && (
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full"></div>
+                <h2 className="text-2xl font-bold text-gray-800">All Articles</h2>
+              </div>
+            )}
+            
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="animate-pulse">
+                    <div className="bg-gray-200 h-48 rounded-t-lg"></div>
+                    <div className="bg-white rounded-b-lg p-6 space-y-3">
+                      <div className="bg-gray-200 h-4 rounded w-3/4"></div>
+                      <div className="bg-gray-200 h-4 rounded w-1/2"></div>
+                      <div className="bg-gray-200 h-3 rounded w-full"></div>
+                      <div className="bg-gray-200 h-3 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <BlogGrid blogs={filteredBlogs} onLike={user ? likeBlog : undefined} />
+            )}
+          </div>
         </section>
 
         {/* Newsletter Section */}
@@ -191,6 +174,21 @@ const Blogs = () => {
             </div>
           </div>
         </section>
+
+        {/* Create Blog Modal */}
+        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                Create New Blog Post
+              </DialogTitle>
+            </DialogHeader>
+            <BlogEditor
+              onSubmit={handleCreateBlog}
+              isSubmitting={isSubmitting}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   );

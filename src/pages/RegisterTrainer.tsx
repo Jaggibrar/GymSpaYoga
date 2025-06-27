@@ -1,252 +1,320 @@
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Trophy, DollarSign, Calendar, ArrowRight, CheckCircle, Star } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { TrainerCategorySelector } from '@/components/registration/TrainerCategorySelector';
+import { TrainerSpecializationsSelector } from '@/components/registration/TrainerSpecializationsSelector';
+import { TrainerProfileImageUpload } from '@/components/registration/TrainerProfileImageUpload';
+import { useTrainerRegistration } from '@/hooks/useTrainerRegistration';
+import { useAuth } from '@/hooks/useAuth';
+import { Heart, Dumbbell, Waves } from 'lucide-react';
+import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 
 const RegisterTrainer = () => {
-  const benefits = [
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: "Find More Clients",
-      description: "Connect with clients actively looking for personal training services in your area."
-    },
-    {
-      icon: <DollarSign className="h-8 w-8" />,
-      title: "Increase Your Income",
-      description: "Set your own rates and build a steady stream of income with consistent bookings."
-    },
-    {
-      icon: <Calendar className="h-8 w-8" />,
-      title: "Flexible Scheduling",
-      description: "Manage your availability and bookings on your own terms with our easy scheduling tools."
-    },
-    {
-      icon: <Trophy className="h-8 w-8" />,
-      title: "Build Your Brand",
-      description: "Showcase your expertise, collect reviews, and build a strong professional reputation."
-    }
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { registerTrainer, loading } = useTrainerRegistration();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: user?.email || '',
+    phone: '',
+    location: '',
+    category: '',
+    trainer_tier: 'certified',
+    bio: '',
+    experience: 1,
+    hourly_rate: 500,
+    specializations: [] as string[],
+    certifications: '',
+    profile_image: null as File | null
+  });
+
+  const categories = [
+    { value: 'fitness', label: 'Fitness Trainer', icon: Dumbbell, color: 'from-orange-400 to-red-500' },
+    { value: 'yoga', label: 'Yoga Instructor', icon: Heart, color: 'from-purple-400 to-pink-500' },
+    { value: 'wellness', label: 'Wellness Coach', icon: Waves, color: 'from-blue-400 to-teal-500' }
   ];
 
-  const features = [
-    "Professional trainer profile",
-    "Client booking management",
-    "Flexible pricing options",
-    "Calendar integration",
-    "Client communication tools",
-    "Review and rating system",
-    "Marketing support",
-    "Mobile app access"
-  ];
+  const specializations = {
+    fitness: ['Weight Training', 'Cardio', 'HIIT', 'CrossFit', 'Bodybuilding', 'Functional Training'],
+    yoga: ['Hatha Yoga', 'Vinyasa', 'Ashtanga', 'Yin Yoga', 'Power Yoga', 'Restorative Yoga'],
+    wellness: ['Nutrition Coaching', 'Meditation', 'Stress Management', 'Life Coaching', 'Mindfulness', 'Breathing Techniques']
+  };
 
   const tiers = [
-    {
-      name: "Certified Trainer",
-      price: "₹500/session",
-      description: "Perfect for certified fitness professionals starting their journey"
-    },
-    {
-      name: "Expert Trainer", 
-      price: "₹1000/session",
-      description: "For experienced trainers with specialized skills and certifications"
-    },
-    {
-      name: "Elite Trainer",
-      price: "₹2000/session", 
-      description: "Top-tier trainers with extensive experience and proven results"
-    }
+    { value: 'certified', label: 'Certified Trainer', rate: 500 },
+    { value: 'expert', label: 'Expert Trainer', rate: 1000 },
+    { value: 'elite', label: 'Elite Trainer', rate: 2000 }
   ];
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategorySelect = (category: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      category,
+      specializations: [] // Reset specializations when category changes
+    }));
+  };
+
+  const handleSpecializationChange = (specialization: string, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      specializations: checked 
+        ? [...prev.specializations, specialization]
+        : prev.specializations.filter(s => s !== specialization)
+    }));
+  };
+
+  const handleTierChange = (tier: string) => {
+    const selectedTier = tiers.find(t => t.value === tier);
+    setFormData(prev => ({
+      ...prev,
+      trainer_tier: tier,
+      hourly_rate: selectedTier?.rate || 500
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setFormData(prev => ({ ...prev, profile_image: file }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!user) {
+      toast.error('Please login to register as a trainer');
+      navigate('/login');
+      return;
+    }
+
+    if (!formData.category) {
+      toast.error('Please select a category');
+      return;
+    }
+
+    if (formData.specializations.length === 0) {
+      toast.error('Please select at least one specialization');
+      return;
+    }
+
+    const success = await registerTrainer(formData);
+    if (success) {
+      navigate('/trainers');
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle>Authentication Required</CardTitle>
+          </CardHeader>
+          <CardContent className="text-center">
+            <p className="mb-4">Please login to register as a trainer</p>
+            <Button onClick={() => navigate('/login')}>Login</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <>
       <SEOHead
-        title="Become a Personal Trainer - GymSpaYoga | Join Our Platform"
-        description="Join GymSpaYoga as a personal trainer. Find more clients, set your own rates, and build your fitness coaching business with our platform."
-        keywords="personal trainer registration, fitness coach, trainer platform, become trainer"
+        title="Register as Trainer - GymSpaYoga"
+        description="Join our platform as a professional trainer and start building your client base"
+        keywords="trainer registration, fitness coach, yoga instructor"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Become a Personal Trainer</h1>
-              <p className="text-xl mb-8">
-                Turn your passion for fitness into a thriving career. Join GymSpaYoga and connect 
-                with clients who are serious about achieving their fitness goals.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-                  <Users className="mr-2 h-5 w-5" />
-                  Start Registration
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                  Learn More
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Benefits Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
-              Why Train With GymSpaYoga?
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <div className="text-purple-600">{benefit.icon}</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <Card className="shadow-2xl">
+              <CardHeader className="text-center bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-t-lg">
+                <CardTitle className="text-3xl font-bold">Become a Professional Trainer</CardTitle>
+                <p className="text-lg opacity-90">Join our platform and start building your client base</p>
+              </CardHeader>
+              
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Personal Information */}
+                  <div className="space-y-6">
+                    <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
+                      Personal Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="name" className="text-lg font-medium text-gray-700">Full Name *</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                          className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email" className="text-lg font-medium text-gray-700">Email *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone" className="text-lg font-medium text-gray-700">Phone Number *</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          required
+                          className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="location" className="text-lg font-medium text-gray-700">Location *</Label>
+                        <Input
+                          id="location"
+                          name="location"
+                          value={formData.location}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="City, State"
+                          className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                        />
+                      </div>
                     </div>
-                    <CardTitle className="text-xl">{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{benefit.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+                  </div>
 
-        {/* Pricing Tiers */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
-              Trainer Tiers & Earnings
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {tiers.map((tier, index) => (
-                <Card key={index} className="text-center hover:shadow-xl transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="flex justify-center mb-4">
-                      {[...Array(index + 1)].map((_, i) => (
-                        <Star key={i} className="h-6 w-6 text-yellow-400 fill-current" />
-                      ))}
-                    </div>
-                    <CardTitle className="text-2xl">{tier.name}</CardTitle>
-                    <div className="text-3xl font-bold text-purple-600 mt-2">{tier.price}</div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">{tier.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+                  {/* Profile Image Upload */}
+                  <TrainerProfileImageUpload onFileChange={handleFileChange} />
 
-        {/* Features Section */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
-                Everything You Need to Succeed
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <img 
-                    src="/placeholder.svg" 
-                    alt="Trainer dashboard"
-                    className="rounded-2xl shadow-2xl mb-8"
+                  {/* Category Selection */}
+                  <TrainerCategorySelector
+                    categories={categories}
+                    selectedCategory={formData.category}
+                    onCategorySelect={handleCategorySelect}
                   />
-                </div>
-                <div className="space-y-4">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <CheckCircle className="h-6 w-6 text-purple-500 flex-shrink-0" />
-                      <span className="text-lg">{feature}</span>
+
+                  {/* Specializations */}
+                  <TrainerSpecializationsSelector
+                    category={formData.category}
+                    specializations={specializations}
+                    selectedSpecializations={formData.specializations}
+                    onSpecializationChange={handleSpecializationChange}
+                  />
+
+                  {/* Professional Details */}
+                  <div className="space-y-6">
+                    <h3 className="text-2xl font-semibold text-gray-800 border-b border-gray-200 pb-3">
+                      Professional Details
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label htmlFor="experience" className="text-lg font-medium text-gray-700">Experience (Years) *</Label>
+                        <Input
+                          id="experience"
+                          name="experience"
+                          type="number"
+                          min="1"
+                          value={formData.experience}
+                          onChange={handleInputChange}
+                          required
+                          className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-lg font-medium text-gray-700">Trainer Tier *</Label>
+                        <Select value={formData.trainer_tier} onValueChange={handleTierChange}>
+                          <SelectTrigger className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors">
+                            <SelectValue placeholder="Select your tier" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {tiers.map(tier => (
+                              <SelectItem key={tier.value} value={tier.value}>
+                                {tier.label} (₹{tier.rate}/session)
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+                    <div>
+                      <Label htmlFor="hourly_rate" className="text-lg font-medium text-gray-700">Hourly Rate (₹) *</Label>
+                      <Input
+                        id="hourly_rate"
+                        name="hourly_rate"
+                        type="number"
+                        min="100"
+                        value={formData.hourly_rate}
+                        onChange={handleInputChange}
+                        required
+                        className="text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                  </div>
 
-        {/* Requirements Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
-              Requirements to Join
-            </h2>
-            <div className="max-w-3xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-2xl font-bold mb-4">Basic Requirements</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span>Valid fitness certification</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span>Minimum 1 year experience</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span>Professional liability insurance</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span>Background verification</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-4">What We Provide</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-purple-500" />
-                      <span>Marketing and promotion</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-purple-500" />
-                      <span>Secure payment processing</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-purple-500" />
-                      <span>Client management tools</span>
-                    </li>
-                    <li className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-purple-500" />
-                      <span>24/7 support</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+                  {/* Bio and Certifications */}
+                  <div className="space-y-6">
+                    <div>
+                      <Label htmlFor="bio" className="text-lg font-medium text-gray-700">Professional Bio *</Label>
+                      <Textarea
+                        id="bio"
+                        name="bio"
+                        value={formData.bio}
+                        onChange={handleInputChange}
+                        required
+                        placeholder="Tell potential clients about your experience, training philosophy, and what makes you unique..."
+                        className="min-h-[120px] text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="certifications" className="text-lg font-medium text-gray-700">Certifications</Label>
+                      <Textarea
+                        id="certifications"
+                        name="certifications"
+                        value={formData.certifications}
+                        onChange={handleInputChange}
+                        placeholder="List your certifications, separated by commas"
+                        className="min-h-[100px] text-lg border-2 border-gray-200 rounded-xl focus:border-blue-500 transition-colors"
+                      />
+                    </div>
+                  </div>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-gradient-to-r from-purple-500 to-indigo-600 text-white">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl font-bold mb-6">Ready to Start Your Journey?</h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Join hundreds of successful trainers already building their careers with GymSpaYoga. 
-              Your next client is waiting for you.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-                <Users className="mr-2 h-5 w-5" />
-                Apply Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Link to="/support">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                  Contact Us
-                </Button>
-              </Link>
-            </div>
+                  {/* Submit Button */}
+                  <div className="text-center pt-6">
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white px-12 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
+                      {loading ? 'Registering...' : 'Complete Registration'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           </div>
-        </section>
+        </div>
       </div>
     </>
   );

@@ -10,24 +10,22 @@ export interface Blog {
   slug: string;
   content: string;
   excerpt?: string;
-  featured_image_url?: string;
-  author_id: string;
-  status: 'draft' | 'published' | 'archived';
-  published_at?: string;
+  image_url?: string;
+  category: string;
+  tags?: string[];
+  published: boolean;
+  featured: boolean;
+  views_count: number;
+  likes_count: number;
   created_at: string;
   updated_at: string;
-  tags?: string[];
-  meta_description?: string;
+  author_id?: string;
+  author_name?: string;
+  author_avatar?: string;
   read_time_minutes?: number;
-  // Additional properties for UI compatibility
-  image_url?: string;
-  category?: string;
-  views_count?: number;
-  author?: {
-    full_name: string;
-  };
+  meta_description?: string;
+  published_at?: string;
   is_liked?: boolean;
-  featured?: boolean;
 }
 
 export const useBlogs = () => {
@@ -39,55 +37,35 @@ export const useBlogs = () => {
     try {
       setLoading(true);
       
-      // Mock blogs for now since the table doesn't exist yet
-      const mockBlogs: Blog[] = [
-        {
-          id: '1',
-          title: 'Top 10 Yoga Poses for Beginners',
-          slug: 'top-10-yoga-poses-beginners',
-          content: 'Discover the essential yoga poses every beginner should master...',
-          excerpt: 'Essential yoga poses for beginners to start their wellness journey',
-          featured_image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-          author_id: 'demo',
-          status: 'published',
-          published_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          tags: ['yoga', 'beginners', 'wellness'],
-          meta_description: 'Learn the top 10 yoga poses perfect for beginners',
-          read_time_minutes: 5,
-          image_url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-          category: 'Yoga',
-          views_count: 150,
-          is_liked: false,
-          featured: true
-        },
-        {
-          id: '2',
-          title: 'Benefits of Regular Spa Treatments',
-          slug: 'benefits-regular-spa-treatments',
-          content: 'Explore how regular spa treatments can improve your mental and physical health...',
-          excerpt: 'Discover the amazing benefits of incorporating spa treatments into your routine',
-          featured_image_url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800',
-          author_id: 'demo',
-          status: 'published',
-          published_at: new Date().toISOString(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          tags: ['spa', 'wellness', 'health'],
-          meta_description: 'Learn about the benefits of regular spa treatments',
-          read_time_minutes: 7,
-          image_url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800',
-          category: 'Spa',
-          views_count: 89,
-          is_liked: false,
-          featured: false
-        }
-      ];
-      
-      setBlogs(mockBlogs);
+      let query = supabase
+        .from('blogs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (status === 'published') {
+        query = query.eq('published', true);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching blogs:', error);
+        toast.error('Failed to load blogs');
+        return;
+      }
+
+      const blogsWithAuthors = data?.map(blog => ({
+        ...blog,
+        read_time_minutes: Math.ceil(blog.content.length / 200),
+        is_liked: false,
+        author_name: 'GymSpaYoga Author',
+        meta_description: blog.excerpt
+      })) || [];
+
+      setBlogs(blogsWithAuthors);
     } catch (error: any) {
       console.error('Error fetching blogs:', error);
+      toast.error('Failed to load blogs');
       setBlogs([]);
     } finally {
       setLoading(false);
@@ -105,64 +83,64 @@ export const useBlogs = () => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '') || '';
 
+      const { data, error } = await supabase
+        .from('blogs')
+        .insert({
+          title: blogData.title,
+          content: blogData.content,
+          excerpt: blogData.excerpt,
+          slug: slug,
+          category: blogData.category || 'wellness',
+          tags: blogData.tags || [],
+          author_id: user.id,
+          published: true,
+          featured: false
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating blog:', error);
+        toast.error('Failed to create blog');
+        return '';
+      }
+
       toast.success('Blog created successfully!');
-      return slug;
+      fetchBlogs();
+      return data.slug;
     } catch (error: any) {
       console.error('Error creating blog:', error);
-      toast.error('Failed to create blog - feature coming soon!');
+      toast.error('Failed to create blog');
       return '';
-    }
-  };
-
-  const updateBlog = async (id: string, blogData: Partial<Blog>) => {
-    try {
-      toast.success('Blog updated successfully!');
-      return blogData;
-    } catch (error: any) {
-      console.error('Error updating blog:', error);
-      toast.error('Failed to update blog - feature coming soon!');
-      return null;
-    }
-  };
-
-  const deleteBlog = async (id: string) => {
-    try {
-      toast.success('Blog deleted successfully!');
-      fetchBlogs();
-    } catch (error: any) {
-      console.error('Error deleting blog:', error);
-      toast.error('Failed to delete blog - feature coming soon!');
-    }
-  };
-
-  const publishBlog = async (id: string) => {
-    try {
-      toast.success('Blog published successfully!');
-      fetchBlogs();
-    } catch (error: any) {
-      console.error('Error publishing blog:', error);
-      toast.error('Failed to publish blog - feature coming soon!');
     }
   };
 
   const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
     try {
-      // Return mock blog for now
+      const { data, error } = await supabase
+        .from('blogs')
+        .select('*')
+        .eq('slug', slug)
+        .eq('published', true)
+        .single();
+
+      if (error) {
+        console.error('Error fetching blog by slug:', error);
+        return null;
+      }
+
+      // Increment view count
+      await supabase
+        .from('blogs')
+        .update({ views_count: (data.views_count || 0) + 1 })
+        .eq('id', data.id);
+
       return {
-        id: '1',
-        title: 'Sample Blog Post',
-        slug: slug,
-        content: 'This is a sample blog post content with rich formatting and detailed information.',
-        excerpt: 'Sample excerpt for the blog post',
-        author_id: 'user1',
-        status: 'published',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        read_time_minutes: 5,
-        category: 'Health',
-        views_count: 0,
+        ...data,
+        read_time_minutes: Math.ceil(data.content.length / 200),
         is_liked: false,
-        featured: false
+        author_name: 'GymSpaYoga Author',
+        meta_description: data.excerpt
       };
     } catch (error: any) {
       console.error('Error fetching blog by slug:', error);
@@ -172,16 +150,94 @@ export const useBlogs = () => {
 
   const likeBlog = async (id: string) => {
     try {
-      toast.success('Blog liked!');
-      // Mock implementation
+      const { data: currentBlog } = await supabase
+        .from('blogs')
+        .select('likes_count')
+        .eq('id', id)
+        .single();
+
+      if (currentBlog) {
+        await supabase
+          .from('blogs')
+          .update({ likes_count: (currentBlog.likes_count || 0) + 1 })
+          .eq('id', id);
+
+        toast.success('Blog liked!');
+        fetchBlogs();
+      }
     } catch (error: any) {
       console.error('Error liking blog:', error);
       toast.error('Failed to like blog');
     }
   };
 
+  const updateBlog = async (id: string, blogData: Partial<Blog>) => {
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .update(blogData)
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating blog:', error);
+        toast.error('Failed to update blog');
+        return null;
+      }
+
+      toast.success('Blog updated successfully!');
+      fetchBlogs();
+      return blogData;
+    } catch (error: any) {
+      console.error('Error updating blog:', error);
+      toast.error('Failed to update blog');
+      return null;
+    }
+  };
+
+  const deleteBlog = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting blog:', error);
+        toast.error('Failed to delete blog');
+        return;
+      }
+
+      toast.success('Blog deleted successfully!');
+      fetchBlogs();
+    } catch (error: any) {
+      console.error('Error deleting blog:', error);
+      toast.error('Failed to delete blog');
+    }
+  };
+
+  const publishBlog = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('blogs')
+        .update({ published: true })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error publishing blog:', error);
+        toast.error('Failed to publish blog');
+        return;
+      }
+
+      toast.success('Blog published successfully!');
+      fetchBlogs();
+    } catch (error: any) {
+      console.error('Error publishing blog:', error);
+      toast.error('Failed to publish blog');
+    }
+  };
+
   useEffect(() => {
-    fetchBlogs();
+    fetchBlogs('published');
   }, []);
 
   return {
