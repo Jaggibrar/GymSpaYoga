@@ -21,7 +21,7 @@ const BlogEditor: React.FC<BlogEditorProps> = ({ onSubmit, isSubmitting, initial
     excerpt: initialData?.excerpt || '',
     category: initialData?.category || 'wellness',
     tags: initialData?.tags || [],
-    image_url: initialData?.image_url || ''
+    image_url: initialData?.image_url || initialData?.featured_image_url || ''
   });
   
   const [currentTag, setCurrentTag] = useState('');

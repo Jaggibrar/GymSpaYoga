@@ -65,7 +65,7 @@ const BlogGrid: React.FC<BlogGridProps> = ({ blogs, onLike }) => {
                 alt={blog.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800';
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800';
                 }}
               />
               {blog.featured && (
@@ -96,6 +96,15 @@ const BlogGrid: React.FC<BlogGridProps> = ({ blogs, onLike }) => {
             <CardTitle className="text-lg sm:text-xl leading-tight group-hover:text-emerald-600 transition-colors line-clamp-2">
               {blog.title}
             </CardTitle>
+
+            {blog.author_name && (
+              <div className="flex items-center gap-2 text-xs text-gray-600 mt-2">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-xs">
+                  {blog.author_name.charAt(0)}
+                </div>
+                <span className="font-medium">By {blog.author_name}</span>
+              </div>
+            )}
           </CardHeader>
           
           <CardContent className="pt-0">

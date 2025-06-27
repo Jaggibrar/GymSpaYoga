@@ -11,10 +11,12 @@ export interface Blog {
   content: string;
   excerpt?: string;
   image_url?: string;
+  featured_image_url?: string;
   category: string;
-  tags?: string[];
+  tags: string[];
   published: boolean;
   featured: boolean;
+  status?: 'draft' | 'published' | 'archived';
   views_count: number;
   likes_count: number;
   created_at: string;
@@ -22,6 +24,10 @@ export interface Blog {
   author_id?: string;
   author_name?: string;
   author_avatar?: string;
+  author?: {
+    full_name: string;
+    avatar_url?: string;
+  };
   read_time_minutes?: number;
   meta_description?: string;
   published_at?: string;
@@ -37,41 +43,26 @@ export const useBlogs = () => {
     try {
       setLoading(true);
       
-      // Use the correct SQL query with proper typing
-      const { data, error } = await supabase.rpc('get_blogs_with_authors', {
-        published_only: status === 'published'
-      });
+      let query = supabase
+        .from('blogs')
+        .select(`
+          *,
+          author:user_profiles!author_id(
+            full_name,
+            avatar_url
+          )
+        `)
+        .order('created_at', { ascending: false });
+
+      if (status === 'published') {
+        query = query.eq('published', true);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching blogs:', error);
-        
-        // Fallback to direct table query if RPC doesn't exist
-        const fallbackQuery = supabase
-          .from('blogs' as any)
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (status === 'published') {
-          fallbackQuery.eq('published', true);
-        }
-
-        const { data: fallbackData, error: fallbackError } = await fallbackQuery;
-        
-        if (fallbackError) {
-          console.error('Fallback query error:', fallbackError);
-          toast.error('Failed to load blogs');
-          return;
-        }
-
-        const blogsWithMeta = fallbackData?.map((blog: any) => ({
-          ...blog,
-          read_time_minutes: Math.ceil((blog.content || '').length / 200),
-          is_liked: false,
-          author_name: 'GymSpaYoga Author',
-          meta_description: blog.excerpt || blog.content?.substring(0, 160)
-        })) || [];
-
-        setBlogs(blogsWithMeta);
+        toast.error('Failed to load blogs');
         return;
       }
 
@@ -79,7 +70,12 @@ export const useBlogs = () => {
         ...blog,
         read_time_minutes: Math.ceil((blog.content || '').length / 200),
         is_liked: false,
-        meta_description: blog.excerpt || blog.content?.substring(0, 160)
+        author_name: blog.author?.full_name || 'GymSpaYoga Author',
+        author_avatar: blog.author?.avatar_url,
+        meta_description: blog.excerpt || blog.content?.substring(0, 160),
+        featured_image_url: blog.image_url,
+        status: blog.published ? 'published' : 'draft',
+        tags: Array.isArray(blog.tags) ? blog.tags : []
       })) || [];
 
       setBlogs(blogsWithMeta);
@@ -104,15 +100,15 @@ export const useBlogs = () => {
         .replace(/(^-|-$)/g, '') || '';
 
       const { data, error } = await supabase
-        .from('blogs' as any)
+        .from('blogs')
         .insert({
           title: blogData.title,
           content: blogData.content,
           excerpt: blogData.excerpt,
           slug: slug,
           category: blogData.category || 'wellness',
-          tags: blogData.tags || [],
-          image_url: blogData.image_url,
+          tags: Array.isArray(blogData.tags) ? blogData.tags : [],
+          image_url: blogData.image_url || blogData.featured_image_url,
           author_id: user.id,
           published: true,
           featured: false,
@@ -141,8 +137,14 @@ export const useBlogs = () => {
   const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
     try {
       const { data, error } = await supabase
-        .from('blogs' as any)
-        .select('*')
+        .from('blogs')
+        .select(`
+          *,
+          author:user_profiles!author_id(
+            full_name,
+            avatar_url
+          )
+        `)
         .eq('slug', slug)
         .eq('published', true)
         .single();
@@ -154,7 +156,7 @@ export const useBlogs = () => {
 
       // Increment view count
       await supabase
-        .from('blogs' as any)
+        .from('blogs')
         .update({ views_count: (data.views_count || 0) + 1 })
         .eq('id', data.id);
 
@@ -162,8 +164,12 @@ export const useBlogs = () => {
         ...data,
         read_time_minutes: Math.ceil((data.content || '').length / 200),
         is_liked: false,
-        author_name: 'GymSpaYoga Author',
-        meta_description: data.excerpt || data.content?.substring(0, 160)
+        author_name: data.author?.full_name || 'GymSpaYoga Author',
+        author_avatar: data.author?.avatar_url,
+        meta_description: data.excerpt || data.content?.substring(0, 160),
+        featured_image_url: data.image_url,
+        status: data.published ? 'published' : 'draft',
+        tags: Array.isArray(data.tags) ? data.tags : []
       };
     } catch (error: any) {
       console.error('Error fetching blog by slug:', error);
@@ -174,14 +180,14 @@ export const useBlogs = () => {
   const likeBlog = async (id: string) => {
     try {
       const { data: currentBlog } = await supabase
-        .from('blogs' as any)
+        .from('blogs')
         .select('likes_count')
         .eq('id', id)
         .single();
 
       if (currentBlog) {
         await supabase
-          .from('blogs' as any)
+          .from('blogs')
           .update({ likes_count: (currentBlog.likes_count || 0) + 1 })
           .eq('id', id);
 
@@ -197,8 +203,11 @@ export const useBlogs = () => {
   const updateBlog = async (id: string, blogData: Partial<Blog>) => {
     try {
       const { error } = await supabase
-        .from('blogs' as any)
-        .update(blogData)
+        .from('blogs')
+        .update({
+          ...blogData,
+          tags: Array.isArray(blogData.tags) ? blogData.tags : []
+        })
         .eq('id', id);
 
       if (error) {
@@ -220,7 +229,7 @@ export const useBlogs = () => {
   const deleteBlog = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('blogs' as any)
+        .from('blogs')
         .delete()
         .eq('id', id);
 
@@ -241,7 +250,7 @@ export const useBlogs = () => {
   const publishBlog = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('blogs' as any)
+        .from('blogs')
         .update({ published: true })
         .eq('id', id);
 

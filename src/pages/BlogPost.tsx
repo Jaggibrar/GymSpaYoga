@@ -88,6 +88,8 @@ const BlogPost = () => {
     );
   }
 
+  const featuredImage = blog.image_url || blog.featured_image_url;
+
   return (
     <>
       <SEOHead
@@ -114,9 +116,9 @@ const BlogPost = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
               {/* Featured Image */}
-              {blog.featured_image_url && (
+              {featuredImage && (
                 <img
-                  src={blog.featured_image_url}
+                  src={featuredImage}
                   alt={blog.title}
                   className="w-full h-64 md:h-96 object-cover rounded-2xl mb-8 shadow-lg"
                 />

@@ -7,10 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { useBlogs } from '@/hooks/useBlogs';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, BookOpen, TrendingUp } from 'lucide-react';
+import { Search, Plus, BookOpen, TrendingUp, Edit3 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import BlogGrid from '@/components/BlogGrid';
-import BlogEditor from '@/components/BlogEditor';
+import BlogRichEditor from '@/components/blog/BlogRichEditor';
 import SEOHead from '@/components/SEOHead';
 
 const Blogs = () => {
@@ -29,11 +29,6 @@ const Blogs = () => {
   );
 
   const handleCreateBlog = async (blogData: any) => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       const slug = await createBlog(blogData);
@@ -100,15 +95,27 @@ const Blogs = () => {
               </div>
             </div>
             
-            {user && (
-              <Button 
-                onClick={() => setIsCreateModalOpen(true)}
-                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Write Article
-              </Button>
-            )}
+            <div className="flex gap-2">
+              {user && (
+                <>
+                  <Button 
+                    onClick={() => navigate('/my-blogs')}
+                    variant="outline"
+                    className="text-emerald-600 border-emerald-600 hover:bg-emerald-50"
+                  >
+                    <Edit3 className="h-4 w-4 mr-2" />
+                    My Blogs
+                  </Button>
+                  <Button 
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Write Article
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Featured Blogs Section */}
@@ -177,15 +184,16 @@ const Blogs = () => {
 
         {/* Create Blog Modal */}
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
                 Create New Blog Post
               </DialogTitle>
             </DialogHeader>
-            <BlogEditor
+            <BlogRichEditor
               onSubmit={handleCreateBlog}
               isSubmitting={isSubmitting}
+              onCancel={() => setIsCreateModalOpen(false)}
             />
           </DialogContent>
         </Dialog>
