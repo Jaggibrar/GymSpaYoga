@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { performanceMonitor } from '@/utils/performanceMonitor';
+import { useLoadingTimeout } from '@/hooks/useLoadingTimeout';
 
 export interface Business {
   id: string;
@@ -34,18 +35,20 @@ export const useBusinessData = (
   sortBy: string = 'created_at'
 ) => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
+  const { executeWithTimeout, loading, error } = useLoadingTimeout({
+    timeout: 12000,
+    retryAttempts: 2,
+    onTimeout: () => {
+      toast.error('Loading is taking longer than expected. Please check your connection.');
+    }
+  });
 
   const fetchBusinesses = useCallback(async () => {
     const startTime = Date.now();
-    console.log('🔍 Fetching businesses... Category:', category || 'all');
+    console.log('🔍 Fetching businesses with timeout protection... Category:', category || 'all');
     console.log('📊 Search params:', { searchTerm, location, sortBy });
     
-    setLoading(true);
-    setError('');
-    
-    try {
+    const result = await executeWithTimeout(async () => {
       // For trainer category, fetch from trainer_profiles
       if (category === 'trainer') {
         const { data: trainers, error: trainerError } = await supabase
@@ -57,9 +60,7 @@ export const useBusinessData = (
         performanceMonitor.trackApiCall('trainer_profiles', startTime);
 
         if (trainerError) {
-          console.error('❌ Error fetching trainers:', trainerError);
-          setError('Failed to fetch trainers');
-          return;
+          throw new Error(`Failed to fetch trainers: ${trainerError.message}`);
         }
 
         console.log('✅ Successfully fetched trainers:', trainers?.length || 0);
@@ -87,11 +88,10 @@ export const useBusinessData = (
           updated_at: trainer.updated_at || trainer.created_at
         }));
 
-        setBusinesses(transformedTrainers);
-        return;
+        return transformedTrainers;
       }
 
-      // For regular businesses, use existing logic with better error handling
+      // For regular businesses, use optimized query
       let query = supabase
         .from('business_profiles')
         .select('*')
@@ -134,9 +134,7 @@ export const useBusinessData = (
       performanceMonitor.trackApiCall('business_profiles', startTime);
 
       if (fetchError) {
-        console.error('❌ Error fetching businesses:', fetchError);
-        setError('Failed to fetch businesses');
-        return;
+        throw new Error(`Failed to fetch businesses: ${fetchError.message}`);
       }
 
       console.log('✅ Successfully fetched businesses:', data?.length || 0);
@@ -152,49 +150,81 @@ export const useBusinessData = (
         business_name: business.business_name || 'Unnamed Business'
       }));
 
-      setBusinesses(validBusinesses);
       console.log('🎯 Final filtered results:', validBusinesses.length, 'businesses');
-      
-    } catch (err) {
-      console.error('💥 Unexpected error:', err);
-      setError('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
-  }, [category, searchTerm, location, sortBy]);
+      return validBusinesses;
+    }, 'Fetch Business Data');
 
-  // Set up real-time subscription
+    if (result) {
+      setBusinesses(result);
+    }
+  }, [category, searchTerm, location, sortBy, executeWithTimeout]);
+
+  // Set up optimized real-time subscription with proper cleanup
   useEffect(() => {
-    const channel = supabase
-      .channel('business-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'business_profiles'
-        },
-        (payload) => {
-          console.log('📡 Real-time update received:', payload);
-          fetchBusinesses(); // Refetch data when changes occur
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'trainer_profiles'
-        },
-        (payload) => {
-          console.log('📡 Real-time trainer update received:', payload);
-          fetchBusinesses(); // Refetch data when trainer changes occur
-        }
-      )
-      .subscribe();
+    let mounted = true;
+    let businessChannel: any = null;
+    let trainerChannel: any = null;
+
+    const setupRealtimeSubscription = () => {
+      try {
+        // Business profiles subscription
+        businessChannel = supabase
+          .channel('business-changes')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'business_profiles'
+            },
+            (payload) => {
+              if (!mounted) return;
+              console.log('📡 Real-time business update received:', payload.eventType);
+              // Debounced refetch to prevent too many calls
+              setTimeout(() => {
+                if (mounted) fetchBusinesses();
+              }, 1000);
+            }
+          )
+          .subscribe();
+
+        // Trainer profiles subscription
+        trainerChannel = supabase
+          .channel('trainer-changes')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'trainer_profiles'
+            },
+            (payload) => {
+              if (!mounted) return;
+              console.log('📡 Real-time trainer update received:', payload.eventType);
+              setTimeout(() => {
+                if (mounted) fetchBusinesses();
+              }, 1000);
+            }
+          )
+          .subscribe();
+
+        console.log('📡 Real-time subscriptions established');
+      } catch (err) {
+        console.warn('Failed to setup real-time subscriptions:', err);
+      }
+    };
+
+    setupRealtimeSubscription();
 
     return () => {
-      supabase.removeChannel(channel);
+      mounted = false;
+      if (businessChannel) {
+        supabase.removeChannel(businessChannel);
+      }
+      if (trainerChannel) {
+        supabase.removeChannel(trainerChannel);
+      }
+      console.log('🧹 Cleaned up real-time subscriptions');
     };
   }, [fetchBusinesses]);
 

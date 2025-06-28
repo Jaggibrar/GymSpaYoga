@@ -3,9 +3,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
 import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
 import BusinessListingsManager from "@/components/business/BusinessListingsManager";
+import ConnectionHealthMonitor from "@/components/ConnectionHealthMonitor";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Users, Calendar, TrendingUp, Loader2, Plus, BarChart3, Image as ImageIcon } from "lucide-react";
+import { Building2, Users, Calendar, TrendingUp, Loader2, Plus, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -13,6 +14,11 @@ export default function BusinessDashboard() {
   const { user } = useAuth();
   const { hasProfiles, loading } = useHasBusinessProfiles();
   const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'bookings'>('overview');
+
+  const handleReconnect = () => {
+    // Trigger a page refresh for all data
+    window.location.reload();
+  };
 
   if (loading) {
     return (
@@ -50,6 +56,9 @@ export default function BusinessDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
+        {/* Connection Health Monitor */}
+        <ConnectionHealthMonitor onReconnect={handleReconnect} />
+
         {/* Header Section */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>

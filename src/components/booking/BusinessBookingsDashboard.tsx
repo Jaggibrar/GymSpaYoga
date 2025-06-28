@@ -1,14 +1,16 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, User, Phone, Calendar, Clock, CreditCard, CheckCircle, XCircle, RefreshCw, AlertTriangle, Building2 } from "lucide-react";
+import { Loader2, User, Phone, Calendar, Clock, CreditCard, CheckCircle, XCircle, RefreshCw, AlertTriangle, Building2, Wifi, WifiOff } from "lucide-react";
 import { useOwnerBookings, useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
 import { BookingActionModal } from "./BookingActionModal";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const statusLabels = {
   pending: { color: "bg-yellow-100 text-yellow-700", label: "Pending" },
@@ -22,15 +24,37 @@ export default function BusinessBookingsDashboard() {
   const { hasProfiles, loading: profilesLoading } = useHasBusinessProfiles();
   const [modalInfo, setModalInfo] = useState<{id: number, action: "accept" | "cancel"}|null>(null);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // Accept booking
+  // Monitor online status
+  useState(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  });
+
+  // Accept booking with timeout protection
   const handleAccept = async (bookingId: number) => {
     setActionLoading(bookingId);
     try {
-      const { error } = await supabase.rpc("update_booking_status", {
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Operation timed out')), 10000);
+      });
+
+      const operation = supabase.rpc("update_booking_status", {
         booking_id_param: bookingId,
         new_status_param: "confirmed",
       });
+
+      const { error } = await Promise.race([operation, timeoutPromise]);
+      
       if (!error) {
         toast.success("Booking accepted successfully!");
         refetch();
@@ -46,15 +70,22 @@ export default function BusinessBookingsDashboard() {
     }
   };
 
-  // Cancel booking
+  // Cancel booking with timeout protection
   const handleCancel = async (bookingId: number, reason = "") => {
     setActionLoading(bookingId);
     try {
-      const { error } = await supabase.rpc("update_booking_status", {
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Operation timed out')), 10000);
+      });
+
+      const operation = supabase.rpc("update_booking_status", {
         booking_id_param: bookingId,
         new_status_param: "cancelled",
         notes_param: reason,
       });
+
+      const { error } = await Promise.race([operation, timeoutPromise]);
+      
       if (!error) {
         toast.success("Booking cancelled successfully!");
         refetch();
@@ -70,12 +101,13 @@ export default function BusinessBookingsDashboard() {
     }
   };
 
-  // Show loading state while checking profiles
+  // Show loading skeleton while checking profiles
   if (profilesLoading) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-6 w-6 animate-spin mr-2" />
-        <span>Loading...</span>
+      <div className="space-y-4">
+        <Skeleton className="h-12 w-full" />
+        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-24 w-full" />
       </div>
     );
   }
@@ -98,15 +130,31 @@ export default function BusinessBookingsDashboard() {
     );
   }
 
-  // Show error state with retry option
+  // Show error state with retry option and connection status
   if (error) {
     return (
       <Card className="border-0 shadow-lg">
         <CardContent className="py-8">
+          <div className="flex items-center gap-2 mb-4">
+            {isOnline ? (
+              <Wifi className="h-4 w-4 text-green-500" />
+            ) : (
+              <WifiOff className="h-4 w-4 text-red-500" />
+            )}
+            <span className="text-sm text-gray-500">
+              {isOnline ? 'Connected' : 'Offline'}
+            </span>
+          </div>
+          
           <Alert className="border-red-200 bg-red-50">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription className="mb-4">
               <strong>Error loading bookings:</strong> {error}
+              {!isOnline && (
+                <div className="mt-2 text-sm">
+                  You appear to be offline. Please check your internet connection.
+                </div>
+              )}
             </AlertDescription>
           </Alert>
           <div className="text-center mt-6">
@@ -122,8 +170,8 @@ export default function BusinessBookingsDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Filter Buttons */}
-      <div className="flex flex-wrap gap-2">
+      {/* Filter Buttons with Connection Status */}
+      <div className="flex flex-wrap gap-2 items-center">
         {["pending","confirmed","cancelled","all"].map(status => (
           <Button
             key={status}
@@ -136,23 +184,60 @@ export default function BusinessBookingsDashboard() {
           </Button>
         ))}
         
-        <Button
-          onClick={refetch}
-          variant="ghost"
-          size="sm"
-          className="ml-auto flex items-center gap-2"
-          disabled={loading}
-        >
-          <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
+        <div className="ml-auto flex items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            {isOnline ? (
+              <Wifi className="h-4 w-4 text-green-500" />
+            ) : (
+              <WifiOff className="h-4 w-4 text-red-500" />
+            )}
+            <span>{isOnline ? 'Online' : 'Offline'}</span>
+          </div>
+          
+          <Button
+            onClick={refetch}
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2"
+            disabled={loading}
+          >
+            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+        </div>
       </div>
 
-      {/* Loading State */}
+      {/* Loading State with Skeleton */}
       {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin mr-2" />
-          <span>Loading bookings...</span>
+        <div className="space-y-4">
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-6 w-6 animate-spin mr-2" />
+            <span>Loading bookings...</span>
+          </div>
+          {/* Skeleton cards for better UX */}
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="border-0 shadow-lg">
+              <CardHeader>
+                <Skeleton className="h-6 w-3/4" />
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       ) : bookings.length === 0 ? (
         /* Empty State */
