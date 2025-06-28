@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,23 +7,43 @@ import { Badge } from '@/components/ui/badge';
 import { Search, MapPin, Filter, Star, Clock, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
-import { useGyms } from '@/hooks/useGyms';
+import { useBusinessData } from '@/hooks/useBusinessData';
+import ImageGallery from '@/components/ImageGallery';
 
 const Explore = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
-  const { gyms, loading, error } = useGyms();
+  const [sortBy, setSortBy] = useState('created_at');
+
+  const { businesses, loading, error } = useBusinessData(
+    activeFilter === 'all' ? undefined : activeFilter,
+    searchTerm,
+    location,
+    sortBy
+  );
 
   const categories = [
-    { id: 'all', name: 'All', count: 150 },
-    { id: 'gym', name: 'Gyms', count: 85 },
-    { id: 'spa', name: 'Spas', count: 35 },
-    { id: 'yoga', name: 'Yoga Studios', count: 30 }
+    { id: 'all', name: 'All', count: businesses.length },
+    { id: 'gym', name: 'Gyms', count: businesses.filter(b => b.business_type === 'gym').length },
+    { id: 'spa', name: 'Spas', count: businesses.filter(b => b.business_type === 'spa').length },
+    { id: 'yoga', name: 'Yoga Studios', count: businesses.filter(b => b.business_type === 'yoga').length },
+    { id: 'trainer', name: 'Trainers', count: businesses.filter(b => b.business_type === 'trainer').length }
   ];
 
   const handleSearch = () => {
+    // Search is handled by the hook automatically when searchTerm or location changes
     console.log('Searching for:', searchTerm, 'in', location);
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors = {
+      gym: 'bg-orange-100 text-orange-700',
+      spa: 'bg-pink-100 text-pink-700',
+      yoga: 'bg-purple-100 text-purple-700',
+      trainer: 'bg-blue-100 text-blue-700'
+    };
+    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
   };
 
   return (
@@ -97,10 +117,17 @@ const Explore = () => {
                   </Button>
                 ))}
               </div>
-              <Button variant="outline" className="rounded-full">
-                <Filter className="mr-2 h-4 w-4" />
-                More Filters
-              </Button>
+              <div className="flex gap-2">
+                <select 
+                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="created_at">Sort by: Latest</option>
+                  <option value="name">Sort by: Name</option>
+                  <option value="price">Sort by: Price</option>
+                </select>
+              </div>
             </div>
           </div>
         </section>
@@ -116,30 +143,26 @@ const Explore = () => {
             ) : error ? (
               <div className="text-center py-20">
                 <p className="text-red-600">Error loading results: {error}</p>
+                <Button onClick={() => window.location.reload()} className="mt-4">
+                  Try Again
+                </Button>
               </div>
             ) : (
               <>
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl font-bold text-gray-900">
-                    {gyms.length} places found
+                    {businesses.length} places found
                   </h2>
-                  <select className="px-4 py-2 border border-gray-300 rounded-lg">
-                    <option>Sort by: Recommended</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Rating</option>
-                    <option>Distance</option>
-                  </select>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {gyms.map((gym) => (
-                    <Card key={gym.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                  {businesses.map((business) => (
+                    <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
                       <div className="relative">
-                        <img 
-                          src={gym.image_urls[0] || "/placeholder.svg"} 
-                          alt={gym.business_name}
-                          className="w-full h-48 object-cover rounded-t-lg group-hover:scale-105 transition-transform duration-300"
+                        <ImageGallery
+                          images={business.image_urls}
+                          title={business.business_name}
+                          className="h-48 w-full"
                         />
                         <div className="absolute top-4 right-4">
                           <Badge className="bg-white/90 text-gray-800">
@@ -148,68 +171,67 @@ const Explore = () => {
                           </Badge>
                         </div>
                         <div className="absolute top-4 left-4">
-                          <Badge className="bg-emerald-500 text-white capitalize">
-                            {gym.business_type}
+                          <Badge className={`${getCategoryColor(business.business_type)} border-0 capitalize`}>
+                            {business.business_type}
                           </Badge>
                         </div>
                       </div>
                       
                       <CardHeader>
                         <CardTitle className="group-hover:text-emerald-600 transition-colors">
-                          {gym.business_name}
+                          {business.business_name}
                         </CardTitle>
                         <div className="flex items-center text-gray-600">
                           <MapPin className="h-4 w-4 mr-1" />
-                          <span className="text-sm">{gym.city}, {gym.state}</span>
+                          <span className="text-sm">{business.city}, {business.state}</span>
                         </div>
                       </CardHeader>
                       
                       <CardContent className="space-y-4">
                         <p className="text-gray-600 text-sm line-clamp-2">
-                          {gym.description || "Premium fitness facility with modern equipment and expert trainers."}
+                          {business.description || "Premium fitness facility with modern equipment and expert trainers."}
                         </p>
                         
                         <div className="flex items-center justify-between text-sm text-gray-500">
                           <div className="flex items-center">
                             <Clock className="h-4 w-4 mr-1" />
-                            {gym.opening_time} - {gym.closing_time}
+                            {business.opening_time} - {business.closing_time}
                           </div>
                           <div className="flex items-center">
                             <DollarSign className="h-4 w-4 mr-1" />
-                            {gym.session_price ? `₹${gym.session_price}/session` : 
-                             gym.monthly_price ? `₹${gym.monthly_price}/month` : 'Contact for pricing'}
+                            {business.session_price ? `₹${business.session_price}/session` : 
+                             business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact for pricing'}
                           </div>
                         </div>
 
-                        {gym.amenities && gym.amenities.length > 0 && (
+                        {business.amenities && business.amenities.length > 0 && (
                           <div className="flex flex-wrap gap-1">
-                            {gym.amenities.slice(0, 3).map((amenity) => (
+                            {business.amenities.slice(0, 3).map((amenity) => (
                               <Badge key={amenity} variant="outline" className="text-xs">
                                 {amenity}
                               </Badge>
                             ))}
-                            {gym.amenities.length > 3 && (
+                            {business.amenities.length > 3 && (
                               <Badge variant="outline" className="text-xs">
-                                +{gym.amenities.length - 3} more
+                                +{business.amenities.length - 3} more
                               </Badge>
                             )}
                           </div>
                         )}
                         
                         <div className="flex gap-2 pt-2">
-                          <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                            Book Now
-                          </Button>
-                          <Button variant="outline" className="flex-1">
-                            View Details
-                          </Button>
+                          <Link to={`/business/${business.id}`} className="flex-1">
+                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                              View Details
+                            </Button>
+                          </Link>
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </div>
 
-                {gyms.length === 0 && (
+                {businesses.length === 0 && (
                   <div className="text-center py-20">
                     <div className="text-6xl mb-4">🏃‍♀️</div>
                     <h3 className="text-2xl font-bold text-gray-800 mb-2">No results found</h3>
@@ -217,15 +239,9 @@ const Explore = () => {
                       Try adjusting your search criteria or explore different categories
                     </p>
                     <div className="flex flex-wrap gap-4 justify-center">
-                      <Link to="/gyms">
-                        <Button variant="outline">Browse Gyms</Button>
-                      </Link>
-                      <Link to="/spas">
-                        <Button variant="outline">Browse Spas</Button>
-                      </Link>
-                      <Link to="/yoga">
-                        <Button variant="outline">Browse Yoga</Button>
-                      </Link>
+                      <Button variant="outline" onClick={() => {setActiveFilter('all'); setSearchTerm(''); setLocation('');}}>
+                        Clear Filters
+                      </Button>
                     </div>
                   </div>
                 )}

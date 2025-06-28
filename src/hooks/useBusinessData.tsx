@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { performanceMonitor } from '@/utils/performanceMonitor';
@@ -37,7 +37,7 @@ export const useBusinessData = (
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
 
-  const fetchBusinesses = async () => {
+  const fetchBusinesses = useCallback(async () => {
     const startTime = Date.now();
     console.log('🔍 Fetching businesses... Category:', category || 'all');
     console.log('📊 Search params:', { searchTerm, location, sortBy });
@@ -59,7 +59,6 @@ export const useBusinessData = (
         if (trainerError) {
           console.error('❌ Error fetching trainers:', trainerError);
           setError('Failed to fetch trainers');
-          toast.error('Failed to fetch trainers');
           return;
         }
 
@@ -137,7 +136,6 @@ export const useBusinessData = (
       if (fetchError) {
         console.error('❌ Error fetching businesses:', fetchError);
         setError('Failed to fetch businesses');
-        toast.error('Failed to fetch businesses');
         return;
       }
 
@@ -160,15 +158,49 @@ export const useBusinessData = (
     } catch (err) {
       console.error('💥 Unexpected error:', err);
       setError('An unexpected error occurred');
-      toast.error('Failed to load businesses');
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, searchTerm, location, sortBy]);
+
+  // Set up real-time subscription
+  useEffect(() => {
+    const channel = supabase
+      .channel('business-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'business_profiles'
+        },
+        (payload) => {
+          console.log('📡 Real-time update received:', payload);
+          fetchBusinesses(); // Refetch data when changes occur
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'trainer_profiles'
+        },
+        (payload) => {
+          console.log('📡 Real-time trainer update received:', payload);
+          fetchBusinesses(); // Refetch data when trainer changes occur
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchBusinesses]);
 
   useEffect(() => {
     fetchBusinesses();
-  }, [category, searchTerm, location, sortBy]);
+  }, [fetchBusinesses]);
 
   return { 
     businesses, 
