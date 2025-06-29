@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +43,7 @@ export default function BusinessBookingsDashboard() {
   const handleAccept = async (bookingId: number) => {
     setActionLoading(bookingId);
     try {
-      const timeoutPromise = new Promise((_, reject) => {
+      const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Operation timed out')), 10000);
       });
 
@@ -53,14 +52,14 @@ export default function BusinessBookingsDashboard() {
         new_status_param: "confirmed",
       });
 
-      const { error } = await Promise.race([operation, timeoutPromise]);
+      const result = await Promise.race([operation, timeoutPromise]);
       
-      if (!error) {
+      if (result.error) {
+        console.error('Accept booking error:', result.error);
+        toast.error("Failed to accept booking: " + result.error.message);
+      } else {
         toast.success("Booking accepted successfully!");
         refetch();
-      } else {
-        console.error('Accept booking error:', error);
-        toast.error("Failed to accept booking: " + error.message);
       }
     } catch (err) {
       console.error('Error accepting booking:', err);
@@ -74,7 +73,7 @@ export default function BusinessBookingsDashboard() {
   const handleCancel = async (bookingId: number, reason = "") => {
     setActionLoading(bookingId);
     try {
-      const timeoutPromise = new Promise((_, reject) => {
+      const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error('Operation timed out')), 10000);
       });
 
@@ -84,14 +83,14 @@ export default function BusinessBookingsDashboard() {
         notes_param: reason,
       });
 
-      const { error } = await Promise.race([operation, timeoutPromise]);
+      const result = await Promise.race([operation, timeoutPromise]);
       
-      if (!error) {
+      if (result.error) {
+        console.error('Cancel booking error:', result.error);
+        toast.error("Failed to cancel booking: " + result.error.message);
+      } else {
         toast.success("Booking cancelled successfully!");
         refetch();
-      } else {
-        console.error('Cancel booking error:', error);
-        toast.error("Failed to cancel booking: " + error.message);
       }
     } catch (err) {
       console.error('Error cancelling booking:', err);
