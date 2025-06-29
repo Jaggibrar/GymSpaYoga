@@ -13,7 +13,7 @@ export const useLoadingTimeout = (options: UseLoadingTimeoutOptions = {}) => {
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  const executeWithTimeout = useCallback(async <T>(
+  const executeWithTimeout = useCallback(async <T,>(
     operation: () => Promise<T>,
     operationName = 'Operation'
   ): Promise<T | null> => {
