@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export default function BusinessBookingsDashboard() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   // Monitor online status
-  useState(() => {
+  useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
     
@@ -38,7 +38,7 @@ export default function BusinessBookingsDashboard() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  });
+  }, []);
 
   // Accept booking with timeout protection
   const handleAccept = async (bookingId: number) => {
