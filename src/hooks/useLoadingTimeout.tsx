@@ -15,7 +15,7 @@ export const useLoadingTimeout = (options: UseLoadingTimeoutOptions = {}) => {
 
   const executeWithTimeout = useCallback(async <T>(
     operation: () => Promise<T>,
-    operationName: string = 'Operation'
+    operationName = 'Operation'
   ): Promise<T | null> => {
     setLoading(true);
     setError(null);
