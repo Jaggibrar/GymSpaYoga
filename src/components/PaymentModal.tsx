@@ -1,10 +1,11 @@
+
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Calendar, Clock, MapPin, User, CreditCard } from "lucide-react";
+import { Calendar, Clock, MapPin, CreditCard, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from '@/hooks/useAuth';
 import { useBookings } from '@/hooks/useBookings';
@@ -36,10 +37,33 @@ const PaymentModal = ({
     duration: 60,
     notes: ''
   });
-  const [confirmation, setConfirmation] = useState<{id: number}|null>(null);
+  const [confirmation, setConfirmation] = useState<{id: number} | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   console.log('PaymentModal - Auth state:', { user: user?.id, authLoading, isOpen });
+
+  const validateBookingData = () => {
+    if (!bookingData.date || !bookingData.time) {
+      setErrorMsg("Please select both date and time for your booking");
+      return false;
+    }
+
+    const selectedDate = new Date(bookingData.date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      setErrorMsg("Please select a future date for your booking");
+      return false;
+    }
+
+    if (bookingData.duration < 30 || bookingData.duration > 300) {
+      setErrorMsg("Duration must be between 30 and 300 minutes");
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,32 +79,43 @@ const PaymentModal = ({
       return;
     }
 
-    if (!bookingData.date || !bookingData.time) {
-      toast.error("Please select date and time");
+    if (!validateBookingData()) {
       return;
     }
 
-    const booking = await submitBooking({
-      user_id: user.id,
-      business_type: serviceType,
-      business_id: businessId,
-      trainer_id: null,
-      booking_date: bookingData.date,
-      booking_time: bookingData.time,
-      duration_minutes: bookingData.duration,
-      total_amount: price,
-      status: 'pending',
-      payment_status: 'pending',
-      notes: bookingData.notes
-    });
+    try {
+      const booking = await submitBooking({
+        user_id: user.id,
+        business_type: serviceType,
+        business_id: businessId,
+        trainer_id: null,
+        booking_date: bookingData.date,
+        booking_time: bookingData.time,
+        duration_minutes: bookingData.duration,
+        total_amount: price,
+        status: 'pending',
+        payment_status: 'pending',
+        notes: bookingData.notes
+      });
 
-    if (booking) {
-      toast.success("Booking request submitted successfully! Payment will be made at the counter.");
-      setConfirmation({id: booking.id});
-      setBookingData({ date: '', time: '', duration: 60, notes: '' });
-    } else {
-      setErrorMsg("Booking submission failed. Please try again.");
+      if (booking) {
+        toast.success("Booking request submitted successfully! Payment will be made at the counter.");
+        setConfirmation({id: booking.id});
+        setBookingData({ date: '', time: '', duration: 60, notes: '' });
+      } else {
+        setErrorMsg("Booking submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error('Booking submission error:', error);
+      setErrorMsg(error instanceof Error ? error.message : "An unexpected error occurred");
     }
+  };
+
+  const handleClose = () => {
+    setConfirmation(null);
+    setErrorMsg(null);
+    setBookingData({ date: '', time: '', duration: 60, notes: '' });
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -88,7 +123,7 @@ const PaymentModal = ({
   // Show loading while auth is being determined
   if (authLoading) {
     return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="sm:max-w-md">
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
@@ -102,17 +137,20 @@ const PaymentModal = ({
   // Show a clear booking confirmation page after successful booking
   if (confirmation) {
     return (
-      <Dialog open={isOpen} onOpenChange={() => { setConfirmation(null); onClose(); }}>
+      <Dialog open={isOpen} onOpenChange={handleClose}>
         <DialogContent className="sm:max-w-md">
           <div className="text-center py-10">
             <div className="flex justify-center mb-4">
               <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                <span className="text-4xl text-emerald-600">✔️</span>
+                <CheckCircle className="h-8 w-8 text-emerald-600" />
               </div>
             </div>
             <h2 className="text-2xl font-bold mb-2 text-emerald-800">Booking Submitted!</h2>
-            <p className="mb-4 text-emerald-800">Your booking ID is <span className="font-bold">#{confirmation.id}</span>. You will be notified when the business responds.</p>
-            <Button onClick={() => { setConfirmation(null); onClose(); }} className="bg-emerald-500 hover:bg-emerald-600 w-full">
+            <p className="mb-4 text-emerald-800">
+              Your booking ID is <span className="font-bold">#{confirmation.id}</span>. 
+              You will be notified when the business responds.
+            </p>
+            <Button onClick={handleClose} className="bg-emerald-500 hover:bg-emerald-600 w-full">
               Done
             </Button>
           </div>
@@ -122,8 +160,8 @@ const PaymentModal = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2 text-gray-900">
             <Calendar className="h-5 w-5" />
@@ -132,7 +170,13 @@ const PaymentModal = ({
         </DialogHeader>
         
         {errorMsg && (
-          <div className="bg-red-100 p-3 rounded text-red-700 mb-2 text-sm text-center">{errorMsg}</div>
+          <div className="bg-red-100 border border-red-200 p-3 rounded-lg flex items-start gap-2">
+            <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-red-700 font-medium">Booking Error</p>
+              <p className="text-red-600 text-sm">{errorMsg}</p>
+            </div>
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -142,7 +186,7 @@ const PaymentModal = ({
               <span className="font-semibold text-gray-900">{serviceName}</span>
             </div>
             <p className="text-lg font-bold text-emerald-600">
-              ₹{price}/{priceType}
+              ₹{price.toLocaleString()}/{priceType}
             </p>
           </div>
 
@@ -150,7 +194,7 @@ const PaymentModal = ({
             <div>
               <Label htmlFor="date" className="flex items-center space-x-2 text-gray-900">
                 <Calendar className="h-4 w-4" />
-                <span>Date</span>
+                <span>Date *</span>
               </Label>
               <Input
                 id="date"
@@ -166,7 +210,7 @@ const PaymentModal = ({
             <div>
               <Label htmlFor="time" className="flex items-center space-x-2 text-gray-900">
                 <Clock className="h-4 w-4" />
-                <span>Time</span>
+                <span>Time *</span>
               </Label>
               <Input
                 id="time"
@@ -180,17 +224,19 @@ const PaymentModal = ({
           </div>
 
           <div>
-            <Label htmlFor="duration" className="text-gray-900">Duration (minutes)</Label>
+            <Label htmlFor="duration" className="text-gray-900">Duration (minutes) *</Label>
             <Input
               id="duration"
               type="number"
               value={bookingData.duration}
-              onChange={(e) => setBookingData({ ...bookingData, duration: parseInt(e.target.value) })}
+              onChange={(e) => setBookingData({ ...bookingData, duration: parseInt(e.target.value) || 60 })}
               min="30"
-              max="180"
+              max="300"
               step="15"
               className="text-gray-900"
+              required
             />
+            <p className="text-xs text-gray-500 mt-1">Between 30 and 300 minutes</p>
           </div>
 
           <div>
@@ -202,7 +248,11 @@ const PaymentModal = ({
               placeholder="Any special requirements or preferences..."
               rows={3}
               className="text-gray-900"
+              maxLength={500}
             />
+            <p className="text-xs text-gray-500 mt-1">
+              {bookingData.notes.length}/500 characters
+            </p>
           </div>
 
           {/* Payment Information Notice */}
@@ -220,8 +270,9 @@ const PaymentModal = ({
             <Button 
               type="button" 
               variant="outline" 
-              onClick={onClose} 
+              onClick={handleClose} 
               className="flex-1"
+              disabled={loading}
             >
               Cancel
             </Button>
@@ -230,7 +281,14 @@ const PaymentModal = ({
               disabled={loading || authLoading}
               className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white"
             >
-              {loading ? "Booking..." : "Submit Booking Request"}
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Booking...
+                </>
+              ) : (
+                "Submit Booking Request"
+              )}
             </Button>
           </div>
         </form>
