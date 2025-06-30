@@ -16,9 +16,13 @@ const MainNavigation = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-    setIsMenuOpen(false);
+    try {
+      await signOut();
+      navigate('/');
+      setIsMenuOpen(false);
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
   };
 
   return (

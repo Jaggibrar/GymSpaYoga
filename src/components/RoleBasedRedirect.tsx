@@ -2,16 +2,14 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useHasBusinessProfiles } from '@/hooks/useOwnerBookings';
 import { Loader2 } from 'lucide-react';
 
 export default function RoleBasedRedirect() {
   const { user, userProfile, loading: authLoading } = useAuth();
-  const { hasProfiles: hasBusinessProfiles, loading: businessLoading } = useHasBusinessProfiles();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authLoading || businessLoading) return;
+    if (authLoading) return;
 
     if (!user) {
       navigate('/login');
@@ -24,17 +22,17 @@ export default function RoleBasedRedirect() {
       return;
     }
 
-    // Check if user has business profiles
-    if (hasBusinessProfiles) {
+    // Check if user is business owner
+    if (userProfile?.role === 'business_owner') {
       navigate('/business-dashboard');
       return;
     }
 
-    // Default to user dashboard
-    navigate('/user-dashboard');
-  }, [user, userProfile, hasBusinessProfiles, authLoading, businessLoading, navigate]);
+    // Default to home page for regular users
+    navigate('/');
+  }, [user, userProfile, authLoading, navigate]);
 
-  if (authLoading || businessLoading) {
+  if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

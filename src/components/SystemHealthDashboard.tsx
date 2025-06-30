@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,6 +26,14 @@ interface SystemHealth {
   uptime: number;
 }
 
+interface PerformanceMetric {
+  name: string;
+  duration: number;
+  timestamp: number;
+  type: 'api' | 'render' | 'user_action' | 'navigation';
+  metadata?: Record<string, any>;
+}
+
 const SystemHealthDashboard = () => {
   const [systemHealth, setSystemHealth] = useState<SystemHealth>({
     status: 'healthy',
@@ -35,7 +42,7 @@ const SystemHealthDashboard = () => {
     performance: 0,
     uptime: 99.9
   });
-  const [performanceData, setPerformanceData] = useState<any[]>([]);
+  const [performanceData, setPerformanceData] = useState<PerformanceMetric[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Check system health
