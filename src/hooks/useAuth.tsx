@@ -35,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchUserProfile = async (userId: string) => {
     try {
+      console.log('Fetching user profile for:', userId);
       const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
+      console.log('User profile fetched:', data);
       setUserProfile(data);
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -53,65 +55,104 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    let mounted = true;
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state changed:', event, session?.user?.id);
+        
+        if (!mounted) return;
+
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Use setTimeout to prevent deadlock
+        // Handle profile fetching with proper error handling
         if (session?.user) {
+          // Use setTimeout to prevent potential deadlock issues
           setTimeout(() => {
-            fetchUserProfile(session.user.id);
-          }, 0);
+            if (mounted) {
+              fetchUserProfile(session.user.id);
+            }
+          }, 100);
         } else {
           setUserProfile(null);
         }
         
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        setTimeout(() => {
-          fetchUserProfile(session.user.id);
-        }, 0);
-      }
-      
-      setLoading(false);
-    });
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+        }
 
-    return () => subscription.unsubscribe();
+        if (!mounted) return;
+
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          setTimeout(() => {
+            if (mounted) {
+              fetchUserProfile(session.user.id);
+            }
+          }, 100);
+        }
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    initializeAuth();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
       if (error) {
+        console.error('Sign in error:', error);
         toast.error(error.message);
+        setLoading(false);
         return { error };
       }
       
+      // Don't set loading to false here - let the auth state change handle it
       toast.success('Successfully signed in!');
       return { error: null };
     } catch (error: any) {
+      console.error('Sign in failed:', error);
       toast.error('Sign in failed');
+      setLoading(false);
       return { error };
     }
   };
 
   const signUp = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
@@ -123,34 +164,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
+        console.error('Sign up error:', error);
         toast.error(error.message);
+        setLoading(false);
         return { error };
       }
       
       toast.success('Check your email to verify your account');
+      setLoading(false);
       return { error: null };
     } catch (error: any) {
+      console.error('Sign up failed:', error);
       toast.error('Sign up failed');
+      setLoading(false);
       return { error };
     }
   };
 
   const signOut = async () => {
     try {
+      setLoading(true);
+      console.log('Signing out user...');
+      
       const { error } = await supabase.auth.signOut();
       if (error) {
-        toast.error('Sign out failed');
         console.error('Sign out error:', error);
+        toast.error('Sign out failed');
+        setLoading(false);
         return;
       }
       
+      // Clear all state
       setUserProfile(null);
       setUser(null);
       setSession(null);
+      setLoading(false);
+      
+      console.log('Successfully signed out');
       toast.success('Signed out successfully');
     } catch (error) {
       console.error('Sign out error:', error);
       toast.error('Sign out failed');
+      setLoading(false);
     }
   };
 

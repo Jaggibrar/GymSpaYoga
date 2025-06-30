@@ -11,10 +11,12 @@ import { toast } from 'sonner';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Dumbbell, Waves, Heart } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import BrandedLoadingScreen from '@/components/BrandedLoadingScreen';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -39,11 +41,11 @@ const Login = () => {
 
       if (error) throw error;
       
+      // Show branded loading screen before redirecting
+      setShowLoadingScreen(true);
       toast.success('Welcome back!');
-      navigate('/');
     } catch (error: any) {
       toast.error(error.message || 'Failed to sign in');
-    } finally {
       setLoading(false);
     }
   };
@@ -72,6 +74,16 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleLoadingComplete = () => {
+    setShowLoadingScreen(false);
+    setLoading(false);
+    navigate('/');
+  };
+
+  if (showLoadingScreen) {
+    return <BrandedLoadingScreen onComplete={handleLoadingComplete} message="Signing you in..." />;
+  }
 
   return (
     <>
