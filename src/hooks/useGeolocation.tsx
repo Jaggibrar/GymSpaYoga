@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 
-interface GeolocationPosition {
+interface CustomGeolocationPosition {
   latitude: number;
   longitude: number;
   accuracy: number;
@@ -15,7 +15,7 @@ interface GeolocationError {
 }
 
 interface UseGeolocationReturn {
-  position: GeolocationPosition | null;
+  position: CustomGeolocationPosition | null;
   error: GeolocationError | null;
   loading: boolean;
   getCurrentPosition: () => void;
@@ -25,7 +25,7 @@ interface UseGeolocationReturn {
 }
 
 export const useGeolocation = (options?: PositionOptions): UseGeolocationReturn => {
-  const [position, setPosition] = useState<GeolocationPosition | null>(null);
+  const [position, setPosition] = useState<CustomGeolocationPosition | null>(null);
   const [error, setError] = useState<GeolocationError | null>(null);
   const [loading, setLoading] = useState(false);
   const [watchId, setWatchId] = useState<number | null>(null);

@@ -7,6 +7,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import FunctionalSearch from '@/components/FunctionalSearch';
 import SEOHead from '@/components/SEOHead';
+import SEOAnalytics from '@/components/SEOAnalytics';
+import { generateBusinessSchema } from '@/utils/seoUtils';
 
 const Index = () => {
   const [featuredListings, setFeaturedListings] = useState([]);
@@ -162,12 +164,47 @@ const Index = () => {
     }
   ];
 
+  // Generate structured data for featured businesses
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "GymSpaYoga",
+    "description": "India's Premier Wellness Booking Platform - Find and book the best gyms, spas, yoga studios, and personal trainers",
+    "url": "https://gymspayoga.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://gymspayoga.com/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    },
+    "sameAs": [
+      "https://facebook.com/gymspayoga",
+      "https://instagram.com/gymspayoga",
+      "https://twitter.com/gymspayoga"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Wellness Services Directory",
+      "itemListElement": featuredListings.slice(0, 3).map(business => generateBusinessSchema(business))
+    }
+  };
+
   return (
     <>
       <SEOHead
-        title="GymSpaYoga - Find Premium Gyms, Spas & Yoga Studios Near You"
-        description="Discover and book the best gyms, spas, yoga studios, and personal trainers in your city. Premium wellness experiences at your fingertips."
-        keywords="gym booking, spa booking, yoga classes, personal trainer, fitness, wellness, health"
+        title="GymSpaYoga - India's #1 Wellness Booking Platform | Find Premium Gyms, Spas & Yoga Studios"
+        description="Discover and book the best gyms, spas, yoga studios, and personal trainers across India. Premium wellness experiences, verified quality, instant booking. Join 10,000+ happy customers!"
+        keywords="gym booking India, spa booking, yoga classes, personal trainer, fitness center, wellness booking, gym membership, massage therapy, yoga studio near me, fitness booking app"
+        structuredData={structuredData}
+        canonicalUrl="https://gymspayoga.com/"
+      />
+      
+      <SEOAnalytics 
+        pageTitle="Home - GymSpaYoga"
+        pageUrl="https://gymspayoga.com/"
+        pageType="homepage"
       />
       
       <div className="min-h-screen bg-white">

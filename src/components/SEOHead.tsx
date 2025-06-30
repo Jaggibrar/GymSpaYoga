@@ -10,19 +10,24 @@ interface SEOHeadProps {
   type?: 'website' | 'article' | 'business';
   noindex?: boolean;
   structuredData?: any;
+  canonicalUrl?: string;
+  alternateUrls?: Array<{href: string; hreflang: string}>;
 }
 
 const SEOHead = ({ 
   title, 
   description, 
-  keywords = 'gym, spa, yoga, fitness, wellness, booking, health', 
+  keywords = 'gym, spa, yoga, fitness, wellness, booking, health, personal trainer, fitness center, meditation', 
   image = '/api/placeholder/1200/630',
   url = typeof window !== 'undefined' ? window.location.href : '',
   type = 'website',
   noindex = false,
-  structuredData
+  structuredData,
+  canonicalUrl,
+  alternateUrls = []
 }: SEOHeadProps) => {
-  const fullTitle = title.includes('GymSpaYoga') ? title : `${title} | GymSpaYoga`;
+  const fullTitle = title.includes('GymSpaYoga') ? title : `${title} | GymSpaYoga - Best Gyms, Spas & Yoga Studios`;
+  const finalCanonicalUrl = canonicalUrl || url;
   
   return (
     <Helmet>
@@ -31,26 +36,48 @@ const SEOHead = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="GymSpaYoga" />
-      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="google-site-verification" content="your-google-verification-code" />
+      
+      {/* Canonical URL */}
+      <link rel="canonical" href={finalCanonicalUrl} />
+      
+      {/* Alternate URLs for multi-language */}
+      {alternateUrls.map((alt, index) => (
+        <link key={index} rel="alternate" href={alt.href} hrefLang={alt.hreflang} />
+      ))}
       
       {/* Open Graph Tags */}
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      <meta property="og:url" content={url} />
+      <meta property="og:image:alt" content={title} />
+      <meta property="og:url" content={finalCanonicalUrl} />
       <meta property="og:site_name" content="GymSpaYoga" />
+      <meta property="og:locale" content="en_IN" />
       
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:site" content="@GymSpaYoga" />
+      <meta name="twitter:creator" content="@GymSpaYoga" />
       
       {/* Additional SEO Tags */}
       <meta name="theme-color" content="#10B981" />
-      <link rel="canonical" href={url} />
+      <meta name="msapplication-TileColor" content="#10B981" />
+      <meta name="application-name" content="GymSpaYoga" />
+      <meta name="apple-mobile-web-app-title" content="GymSpaYoga" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="mobile-web-app-capable" content="yes" />
+      
+      {/* Preconnect to external domains */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://images.unsplash.com" />
+      <link rel="preconnect" href="https://api.bigdatacloud.net" />
       
       {/* Structured Data */}
       {structuredData && (
@@ -59,18 +86,35 @@ const SEOHead = ({
         </script>
       )}
       
-      {/* Default Structured Data for Local Business */}
+      {/* Default Website Structured Data */}
       {!structuredData && (
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "LocalBusiness",
+            "@type": "WebSite",
             "name": "GymSpaYoga",
-            "description": description,
-            "url": url,
-            "logo": `${url}/logo.png`,
+            "description": "Find and book the best gyms, spas, yoga studios, and personal trainers in India. Premium wellness experiences at your fingertips.",
+            "url": finalCanonicalUrl,
+            "logo": `${new URL(finalCanonicalUrl).origin}/logo.png`,
+            "sameAs": [
+              "https://facebook.com/gymspayoga",
+              "https://instagram.com/gymspayoga",
+              "https://twitter.com/gymspayoga",
+              "https://linkedin.com/company/gymspayoga"
+            ],
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${new URL(finalCanonicalUrl).origin}/search?q={search_term_string}`
+              },
+              "query-input": "required name=search_term_string"
+            },
             "serviceType": ["Fitness Center", "Spa", "Yoga Studio"],
-            "areaServed": "India",
+            "areaServed": {
+              "@type": "Country",
+              "name": "India"
+            },
             "hasOfferCatalog": {
               "@type": "OfferCatalog",
               "name": "Wellness Services",
@@ -80,7 +124,8 @@ const SEOHead = ({
                   "itemOffered": {
                     "@type": "Service",
                     "name": "Gym Membership",
-                    "serviceType": "Fitness"
+                    "serviceType": "Fitness",
+                    "description": "Access to premium gyms and fitness centers"
                   }
                 },
                 {
@@ -88,7 +133,8 @@ const SEOHead = ({
                   "itemOffered": {
                     "@type": "Service",
                     "name": "Spa Treatment",
-                    "serviceType": "Wellness"
+                    "serviceType": "Wellness",
+                    "description": "Luxury spa treatments and massage therapy"
                   }
                 },
                 {
@@ -96,7 +142,17 @@ const SEOHead = ({
                   "itemOffered": {
                     "@type": "Service",
                     "name": "Yoga Classes",
-                    "serviceType": "Fitness"
+                    "serviceType": "Fitness",
+                    "description": "Yoga classes and meditation sessions"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Personal Training",
+                    "serviceType": "Fitness",
+                    "description": "One-on-one personal training sessions"
                   }
                 }
               ]
