@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Bell, X, CheckCircle, AlertCircle, Info, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -43,8 +42,14 @@ export const NotificationSystem = () => {
         return;
       }
 
-      setNotifications(data || []);
-      setUnreadCount((data || []).filter(n => !n.is_read).length);
+      // Type assertion to ensure proper typing
+      const typedNotifications = (data || []).map(item => ({
+        ...item,
+        type: item.type as 'new_booking' | 'booking_status' | 'system' | 'reminder'
+      }));
+
+      setNotifications(typedNotifications);
+      setUnreadCount(typedNotifications.filter(n => !n.is_read).length);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     } finally {
@@ -147,7 +152,11 @@ export const NotificationSystem = () => {
         },
         (payload) => {
           console.log('New notification received:', payload);
-          const newNotification = payload.new as Notification;
+          const newNotification = {
+            ...payload.new,
+            type: payload.new.type as 'new_booking' | 'booking_status' | 'system' | 'reminder'
+          } as Notification;
+          
           setNotifications(prev => [newNotification, ...prev]);
           setUnreadCount(prev => prev + 1);
           

@@ -1,3 +1,4 @@
+
 interface PerformanceMetric {
   name: string;
   duration: number;
@@ -10,6 +11,7 @@ class PerformanceMonitor {
   private metrics: PerformanceMetric[] = [];
   private observers: PerformanceObserver[] = [];
   private isEnabled: boolean = true;
+  private timers: Map<string, number> = new Map();
 
   constructor() {
     this.initializeObservers();
@@ -42,11 +44,11 @@ class PerformanceMonitor {
             const navEntry = entry as PerformanceNavigationTiming;
             this.addMetric({
               name: 'page-load',
-              duration: navEntry.loadEventEnd - navEntry.navigationStart,
-              timestamp: navEntry.navigationStart,
+              duration: navEntry.loadEventEnd - navEntry.fetchStart,
+              timestamp: navEntry.fetchStart,
               type: 'navigation',
               metadata: {
-                domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.navigationStart,
+                domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.fetchStart,
                 firstPaint: this.getFirstPaint(),
                 firstContentfulPaint: this.getFirstContentfulPaint()
               }
@@ -79,6 +81,28 @@ class PerformanceMonitor {
     } catch {
       return null;
     }
+  }
+
+  startTimer(name: string): void {
+    this.timers.set(name, Date.now());
+  }
+
+  stopTimer(name: string): number {
+    const startTime = this.timers.get(name);
+    if (!startTime) return 0;
+    
+    const duration = Date.now() - startTime;
+    this.timers.delete(name);
+    return duration;
+  }
+
+  recordMetric(name: string, duration: number, type: PerformanceMetric['type'] = 'api'): void {
+    this.addMetric({
+      name,
+      duration,
+      timestamp: Date.now(),
+      type,
+    });
   }
 
   addMetric(metric: PerformanceMetric) {
@@ -175,6 +199,10 @@ class PerformanceMonitor {
 
   clear() {
     this.metrics = [];
+  }
+
+  clearMetrics() {
+    this.clear();
   }
 
   disable() {

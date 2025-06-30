@@ -20,6 +20,8 @@ interface BookingData {
 
 export const useBookings = () => {
   const [submitting, setSubmitting] = useState(false);
+  const [bookings, setBookings] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const { executeWithTimeout } = useLoadingTimeout({
     timeout: 30000,
     retryAttempts: 2,
@@ -33,6 +35,7 @@ export const useBookings = () => {
     
     const result = await executeWithTimeout(async (signal) => {
       setSubmitting(true);
+      setError(null);
       
       try {
         // Get current user session
@@ -82,6 +85,7 @@ export const useBookings = () => {
         
       } catch (error) {
         console.error('❌ Booking submission error:', error);
+        setError(error instanceof Error ? error.message : 'Unknown error');
         throw error;
       } finally {
         setSubmitting(false);
@@ -95,6 +99,8 @@ export const useBookings = () => {
     console.log('📚 Fetching user bookings...');
     
     const result = await executeWithTimeout(async () => {
+      setError(null);
+      
       const { data, error } = await supabase
         .from('bookings')
         .select(`
@@ -116,9 +122,11 @@ export const useBookings = () => {
         .order('created_at', { ascending: false });
 
       if (error) {
+        setError(`Failed to fetch bookings: ${error.message}`);
         throw new Error(`Failed to fetch bookings: ${error.message}`);
       }
 
+      setBookings(data || []);
       return data || [];
     }, 'Fetch User Bookings');
 
@@ -128,6 +136,8 @@ export const useBookings = () => {
   return {
     submitBooking,
     fetchUserBookings,
-    loading: submitting
+    loading: submitting,
+    bookings,
+    error
   };
 };
