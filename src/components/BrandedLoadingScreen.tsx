@@ -107,9 +107,9 @@ const BrandedLoadingScreen = ({
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse"></div>
             {/* Moving Shine Effect */}
             <div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12 animate-pulse"
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12"
               style={{ 
-                animation: 'shimmer 1.5s infinite',
+                animation: 'shimmer-move 1.5s infinite',
                 width: '30%',
                 left: `${progress - 15}%`
               }}
@@ -149,12 +149,15 @@ const BrandedLoadingScreen = ({
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%) skewX(-12deg); }
-          100% { transform: translateX(400%) skewX(-12deg); }
-        }
-      `}</style>
+      {/* CSS for shimmer animation - using a style tag without jsx prop */}
+      <style>
+        {`
+          @keyframes shimmer-move {
+            0% { transform: translateX(-100%) skewX(-12deg); }
+            100% { transform: translateX(400%) skewX(-12deg); }
+          }
+        `}
+      </style>
     </div>
   );
 };
