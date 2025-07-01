@@ -35,8 +35,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const mountedRef = useRef(true);
   const profileFetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const initializingRef = useRef(false);
+  const profileFetchingRef = useRef(false);
 
   const fetchUserProfile = async (userId: string) => {
+    // Prevent duplicate profile fetches
+    if (profileFetchingRef.current) {
+      console.log('Profile fetch already in progress, skipping...');
+      return;
+    }
+
+    profileFetchingRef.current = true;
     const startTime = Date.now();
     
     try {
@@ -47,11 +56,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearTimeout(profileFetchTimeoutRef.current);
       }
 
-      // Set a timeout for profile fetching
+      // Set a shorter timeout for profile fetching (5 seconds)
       const timeoutPromise = new Promise<never>((_, reject) => {
         profileFetchTimeoutRef.current = setTimeout(() => {
           reject(new Error('Profile fetch timeout'));
-        }, 10000); // 10 second timeout
+        }, 5000);
       });
 
       const fetchPromise = supabase
@@ -62,14 +71,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
 
-      // Clear timeout on successful completion
+      // Clear timeout on completion
       if (profileFetchTimeoutRef.current) {
         clearTimeout(profileFetchTimeoutRef.current);
         profileFetchTimeoutRef.current = null;
       }
 
       if (error) {
-        console.error('Error fetching user profile:', error);
+        if (error.code === 'PGRST116') {
+          // No profile found, this is normal for new users
+          console.log('No profile found for user, this is normal for new users');
+          setUserProfile(null);
+        } else {
+          console.error('Error fetching user profile:', error);
+        }
         performanceMonitor.trackApiCall('user_profiles_fetch', startTime, { 
           success: false, 
           error: error.message,
@@ -79,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (mountedRef.current) {
-        console.log('User profile fetched:', data);
+        console.log('User profile fetched successfully:', data);
         setUserProfile(data);
         performanceMonitor.trackApiCall('user_profiles_fetch', startTime, { 
           success: true, 
@@ -99,35 +114,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearTimeout(profileFetchTimeoutRef.current);
         profileFetchTimeoutRef.current = null;
       }
+    } finally {
+      profileFetchingRef.current = false;
     }
   };
 
   useEffect(() => {
+    // Prevent multiple initializations
+    if (initializingRef.current) {
+      return;
+    }
+    
+    initializingRef.current = true;
     mountedRef.current = true;
     const initStartTime = Date.now();
+
+    console.log('🚀 Initializing auth...');
 
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.id);
+        console.log('🔄 Auth state changed:', event, session?.user?.id);
         
         if (!mountedRef.current) return;
 
+        // Always update session and user immediately
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Handle profile fetching with proper error handling
-        if (session?.user) {
-          // Use setTimeout to prevent potential deadlock issues
+        // Handle profile fetching with debouncing
+        if (session?.user && event !== 'SIGNED_OUT') {
+          // Debounce profile fetch to prevent multiple calls
           setTimeout(() => {
-            if (mountedRef.current) {
+            if (mountedRef.current && !profileFetchingRef.current) {
               fetchUserProfile(session.user.id);
             }
-          }, 100);
+          }, 200);
         } else {
           setUserProfile(null);
+          profileFetchingRef.current = false;
         }
         
+        // Set loading to false after handling auth state
         if (mountedRef.current) {
           setLoading(false);
         }
@@ -137,15 +165,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // THEN check for existing session
     const initializeAuth = async () => {
       try {
+        console.log('🔍 Checking for existing session...');
         const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Error getting session:', error);
+          console.error('❌ Error getting session:', error);
           performanceMonitor.trackApiCall('auth_init', initStartTime, { 
             success: false, 
             error: error.message 
           });
         } else {
+          console.log('✅ Session check complete:', session?.user?.id || 'No session');
           performanceMonitor.trackApiCall('auth_init', initStartTime, { 
             success: true 
           });
@@ -153,20 +183,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (!mountedRef.current) return;
 
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          setTimeout(() => {
-            if (mountedRef.current) {
-              fetchUserProfile(session.user.id);
-            }
-          }, 100);
+        // Only update state if no session was already set by the listener
+        if (!session) {
+          setSession(null);
+          setUser(null);
+          setUserProfile(null);
+          setLoading(false);
         }
         
-        setLoading(false);
       } catch (error) {
-        console.error('Error initializing auth:', error);
+        console.error('❌ Error initializing auth:', error);
         performanceMonitor.trackApiCall('auth_init', initStartTime, { 
           success: false, 
           error: error instanceof Error ? error.message : 'Unknown error' 
@@ -178,10 +204,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    initializeAuth();
+    // Initialize auth with a small delay to ensure proper setup
+    setTimeout(initializeAuth, 100);
 
     return () => {
+      console.log('🧹 Cleaning up auth...');
       mountedRef.current = false;
+      initializingRef.current = false;
+      profileFetchingRef.current = false;
       subscription.unsubscribe();
       
       // Clear any pending timeouts
@@ -195,6 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const startTime = Date.now();
     
     try {
+      console.log('🔐 Attempting sign in...');
       setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -202,7 +233,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
-        console.error('Sign in error:', error);
+        console.error('❌ Sign in error:', error);
         toast.error(error.message);
         setLoading(false);
         performanceMonitor.trackApiCall('auth_signin', startTime, { 
@@ -213,10 +244,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       performanceMonitor.trackApiCall('auth_signin', startTime, { success: true });
-      toast.success('Successfully signed in!');
+      console.log('✅ Sign in successful');
       return { error: null };
     } catch (error: any) {
-      console.error('Sign in failed:', error);
+      console.error('❌ Sign in failed:', error);
       toast.error('Sign in failed');
       setLoading(false);
       performanceMonitor.trackApiCall('auth_signin', startTime, { 
@@ -231,6 +262,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const startTime = Date.now();
     
     try {
+      console.log('📝 Attempting sign up...');
       setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
       
@@ -243,7 +275,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) {
-        console.error('Sign up error:', error);
+        console.error('❌ Sign up error:', error);
         toast.error(error.message);
         setLoading(false);
         performanceMonitor.trackApiCall('auth_signup', startTime, { 
@@ -254,11 +286,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       performanceMonitor.trackApiCall('auth_signup', startTime, { success: true });
+      console.log('✅ Sign up successful');
       toast.success('Check your email to verify your account');
       setLoading(false);
       return { error: null };
     } catch (error: any) {
-      console.error('Sign up failed:', error);
+      console.error('❌ Sign up failed:', error);
       toast.error('Sign up failed');
       setLoading(false);
       performanceMonitor.trackApiCall('auth_signup', startTime, { 
@@ -274,11 +307,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       setLoading(true);
-      console.log('Signing out user...');
+      console.log('🚪 Signing out user...');
       
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Sign out error:', error);
+        console.error('❌ Sign out error:', error);
         toast.error('Sign out failed');
         setLoading(false);
         performanceMonitor.trackApiCall('auth_signout', startTime, { 
@@ -288,17 +321,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
       
-      // Clear all state
+      // Clear all state immediately
       setUserProfile(null);
-      setUser(null);
+      setUser(null);  
       setSession(null);
       setLoading(false);
+      profileFetchingRef.current = false;
       
       performanceMonitor.trackApiCall('auth_signout', startTime, { success: true });
-      console.log('Successfully signed out');
+      console.log('✅ Successfully signed out');
       toast.success('Signed out successfully');
     } catch (error) {
-      console.error('Sign out error:', error);
+      console.error('❌ Sign out error:', error);
       toast.error('Sign out failed');
       setLoading(false);
       performanceMonitor.trackApiCall('auth_signout', startTime, { 

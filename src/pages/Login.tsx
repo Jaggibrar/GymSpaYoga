@@ -20,17 +20,19 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (user) {
+    if (user && !showLoadingScreen && !authLoading) {
       navigate('/');
     }
-  }, [user, navigate]);
+  }, [user, navigate, showLoadingScreen, authLoading]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    
     setLoading(true);
 
     try {
@@ -39,12 +41,23 @@ const Login = () => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       
       // Show branded loading screen for exactly 2 seconds
       setShowLoadingScreen(true);
       toast.success('Welcome back!');
+      
+      // Navigate after loading screen completes
+      setTimeout(() => {
+        setShowLoadingScreen(false);
+        setLoading(false);
+        navigate('/');
+      }, 2000);
+      
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast.error(error.message || 'Failed to sign in');
       setLoading(false);
     }
@@ -52,9 +65,13 @@ const Login = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
+    
     setLoading(true);
 
     try {
+      const redirectUrl = `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -62,27 +79,46 @@ const Login = () => {
           data: {
             full_name: fullName,
           },
+          emailRedirectTo: redirectUrl
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       
       toast.success('Account created! Please check your email to verify your account.');
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast.error(error.message || 'Failed to create account');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLoadingComplete = () => {
-    setShowLoadingScreen(false);
-    setLoading(false);
-    navigate('/');
-  };
-
+  // Show loading screen during sign in process
   if (showLoadingScreen) {
-    return <BrandedLoadingScreen onComplete={handleLoadingComplete} message="Signing you in..." duration={2000} />;
+    return (
+      <BrandedLoadingScreen 
+        onComplete={() => {
+          setShowLoadingScreen(false);
+          setLoading(false);
+        }} 
+        message="Signing you in..." 
+        duration={2000} 
+      />
+    );
+  }
+
+  // Show loading if auth is still initializing
+  if (authLoading) {
+    return (
+      <BrandedLoadingScreen 
+        onComplete={() => {}} 
+        message="Loading GymSpaYoga.com..." 
+        duration={3000} 
+      />
+    );
   }
 
   return (
@@ -97,16 +133,16 @@ const Login = () => {
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-20 left-20">
-            <Dumbbell className="h-16 w-16 text-emerald-500 transform rotate-12" />
+            <Dumbbell className="h-16 w-16 text-emerald-500 transform rotate-12 animate-bounce" style={{ animationDelay: '0s' }} />
           </div>
           <div className="absolute top-40 right-32">
-            <Waves className="h-12 w-12 text-blue-500 transform -rotate-12" />
+            <Waves className="h-12 w-12 text-blue-500 transform -rotate-12 animate-bounce" style={{ animationDelay: '0.5s' }} />
           </div>
           <div className="absolute bottom-32 left-40">
-            <Heart className="h-14 w-14 text-pink-500 transform rotate-45" />
+            <Heart className="h-14 w-14 text-pink-500 transform rotate-45 animate-bounce" style={{ animationDelay: '1s' }} />
           </div>
           <div className="absolute bottom-20 right-20">
-            <User className="h-10 w-10 text-purple-500 transform -rotate-12" />
+            <User className="h-10 w-10 text-purple-500 transform -rotate-12 animate-bounce" style={{ animationDelay: '1.5s' }} />
           </div>
         </div>
 
@@ -116,9 +152,9 @@ const Login = () => {
             <Link to="/" className="inline-block">
               <div className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white rounded-2xl p-4 mb-4 shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex items-center justify-center space-x-2">
-                  <Dumbbell className="h-8 w-8" />
-                  <Waves className="h-8 w-8" />
-                  <Heart className="h-8 w-8" />
+                  <Dumbbell className="h-8 w-8 animate-pulse" />
+                  <Waves className="h-8 w-8 animate-pulse" style={{ animationDelay: '0.2s' }} />
+                  <Heart className="h-8 w-8 animate-pulse" style={{ animationDelay: '0.4s' }} />
                 </div>
               </div>
             </Link>
@@ -161,6 +197,7 @@ const Login = () => {
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
+                          disabled={loading}
                         />
                       </div>
                     </div>
@@ -177,11 +214,13 @@ const Login = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           className="pl-10 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
+                          disabled={loading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
+                          disabled={loading}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -190,8 +229,8 @@ const Login = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300" 
-                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
+                      disabled={loading || !email || !password}
                     >
                       {loading ? (
                         <div className="flex items-center justify-center">
@@ -219,43 +258,47 @@ const Login = () => {
                           onChange={(e) => setFullName(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
+                          disabled={loading}
                         />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
+                      <Label htmlFor="signup-email" className="text-gray-700 font-medium">Email</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
-                          id="email"
+                          id="signup-email"
                           type="email"
                           placeholder="Enter your email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
+                          disabled={loading}
                         />
                       </div>
                     </div>
                     
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                      <Label htmlFor="signup-password" className="text-gray-700 font-medium">Password</Label>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                         <Input
-                          id="password"
+                          id="signup-password"
                           type={showPassword ? 'text' : 'password'}
                           placeholder="Create a password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           className="pl-10 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
+                          disabled={loading}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
+                          disabled={loading}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -264,8 +307,8 @@ const Login = () => {
                     
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300" 
-                      disabled={loading}
+                      className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
+                      disabled={loading || !email || !password || !fullName}
                     >
                       {loading ? (
                         <div className="flex items-center justify-center">

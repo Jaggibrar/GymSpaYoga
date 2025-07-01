@@ -15,6 +15,7 @@ const BrandedLoadingScreen = ({
 }: BrandedLoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [currentIcon, setCurrentIcon] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   const icons = [
     { icon: <Dumbbell className="h-12 w-12 text-white" />, color: "from-red-500 to-orange-500" },
@@ -23,71 +24,103 @@ const BrandedLoadingScreen = ({
   ];
 
   useEffect(() => {
+    let progressTimer: NodeJS.Timeout;
+    let iconTimer: NodeJS.Timeout;
+    let completionTimer: NodeJS.Timeout;
+
     const progressInterval = duration / 100; // Calculate interval for smooth progress
     
-    const progressTimer = setInterval(() => {
+    // Progress animation
+    progressTimer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressTimer);
-          setTimeout(onComplete, 200); // Small delay before completion
           return 100;
         }
         return prev + 2; // Increment by 2% each time
       });
     }, progressInterval);
 
-    const iconTimer = setInterval(() => {
+    // Icon rotation animation
+    iconTimer = setInterval(() => {
       setCurrentIcon((prev) => (prev + 1) % icons.length);
-    }, 600); // Faster icon rotation for better animation
+    }, 600); // Icon changes every 600ms
+
+    // Completion handler
+    completionTimer = setTimeout(() => {
+      setIsVisible(false);
+      setTimeout(() => {
+        onComplete();
+      }, 300); // Allow fade out animation
+    }, duration);
 
     return () => {
       clearInterval(progressTimer);
       clearInterval(iconTimer);
+      clearTimeout(completionTimer);
     };
   }, [onComplete, duration]);
 
+  if (!isVisible) {
+    return (
+      <div className="fixed inset-0 z-50 bg-white flex items-center justify-center opacity-0 transition-opacity duration-300">
+        {/* Fade out animation */}
+      </div>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
-      <div className="text-center">
+    <div className="fixed inset-0 z-50 bg-white flex items-center justify-center animate-fade-in">
+      <div className="text-center relative">
         {/* Animated Logo */}
         <div className="mb-8 flex justify-center">
-          <div className={`p-6 rounded-3xl bg-gradient-to-br ${icons[currentIcon].color} shadow-2xl transform transition-all duration-500 hover:scale-105 animate-pulse`}>
+          <div className={`p-6 rounded-3xl bg-gradient-to-br ${icons[currentIcon].color} shadow-2xl transform transition-all duration-500 hover:scale-105`}>
             <div className="animate-bounce">
               {icons[currentIcon].icon}
             </div>
           </div>
         </div>
 
-        {/* Brand Name */}
+        {/* Brand Name with Enhanced Gradient Animation */}
         <div className="mb-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-2 animate-fade-in">
-            <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent animate-pulse">
               Gym
             </span>
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-pulse" style={{ animationDelay: '0.2s' }}>
               Spa
             </span>
-            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-emerald-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-emerald-600 bg-clip-text text-transparent animate-pulse" style={{ animationDelay: '0.4s' }}>
               Yoga
             </span>
           </h1>
-          <p className="text-gray-600 text-lg animate-fade-in">{message}</p>
+          <p className="text-gray-600 text-lg animate-fade-in" style={{ animationDelay: '0.3s' }}>{message}</p>
         </div>
 
-        {/* Enhanced Progress Bar */}
-        <div className="w-80 h-3 bg-gray-200 rounded-full overflow-hidden mb-4 shadow-inner">
+        {/* Enhanced Progress Bar with Shimmer Effect */}
+        <div className="w-80 h-4 bg-gray-200 rounded-full overflow-hidden mb-4 shadow-inner">
           <div 
             className="h-full bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-full transition-all duration-200 ease-out relative overflow-hidden"
             style={{ width: `${progress}%` }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+            {/* Shimmer Effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse"></div>
+            {/* Moving Shine Effect */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12 animate-pulse"
+              style={{ 
+                animation: 'shimmer 1.5s infinite',
+                width: '30%',
+                left: `${progress - 15}%`
+              }}
+            ></div>
           </div>
         </div>
 
-        {/* Progress Text */}
-        <p className="text-gray-500 text-sm font-medium">{progress}% Complete</p>
+        {/* Progress Text with Animation */}
+        <p className="text-gray-500 text-sm font-medium animate-pulse">{progress}% Complete</p>
 
-        {/* Floating Icons Animation */}
+        {/* Enhanced Floating Icons Animation */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-20 left-20 opacity-10 animate-bounce" style={{ animationDelay: '0s' }}>
             <Dumbbell className="h-8 w-8 text-emerald-500" />
@@ -108,7 +141,20 @@ const BrandedLoadingScreen = ({
             <Waves className="h-8 w-8 text-indigo-500" />
           </div>
         </div>
+
+        {/* Pulsing Background Effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-emerald-200/20 to-blue-200/20 rounded-full animate-ping" style={{ animationDuration: '3s' }}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%) skewX(-12deg); }
+          100% { transform: translateX(400%) skewX(-12deg); }
+        }
+      `}</style>
     </div>
   );
 };
