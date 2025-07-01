@@ -41,7 +41,7 @@ const Login = () => {
 
       if (error) throw error;
       
-      // Show branded loading screen before redirecting
+      // Show branded loading screen for exactly 2 seconds
       setShowLoadingScreen(true);
       toast.success('Welcome back!');
     } catch (error: any) {
@@ -82,7 +82,7 @@ const Login = () => {
   };
 
   if (showLoadingScreen) {
-    return <BrandedLoadingScreen onComplete={handleLoadingComplete} message="Signing you in..." />;
+    return <BrandedLoadingScreen onComplete={handleLoadingComplete} message="Signing you in..." duration={2000} />;
   }
 
   return (

@@ -48,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Set a timeout for profile fetching
-      const timeoutPromise = new Promise((_, reject) => {
+      const timeoutPromise = new Promise<never>((_, reject) => {
         profileFetchTimeoutRef.current = setTimeout(() => {
           reject(new Error('Profile fetch timeout'));
         }, 10000); // 10 second timeout
