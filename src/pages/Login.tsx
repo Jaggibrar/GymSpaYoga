@@ -46,7 +46,6 @@ const Login = () => {
         throw error;
       }
       
-      // Show branded loading screen for exactly 2 seconds
       setShowBrandedLoading(true);
       toast.success('Welcome back!');
       
@@ -90,7 +89,6 @@ const Login = () => {
     }
   };
 
-  // Show branded loading screen during sign in process
   if (showBrandedLoading) {
     return (
       <BrandedLoadingScreen 
@@ -105,7 +103,6 @@ const Login = () => {
     );
   }
 
-  // Show initial loading only if auth is still initializing and no user
   if (authLoading && !user) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">

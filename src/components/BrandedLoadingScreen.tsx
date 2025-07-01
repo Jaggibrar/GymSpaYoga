@@ -23,37 +23,27 @@ const BrandedLoadingScreen = ({
   ];
 
   useEffect(() => {
-    let progressTimer: NodeJS.Timeout;
-    let iconTimer: NodeJS.Timeout;
-    let completionTimer: NodeJS.Timeout;
-
-    const progressInterval = duration / 100;
+    const progressIncrement = 100 / (duration / 50);
+    let currentProgress = 0;
     
-    // Smooth progress animation
-    progressTimer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(progressTimer);
-          return 100;
-        }
-        return prev + 2;
-      });
-    }, progressInterval);
+    const progressTimer = setInterval(() => {
+      currentProgress += progressIncrement;
+      if (currentProgress >= 100) {
+        setProgress(100);
+        clearInterval(progressTimer);
+        setTimeout(onComplete, 200);
+      } else {
+        setProgress(Math.min(currentProgress, 100));
+      }
+    }, 50);
 
-    // Icon rotation
-    iconTimer = setInterval(() => {
+    const iconTimer = setInterval(() => {
       setCurrentIcon((prev) => (prev + 1) % icons.length);
     }, 600);
-
-    // Complete after duration
-    completionTimer = setTimeout(() => {
-      onComplete();
-    }, duration);
 
     return () => {
       clearInterval(progressTimer);
       clearInterval(iconTimer);
-      clearTimeout(completionTimer);
     };
   }, [onComplete, duration]);
 
@@ -92,18 +82,10 @@ const BrandedLoadingScreen = ({
             style={{ width: `${progress}%` }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-pulse"></div>
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent transform -skew-x-12"
-              style={{ 
-                animation: 'shimmer-move 1.5s infinite',
-                width: '30%',
-                left: `${progress - 15}%`
-              }}
-            ></div>
           </div>
         </div>
 
-        <p className="text-gray-500 text-sm font-medium">{progress}% Complete</p>
+        <p className="text-gray-500 text-sm font-medium">{Math.round(progress)}% Complete</p>
 
         {/* Floating Icons */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -127,15 +109,6 @@ const BrandedLoadingScreen = ({
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-r from-blue-200/20 to-purple-200/20 rounded-full animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }}></div>
         </div>
       </div>
-
-      <style>
-        {`
-          @keyframes shimmer-move {
-            0% { transform: translateX(-100%) skewX(-12deg); }
-            100% { transform: translateX(400%) skewX(-12deg); }
-          }
-        `}
-      </style>
     </div>
   );
 };

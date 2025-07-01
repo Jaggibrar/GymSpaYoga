@@ -1,10 +1,34 @@
 
-import React from 'react';
-import CategoryBusinesses from '@/components/CategoryBusinesses';
-import CategoryTrainers from '@/components/CategoryTrainers';
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Search, MapPin, Filter, Grid3X3, Map } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { useStableBusinessData } from '@/hooks/useStableBusinessData';
+import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
+import GoogleMapView from '@/components/GoogleMapView';
 
 const Gyms = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [location, setLocation] = useState('');
+  const [sortBy, setSortBy] = useState('created_at');
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  const [selectedBusiness, setSelectedBusiness] = useState(null);
+
+  const { businesses, loading, error } = useStableBusinessData(
+    'gym',
+    searchTerm,
+    location,
+    sortBy
+  );
+
+  const handleSearch = () => {
+    // Search is handled automatically by the hook
+    console.log('Searching gyms:', { searchTerm, location });
+  };
+
   return (
     <>
       <SEOHead
@@ -13,28 +37,135 @@ const Gyms = () => {
         keywords="gyms near me, fitness center, premium gym, gym membership, workout facilities, fitness training"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-20">
+        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-16">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Premium Gyms Near You</h1>
+              <h1 className="text-4xl md:text-5xl font-bold mb-6">Premium Gyms Near You</h1>
               <p className="text-xl mb-8">
                 Find state-of-the-art fitness centers with expert trainers and premium equipment
               </p>
+              
+              {/* Search Bar */}
+              <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
+                <CardContent className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Input
+                        placeholder="Search gyms..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 py-3 text-gray-900"
+                      />
+                    </div>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                      <Input
+                        placeholder="Enter location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="pl-10 py-3 text-gray-900"
+                      />
+                    </div>
+                    <Button 
+                      onClick={handleSearch}
+                      className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 py-3"
+                    >
+                      <Search className="mr-2 h-5 w-5" />
+                      Search Gyms
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* Business Listings */}
-        <CategoryBusinesses
-          category="gym"
-          title="Gyms"
-          description="Transform your fitness journey with our curated selection of premium gyms. Each facility offers state-of-the-art equipment, certified personal trainers, and a motivating environment to help you achieve your fitness goals. From budget-friendly options to luxury fitness centers, find the perfect gym that matches your workout style and budget."
-        />
+        {/* Filters and View Toggle */}
+        <section className="py-6 bg-white shadow-sm">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-wrap gap-4 items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Badge variant="secondary" className="px-3 py-1">
+                  {businesses.length} Gyms Found
+                </Badge>
+                <select 
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="created_at">Sort by: Latest</option>
+                  <option value="business_name">Sort by: Name</option>
+                  <option value="monthly_price">Sort by: Price</option>
+                </select>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('grid')}
+                >
+                  <Grid3X3 className="h-4 w-4 mr-1" />
+                  Grid
+                </Button>
+                <Button
+                  variant={viewMode === 'map' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('map')}
+                >
+                  <Map className="h-4 w-4 mr-1" />
+                  Map
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Expert Trainers */}
-        <CategoryTrainers category="gym" />
+        {/* Content */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            {error ? (
+              <div className="text-center py-12">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+                  <p className="text-red-600 mb-4">Failed to load gyms: {error}</p>
+                  <Button 
+                    onClick={() => window.location.reload()} 
+                    variant="outline"
+                    className="border-red-300 text-red-600 hover:bg-red-50"
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className={viewMode === 'map' ? 'lg:col-span-2' : 'lg:col-span-3'}>
+                  <OptimizedBusinessGrid
+                    businesses={businesses}
+                    loading={loading}
+                    onBusinessSelect={setSelectedBusiness}
+                    selectedBusiness={selectedBusiness}
+                  />
+                </div>
+                
+                {viewMode === 'map' && (
+                  <div className="lg:col-span-1">
+                    <div className="sticky top-4">
+                      <GoogleMapView
+                        businesses={businesses}
+                        selectedBusiness={selectedBusiness}
+                        onBusinessSelect={setSelectedBusiness}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
       </div>
     </>
   );
