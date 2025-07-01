@@ -34,52 +34,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const mountedRef = useRef(true);
-  const profileFetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const initializingRef = useRef(false);
-  const profileFetchingRef = useRef(false);
+  const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
 
   const fetchUserProfile = async (userId: string) => {
-    // Prevent duplicate profile fetches
-    if (profileFetchingRef.current) {
-      console.log('Profile fetch already in progress, skipping...');
-      return;
-    }
-
-    profileFetchingRef.current = true;
     const startTime = Date.now();
     
     try {
       console.log('Fetching user profile for:', userId);
       
-      // Clear any existing timeout
-      if (profileFetchTimeoutRef.current) {
-        clearTimeout(profileFetchTimeoutRef.current);
-      }
-
-      // Set a shorter timeout for profile fetching (5 seconds)
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        profileFetchTimeoutRef.current = setTimeout(() => {
-          reject(new Error('Profile fetch timeout'));
-        }, 5000);
-      });
-
-      const fetchPromise = supabase
+      const { data, error } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('user_id', userId)
         .single();
 
-      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
-
-      // Clear timeout on completion
-      if (profileFetchTimeoutRef.current) {
-        clearTimeout(profileFetchTimeoutRef.current);
-        profileFetchTimeoutRef.current = null;
-      }
-
       if (error) {
         if (error.code === 'PGRST116') {
-          // No profile found, this is normal for new users
           console.log('No profile found for user, this is normal for new users');
           setUserProfile(null);
         } else {
@@ -108,14 +79,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         error: error instanceof Error ? error.message : 'Unknown error',
         userId 
       });
-      
-      // Clear timeout on error
-      if (profileFetchTimeoutRef.current) {
-        clearTimeout(profileFetchTimeoutRef.current);
-        profileFetchTimeoutRef.current = null;
-      }
-    } finally {
-      profileFetchingRef.current = false;
     }
   };
 
@@ -131,6 +94,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     console.log('🚀 Initializing auth...');
 
+    // Clean up any existing subscription
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe();
+    }
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -142,17 +110,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Handle profile fetching with debouncing
+        // Handle profile fetching
         if (session?.user && event !== 'SIGNED_OUT') {
-          // Debounce profile fetch to prevent multiple calls
+          // Fetch profile with a small delay to prevent race conditions
           setTimeout(() => {
-            if (mountedRef.current && !profileFetchingRef.current) {
+            if (mountedRef.current) {
               fetchUserProfile(session.user.id);
             }
-          }, 200);
+          }, 100);
         } else {
           setUserProfile(null);
-          profileFetchingRef.current = false;
         }
         
         // Set loading to false after handling auth state
@@ -161,6 +128,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     );
+
+    subscriptionRef.current = subscription;
 
     // THEN check for existing session
     const initializeAuth = async () => {
@@ -205,18 +174,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     // Initialize auth with a small delay to ensure proper setup
-    setTimeout(initializeAuth, 100);
+    setTimeout(initializeAuth, 50);
 
     return () => {
       console.log('🧹 Cleaning up auth...');
       mountedRef.current = false;
       initializingRef.current = false;
-      profileFetchingRef.current = false;
-      subscription.unsubscribe();
       
-      // Clear any pending timeouts
-      if (profileFetchTimeoutRef.current) {
-        clearTimeout(profileFetchTimeoutRef.current);
+      if (subscriptionRef.current) {
+        subscriptionRef.current.unsubscribe();
+        subscriptionRef.current = null;
       }
     };
   }, []);
@@ -226,7 +193,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       console.log('🔐 Attempting sign in...');
-      setLoading(true);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -235,7 +201,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('❌ Sign in error:', error);
         toast.error(error.message);
-        setLoading(false);
         performanceMonitor.trackApiCall('auth_signin', startTime, { 
           success: false, 
           error: error.message 
@@ -249,7 +214,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       console.error('❌ Sign in failed:', error);
       toast.error('Sign in failed');
-      setLoading(false);
       performanceMonitor.trackApiCall('auth_signin', startTime, { 
         success: false, 
         error: error.message || 'Unknown error' 
@@ -263,7 +227,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       console.log('📝 Attempting sign up...');
-      setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
       
       const { error } = await supabase.auth.signUp({
@@ -277,7 +240,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('❌ Sign up error:', error);
         toast.error(error.message);
-        setLoading(false);
         performanceMonitor.trackApiCall('auth_signup', startTime, { 
           success: false, 
           error: error.message 
@@ -288,12 +250,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       performanceMonitor.trackApiCall('auth_signup', startTime, { success: true });
       console.log('✅ Sign up successful');
       toast.success('Check your email to verify your account');
-      setLoading(false);
       return { error: null };
     } catch (error: any) {
       console.error('❌ Sign up failed:', error);
       toast.error('Sign up failed');
-      setLoading(false);
       performanceMonitor.trackApiCall('auth_signup', startTime, { 
         success: false, 
         error: error.message || 'Unknown error' 
@@ -306,14 +266,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const startTime = Date.now();
     
     try {
-      setLoading(true);
       console.log('🚪 Signing out user...');
       
       const { error } = await supabase.auth.signOut();
       if (error) {
         console.error('❌ Sign out error:', error);
         toast.error('Sign out failed');
-        setLoading(false);
         performanceMonitor.trackApiCall('auth_signout', startTime, { 
           success: false, 
           error: error.message 
@@ -325,8 +283,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUserProfile(null);
       setUser(null);  
       setSession(null);
-      setLoading(false);
-      profileFetchingRef.current = false;
       
       performanceMonitor.trackApiCall('auth_signout', startTime, { success: true });
       console.log('✅ Successfully signed out');
@@ -334,7 +290,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       console.error('❌ Sign out error:', error);
       toast.error('Sign out failed');
-      setLoading(false);
       performanceMonitor.trackApiCall('auth_signout', startTime, { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error' 

@@ -15,8 +15,9 @@ import BrandedLoadingScreen from '@/components/BrandedLoadingScreen';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [signingUp, setSigningUp] = useState(false);
+  const [showBrandedLoading, setShowBrandedLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -24,16 +25,16 @@ const Login = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (user && !showLoadingScreen && !authLoading) {
+    if (user && !showBrandedLoading && !authLoading) {
       navigate('/');
     }
-  }, [user, navigate, showLoadingScreen, authLoading]);
+  }, [user, navigate, showBrandedLoading, authLoading]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return;
+    if (signingIn) return;
     
-    setLoading(true);
+    setSigningIn(true);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
@@ -46,28 +47,21 @@ const Login = () => {
       }
       
       // Show branded loading screen for exactly 2 seconds
-      setShowLoadingScreen(true);
+      setShowBrandedLoading(true);
       toast.success('Welcome back!');
-      
-      // Navigate after loading screen completes
-      setTimeout(() => {
-        setShowLoadingScreen(false);
-        setLoading(false);
-        navigate('/');
-      }, 2000);
       
     } catch (error: any) {
       console.error('Sign in error:', error);
       toast.error(error.message || 'Failed to sign in');
-      setLoading(false);
+      setSigningIn(false);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (loading) return;
+    if (signingUp) return;
     
-    setLoading(true);
+    setSigningUp(true);
 
     try {
       const redirectUrl = `${window.location.origin}/`;
@@ -92,17 +86,18 @@ const Login = () => {
       console.error('Sign up error:', error);
       toast.error(error.message || 'Failed to create account');
     } finally {
-      setLoading(false);
+      setSigningUp(false);
     }
   };
 
-  // Show loading screen during sign in process
-  if (showLoadingScreen) {
+  // Show branded loading screen during sign in process
+  if (showBrandedLoading) {
     return (
       <BrandedLoadingScreen 
         onComplete={() => {
-          setShowLoadingScreen(false);
-          setLoading(false);
+          setShowBrandedLoading(false);
+          setSigningIn(false);
+          navigate('/');
         }} 
         message="Signing you in..." 
         duration={2000} 
@@ -110,14 +105,15 @@ const Login = () => {
     );
   }
 
-  // Show loading if auth is still initializing
-  if (authLoading) {
+  // Show initial loading only if auth is still initializing and no user
+  if (authLoading && !user) {
     return (
-      <BrandedLoadingScreen 
-        onComplete={() => {}} 
-        message="Loading GymSpaYoga.com..." 
-        duration={3000} 
-      />
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
     );
   }
 
@@ -197,7 +193,7 @@ const Login = () => {
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
-                          disabled={loading}
+                          disabled={signingIn}
                         />
                       </div>
                     </div>
@@ -214,13 +210,13 @@ const Login = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           className="pl-10 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
-                          disabled={loading}
+                          disabled={signingIn}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
-                          disabled={loading}
+                          disabled={signingIn}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -230,9 +226,9 @@ const Login = () => {
                     <Button 
                       type="submit" 
                       className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
-                      disabled={loading || !email || !password}
+                      disabled={signingIn || !email || !password}
                     >
-                      {loading ? (
+                      {signingIn ? (
                         <div className="flex items-center justify-center">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Signing in...
@@ -258,7 +254,7 @@ const Login = () => {
                           onChange={(e) => setFullName(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
-                          disabled={loading}
+                          disabled={signingUp}
                         />
                       </div>
                     </div>
@@ -275,7 +271,7 @@ const Login = () => {
                           onChange={(e) => setEmail(e.target.value)}
                           className="pl-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
-                          disabled={loading}
+                          disabled={signingUp}
                         />
                       </div>
                     </div>
@@ -292,13 +288,13 @@ const Login = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           className="pl-10 pr-10 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
                           required
-                          disabled={loading}
+                          disabled={signingUp}
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
                           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
-                          disabled={loading}
+                          disabled={signingUp}
                         >
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
@@ -308,9 +304,9 @@ const Login = () => {
                     <Button 
                       type="submit" 
                       className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
-                      disabled={loading || !email || !password || !fullName}
+                      disabled={signingUp || !email || !password || !fullName}
                     >
-                      {loading ? (
+                      {signingUp ? (
                         <div className="flex items-center justify-center">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                           Creating account...
