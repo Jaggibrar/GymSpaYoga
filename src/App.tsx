@@ -37,6 +37,7 @@ import NotFound from "./pages/NotFound";
 import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
+import AdminDashboard from "./pages/AdminDashboard";
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,11 @@ const AppContent = () => {
           <Route path="/edit-listing/:id" element={
             <ProtectedRoute>
               <EditListing />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin-dashboard" element={
+            <ProtectedRoute>
+              <AdminDashboard />
             </ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
