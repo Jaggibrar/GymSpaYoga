@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dumbbell, Waves, Heart, MapPin, Star, Clock, Users, TrendingUp, Navigation } from "lucide-react";
 import { Link } from "react-router-dom";
-import AppHeader from "@/components/AppHeader";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import BrandedLoadingScreen from "@/components/BrandedLoadingScreen";
@@ -65,7 +65,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <AppHeader />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-600 text-white py-20">
