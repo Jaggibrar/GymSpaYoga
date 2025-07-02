@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useBusinessData } from '@/hooks/useBusinessData';
+import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
   const [locationFilter, setLocationFilter] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
   
-  const { businesses, loading, error } = useBusinessData(
+  const { businesses, loading, error } = useOptimizedBusinessData(
     category,
     searchTerm,
     locationFilter,

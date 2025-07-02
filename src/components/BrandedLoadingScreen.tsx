@@ -11,10 +11,11 @@ interface BrandedLoadingScreenProps {
 const BrandedLoadingScreen = ({ 
   onComplete, 
   message = "Loading GymSpaYoga.com",
-  duration = 2000
+  duration = 1500
 }: BrandedLoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [currentIcon, setCurrentIcon] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
 
   const icons = [
     { icon: <Dumbbell className="h-12 w-12 text-white" />, color: "from-red-500 to-orange-500" },
@@ -23,32 +24,46 @@ const BrandedLoadingScreen = ({
   ];
 
   useEffect(() => {
-    const progressIncrement = 100 / (duration / 50);
-    let currentProgress = 0;
+    let progressTimer: NodeJS.Timeout;
+    let iconTimer: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout;
     
-    const progressTimer = setInterval(() => {
-      currentProgress += progressIncrement;
-      if (currentProgress >= 100) {
-        setProgress(100);
-        clearInterval(progressTimer);
-        setTimeout(onComplete, 200);
-      } else {
-        setProgress(Math.min(currentProgress, 100));
-      }
-    }, 50);
+    const startAnimation = () => {
+      const progressIncrement = 100 / (duration / 50);
+      let currentProgress = 0;
+      
+      progressTimer = setInterval(() => {
+        currentProgress += progressIncrement;
+        if (currentProgress >= 100) {
+          setProgress(100);
+          clearInterval(progressTimer);
+          
+          // Start fade out
+          setIsVisible(false);
+          timeoutId = setTimeout(onComplete, 300);
+        } else {
+          setProgress(Math.min(currentProgress, 100));
+        }
+      }, 50);
 
-    const iconTimer = setInterval(() => {
-      setCurrentIcon((prev) => (prev + 1) % icons.length);
-    }, 600);
+      iconTimer = setInterval(() => {
+        setCurrentIcon((prev) => (prev + 1) % icons.length);
+      }, 600);
+    };
+
+    // Small delay to prevent immediate flash
+    const initialDelay = setTimeout(startAnimation, 100);
 
     return () => {
+      clearTimeout(initialDelay);
       clearInterval(progressTimer);
       clearInterval(iconTimer);
+      clearTimeout(timeoutId);
     };
-  }, [onComplete, duration]);
+  }, [onComplete, duration, icons.length]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
+    <div className={`fixed inset-0 z-50 bg-white flex items-center justify-center transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="text-center relative">
         {/* Animated Logo */}
         <div className="mb-8 flex justify-center">

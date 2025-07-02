@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Search, MapPin, Filter, Grid3X3, Map } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { useStableBusinessData } from '@/hooks/useStableBusinessData';
+import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
 import GoogleMapView from '@/components/GoogleMapView';
 
@@ -17,7 +17,7 @@ const Gyms = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [selectedBusiness, setSelectedBusiness] = useState(null);
 
-  const { businesses, loading, error } = useStableBusinessData(
+  const { businesses, loading, error } = useOptimizedBusinessData(
     'gym',
     searchTerm,
     location,

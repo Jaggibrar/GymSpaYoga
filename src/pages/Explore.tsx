@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, MapPin, Filter, Star, Clock, DollarSign } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
-import { useBusinessData } from '@/hooks/useBusinessData';
+import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import ImageGallery from '@/components/ImageGallery';
 
 const Explore = () => {
@@ -16,7 +16,7 @@ const Explore = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [sortBy, setSortBy] = useState('created_at');
 
-  const { businesses, loading, error } = useBusinessData(
+  const { businesses, loading, error } = useOptimizedBusinessData(
     activeFilter === 'all' ? undefined : activeFilter,
     searchTerm,
     location,

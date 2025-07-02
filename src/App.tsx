@@ -6,8 +6,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import AppFooter from "./components/AppFooter";
 import { AuthProvider } from "./hooks/useAuth";
+import { LoadingProvider } from "./contexts/LoadingContext";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import ErrorBoundary from "./components/ErrorBoundary";
+import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
 
 // Import all pages
 import Index from "./pages/Index";
@@ -43,6 +45,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
+      <GlobalLoadingIndicator />
       <MainNavigation />
       <main className="flex-1">
         <Routes>
@@ -102,13 +105,15 @@ const App = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <TooltipProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </TooltipProvider>
-        </AuthProvider>
+        <LoadingProvider>
+          <AuthProvider>
+            <TooltipProvider>
+              <Router>
+                <AppContent />
+              </Router>
+            </TooltipProvider>
+          </AuthProvider>
+        </LoadingProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );
