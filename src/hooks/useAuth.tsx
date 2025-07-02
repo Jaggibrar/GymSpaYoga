@@ -34,13 +34,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   
   const mountedRef = useRef(true);
-  const initializingRef = useRef(false);
   const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
-  const profileFetchedRef = useRef(false);
 
   const fetchUserProfile = async (userId: string) => {
-    if (profileFetchedRef.current) return;
-    
     try {
       console.log('Fetching user profile for:', userId);
       
@@ -57,7 +53,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (mountedRef.current) {
         setUserProfile(data || null);
-        profileFetchedRef.current = true;
         console.log('User profile set:', data);
       }
     } catch (error) {
@@ -66,11 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    if (initializingRef.current) return;
-    
-    initializingRef.current = true;
     mountedRef.current = true;
-
     console.log('🚀 Initializing auth...');
 
     // Clean up any existing subscription
@@ -81,19 +72,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('🔄 Auth state changed:', event);
+        console.log('🔄 Auth state changed:', event, session?.user?.id);
         
         if (!mountedRef.current) return;
 
         setSession(session);
         setUser(session?.user ?? null);
         
-        if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
-          profileFetchedRef.current = false;
+        if (session?.user && event === 'SIGNED_IN') {
           await fetchUserProfile(session.user.id);
         } else if (event === 'SIGNED_OUT') {
           setUserProfile(null);
-          profileFetchedRef.current = false;
         }
         
         setLoading(false);
@@ -110,13 +99,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (!mountedRef.current) return;
 
         if (session) {
+          console.log('✅ Existing session found');
           setSession(session);
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-        } else {
-          setLoading(false);
         }
         
+        setLoading(false);
       } catch (error) {
         console.error('❌ Error initializing auth:', error);
         if (mountedRef.current) {
@@ -130,8 +119,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('🧹 Cleaning up auth...');
       mountedRef.current = false;
-      initializingRef.current = false;
-      profileFetchedRef.current = false;
       
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
@@ -143,6 +130,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     try {
       console.log('🔐 Attempting sign in...');
+      setLoading(true);
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -151,14 +140,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('❌ Sign in error:', error);
         toast.error(error.message);
+        setLoading(false);
         return { error };
       }
       
       console.log('✅ Sign in successful');
+      toast.success('Successfully signed in!');
       return { error: null };
     } catch (error: any) {
       console.error('❌ Sign in failed:', error);
       toast.error('Sign in failed');
+      setLoading(false);
       return { error };
     }
   };
@@ -207,7 +199,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUserProfile(null);
       setUser(null);  
       setSession(null);
-      profileFetchedRef.current = false;
       
       console.log('✅ Successfully signed out');
       toast.success('Signed out successfully');
