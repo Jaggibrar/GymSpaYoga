@@ -14,15 +14,7 @@ import { toast } from "sonner";
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
   const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
-  const [showLoading, setShowLoading] = useState(true);
   const [locationGranted, setLocationGranted] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleGetLocation = () => {
     getCurrentPosition();
@@ -32,8 +24,8 @@ const Index = () => {
     }
   };
 
-  if (authLoading || showLoading) {
-    return <BrandedLoadingScreen onComplete={() => setShowLoading(false)} />;
+  if (authLoading) {
+    return <BrandedLoadingScreen onComplete={() => {}} />;
   }
 
   const categories = [
