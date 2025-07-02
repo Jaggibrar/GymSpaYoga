@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import BrandedLoadingScreen from "@/components/BrandedLoadingScreen";
+import RecentListings from "@/components/RecentListings";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -184,6 +185,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Recent Listings Section */}
+      <RecentListings />
 
       {/* Stats Section */}
       <section className="py-16 bg-white">
