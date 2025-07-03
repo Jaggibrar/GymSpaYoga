@@ -1153,6 +1153,10 @@ export type Database = {
         Args: { monthly_price: number; session_price: number }
         Returns: string
       }
+      grant_admin_access: {
+        Args: { user_email: string }
+        Returns: boolean
+      }
       has_admin_permission: {
         Args: { permission_name: string; user_uuid?: string }
         Returns: boolean

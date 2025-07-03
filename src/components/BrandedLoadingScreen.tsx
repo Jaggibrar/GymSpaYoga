@@ -11,7 +11,7 @@ interface BrandedLoadingScreenProps {
 const BrandedLoadingScreen = ({ 
   onComplete, 
   message = "Loading GymSpaYoga.com",
-  duration = 1500
+  duration = 5000
 }: BrandedLoadingScreenProps) => {
   const [progress, setProgress] = useState(0);
   const [currentIcon, setCurrentIcon] = useState(0);

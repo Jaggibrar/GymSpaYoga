@@ -43,14 +43,10 @@ export const useBlogs = () => {
     try {
       setLoading(true);
       
-      let query = (supabase as any)
+      let query = supabase
         .from('blogs')
         .select(`
-          *,
-          author:user_profiles!author_id(
-            full_name,
-            avatar_url
-          )
+          *
         `)
         .order('created_at', { ascending: false });
 
@@ -70,8 +66,8 @@ export const useBlogs = () => {
         ...blog,
         read_time_minutes: Math.ceil((blog.content || '').length / 200) || 5,
         is_liked: false,
-        author_name: blog.author?.full_name || 'GymSpaYoga Author',
-        author_avatar: blog.author?.avatar_url,
+        author_name: 'GymSpaYoga Author',
+        author_avatar: undefined,
         meta_description: blog.excerpt || blog.content?.substring(0, 160) || '',
         featured_image_url: blog.image_url,
         status: blog.published ? 'published' : 'draft',
@@ -99,7 +95,7 @@ export const useBlogs = () => {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '') || '';
 
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('blogs')
         .insert({
           title: blogData.title,
@@ -137,15 +133,9 @@ export const useBlogs = () => {
 
   const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
     try {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('blogs')
-        .select(`
-          *,
-          author:user_profiles!author_id(
-            full_name,
-            avatar_url
-          )
-        `)
+        .select(`*`)
         .eq('slug', slug)
         .eq('published', true)
         .single();
@@ -156,7 +146,7 @@ export const useBlogs = () => {
       }
 
       // Increment view count
-      await (supabase as any)
+      await supabase
         .from('blogs')
         .update({ views_count: (data.views_count || 0) + 1 })
         .eq('id', data.id);
@@ -165,8 +155,8 @@ export const useBlogs = () => {
         ...data,
         read_time_minutes: Math.ceil((data.content || '').length / 200) || 5,
         is_liked: false,
-        author_name: data.author?.full_name || 'GymSpaYoga Author',
-        author_avatar: data.author?.avatar_url,
+        author_name: 'GymSpaYoga Author',
+        author_avatar: undefined,
         meta_description: data.excerpt || data.content?.substring(0, 160) || '',
         featured_image_url: data.image_url,
         status: data.published ? 'published' : 'draft',
@@ -186,30 +176,30 @@ export const useBlogs = () => {
 
     try {
       // Check if user already liked this blog
-      const { data: existingLike } = await (supabase as any)
+      const { data: existingLike } = await supabase
         .from('blog_likes')
         .select('id')
         .eq('blog_id', id)
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (existingLike) {
         // Unlike the blog
-        await (supabase as any)
+        await supabase
           .from('blog_likes')
           .delete()
           .eq('blog_id', id)
           .eq('user_id', user.id);
 
         // Decrement likes count
-        const { data: currentBlog } = await (supabase as any)
+        const { data: currentBlog } = await supabase
           .from('blogs')
           .select('likes_count')
           .eq('id', id)
           .single();
 
         if (currentBlog) {
-          await (supabase as any)
+          await supabase
             .from('blogs')
             .update({ likes_count: Math.max(0, (currentBlog.likes_count || 0) - 1) })
             .eq('id', id);
@@ -218,19 +208,19 @@ export const useBlogs = () => {
         toast.success('Blog unliked!');
       } else {
         // Like the blog
-        await (supabase as any)
+        await supabase
           .from('blog_likes')
           .insert({ blog_id: id, user_id: user.id });
 
         // Increment likes count
-        const { data: currentBlog } = await (supabase as any)
+        const { data: currentBlog } = await supabase
           .from('blogs')
           .select('likes_count')
           .eq('id', id)
           .single();
 
         if (currentBlog) {
-          await (supabase as any)
+          await supabase
             .from('blogs')
             .update({ likes_count: (currentBlog.likes_count || 0) + 1 })
             .eq('id', id);
@@ -248,7 +238,7 @@ export const useBlogs = () => {
 
   const updateBlog = async (id: string, blogData: Partial<Blog>) => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('blogs')
         .update({
           ...blogData,
@@ -275,7 +265,7 @@ export const useBlogs = () => {
 
   const deleteBlog = async (id: string) => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('blogs')
         .delete()
         .eq('id', id);
@@ -296,7 +286,7 @@ export const useBlogs = () => {
 
   const publishBlog = async (id: string) => {
     try {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('blogs')
         .update({ 
           published: true, 
