@@ -5,11 +5,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import AppFooter from "./components/AppFooter";
-import { AuthProvider } from "./hooks/useAuth";
+import { AuthProvider } from "./hooks/useAuthWithSplash";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
+import SplashScreenOverlay from "./components/SplashScreenOverlay";
+import AdminRoute from "./components/AdminRoute";
 
 // Import all pages
 import Index from "./pages/Index";
@@ -47,6 +49,7 @@ const AppContent = () => {
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
       <GlobalLoadingIndicator />
+      <SplashScreenOverlay />
       <MainNavigation />
       <main className="flex-1">
         <Routes>
@@ -95,7 +98,16 @@ const AppContent = () => {
           } />
           <Route path="/admin-dashboard" element={
             <ProtectedRoute>
-              <AdminDashboard />
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            </ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
             </ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />

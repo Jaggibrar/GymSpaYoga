@@ -4,12 +4,12 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuthWithSplash';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 
 const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, isAdmin } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -110,13 +110,15 @@ const MainNavigation = () => {
                         <User className="h-4 w-4" />
                         <span>Profile</span>
                       </Link>
-                      <Link 
-                        to="/admin-dashboard" 
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                      >
-                        <Settings className="h-4 w-4" />
-                        <span>Admin Dashboard</span>
-                      </Link>
+                      {isAdmin && (
+                        <Link 
+                          to="/admin-dashboard" 
+                          className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                        >
+                          <Settings className="h-4 w-4" />
+                          <span>Admin Dashboard</span>
+                        </Link>
+                      )}
                       <Link 
                         to="/business-dashboard" 
                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"

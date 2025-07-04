@@ -6,29 +6,27 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/useAuthWithSplash';
 import { toast } from 'sonner';
 import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, Dumbbell, Waves, Heart } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import BrandedLoadingScreen from '@/components/BrandedLoadingScreen';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [signingUp, setSigningUp] = useState(false);
-  const [showBrandedLoading, setShowBrandedLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    if (user && !showBrandedLoading && !authLoading) {
+    if (user && !authLoading) {
       navigate('/');
     }
-  }, [user, navigate, showBrandedLoading, authLoading]);
+  }, [user, navigate, authLoading]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,21 +35,16 @@ const Login = () => {
     setSigningIn(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error } = await signIn(email, password);
 
       if (error) {
         throw error;
       }
       
-      setShowBrandedLoading(true);
-      toast.success('Welcome back!');
-      
     } catch (error: any) {
       console.error('Sign in error:', error);
       toast.error(error.message || 'Failed to sign in');
+    } finally {
       setSigningIn(false);
     }
   };
@@ -63,18 +56,7 @@ const Login = () => {
     setSigningUp(true);
 
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-          emailRedirectTo: redirectUrl
-        },
-      });
+      const { error } = await signUp(email, password);
 
       if (error) {
         throw error;
@@ -88,20 +70,6 @@ const Login = () => {
       setSigningUp(false);
     }
   };
-
-  if (showBrandedLoading) {
-    return (
-      <BrandedLoadingScreen 
-        onComplete={() => {
-          setShowBrandedLoading(false);
-          setSigningIn(false);
-          navigate('/');
-        }} 
-        message="Signing you in..." 
-        duration={2000} 
-      />
-    );
-  }
 
   if (authLoading && !user) {
     return (
