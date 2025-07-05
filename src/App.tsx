@@ -19,6 +19,8 @@ import Gyms from "./pages/Gyms";
 import Spas from "./pages/Spas";
 import Yoga from "./pages/Yoga";
 import Trainers from "./pages/Trainers";
+import TrainerDetails from "./pages/TrainerDetails";
+import BookTrainer from "./pages/BookTrainer";
 import Blogs from "./pages/Blogs";
 import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -59,6 +61,8 @@ const AppContent = () => {
           <Route path="/spas" element={<Spas />} />
           <Route path="/yoga" element={<Yoga />} />
           <Route path="/trainers" element={<Trainers />} />
+          <Route path="/trainers/:id" element={<TrainerDetails />} />
+          <Route path="/book-trainer/:id" element={<BookTrainer />} />
           <Route path="/business/:id" element={<BusinessDetails />} />
           <Route path="/gyms/:id" element={<BusinessDetails />} />
           <Route path="/spas/:id" element={<BusinessDetails />} />
