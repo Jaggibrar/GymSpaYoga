@@ -23,6 +23,7 @@ import TrainerDetails from "./pages/TrainerDetails";
 import BookTrainer from "./pages/BookTrainer";
 import Blogs from "./pages/Blogs";
 import BlogPost from "./pages/BlogPost";
+import MyBlogs from "./pages/MyBlogs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Login from "./pages/Login";
@@ -78,6 +79,11 @@ const AppContent = () => {
           <Route path="/blog" element={<Blogs />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/blogs/:slug" element={<BlogPost />} />
+          <Route path="/my-blogs" element={
+            <ProtectedRoute>
+              <MyBlogs />
+            </ProtectedRoute>
+          } />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/profile" element={
