@@ -91,13 +91,13 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto bg-gradient-to-br from-gray-50/80 to-white/90 rounded-xl p-6">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-7xl mx-auto bg-gradient-to-br from-emerald-50/50 via-white to-blue-50/50 rounded-2xl p-8 shadow-2xl border border-white/50 backdrop-blur-md">
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-4xl font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
             {initialData?.id ? 'Edit Blog Post' : 'Create New Blog Post'}
           </h2>
-          <p className="text-gray-600 mt-2">Share your knowledge with the wellness community</p>
+          <p className="text-gray-600 text-lg">Share your knowledge with the wellness community</p>
         </div>
         <div className="flex gap-3">
           <Button
@@ -175,20 +175,29 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
 
               {/* Content */}
               <div>
-                <Label htmlFor="content" className="text-base font-medium">Content *</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => handleInputChange('content', e.target.value)}
-                  placeholder="Share your expertise, insights, and tips with our wellness community. Write in a conversational tone that engages readers..."
-                  required
-                  className="mt-1 min-h-[500px] text-base leading-relaxed resize-none border-2 border-gray-200 focus:border-emerald-500 rounded-lg p-4 transition-colors"
-                />
-                <div className="flex items-center justify-between mt-2">
-                  <p className="text-sm text-gray-600">
-                    💡 Pro tip: Use double line breaks for paragraphs. Write naturally - we'll handle the formatting!
-                  </p>
-                  <span className="text-xs text-gray-500">{formData.content.length} characters</span>
+                <Label htmlFor="content" className="text-lg font-semibold text-gray-800">Content *</Label>
+                <div className="mt-3 relative">
+                  <Textarea
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) => handleInputChange('content', e.target.value)}
+                    placeholder="Share your expertise, insights, and tips with our wellness community. Write in a conversational tone that engages readers..."
+                    required
+                    className="min-h-[600px] text-base leading-relaxed resize-none border-2 border-gradient-to-r from-emerald-200 to-blue-200 focus:border-emerald-500 rounded-xl p-6 transition-all duration-300 shadow-inner bg-white/80 backdrop-blur-sm"
+                    style={{
+                      background: 'linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(240,253,244,0.3) 100%)'
+                    }}
+                  />
+                </div>
+                <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 bg-emerald-50 px-3 py-2 rounded-lg">
+                    <span className="text-emerald-600">💡</span>
+                    <span>Pro tip: Use double line breaks for paragraphs. Write naturally - we'll handle the formatting!</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-500 bg-white px-3 py-2 rounded-lg shadow-sm">
+                    <span className="font-medium">{formData.content.length.toLocaleString()}</span>
+                    <span>characters</span>
+                  </div>
                 </div>
               </div>
 

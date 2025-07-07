@@ -48,48 +48,51 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
       {blogs.map((blog) => (
-        <Card key={blog.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 bg-white/80 backdrop-blur-sm">
+        <Card key={blog.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-white/90 backdrop-blur-md shadow-lg">
           {blog.image_url && (
-            <div className="relative h-44 sm:h-48 overflow-hidden">
+            <div className="relative h-52 sm:h-56 overflow-hidden">
               <img
                 src={blog.image_url}
                 alt={blog.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-              <Badge className={`absolute top-3 right-3 border ${getCategoryColor(blog.category)} font-semibold text-xs px-2 py-1`}>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              <Badge className={`absolute top-4 right-4 border-0 ${getCategoryColor(blog.category)} font-bold text-xs px-3 py-1.5 shadow-lg backdrop-blur-sm`}>
                 {blog.category.charAt(0).toUpperCase() + blog.category.slice(1)}
               </Badge>
-              <div className="absolute bottom-3 left-3 flex items-center gap-2 text-white text-xs">
-                <Clock className="h-3 w-3" />
-                <span className="font-medium">5 min read</span>
+              
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 text-white text-sm font-medium">
+                <Clock className="h-4 w-4" />
+                <span>5 min read</span>
               </div>
             </div>
           )}
           
-          <CardHeader className="pb-3 px-4 sm:px-6">
-            <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-              <div className="flex items-center gap-1.5">
-                <Calendar className="h-3 w-3" />
+          <CardHeader className="pb-4 px-6 pt-6">
+            <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-emerald-600" />
                 <span className="font-medium">{formatDate(blog.created_at)}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Eye className="h-3 w-3" />
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-blue-600" />
                 <span className="font-medium">{blog.views_count.toLocaleString()}</span>
               </div>
             </div>
             
             <Link to={`/blogs/${blog.slug}`}>
-              <h3 className="text-base sm:text-lg font-bold hover:text-emerald-600 transition-colors line-clamp-2 leading-tight mb-2">
+              <h3 className="text-xl font-bold hover:text-emerald-600 transition-colors line-clamp-2 leading-tight mb-3 text-gray-900">
                 {blog.title}
               </h3>
             </Link>
             
             {blog.author && (
-              <div className="flex items-center gap-2 text-xs text-gray-600 mb-3">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold text-xs">
+              <div className="flex items-center gap-3 text-sm text-gray-600 mb-4">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-bold shadow-md">
                   {blog.author.full_name.charAt(0)}
                 </div>
                 <span className="font-medium">By {blog.author.full_name}</span>
@@ -97,47 +100,47 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
             )}
           </CardHeader>
           
-          <CardContent className="pt-0 px-4 sm:px-6">
+          <CardContent className="pt-0 px-6 pb-6">
             {blog.excerpt && (
-              <p className="text-gray-600 text-sm line-clamp-3 mb-4 leading-relaxed">
+              <p className="text-gray-600 text-sm line-clamp-3 mb-5 leading-relaxed">
                 {blog.excerpt}
               </p>
             )}
             
             <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-2">
                 {blog.tags.slice(0, 2).map(tag => (
-                  <Badge key={tag} variant="outline" className="text-xs px-2 py-0.5 text-gray-600 border-gray-300 hover:bg-gray-50">
+                  <Badge key={tag} variant="outline" className="text-xs px-3 py-1 text-gray-600 border-gray-300 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 transition-colors">
                     #{tag}
                   </Badge>
                 ))}
                 {blog.tags.length > 2 && (
-                  <Badge variant="outline" className="text-xs px-2 py-0.5 text-gray-500 border-gray-200">
+                  <Badge variant="outline" className="text-xs px-3 py-1 text-gray-500 border-gray-200 bg-gray-50">
                     +{blog.tags.length - 2}
                   </Badge>
                 )}
               </div>
               
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {onLike && (
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => onLike(blog.id)}
-                    className={`h-8 w-8 p-0 rounded-full transition-all duration-200 ${
+                    className={`h-9 w-9 p-0 rounded-full transition-all duration-300 ${
                       blog.is_liked 
-                        ? 'text-red-500 hover:text-red-600 hover:bg-red-50' 
-                        : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
+                        ? 'text-red-500 hover:text-red-600 hover:bg-red-50 hover:scale-110' 
+                        : 'text-gray-400 hover:text-red-500 hover:bg-red-50 hover:scale-110'
                     }`}
                   >
-                    <Heart className={`h-3.5 w-3.5 ${blog.is_liked ? 'fill-current' : ''}`} />
+                    <Heart className={`h-4 w-4 ${blog.is_liked ? 'fill-current' : ''}`} />
                   </Button>
                 )}
                 
                 <Link to={`/blogs/${blog.slug}`}>
                   <Button 
                     size="sm" 
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white text-xs px-3 py-1.5 h-auto font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white text-sm px-4 py-2 h-auto font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                   >
                     Read More
                   </Button>
