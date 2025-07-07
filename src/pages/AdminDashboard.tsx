@@ -62,7 +62,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      const { data } = await supabase.rpc('is_admin');
+      const { data } = await supabase.rpc('is_admin', { user_uuid: user.id });
       if (data) {
         setIsAdmin(true);
         fetchAdminStats();

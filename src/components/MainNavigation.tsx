@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building } from 'lucide-react';
+import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuthWithSplash';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 
@@ -119,13 +119,20 @@ const MainNavigation = () => {
                           <span>Admin Dashboard</span>
                         </Link>
                       )}
-                      <Link 
-                        to="/business-dashboard" 
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
-                      >
-                        <Building className="h-4 w-4" />
-                        <span>Business Dashboard</span>
-                      </Link>
+                       <Link 
+                         to="/my-blogs" 
+                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                       >
+                         <Edit className="h-4 w-4" />
+                         <span>My Blogs</span>
+                       </Link>
+                       <Link 
+                         to="/business-dashboard" 
+                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                       >
+                         <Building className="h-4 w-4" />
+                         <span>Business Dashboard</span>
+                       </Link>
                       <hr className="my-2" />
                       <button 
                         onClick={handleSignOut}
@@ -214,13 +221,20 @@ const MainNavigation = () => {
                   >
                     Profile
                   </Link>
-                  <Link 
-                    to="/business-dashboard" 
-                    className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Business Dashboard
-                  </Link>
+                   <Link 
+                     to="/my-blogs" 
+                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                     onClick={() => setIsMenuOpen(false)}
+                   >
+                     My Blogs
+                   </Link>
+                   <Link 
+                     to="/business-dashboard" 
+                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                     onClick={() => setIsMenuOpen(false)}
+                   >
+                     Business Dashboard
+                   </Link>
                   <button 
                     onClick={handleSignOut}
                     className="text-red-600 hover:text-red-700 font-medium px-2 py-1 text-left"

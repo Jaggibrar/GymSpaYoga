@@ -91,19 +91,23 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold">
-          {initialData?.id ? 'Edit Blog Post' : 'Create New Blog Post'}
-        </h2>
-        <div className="flex gap-2">
+    <div className="max-w-6xl mx-auto bg-gradient-to-br from-gray-50/80 to-white/90 rounded-xl p-6">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+            {initialData?.id ? 'Edit Blog Post' : 'Create New Blog Post'}
+          </h2>
+          <p className="text-gray-600 mt-2">Share your knowledge with the wellness community</p>
+        </div>
+        <div className="flex gap-3">
           <Button
             type="button"
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
+            className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
           >
             <Eye className="h-4 w-4 mr-2" />
-            {showPreview ? 'Edit' : 'Preview'}
+            {showPreview ? 'Edit Mode' : 'Preview'}
           </Button>
           {onCancel && (
             <Button type="button" variant="outline" onClick={onCancel}>
@@ -114,9 +118,9 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
       </div>
 
       {showPreview ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-3xl">{formData.title}</CardTitle>
+        <Card className="bg-white shadow-xl border-0">
+          <CardHeader className="pb-8">
+            <CardTitle className="text-4xl font-bold leading-tight text-gray-900">{formData.title || 'Your Blog Title'}</CardTitle>
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <Badge className="bg-blue-100 text-blue-700">
                 {categories.find(c => c.value === formData.category)?.label}
@@ -176,13 +180,16 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
                   id="content"
                   value={formData.content}
                   onChange={(e) => handleInputChange('content', e.target.value)}
-                  placeholder="Write your blog content here... Use double line breaks for paragraphs."
+                  placeholder="Share your expertise, insights, and tips with our wellness community. Write in a conversational tone that engages readers..."
                   required
-                  className="mt-1 min-h-[400px] font-mono text-sm"
+                  className="mt-1 min-h-[500px] text-base leading-relaxed resize-none border-2 border-gray-200 focus:border-emerald-500 rounded-lg p-4 transition-colors"
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  Tip: Use double line breaks for new paragraphs. Single line breaks become line breaks.
-                </p>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-sm text-gray-600">
+                    💡 Pro tip: Use double line breaks for paragraphs. Write naturally - we'll handle the formatting!
+                  </p>
+                  <span className="text-xs text-gray-500">{formData.content.length} characters</span>
+                </div>
               </div>
 
               {/* Excerpt */}

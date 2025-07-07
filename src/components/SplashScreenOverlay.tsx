@@ -21,7 +21,7 @@ const SplashScreenOverlay = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-white">
+    <div className="fixed inset-0 z-[9998] bg-white/95 backdrop-blur-sm">
       <BrandedLoadingScreen 
         onComplete={hideSplashScreen}
         message="Welcome to GymSpaYoga.com"
