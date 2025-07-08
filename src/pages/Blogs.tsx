@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus, BookOpen, TrendingUp, Edit3 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import BlogGrid from '@/components/BlogGrid';
+import BlogGrid from '@/components/blog/BlogGrid';
 import BlogRichEditor from '@/components/blog/BlogRichEditor';
 import SEOHead from '@/components/SEOHead';
 

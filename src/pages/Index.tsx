@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import BrandedLoadingScreen from "@/components/BrandedLoadingScreen";
 import RecentListings from "@/components/RecentListings";
+import QuickSetupPanel from "@/components/QuickSetupPanel";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -241,6 +242,9 @@ const Index = () => {
           )}
         </div>
       </section>
+
+      {/* Quick Setup Panel */}
+      <QuickSetupPanel />
     </div>
   );
 };

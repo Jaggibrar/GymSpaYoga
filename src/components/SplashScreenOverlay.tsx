@@ -7,10 +7,10 @@ const SplashScreenOverlay = () => {
 
   useEffect(() => {
     if (showSplashScreen) {
-      // Auto-hide after 5 seconds
+      // Auto-hide after 3 seconds
       const timer = setTimeout(() => {
         hideSplashScreen();
-      }, 5000);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -21,11 +21,11 @@ const SplashScreenOverlay = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-[9998] bg-white/95 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[9999] bg-white flex items-center justify-center">
       <BrandedLoadingScreen 
         onComplete={hideSplashScreen}
         message="Welcome to GymSpaYoga.com"
-        duration={5000}
+        duration={3000}
       />
     </div>
   );

@@ -88,11 +88,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const shouldShowSplash = () => {
     // Check if splash was already shown in this session
     const splashShown = sessionStorage.getItem(sessionStorageKey);
-    return !splashShown;
+    const lastShown = sessionStorage.getItem(`${sessionStorageKey}_timestamp`);
+    const now = Date.now();
+    
+    // Only show splash if it hasn't been shown or if it's been more than 30 minutes
+    if (!splashShown || !lastShown || (now - parseInt(lastShown)) > 30 * 60 * 1000) {
+      return true;
+    }
+    return false;
   };
 
   const markSplashAsShown = () => {
+    const now = Date.now();
     sessionStorage.setItem(sessionStorageKey, 'true');
+    sessionStorage.setItem(`${sessionStorageKey}_timestamp`, now.toString());
   };
 
   useEffect(() => {
@@ -114,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         
-        if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+        if (session?.user) {
           await fetchUserProfile(session.user.id);
           
           // Show splash screen only for fresh sign-ins, not token refreshes or existing sessions

@@ -34,23 +34,29 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
   };
 
   if (blogs.length === 0) {
-    return (
-      <div className="text-center py-16">
+  return (
+    <div className="container mx-auto px-4 py-16">
+      <div className="text-center">
         <div className="max-w-md mx-auto">
           <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Tag className="h-12 w-12 text-emerald-600" />
           </div>
           <h3 className="text-xl font-semibold text-gray-800 mb-2">No blogs found</h3>
-          <p className="text-gray-500">Try adjusting your search or filter criteria</p>
+          <p className="text-gray-500 mb-6">Try adjusting your search or filter criteria, or create sample content</p>
+          <div className="text-xs text-gray-400">
+            Use the Quick Setup panel to create sample blogs for testing
+          </div>
         </div>
       </div>
-    );
+    </div>
+  );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-      {blogs.map((blog) => (
-        <Card key={blog.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-white/90 backdrop-blur-md shadow-lg">
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        {blogs.map((blog) => (
+          <Card key={blog.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-white shadow-xl rounded-2xl">
           {blog.image_url && (
             <div className="relative h-52 sm:h-56 overflow-hidden">
               <img
@@ -148,8 +154,9 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
               </div>
             </div>
           </CardContent>
-        </Card>
-      ))}
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
