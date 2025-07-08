@@ -52,15 +52,23 @@ const Blogs = () => {
         keywords="health blog, fitness tips, wellness guide, yoga advice, spa treatments, exercise tips"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50/80 via-blue-50/60 to-teal-50/80">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Health & Wellness Blog</h1>
-              <p className="text-xl mb-8">
-                Expert insights, tips, and guides for your wellness journey
-              </p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-blue-500 to-teal-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Wellness <span className="text-emerald-200">Insights</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                  Expert insights, actionable tips, and comprehensive guides for your holistic wellness journey. Stay informed about the latest trends in fitness, nutrition, and mental well-being.
+                </p>
+              </div>
               
               {/* Search Bar */}
               <div className="relative max-w-md mx-auto">

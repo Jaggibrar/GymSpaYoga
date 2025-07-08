@@ -13,15 +13,23 @@ const Spas = () => {
         keywords="spa near me, massage therapy, wellness center, relaxation, aromatherapy, luxury spa, spa treatments"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-pink-500 to-rose-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Luxury Spas & Wellness Centers</h1>
-              <p className="text-xl mb-8">
-                Rejuvenate your body and mind with premium spa treatments and wellness services
-              </p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Luxury <span className="text-purple-200">Spas</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
+                  Immerse yourself in tranquil wellness sanctuaries offering rejuvenating spa treatments, therapeutic massages, and holistic healing experiences for ultimate relaxation and renewal.
+                </p>
+              </div>
             </div>
           </div>
         </section>

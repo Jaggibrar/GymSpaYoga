@@ -68,16 +68,24 @@ const RegisterBusiness = () => {
         keywords="register business, list gym, spa registration, yoga studio, business partner"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Partner With GymSpaYoga</h1>
-              <p className="text-xl mb-8">
-                Join India's fastest-growing wellness platform and take your business to the next level. 
-                Connect with more customers and grow your revenue effortlessly.
-              </p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Partner With <span className="text-emerald-200">GymSpaYoga</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                  Join India's fastest-growing wellness marketplace and take your business to the next level. 
+                  Connect with thousands of health-conscious customers and grow your revenue effortlessly.
+                </p>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg" 

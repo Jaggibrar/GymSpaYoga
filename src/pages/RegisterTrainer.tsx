@@ -76,19 +76,27 @@ const RegisterTrainer = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="flex justify-center mb-6">
-                <div className="bg-white/20 p-4 rounded-full">
-                  <Dumbbell className="h-16 w-16" />
+        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-blue-500 to-teal-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <div className="flex justify-center mb-8">
+                  <div className="bg-white/20 p-6 rounded-full backdrop-blur-sm">
+                    <Dumbbell className="h-20 w-20" />
+                  </div>
                 </div>
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Become a <span className="text-emerald-200">Trainer</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                  Join thousands of certified trainers who are building successful careers through our platform. 
+                  Connect with motivated clients and grow your fitness business with purpose and passion.
+                </p>
               </div>
-              <h1 className="text-5xl font-bold mb-6">Become a Trainer</h1>
-              <p className="text-xl mb-8 leading-relaxed">
-                Join thousands of certified trainers who are building successful careers through our platform. 
-                Connect with motivated clients and grow your fitness business.
-              </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   onClick={() => setShowForm(true)}

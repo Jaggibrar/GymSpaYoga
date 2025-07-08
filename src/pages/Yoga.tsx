@@ -13,15 +13,23 @@ const Yoga = () => {
         keywords="yoga classes, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl font-bold mb-6">Yoga Studios & Classes</h1>
-              <p className="text-xl mb-8">
-                Find inner peace and balance with certified yoga instructors and serene studio spaces
-              </p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Yoga <span className="text-emerald-200">Studios</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                  Discover authentic yoga environments with certified instructors offering traditional and modern practices. Find your perfect balance through mindful movement, meditation, and spiritual wellness.
+                </p>
+              </div>
             </div>
           </div>
         </section>

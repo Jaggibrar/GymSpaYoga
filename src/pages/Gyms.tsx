@@ -37,15 +37,23 @@ const Gyms = () => {
         keywords="gyms near me, fitness center, premium gym, gym membership, workout facilities, fitness training"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-orange-100">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">Premium Gyms Near You</h1>
-              <p className="text-xl mb-8">
-                Find state-of-the-art fitness centers with expert trainers and premium equipment
-              </p>
+        <section className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-orange-200/30 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-200/20 rounded-full blur-3xl"></div>
+          </div>
+          <div className="relative container mx-auto px-4">
+            <div className="max-w-5xl mx-auto text-center">
+              <div className="mb-8">
+                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                  Premium <span className="text-orange-200">Gyms</span>
+                </h1>
+                <p className="text-xl md:text-2xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
+                  Discover state-of-the-art fitness centers equipped with cutting-edge equipment, expert personal trainers, and comprehensive wellness programs designed to transform your fitness journey.
+                </p>
+              </div>
               
               {/* Search Bar */}
               <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
