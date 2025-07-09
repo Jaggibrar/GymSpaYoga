@@ -155,10 +155,6 @@
     @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
-  .text-gradient-warm {
-    @apply bg-gradient-to-r from-wellness-terracotta to-wellness-gold bg-clip-text text-transparent;
-  }
-
   /* Premium glass effects */
   .glass-effect {
     @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-xl;

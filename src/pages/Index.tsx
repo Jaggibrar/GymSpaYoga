@@ -78,7 +78,7 @@ const Index = () => {
             <div className="mb-12">
               <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
                 Transform Your
-                <span className="block text-gradient-warm bg-gradient-to-r from-wellness-gold to-wellness-terracotta bg-clip-text text-transparent">
+                <span className="block bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
                   Wellness Journey
                 </span>
               </h1>
@@ -90,7 +90,7 @@ const Index = () => {
             {/* Enhanced CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
               <Link to="/gyms">
-                <Button size="lg" className="btn-primary text-lg px-12 py-6 text-white bg-gradient-to-r from-wellness-terracotta to-wellness-gold hover:scale-105">
+                <Button size="lg" className="btn-primary text-lg px-12 py-6 text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:scale-105">
                   <Dumbbell className="mr-3 h-6 w-6" />
                   Explore Gyms
                 </Button>
