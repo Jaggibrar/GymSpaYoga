@@ -34,10 +34,10 @@ const Yoga = () => {
           </div>
         </section>
 
-        {/* Business Listings */}
+        {/* Business Listings - First Priority */}
         <CategoryBusinesses
           category="yoga"
-          title="Yoga Studios"
+          title="Authentic Yoga Studios & Classes"
           description="Embark on a transformative yoga journey with our network of authentic yoga studios and certified instructors. Whether you're a beginner seeking gentle Hatha classes or an experienced practitioner looking for dynamic Vinyasa flows, find the perfect studio that aligns with your spiritual and physical wellness goals. Experience the ancient art of yoga in modern, peaceful environments."
         />
 

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dumbbell, Waves, Heart, MapPin, Star, Clock, Users, TrendingUp, Navigation } from "lucide-react";
+import { Dumbbell, Waves, Heart, MapPin, Star, Clock, Users, TrendingUp, Navigation, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "@/hooks/useAuth";
@@ -61,195 +61,197 @@ const Index = () => {
     <div className="min-h-screen">
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 py-20 lg:py-32">
+      <section className="relative min-h-screen flex items-center overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
+          <img 
+            src="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png"
+            alt="Wellness lifestyle"
+            className="w-full h-full object-cover"
+          />
+          <div className="hero-overlay"></div>
         </div>
-        <div className="relative container mx-auto px-4">
-          <div className="max-w-5xl mx-auto text-center">
-            <div className="mb-8">
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 leading-tight bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600 bg-clip-text text-transparent">
+        
+        {/* Content */}
+        <div className="relative z-10 container-modern">
+          <div className="max-w-6xl mx-auto text-center text-white">
+            <div className="mb-12">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight">
                 Transform Your
-                <span className="block text-slate-800">
+                <span className="block text-gradient-warm bg-gradient-to-r from-wellness-gold to-wellness-terracotta bg-clip-text text-transparent">
                   Wellness Journey
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-12">
                 India's premier wellness marketplace connecting you with premium gyms, luxury spas, authentic yoga studios, and certified trainers. Your path to holistic health starts here.
               </p>
             </div>
             
+            {/* Enhanced CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
+              <Link to="/gyms">
+                <Button size="lg" className="btn-primary text-lg px-12 py-6 text-white bg-gradient-to-r from-wellness-terracotta to-wellness-gold hover:scale-105">
+                  <Dumbbell className="mr-3 h-6 w-6" />
+                  Explore Gyms
+                </Button>
+              </Link>
+              <Link to="/spas">
+                <Button size="lg" className="btn-secondary border-2 border-white/80 text-white hover:bg-white/20 text-lg px-12 py-6">
+                  <Waves className="mr-3 h-6 w-6" />
+                  Find Spas
+                </Button>
+              </Link>
+              <Link to="/yoga">
+                <Button size="lg" className="btn-secondary border-2 border-white/80 text-white hover:bg-white/20 text-lg px-12 py-6">
+                  <Heart className="mr-3 h-6 w-6" />
+                  Yoga Studios
+                </Button>
+              </Link>
+            </div>
+
             {/* Location Access Card */}
-            <Card className="bg-white/95 backdrop-blur-sm shadow-2xl mb-8 max-w-md mx-auto">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-2">
-                    <MapPin className="h-5 w-5 text-emerald-600" />
-                    <span className="font-semibold text-gray-800">Current Location</span>
+            <Card className="glass-effect max-w-lg mx-auto">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <MapPin className="h-6 w-6 text-primary" />
+                    <span className="font-semibold text-foreground text-lg">Find Wellness Centers Near You</span>
                   </div>
                   {locationGranted && (
                     <Badge variant="secondary" className="bg-green-100 text-green-700">
-                      <Navigation className="h-3 w-3 mr-1" />
+                      <Navigation className="h-4 w-4 mr-1" />
                       Active
                     </Badge>
                   )}
                 </div>
                 
-                {position ? (
-                  <div className="text-sm text-gray-600 mb-3">
-                    <p>Latitude: {position.latitude.toFixed(6)}</p>
-                    <p>Longitude: {position.longitude.toFixed(6)}</p>
-                    <p>Accuracy: ±{Math.round(position.accuracy)}m</p>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-600 mb-3">
-                    Enable location to find wellness centers near you
-                  </p>
-                )}
-                
                 <Button 
                   onClick={handleGetLocation}
                   disabled={geoLoading}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                  className="w-full btn-primary"
                 >
                   {geoLoading ? (
                     <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                       Getting Location...
                     </>
                   ) : position ? (
                     <>
-                      <Navigation className="h-4 w-4 mr-2" />
-                      Location Active
+                      <Navigation className="h-5 w-5 mr-3" />
+                      Location Active - Find Nearby Centers
                     </>
                   ) : (
                     <>
-                      <MapPin className="h-4 w-4 mr-2" />
-                      Enable Location
+                      <MapPin className="h-5 w-5 mr-3" />
+                      Enable Location Access
                     </>
                   )}
                 </Button>
               </CardContent>
             </Card>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
-              <Link to="/gyms">
-                <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  <Dumbbell className="mr-2 h-5 w-5" />
-                  Explore Gyms
-                </Button>
-              </Link>
-              <Link to="/spas">
-                <Button size="lg" variant="outline" className="border-2 border-emerald-600 text-emerald-700 hover:bg-emerald-50 text-lg px-10 py-4 rounded-full transition-all duration-300 hover:scale-105">
-                  <Waves className="mr-2 h-5 w-5" />
-                  Find Spas
-                </Button>
-              </Link>
-              <Link to="/yoga">
-                <Button size="lg" variant="outline" className="border-2 border-teal-600 text-teal-700 hover:bg-teal-50 text-lg px-10 py-4 rounded-full transition-all duration-300 hover:scale-105">
-                  <Heart className="mr-2 h-5 w-5" />
-                  Yoga Studios
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-6">
+      <section className="section-padding bg-background">
+        <div className="container-modern">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl md:text-6xl font-bold text-gradient-primary mb-8">
               Your Wellness Universe
             </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
               Discover a curated ecosystem of premium wellness destinations. From strength training to spiritual wellness, find your perfect match for a healthier, happier you.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8">
             {/* Gyms Card */}
-            <Link to="/gyms">
-              <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-orange-50 to-red-50 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 group-hover:from-orange-500/20 group-hover:to-red-500/20 transition-all duration-500"></div>
-                <CardContent className="relative p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="p-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl text-white group-hover:scale-110 transition-transform duration-300">
-                      <Dumbbell className="h-8 w-8" />
-                    </div>
-                    <Badge className="bg-orange-100 text-orange-700 border-0">500+ Gyms</Badge>
+            <Link to="/gyms" className="category-card block">
+              <div className="relative h-80 rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-gym"></div>
+                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="relative h-full p-8 flex flex-col justify-end text-white">
+                  <div className="mb-4">
+                    <Dumbbell className="h-12 w-12 mb-4" />
+                    <Badge className="bg-white/20 text-white border-0 mb-4">500+ Gyms</Badge>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-orange-600 transition-colors">
-                    Premium Gyms
-                  </h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed">
-                    State-of-the-art fitness centers equipped with modern machinery, expert trainers, and personalized workout programs.
+                  <h3 className="text-2xl font-bold mb-3">Premium Gyms</h3>
+                  <p className="text-white/90 mb-4 leading-relaxed">
+                    State-of-the-art fitness centers with expert trainers and modern equipment.
                   </p>
-                  <div className="flex items-center text-orange-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
                     <span>Explore Gyms</span>
-                    <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </Link>
 
             {/* Spas Card */}
-            <Link to="/spas">
-              <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-purple-50 to-pink-50 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-all duration-500"></div>
-                <CardContent className="relative p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="p-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl text-white group-hover:scale-110 transition-transform duration-300">
-                      <Waves className="h-8 w-8" />
-                    </div>
-                    <Badge className="bg-purple-100 text-purple-700 border-0">200+ Spas</Badge>
+            <Link to="/spas" className="category-card block">
+              <div className="relative h-80 rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-spa"></div>
+                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="relative h-full p-8 flex flex-col justify-end text-white">
+                  <div className="mb-4">
+                    <Waves className="h-12 w-12 mb-4" />
+                    <Badge className="bg-white/20 text-white border-0 mb-4">200+ Spas</Badge>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-purple-600 transition-colors">
-                    Luxury Spas
-                  </h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed">
-                    Rejuvenating wellness sanctuaries offering therapeutic treatments, aromatherapy, and holistic healing experiences.
+                  <h3 className="text-2xl font-bold mb-3">Luxury Spas</h3>
+                  <p className="text-white/90 mb-4 leading-relaxed">
+                    Rejuvenating wellness sanctuaries for therapeutic treatments and relaxation.
                   </p>
-                  <div className="flex items-center text-purple-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
                     <span>Find Spas</span>
-                    <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </Link>
 
             {/* Yoga Card */}
-            <Link to="/yoga">
-              <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-emerald-50 to-teal-50 hover:shadow-2xl transition-all duration-500 hover:-translate-y-3">
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 group-hover:from-emerald-500/20 group-hover:to-teal-500/20 transition-all duration-500"></div>
-                <CardContent className="relative p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="p-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl text-white group-hover:scale-110 transition-transform duration-300">
-                      <Heart className="h-8 w-8" />
-                    </div>
-                    <Badge className="bg-emerald-100 text-emerald-700 border-0">300+ Studios</Badge>
+            <Link to="/yoga" className="category-card block">
+              <div className="relative h-80 rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-yoga"></div>
+                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="relative h-full p-8 flex flex-col justify-end text-white">
+                  <div className="mb-4">
+                    <Heart className="h-12 w-12 mb-4" />
+                    <Badge className="bg-white/20 text-white border-0 mb-4">300+ Studios</Badge>
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-emerald-600 transition-colors">
-                    Yoga Studios
-                  </h3>
-                  <p className="text-slate-600 mb-6 leading-relaxed">
-                    Authentic yoga environments with certified instructors offering traditional and modern practices for mind-body balance.
+                  <h3 className="text-2xl font-bold mb-3">Yoga Studios</h3>
+                  <p className="text-white/90 mb-4 leading-relaxed">
+                    Authentic environments with certified instructors for mind-body balance.
                   </p>
-                  <div className="flex items-center text-emerald-600 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
                     <span>Discover Yoga</span>
-                    <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
+            </Link>
+
+            {/* Trainers Card */}
+            <Link to="/trainers" className="category-card block">
+              <div className="relative h-80 rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-trainer"></div>
+                <div className="absolute inset-0 bg-black/30"></div>
+                <div className="relative h-full p-8 flex flex-col justify-end text-white">
+                  <div className="mb-4">
+                    <Users className="h-12 w-12 mb-4" />
+                    <Badge className="bg-white/20 text-white border-0 mb-4">150+ Trainers</Badge>
+                  </div>
+                  <h3 className="text-2xl font-bold mb-3">Expert Trainers</h3>
+                  <p className="text-white/90 mb-4 leading-relaxed">
+                    Certified professionals for personalized fitness and wellness coaching.
+                  </p>
+                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                    <span>Find Trainers</span>
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </div>
+                </div>
+              </div>
             </Link>
           </div>
         </div>

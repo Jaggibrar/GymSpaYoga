@@ -210,10 +210,12 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                     )}
                   </div>
                   
-                  <div className="flex space-x-2">
-                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300">
-                      Book Session
-                    </Button>
+                   <div className="flex space-x-2">
+                    <Link to={`/book-trainer/${trainer.id}`} className="flex-1">
+                      <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300">
+                        Book Session
+                      </Button>
+                    </Link>
                     <Button variant="outline" size="icon" className="hover:bg-emerald-50">
                       <Phone className="h-4 w-4" />
                     </Button>

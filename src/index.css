@@ -5,56 +5,57 @@
 
 @layer base {
   :root {
-    /* Wellness-focused design system */
-    --background: 0 0% 100%;
-    --foreground: 210 20% 15%;
+    /* Modern wellness design system */
+    --background: 0 0% 98%;
+    --foreground: 220 15% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 15%;
+    --card-foreground: 220 15% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 20% 15%;
+    --popover-foreground: 220 15% 10%;
 
-    /* Primary: Emerald for wellness/health */
-    --primary: 160 84% 39%;
+    /* Primary: Sophisticated emerald */
+    --primary: 155 65% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 160 60% 95%;
-    --primary-dark: 160 84% 30%;
+    --primary-light: 155 45% 95%;
+    --primary-dark: 155 75% 35%;
 
-    /* Secondary: Soft blue for balance */
-    --secondary: 210 50% 95%;
-    --secondary-foreground: 210 20% 25%;
+    /* Secondary: Warm neutrals */
+    --secondary: 25 15% 95%;
+    --secondary-foreground: 220 15% 25%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 25 10% 96%;
+    --muted-foreground: 220 10% 45%;
 
-    /* Accent: Teal for energy */
-    --accent: 176 70% 41%;
+    /* Accent: Warm copper */
+    --accent: 25 65% 60%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 176 60% 95%;
+    --accent-light: 25 45% 95%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 30% 92%;
-    --input: 210 30% 92%;
-    --ring: 160 84% 39%;
+    --border: 220 15% 90%;
+    --input: 220 15% 95%;
+    --ring: 155 65% 45%;
 
     /* Wellness color palette */
-    --wellness-mint: 152 76% 36%;
-    --wellness-sage: 79 34% 57%;
-    --wellness-lavender: 269 45% 70%;
-    --wellness-peach: 25 95% 78%;
-    --wellness-sky: 200 98% 78%;
-    --wellness-forest: 152 100% 19%;
+    --wellness-sage: 155 25% 65%;
+    --wellness-terracotta: 15 65% 65%;
+    --wellness-cream: 45 35% 92%;
+    --wellness-charcoal: 220 15% 20%;
+    --wellness-gold: 45 85% 70%;
+    --wellness-stone: 25 8% 75%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-wellness: linear-gradient(135deg, hsl(var(--wellness-mint)), hsl(var(--wellness-sage)));
-    --gradient-spa: linear-gradient(135deg, hsl(var(--wellness-lavender)), hsl(var(--wellness-peach)));
-    --gradient-yoga: linear-gradient(135deg, hsl(var(--wellness-sage)), hsl(var(--wellness-sky)));
+    /* Modern gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--wellness-sage) / 0.9), hsl(var(--wellness-terracotta) / 0.8));
+    --gradient-gym: linear-gradient(135deg, hsl(15 75% 55%), hsl(25 85% 65%));
+    --gradient-spa: linear-gradient(135deg, hsl(155 35% 75%), hsl(45 45% 85%));
+    --gradient-yoga: linear-gradient(135deg, hsl(155 45% 65%), hsl(180 35% 75%));
+    --gradient-trainer: linear-gradient(135deg, hsl(25 65% 60%), hsl(45 75% 70%));
 
-    --radius: 1rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -111,52 +112,66 @@
 }
 
 @layer components {
-  /* Clean button styles inspired by YesMadam */
+  /* Modern wellness button styles */
   .btn-primary {
-    @apply bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105 shadow-md hover:shadow-lg;
+    @apply bg-primary hover:bg-primary-dark text-primary-foreground font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl;
   }
 
   .btn-secondary {
-    @apply bg-white border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 font-semibold px-6 py-3 rounded-full transition-all duration-300;
+    @apply bg-white/90 backdrop-blur-sm border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-medium px-8 py-4 rounded-xl transition-all duration-300;
   }
 
-  /* Card styles */
+  /* Elevated card styles */
   .card-modern {
-    @apply bg-white rounded-xl shadow-soft border border-gray-100 hover:shadow-medium transition-all duration-300;
+    @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-border hover:shadow-2xl transition-all duration-500;
   }
 
-  /* Input styles */
+  /* Refined input styles */
   .input-modern {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-emerald-500 focus:outline-none transition-colors duration-200 bg-white;
+    @apply w-full px-6 py-4 rounded-xl border-2 border-input focus:border-primary focus:outline-none transition-all duration-300 bg-white/90 backdrop-blur-sm placeholder:text-muted-foreground;
   }
 
-  /* Section spacing */
+  /* Generous spacing */
   .section-padding {
-    @apply py-16 lg:py-24;
+    @apply py-20 lg:py-32;
   }
 
-  /* Container */
+  /* Refined container */
   .container-modern {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-7xl mx-auto px-6 sm:px-8 lg:px-12;
   }
 
-  /* Hover effects */
+  /* Smooth interactions */
   .hover-lift {
-    @apply transition-transform duration-300 hover:-translate-y-2;
+    @apply transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl;
   }
 
   .hover-scale {
-    @apply transition-transform duration-300 hover:scale-105;
+    @apply transition-transform duration-300 hover:scale-[1.02];
   }
 
-  /* Text gradients */
-  .text-gradient {
-    @apply bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent;
+  /* Elegant gradients */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
   }
 
-  /* Glass effect */
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-wellness-terracotta to-wellness-gold bg-clip-text text-transparent;
+  }
+
+  /* Premium glass effects */
   .glass-effect {
-    @apply bg-white/95 backdrop-blur-sm border border-white/20;
+    @apply bg-white/80 backdrop-blur-xl border border-white/30 shadow-xl;
+  }
+
+  /* Category cards */
+  .category-card {
+    @apply group relative overflow-hidden rounded-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl;
+  }
+
+  /* Hero overlay */
+  .hero-overlay {
+    @apply absolute inset-0 bg-gradient-to-br from-black/30 via-black/20 to-transparent;
   }
 }
 
