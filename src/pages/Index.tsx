@@ -169,8 +169,12 @@ const Index = () => {
             {/* Gyms Card */}
             <Link to="/gyms" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-gym"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
+                <img 
+                  src="/lovable-uploads/8eb3d0df-5fff-4dff-b69b-714e86ca0522.png"
+                  alt="Premium Gyms"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div className="relative h-full p-8 flex flex-col justify-end text-white">
                   <div className="mb-4">
                     <Dumbbell className="h-12 w-12 mb-4" />
@@ -191,8 +195,12 @@ const Index = () => {
             {/* Spas Card */}
             <Link to="/spas" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-spa"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
+                <img 
+                  src="/lovable-uploads/81d77828-078a-4018-a4f4-ae3c6beac98d.png"
+                  alt="Luxury Spas"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div className="relative h-full p-8 flex flex-col justify-end text-white">
                   <div className="mb-4">
                     <Waves className="h-12 w-12 mb-4" />
@@ -213,8 +221,12 @@ const Index = () => {
             {/* Yoga Card */}
             <Link to="/yoga" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-yoga"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
+                <img 
+                  src="/lovable-uploads/c24e0012-8319-41f7-b5ce-a3b47d34265d.png"
+                  alt="Yoga Studios"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div className="relative h-full p-8 flex flex-col justify-end text-white">
                   <div className="mb-4">
                     <Heart className="h-12 w-12 mb-4" />
@@ -235,8 +247,12 @@ const Index = () => {
             {/* Trainers Card */}
             <Link to="/trainers" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-trainer"></div>
-                <div className="absolute inset-0 bg-black/30"></div>
+                <img 
+                  src="/lovable-uploads/0fa638c6-9881-4e0e-aa9e-fc87ff97b06e.png"
+                  alt="Expert Trainers"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 <div className="relative h-full p-8 flex flex-col justify-end text-white">
                   <div className="mb-4">
                     <Users className="h-12 w-12 mb-4" />
