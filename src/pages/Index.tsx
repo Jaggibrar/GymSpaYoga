@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import BrandedLoadingScreen from "@/components/BrandedLoadingScreen";
+
 import RecentListings from "@/components/RecentListings";
 import QuickSetupPanel from "@/components/QuickSetupPanel";
 import { toast } from "sonner";
@@ -27,7 +27,11 @@ const Index = () => {
   };
 
   if (authLoading) {
-    return <BrandedLoadingScreen onComplete={() => {}} />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   const categories = [

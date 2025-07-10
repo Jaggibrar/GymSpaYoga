@@ -10,7 +10,7 @@ import { LoadingProvider } from "./contexts/LoadingContext";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
-import SplashScreenOverlay from "./components/SplashScreenOverlay";
+
 import AdminRoute from "./components/AdminRoute";
 
 // Import all pages
@@ -52,7 +52,6 @@ const AppContent = () => {
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
       <GlobalLoadingIndicator />
-      <SplashScreenOverlay />
       <MainNavigation />
       <main className="flex-1">
         <Routes>

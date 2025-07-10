@@ -19,12 +19,10 @@ interface AuthContextType {
   session: Session | null;
   userProfile: UserProfile | null;
   loading: boolean;
-  showSplashScreen: boolean;
   isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  hideSplashScreen: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,12 +32,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [session, setSession] = useState<Session | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showSplashScreen, setShowSplashScreen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   
   const mountedRef = useRef(true);
   const subscriptionRef = useRef<{ unsubscribe: () => void } | null>(null);
-  const sessionStorageKey = 'gymspayoga_splash_shown';
 
   const checkAdminStatus = async (userId: string) => {
     try {
@@ -85,24 +81,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const shouldShowSplash = () => {
-    // Check if splash was already shown in this session
-    const splashShown = sessionStorage.getItem(sessionStorageKey);
-    const lastShown = sessionStorage.getItem(`${sessionStorageKey}_timestamp`);
-    const now = Date.now();
-    
-    // Only show splash if it hasn't been shown or if it's been more than 30 minutes
-    if (!splashShown || !lastShown || (now - parseInt(lastShown)) > 30 * 60 * 1000) {
-      return true;
-    }
-    return false;
-  };
-
-  const markSplashAsShown = () => {
-    const now = Date.now();
-    sessionStorage.setItem(sessionStorageKey, 'true');
-    sessionStorage.setItem(`${sessionStorageKey}_timestamp`, now.toString());
-  };
 
   useEffect(() => {
     mountedRef.current = true;
@@ -125,18 +103,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           await fetchUserProfile(session.user.id);
-          
-          // Show splash screen only for fresh sign-ins, not token refreshes or existing sessions
-          if (event === 'SIGNED_IN' && shouldShowSplash()) {
-            setShowSplashScreen(true);
-            markSplashAsShown();
-          }
         } else if (event === 'SIGNED_OUT') {
           setUserProfile(null);
           setIsAdmin(false);
-          setShowSplashScreen(false);
-          // Clear splash screen session storage on sign out
-          sessionStorage.removeItem(sessionStorageKey);
         }
         
         setLoading(false);
@@ -157,7 +126,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(session);
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-          // Don't show splash for existing sessions
         }
         
         setLoading(false);
@@ -255,7 +223,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);  
       setSession(null);
       setIsAdmin(false);
-      setShowSplashScreen(false);
       
       console.log('✅ Successfully signed out');
       toast.success('Signed out successfully');
@@ -265,21 +232,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const hideSplashScreen = () => {
-    setShowSplashScreen(false);
-  };
-
   const value = {
     user,
     session,
     userProfile,
     loading,
-    showSplashScreen,
     isAdmin,
     signIn,
     signUp,
-    signOut,
-    hideSplashScreen
+    signOut
   };
 
   return (
