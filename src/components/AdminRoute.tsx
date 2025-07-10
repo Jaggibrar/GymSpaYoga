@@ -1,4 +1,4 @@
-import { useAuth } from '@/hooks/useAuthWithSplash';
+import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

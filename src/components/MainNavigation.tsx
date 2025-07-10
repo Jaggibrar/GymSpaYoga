@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuthWithSplash';
+import { useAuth } from '@/hooks/useAuth';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 
 const MainNavigation = () => {

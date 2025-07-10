@@ -5,8 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { navItems } from "./nav-items";
 import AppFooter from "./components/AppFooter";
-import { AuthProvider } from "./hooks/useAuthWithSplash";
-import { LoadingProvider } from "./contexts/LoadingContext";
+import { AuthProvider } from "./hooks/useAuth";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
@@ -132,15 +131,13 @@ const App = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <LoadingProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <Router>
-                <AppContent />
-              </Router>
-            </TooltipProvider>
-          </AuthProvider>
-        </LoadingProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Router>
+              <AppContent />
+            </Router>
+          </TooltipProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

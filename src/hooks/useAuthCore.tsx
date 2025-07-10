@@ -86,10 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     mountedRef.current = true;
     console.log('🚀 Initializing auth...');
 
-    // Clean up any existing subscription
-    if (subscriptionRef.current) {
-      subscriptionRef.current.unsubscribe();
-    }
+    let initialized = false;
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -108,7 +105,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsAdmin(false);
         }
         
-        setLoading(false);
+        // Only set loading to false after the first auth check
+        if (!initialized) {
+          initialized = true;
+          setLoading(false);
+        }
       }
     );
 
@@ -128,10 +129,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await fetchUserProfile(session.user.id);
         }
         
-        setLoading(false);
+        // Set loading to false after initial check
+        if (!initialized) {
+          initialized = true;
+          setLoading(false);
+        }
       } catch (error) {
         console.error('❌ Error initializing auth:', error);
-        if (mountedRef.current) {
+        if (mountedRef.current && !initialized) {
+          initialized = true;
           setLoading(false);
         }
       }
