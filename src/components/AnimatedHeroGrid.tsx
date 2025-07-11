@@ -53,7 +53,7 @@ const AnimatedHeroGrid = () => {
               <img 
                 src={category.image}
                 alt={category.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
               />
               <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} group-hover:opacity-90 transition-opacity duration-300`} />
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
