@@ -88,6 +88,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     let initialized = false;
 
+    // Fallback timeout to ensure loading never gets stuck
+    const loadingTimeout = setTimeout(() => {
+      if (mountedRef.current && !initialized) {
+        console.log('⏰ Auth loading timeout - forcing completion');
+        setLoading(false);
+        initialized = true;
+      }
+    }, 5000); // 5 second timeout
+
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -100,15 +109,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           await fetchUserProfile(session.user.id);
-        } else if (event === 'SIGNED_OUT') {
+        } else {
           setUserProfile(null);
           setIsAdmin(false);
         }
         
-        // Only set loading to false after the first auth check
-        if (!initialized) {
-          initialized = true;
+        // Always set loading to false after processing auth state
+        if (mountedRef.current && !initialized) {
           setLoading(false);
+          initialized = true;
+          clearTimeout(loadingTimeout);
+          console.log('✅ Auth initialization complete');
         }
       }
     );
@@ -129,16 +140,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           await fetchUserProfile(session.user.id);
         }
         
-        // Set loading to false after initial check
-        if (!initialized) {
-          initialized = true;
+        // Always set loading to false after initial check
+        if (mountedRef.current && !initialized) {
           setLoading(false);
+          initialized = true;
+          clearTimeout(loadingTimeout);
+          console.log('✅ Auth initialization complete');
         }
       } catch (error) {
         console.error('❌ Error initializing auth:', error);
         if (mountedRef.current && !initialized) {
-          initialized = true;
           setLoading(false);
+          initialized = true;
+          clearTimeout(loadingTimeout);
         }
       }
     };
@@ -148,6 +162,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       console.log('🧹 Cleaning up auth...');
       mountedRef.current = false;
+      clearTimeout(loadingTimeout);
       
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
