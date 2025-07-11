@@ -29,7 +29,7 @@ const TrainersSection = () => {
       hourlyRate: 1200,
       location: "Pune",
       specializations: ["Hatha Yoga", "Meditation"],
-      image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+      image: "/lovable-uploads/1b4c27c8-74f8-4552-9ef9-658431a0e65b.png"
     },
     {
       id: 3,
@@ -41,7 +41,7 @@ const TrainersSection = () => {
       hourlyRate: 2000,
       location: "Bangalore",
       specializations: ["Deep Tissue", "Aromatherapy"],
-      image: "https://images.unsplash.com/photo-1559599101-f09722fb4948?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+      image: "/lovable-uploads/f6b8bda4-a19a-4114-b2d6-550e44d1a2ce.png"
     }
   ];
 
