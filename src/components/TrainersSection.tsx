@@ -17,7 +17,7 @@ const TrainersSection = () => {
       hourlyRate: 1500,
       location: "Mumbai",
       specializations: ["Weight Training", "Bodybuilding"],
-      image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+      image: "/lovable-uploads/48b65a0c-9366-48be-abc8-35404c2a1d37.png"
     },
     {
       id: 2,
