@@ -9,9 +9,10 @@ import { Blog } from '@/hooks/useBlogs';
 interface BlogGridProps {
   blogs: Blog[];
   onLike?: (blogId: string) => void;
+  onCreateSample?: () => void;
 }
 
-const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
+const BlogGrid = ({ blogs, onLike, onCreateSample }: BlogGridProps) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -34,28 +35,37 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
   };
 
   if (blogs.length === 0) {
-  return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="text-center">
+    return (
+      <div className="text-center py-16">
         <div className="max-w-md mx-auto">
           <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <Tag className="h-12 w-12 text-emerald-600" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-2">No blogs found</h3>
-          <p className="text-gray-500 mb-6">Try adjusting your search or filter criteria, or create sample content</p>
-          <div className="text-xs text-gray-400">
-            Use the Quick Setup panel to create sample blogs for testing
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">No Articles Yet</h3>
+          <p className="text-gray-600 mb-6 leading-relaxed">
+            We're building our wellness content library. Check back soon for expert insights on fitness, yoga, spa treatments, and healthy living.
+          </p>
+          {onCreateSample && (
+            <Button 
+              onClick={onCreateSample}
+              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+            >
+              Load Sample Articles
+            </Button>
+          )}
+          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-6 border border-emerald-200 mt-6">
+            <p className="text-sm text-emerald-700 font-medium">
+              💡 Content coming soon! Our wellness experts are crafting valuable articles just for you.
+            </p>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-        {blogs.map((blog) => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+      {blogs.map((blog) => (
           <Card key={blog.id} className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 bg-white shadow-xl rounded-2xl">
           {blog.image_url && (
             <div className="relative h-52 sm:h-56 overflow-hidden">
@@ -156,7 +166,6 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
           </CardContent>
           </Card>
         ))}
-      </div>
     </div>
   );
 };

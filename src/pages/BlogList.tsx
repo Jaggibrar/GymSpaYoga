@@ -14,7 +14,7 @@ import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
 
 const BlogList = () => {
-  const { blogs, loading, createBlog, likeBlog } = useBlogs();
+  const { blogs, loading, createBlog, likeBlog, createSampleBlogs } = useBlogs();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -160,9 +160,11 @@ const BlogList = () => {
               <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full"></div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Featured Articles</h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <BlogGrid blogs={featuredBlogs} onLike={user ? likeBlog : undefined} />
-            </div>
+            <BlogGrid 
+              blogs={featuredBlogs} 
+              onLike={user ? likeBlog : undefined} 
+              onCreateSample={createSampleBlogs}
+            />
           </div>
         )}
 
@@ -190,7 +192,11 @@ const BlogList = () => {
               ))}
             </div>
           ) : (
-            <BlogGrid blogs={filteredBlogs} onLike={user ? likeBlog : undefined} />
+            <BlogGrid 
+              blogs={filteredBlogs} 
+              onLike={user ? likeBlog : undefined} 
+              onCreateSample={createSampleBlogs}
+            />
           )}
         </div>
 

@@ -52,12 +52,19 @@ export const useBlogs = () => {
 
       if (status === 'published') {
         query = query.eq('published', true);
+      } else if (status === 'draft') {
+        query = query.eq('published', false);
       }
 
       const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching blogs:', error);
+        if (error.code === 'PGRST116') {
+          // No blogs found, create sample data
+          await createSampleBlogs();
+          return;
+        }
         toast.error('Failed to load blogs');
         return;
       }
@@ -73,6 +80,12 @@ export const useBlogs = () => {
         status: blog.published ? 'published' : 'draft',
         tags: Array.isArray(blog.tags) ? blog.tags : []
       })) || [];
+
+      if (blogsWithMeta.length === 0 && status === 'published') {
+        // No published blogs found, create sample data
+        await createSampleBlogs();
+        return;
+      }
 
       setBlogs(blogsWithMeta);
     } catch (error: any) {
@@ -309,6 +322,33 @@ export const useBlogs = () => {
     }
   };
 
+  const createSampleBlogs = async () => {
+    try {
+      console.log('Creating sample blog data...');
+      setLoading(true);
+      
+      // Call the edge function to create sample blogs
+      const { data, error } = await supabase.functions.invoke('create-sample-blogs');
+      
+      if (error) {
+        console.error('Error creating sample blogs:', error);
+        toast.error('Failed to create sample blogs');
+        return;
+      }
+      
+      console.log('Sample blogs created successfully');
+      toast.success('Sample blog articles loaded!');
+      
+      // Refresh the blogs list
+      fetchBlogs('published');
+    } catch (error) {
+      console.error('Error creating sample blogs:', error);
+      toast.error('Failed to create sample blogs');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchBlogs('published');
   }, []);
@@ -322,6 +362,7 @@ export const useBlogs = () => {
     deleteBlog,
     publishBlog,
     getBlogBySlug,
-    likeBlog
+    likeBlog,
+    createSampleBlogs
   };
 };

@@ -14,7 +14,7 @@ import BlogRichEditor from '@/components/blog/BlogRichEditor';
 import SEOHead from '@/components/SEOHead';
 
 const Blogs = () => {
-  const { blogs, loading, createBlog, likeBlog } = useBlogs();
+  const { blogs, loading, createBlog, likeBlog, createSampleBlogs } = useBlogs();
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -133,7 +133,11 @@ const Blogs = () => {
                 <div className="w-1 h-6 bg-gradient-to-b from-emerald-500 to-blue-500 rounded-full"></div>
                 <h2 className="text-2xl font-bold text-gray-800">Featured Articles</h2>
               </div>
-              <BlogGrid blogs={featuredBlogs} onLike={user ? likeBlog : undefined} />
+              <BlogGrid 
+                blogs={featuredBlogs} 
+                onLike={user ? likeBlog : undefined} 
+                onCreateSample={createSampleBlogs}
+              />
             </div>
           )}
 
@@ -161,7 +165,11 @@ const Blogs = () => {
                 ))}
               </div>
             ) : (
-              <BlogGrid blogs={filteredBlogs} onLike={user ? likeBlog : undefined} />
+              <BlogGrid 
+                blogs={filteredBlogs} 
+                onLike={user ? likeBlog : undefined} 
+                onCreateSample={createSampleBlogs}
+              />
             )}
           </div>
         </section>
