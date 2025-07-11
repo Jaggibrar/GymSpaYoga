@@ -69,7 +69,7 @@ const Index = () => {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png"
+            src="/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png"
             alt="Wellness lifestyle"
             className="w-full h-full object-cover"
           />
@@ -174,7 +174,7 @@ const Index = () => {
             <Link to="/gyms" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
                 <img 
-                  src="/lovable-uploads/8eb3d0df-5fff-4dff-b69b-714e86ca0522.png"
+                  src="/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png"
                   alt="Premium Gyms"
                   className="w-full h-full object-cover"
                 />
@@ -200,7 +200,7 @@ const Index = () => {
             <Link to="/spas" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
                 <img 
-                  src="/lovable-uploads/81d77828-078a-4018-a4f4-ae3c6beac98d.png"
+                  src="/lovable-uploads/f6b8bda4-a19a-4114-b2d6-550e44d1a2ce.png"
                   alt="Luxury Spas"
                   className="w-full h-full object-cover"
                 />
@@ -226,7 +226,7 @@ const Index = () => {
             <Link to="/yoga" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
                 <img 
-                  src="/lovable-uploads/c24e0012-8319-41f7-b5ce-a3b47d34265d.png"
+                  src="/lovable-uploads/1b4c27c8-74f8-4552-9ef9-658431a0e65b.png"
                   alt="Yoga Studios"
                   className="w-full h-full object-cover"
                 />
@@ -252,7 +252,7 @@ const Index = () => {
             <Link to="/trainers" className="category-card block">
               <div className="relative h-80 rounded-2xl overflow-hidden">
                 <img 
-                  src="/lovable-uploads/0fa638c6-9881-4e0e-aa9e-fc87ff97b06e.png"
+                  src="/lovable-uploads/48b65a0c-9366-48be-abc8-35404c2a1d37.png"
                   alt="Expert Trainers"
                   className="w-full h-full object-cover"
                 />
