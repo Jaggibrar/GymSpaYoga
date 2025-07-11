@@ -75,9 +75,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // Check admin status
         await checkAdminStatus(userId);
+        
+        // Ensure loading is false after profile fetch
+        setLoading(false);
+        console.log('✅ Profile fetch complete - loading set to false');
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
+      if (mountedRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -90,16 +97,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Fallback timeout to ensure loading never gets stuck
     const loadingTimeout = setTimeout(() => {
-      if (mountedRef.current && !initialized) {
+      if (mountedRef.current) {
         console.log('⏰ Auth loading timeout - forcing completion');
         setLoading(false);
         initialized = true;
       }
-    }, 5000); // 5 second timeout
+    }, 2000); // 2 second timeout
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         console.log('🔄 Auth state changed:', event, session?.user?.id);
         
         if (!mountedRef.current) return;
@@ -108,18 +115,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchUserProfile(session.user.id);
+          // Use setTimeout to avoid blocking auth state change
+          setTimeout(() => {
+            if (mountedRef.current) {
+              fetchUserProfile(session.user.id);
+            }
+          }, 0);
         } else {
           setUserProfile(null);
           setIsAdmin(false);
+          setLoading(false);
         }
         
-        // Always set loading to false after processing auth state
+        // Always clear loading after auth state change
         if (mountedRef.current && !initialized) {
           setLoading(false);
           initialized = true;
           clearTimeout(loadingTimeout);
-          console.log('✅ Auth initialization complete');
+          console.log('✅ Auth state processed - loading cleared');
         }
       }
     );
