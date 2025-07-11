@@ -9,27 +9,30 @@ const AnimatedHeroGrid = () => {
   const categories = [
     {
       id: 'gym',
-      title: "Best Gyms",
-      description: "Discover top-rated fitness centers with state-of-the-art equipment and expert guidance",
+      title: "Premium Gyms",
+      description: "State-of-the-art fitness centers with modern equipment and expert trainers",
       image: "/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png",
       gradient: "from-red-500/80 to-orange-500/80",
-      route: "/gyms"
+      route: "/gyms",
+      subtitle: "Transform Your Body"
     },
     {
       id: 'spa',
-      title: "Best Spas", 
-      description: "Relax and rejuvenate at premium spa facilities offering world-class wellness treatments",
+      title: "Luxury Spas", 
+      description: "Premium wellness centers offering rejuvenating treatments and relaxation",
       image: "/lovable-uploads/f6b8bda4-a19a-4114-b2d6-550e44d1a2ce.png",
       gradient: "from-blue-500/80 to-purple-500/80",
-      route: "/spas"
+      route: "/spas",
+      subtitle: "Rejuvenate Your Soul"
     },
     {
       id: 'yoga',
-      title: "Best Yoga Studios",
-      description: "Find peaceful yoga studios with experienced instructors for your mindfulness journey",
+      title: "Yoga Studios",
+      description: "Peaceful studios with experienced instructors for your mindfulness journey",
       image: "/lovable-uploads/1b4c27c8-74f8-4552-9ef9-658431a0e65b.png",
       gradient: "from-green-500/80 to-emerald-500/80",
-      route: "/yoga"
+      route: "/yoga",
+      subtitle: "Find Inner Peace"
     }
   ];
 
@@ -55,8 +58,11 @@ const AnimatedHeroGrid = () => {
               <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} group-hover:opacity-90 transition-opacity duration-300`} />
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
                 <div className="text-center text-white">
+                  <div className="text-lg sm:text-xl font-medium mb-2 text-white/80">
+                    {category.subtitle}
+                  </div>
                   <h3 className="text-2xl sm:text-3xl font-bold mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                    Explore The {category.title} Near You
+                    {category.title}
                   </h3>
                   <p className="text-sm sm:text-base text-white/90 mb-4 max-w-md">
                     {category.description}

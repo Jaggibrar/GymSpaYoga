@@ -75,16 +75,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         // Check admin status
         await checkAdminStatus(userId);
-        
-        // Ensure loading is false after profile fetch
-        setLoading(false);
-        console.log('✅ Profile fetch complete - loading set to false');
+        console.log('✅ Profile fetch complete');
       }
     } catch (error) {
       console.error('Error fetching user profile:', error);
-      if (mountedRef.current) {
-        setLoading(false);
-      }
     }
   };
 
@@ -95,14 +89,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     let initialized = false;
 
-    // Fallback timeout to ensure loading never gets stuck
+    // Much shorter timeout to avoid persistent loading
     const loadingTimeout = setTimeout(() => {
-      if (mountedRef.current) {
+      if (mountedRef.current && !initialized) {
         console.log('⏰ Auth loading timeout - forcing completion');
         setLoading(false);
         initialized = true;
       }
-    }, 2000); // 2 second timeout
+    }, 500); // 500ms timeout
 
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -115,19 +109,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Use setTimeout to avoid blocking auth state change
-          setTimeout(() => {
-            if (mountedRef.current) {
-              fetchUserProfile(session.user.id);
-            }
-          }, 0);
+          // Fetch profile but don't block on it
+          fetchUserProfile(session.user.id);
         } else {
           setUserProfile(null);
           setIsAdmin(false);
-          setLoading(false);
         }
         
-        // Always clear loading after auth state change
+        // Always clear loading immediately after auth state change
         if (mountedRef.current && !initialized) {
           setLoading(false);
           initialized = true;
