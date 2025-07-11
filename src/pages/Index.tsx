@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Dumbbell, Waves, Heart, MapPin, Star, Clock, Users, TrendingUp, Navigation, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 
 import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -168,111 +169,7 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8">
-            {/* Gyms Card */}
-            <Link to="/gyms" className="category-card block">
-              <div className="relative h-80 rounded-2xl overflow-hidden">
-                <img 
-                  src="/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png"
-                  alt="Premium Gyms"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                <div className="relative h-full p-8 flex flex-col justify-end text-white">
-                  <div className="mb-4">
-                    <Dumbbell className="h-12 w-12 mb-4" />
-                    <Badge className="bg-white/20 text-white border-0 mb-4">500+ Gyms</Badge>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">Premium Gyms</h3>
-                  <p className="text-white/90 mb-4 leading-relaxed">
-                    State-of-the-art fitness centers with expert trainers and modern equipment.
-                  </p>
-                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    <span>Explore Gyms</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Spas Card */}
-            <Link to="/spas" className="category-card block">
-              <div className="relative h-80 rounded-2xl overflow-hidden">
-                <img 
-                  src="/lovable-uploads/f6b8bda4-a19a-4114-b2d6-550e44d1a2ce.png"
-                  alt="Luxury Spas"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                <div className="relative h-full p-8 flex flex-col justify-end text-white">
-                  <div className="mb-4">
-                    <Waves className="h-12 w-12 mb-4" />
-                    <Badge className="bg-white/20 text-white border-0 mb-4">200+ Spas</Badge>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">Luxury Spas</h3>
-                  <p className="text-white/90 mb-4 leading-relaxed">
-                    Rejuvenating wellness sanctuaries for therapeutic treatments and relaxation.
-                  </p>
-                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    <span>Find Spas</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Yoga Card */}
-            <Link to="/yoga" className="category-card block">
-              <div className="relative h-80 rounded-2xl overflow-hidden">
-                <img 
-                  src="/lovable-uploads/1b4c27c8-74f8-4552-9ef9-658431a0e65b.png"
-                  alt="Yoga Studios"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                <div className="relative h-full p-8 flex flex-col justify-end text-white">
-                  <div className="mb-4">
-                    <Heart className="h-12 w-12 mb-4" />
-                    <Badge className="bg-white/20 text-white border-0 mb-4">300+ Studios</Badge>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">Yoga Studios</h3>
-                  <p className="text-white/90 mb-4 leading-relaxed">
-                    Authentic environments with certified instructors for mind-body balance.
-                  </p>
-                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    <span>Discover Yoga</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-
-            {/* Trainers Card */}
-            <Link to="/trainers" className="category-card block">
-              <div className="relative h-80 rounded-2xl overflow-hidden">
-                <img 
-                  src="/lovable-uploads/48b65a0c-9366-48be-abc8-35404c2a1d37.png"
-                  alt="Expert Trainers"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-                <div className="relative h-full p-8 flex flex-col justify-end text-white">
-                  <div className="mb-4">
-                    <Users className="h-12 w-12 mb-4" />
-                    <Badge className="bg-white/20 text-white border-0 mb-4">150+ Trainers</Badge>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-3">Expert Trainers</h3>
-                  <p className="text-white/90 mb-4 leading-relaxed">
-                    Certified professionals for personalized fitness and wellness coaching.
-                  </p>
-                  <div className="flex items-center font-semibold group-hover:translate-x-2 transition-transform duration-300">
-                    <span>Find Trainers</span>
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
+          <AnimatedHeroGrid />
         </div>
       </section>
 
