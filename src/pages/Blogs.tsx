@@ -14,7 +14,7 @@ import BlogRichEditor from '@/components/blog/BlogRichEditor';
 import SEOHead from '@/components/SEOHead';
 
 const Blogs = () => {
-  const { blogs, loading, createBlog, likeBlog, createSampleBlogs } = useBlogs();
+  const { blogs, loading, createBlog, likeBlog } = useBlogs();
   const { user } = useAuth();
   const navigate = useNavigate();
   
@@ -135,8 +135,7 @@ const Blogs = () => {
               </div>
               <BlogGrid 
                 blogs={featuredBlogs} 
-                onLike={user ? likeBlog : undefined} 
-                onCreateSample={createSampleBlogs}
+                onLike={user ? likeBlog : undefined}
               />
             </div>
           )}
@@ -167,8 +166,7 @@ const Blogs = () => {
             ) : (
               <BlogGrid 
                 blogs={filteredBlogs} 
-                onLike={user ? likeBlog : undefined} 
-                onCreateSample={createSampleBlogs}
+                onLike={user ? likeBlog : undefined}
               />
             )}
           </div>

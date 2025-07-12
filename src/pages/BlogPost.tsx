@@ -5,13 +5,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlogs, Blog } from '@/hooks/useBlogs';
-import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Calendar, Clock, ArrowLeft, Share2, Heart, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
+import BlogComments from '@/components/blog/BlogComments';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { getBlogBySlug } = useBlogs();
+  const { getBlogBySlug, likeBlog } = useBlogs();
+  const { user } = useAuth();
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -59,6 +62,21 @@ const BlogPost = () => {
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast.success('Link copied to clipboard!');
+    }
+  };
+
+  const handleLike = async () => {
+    if (!user || !blog) {
+      toast.error('Please log in to like posts');
+      return;
+    }
+    
+    try {
+      await likeBlog(blog.id);
+      // Refresh blog to get updated like count
+      fetchBlog();
+    } catch (error) {
+      console.error('Error liking blog:', error);
     }
   };
 
@@ -148,12 +166,24 @@ const BlogPost = () => {
                       <Clock className="h-4 w-4 mr-2" />
                       {blog.read_time_minutes} min read
                     </div>
+                    <div className="flex items-center">
+                      <Eye className="h-4 w-4 mr-2" />
+                      {blog.views_count || 0} views
+                    </div>
                   </div>
                   
-                  <Button variant="outline" size="sm" onClick={handleShare}>
-                    <Share2 className="h-4 w-4 mr-2" />
-                    Share
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    {user && (
+                      <Button variant="outline" size="sm" onClick={handleLike}>
+                        <Heart className="h-4 w-4 mr-2" />
+                        {blog.likes_count || 0}
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" onClick={handleShare}>
+                      <Share2 className="h-4 w-4 mr-2" />
+                      Share
+                    </Button>
+                  </div>
                 </div>
 
                 {blog.excerpt && (
@@ -172,6 +202,9 @@ const BlogPost = () => {
                   />
                 </CardContent>
               </Card>
+
+              {/* Comments Section */}
+              <BlogComments blogId={blog.id} />
 
               {/* Back to Blogs */}
               <div className="text-center mt-12">

@@ -14,7 +14,7 @@ import SEOHead from '@/components/SEOHead';
 import { toast } from 'sonner';
 
 const BlogList = () => {
-  const { blogs, loading, createBlog, likeBlog, createSampleBlogs } = useBlogs();
+  const { blogs, loading, createBlog, likeBlog } = useBlogs();
   const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -162,8 +162,7 @@ const BlogList = () => {
             </div>
             <BlogGrid 
               blogs={featuredBlogs} 
-              onLike={user ? likeBlog : undefined} 
-              onCreateSample={createSampleBlogs}
+              onLike={user ? likeBlog : undefined}
             />
           </div>
         )}
@@ -194,8 +193,7 @@ const BlogList = () => {
           ) : (
             <BlogGrid 
               blogs={filteredBlogs} 
-              onLike={user ? likeBlog : undefined} 
-              onCreateSample={createSampleBlogs}
+              onLike={user ? likeBlog : undefined}
             />
           )}
         </div>

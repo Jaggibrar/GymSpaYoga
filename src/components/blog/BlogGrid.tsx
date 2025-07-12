@@ -9,10 +9,9 @@ import { Blog } from '@/hooks/useBlogs';
 interface BlogGridProps {
   blogs: Blog[];
   onLike?: (blogId: string) => void;
-  onCreateSample?: () => void;
 }
 
-const BlogGrid = ({ blogs, onLike, onCreateSample }: BlogGridProps) => {
+const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -45,15 +44,7 @@ const BlogGrid = ({ blogs, onLike, onCreateSample }: BlogGridProps) => {
           <p className="text-gray-600 mb-6 leading-relaxed">
             We're building our wellness content library. Check back soon for expert insights on fitness, yoga, spa treatments, and healthy living.
           </p>
-          {onCreateSample && (
-            <Button 
-              onClick={onCreateSample}
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-            >
-              Load Sample Articles
-            </Button>
-          )}
-          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-6 border border-emerald-200 mt-6">
+          <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-6 border border-emerald-200">
             <p className="text-sm text-emerald-700 font-medium">
               💡 Content coming soon! Our wellness experts are crafting valuable articles just for you.
             </p>
