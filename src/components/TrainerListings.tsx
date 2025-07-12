@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Star, Phone, Mail, Users } from "lucide-react";
 import { useTrainers } from "@/hooks/useTrainers";
+import { Link, useNavigate } from "react-router-dom";
 
 interface TrainerListingsProps {
   searchTerm?: string;
@@ -14,6 +15,7 @@ interface TrainerListingsProps {
 
 const TrainerListings = ({ searchTerm, location, sortBy, priceFilter }: TrainerListingsProps) => {
   const { trainers, loading, error } = useTrainers(searchTerm, location, priceFilter, 'trainer');
+  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -131,9 +133,17 @@ const TrainerListings = ({ searchTerm, location, sortBy, priceFilter }: TrainerL
                   </div>
                   
                   <div className="flex space-x-2">
-                    <Button className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300">
-                      Book Session
+                    <Button 
+                      className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 transform hover:scale-105 transition-all duration-300"
+                      onClick={() => navigate(`/trainers/${trainer.id}`)}
+                    >
+                      View Details
                     </Button>
+                    <Link to={`/book-trainer/${trainer.id}`}>
+                      <Button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transform hover:scale-105 transition-all duration-300">
+                        Book Session
+                      </Button>
+                    </Link>
                     <Button variant="outline" size="icon" className="hover:bg-purple-50">
                       <Phone className="h-4 w-4" />
                     </Button>
