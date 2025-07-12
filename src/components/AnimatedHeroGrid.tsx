@@ -38,7 +38,7 @@ const AnimatedHeroGrid = () => {
       id: 'trainers',
       title: "Personal Trainers",
       description: "Certified fitness professionals to guide your personalized workout journey",
-      image: "/lovable-uploads/81d77828-078a-4018-a4f4-ae3c6beac98d.png",
+      image: "/lovable-uploads/36471bfc-00c7-47b8-a7c2-a9488b24803a.png",
       gradient: "from-yellow-500/80 to-amber-500/80",
       route: "/trainers",
       subtitle: "Expert Guidance"
