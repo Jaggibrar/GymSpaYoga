@@ -27,6 +27,13 @@ import {
   Shield
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { AdminStats } from '@/components/admin/AdminStats';
+import { AdminBusinessList } from '@/components/admin/AdminBusinessList';
+import { AdminTrainerList } from '@/components/admin/AdminTrainerList';
+import { AdminUsersList } from '@/components/admin/AdminUsersList';
+import { AdminPayments } from '@/components/admin/AdminPayments';
+import { AdminContent } from '@/components/admin/AdminContent';
+import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 
 interface AdminStats {
   totalUsers: number;
@@ -272,54 +279,30 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="listings">
-            <Card>
-              <CardHeader>
-                <CardTitle>Listing Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Comprehensive listing management interface - View, approve, reject, or edit listings for Gyms, Spas, and Yoga studios.</p>
-                <div className="mt-4 space-y-4">
-                  <div className="flex gap-4">
-                    <Button><CheckCircle className="h-4 w-4 mr-2" />Approve Selected</Button>
-                    <Button variant="destructive"><XCircle className="h-4 w-4 mr-2" />Reject Selected</Button>
-                    <Button variant="outline"><Download className="h-4 w-4 mr-2" />Export Data</Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <Tabs defaultValue="businesses" className="space-y-4">
+              <TabsList>
+                <TabsTrigger value="businesses">Businesses</TabsTrigger>
+                <TabsTrigger value="trainers">Trainers</TabsTrigger>
+              </TabsList>
+              <TabsContent value="businesses">
+                <AdminBusinessList />
+              </TabsContent>
+              <TabsContent value="trainers">
+                <AdminTrainerList />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           <TabsContent value="users">
-            <Card>
-              <CardHeader>
-                <CardTitle>User & Trainer Management</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Manage all registered users, trainers, and business owners. Handle KYC verification and account management.</p>
-              </CardContent>
-            </Card>
+            <AdminUsersList />
           </TabsContent>
 
           <TabsContent value="payments">
-            <Card>
-              <CardHeader>
-                <CardTitle>Payments & Billing</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Track payments, generate invoices, and manage billing for trainer fees and business listing charges.</p>
-              </CardContent>
-            </Card>
+            <AdminPayments />
           </TabsContent>
 
           <TabsContent value="content">
-            <Card>
-              <CardHeader>
-                <CardTitle>Blog & Content Control</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Manage blog posts, content categories, and moderate user-submitted content.</p>
-              </CardContent>
-            </Card>
+            <AdminContent />
           </TabsContent>
 
           <TabsContent value="notifications">
@@ -345,14 +328,7 @@ const AdminDashboard = () => {
           </TabsContent>
 
           <TabsContent value="analytics">
-            <Card>
-              <CardHeader>
-                <CardTitle>Analytics & Reports</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">View detailed analytics on user engagement, conversion rates, and business intelligence data.</p>
-              </CardContent>
-            </Card>
+            <AdminAnalytics />
           </TabsContent>
         </Tabs>
       </div>
