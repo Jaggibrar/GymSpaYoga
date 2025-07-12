@@ -155,73 +155,75 @@ const Explore = () => {
                   </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
                   {businesses.map((business) => (
-                    <Card key={business.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                      <div className="relative">
+                    <Card key={business.id} className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden">
+                      <div className="relative h-56 overflow-hidden">
                         <ImageGallery
                           images={business.image_urls}
                           title={business.business_name}
-                          className="h-48 w-full"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute top-4 right-4">
-                          <Badge className="bg-white/90 text-gray-800">
+                          <Badge className="bg-white/95 text-gray-800 shadow-lg px-3 py-1">
                             <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
                             4.8
                           </Badge>
                         </div>
                         <div className="absolute top-4 left-4">
-                          <Badge className={`${getCategoryColor(business.business_type)} border-0 capitalize`}>
-                            {business.business_type}
+                          <Badge className={`${getCategoryColor(business.business_type)} border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm`}>
+                            {business.business_type.toUpperCase()}
                           </Badge>
                         </div>
                       </div>
                       
-                      <CardHeader>
-                        <CardTitle className="group-hover:text-emerald-600 transition-colors">
+                      <CardHeader className="pb-4">
+                        <CardTitle className="group-hover:text-emerald-600 transition-colors text-xl font-bold leading-tight line-clamp-2">
                           {business.business_name}
                         </CardTitle>
                         <div className="flex items-center text-gray-600">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          <span className="text-sm">{business.city}, {business.state}</span>
+                          <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                          <span className="text-sm font-medium">{business.city}, {business.state}</span>
                         </div>
                       </CardHeader>
                       
                       <CardContent className="space-y-4">
-                        <p className="text-gray-600 text-sm line-clamp-2">
+                        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
                           {business.description || "Premium fitness facility with modern equipment and expert trainers."}
                         </p>
                         
-                        <div className="flex items-center justify-between text-sm text-gray-500">
-                          <div className="flex items-center">
-                            <Clock className="h-4 w-4 mr-1" />
-                            {business.opening_time} - {business.closing_time}
+                        <div className="grid grid-cols-1 gap-2 text-sm">
+                          <div className="flex items-center text-gray-500">
+                            <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                            <span>{business.opening_time} - {business.closing_time}</span>
                           </div>
-                          <div className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
-                            {business.session_price ? `₹${business.session_price}/session` : 
-                             business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact for pricing'}
+                          <div className="flex items-center text-gray-500">
+                            <DollarSign className="h-4 w-4 mr-2 flex-shrink-0" />
+                            <span className="font-medium">
+                              {business.session_price ? `₹${business.session_price}/session` : 
+                               business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact for pricing'}
+                            </span>
                           </div>
                         </div>
 
                         {business.amenities && business.amenities.length > 0 && (
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-2">
                             {business.amenities.slice(0, 3).map((amenity) => (
-                              <Badge key={amenity} variant="outline" className="text-xs">
+                              <Badge key={amenity} variant="outline" className="text-xs px-2 py-1">
                                 {amenity}
                               </Badge>
                             ))}
                             {business.amenities.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
+                              <Badge variant="outline" className="text-xs px-2 py-1">
                                 +{business.amenities.length - 3} more
                               </Badge>
                             )}
                           </div>
                         )}
                         
-                        <div className="flex gap-2 pt-2">
-                          <Link to={`/business/${business.id}`} className="flex-1">
-                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                        <div className="pt-4">
+                          <Link to={`/business/${business.id}`} className="block">
+                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                               View Details
                             </Button>
                           </Link>
