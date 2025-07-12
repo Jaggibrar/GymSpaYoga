@@ -67,89 +67,107 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-white relative">
+    <div className="min-h-screen flex bg-white relative overflow-hidden">
       {/* Background Image - Full Screen */}
       <div 
-        className="absolute inset-0 bg-no-repeat bg-center"
+        className="absolute inset-0 bg-no-repeat bg-center transition-all duration-700"
         style={{
           backgroundImage: "url('/lovable-uploads/0d1bd916-06f9-4059-adf1-8eb8bcbabb8f.png')",
-          backgroundSize: 'contain'
+          backgroundSize: 'cover',
+          filter: 'brightness(0.9) contrast(1.1)'
         }}
       />
       
-      {/* Left side - Login Form with Blur */}
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/10"></div>
+      
+      {/* Left side - Login Form with Enhanced Glassmorphism */}
       <div className="flex-1 flex items-center justify-center px-8 relative z-10">
-        <div className="backdrop-blur-md bg-white/80 rounded-2xl p-8 shadow-2xl border border-white/20">
-          <div className="w-full max-w-sm">
-          {/* Logo and Icon */}
-          <div className="text-center mb-12">
-            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
-              <User className="w-8 h-8 text-white" />
+        <div className="backdrop-blur-xl bg-white/10 rounded-3xl p-10 shadow-2xl border border-white/20 hover:bg-white/15 transition-all duration-300 max-w-md w-full">
+          <div className="w-full">
+            {/* Enhanced Logo and Icon */}
+            <div className="text-center mb-10">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-amber-400/80 to-orange-500/80 rounded-full flex items-center justify-center shadow-2xl backdrop-blur-sm border border-white/30 hover:scale-105 transition-transform duration-300">
+                <User className="w-10 h-10 text-white drop-shadow-lg" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-amber-100 bg-clip-text text-transparent drop-shadow-lg tracking-wide">
+                GymSpaYoga.com
+              </h1>
+              <p className="text-white/70 text-sm mt-2 font-light">One Platform. Infinite Wellness.</p>
             </div>
-            <h1 className="text-2xl font-semibold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">GymSpaYoga.com</h1>
-          </div>
 
-          {/* Login Form */}
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Login</h2>
-            
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Email Address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="h-14 text-base bg-white border border-amber-200 rounded-xl px-4 placeholder:text-gray-500 focus:bg-white focus:ring-2 focus:ring-amber-300 focus:border-amber-400"
-                />
-              </div>
+            {/* Enhanced Login Form */}
+            <div>
+              <h2 className="text-4xl font-bold text-white mb-10 text-center drop-shadow-lg tracking-tight">
+                Welcome Back
+              </h2>
               
-              <div>
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="h-14 text-base bg-white border border-amber-200 rounded-xl px-4 placeholder:text-gray-500 focus:bg-white focus:ring-2 focus:ring-amber-300 focus:border-amber-400"
-                />
-              </div>
-              
-              <div className="text-center mb-6">
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-amber-600 hover:text-amber-700 text-sm"
+              <form onSubmit={handleLogin} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-white/90 text-sm font-medium tracking-wide">Email Address</label>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="h-14 text-base bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl px-6 placeholder:text-white/60 text-white focus:bg-white/25 focus:ring-2 focus:ring-amber-400/50 focus:border-amber-300/50 transition-all duration-300 hover:bg-white/25"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-white/90 text-sm font-medium tracking-wide">Password</label>
+                  <Input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="h-14 text-base bg-white/20 backdrop-blur-sm border border-white/30 rounded-2xl px-6 placeholder:text-white/60 text-white focus:bg-white/25 focus:ring-2 focus:ring-amber-400/50 focus:border-amber-300/50 transition-all duration-300 hover:bg-white/25"
+                  />
+                </div>
+                
+                <div className="text-center mb-8">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-amber-200 hover:text-amber-100 text-sm font-medium transition-colors duration-300 hover:underline decoration-amber-200"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full h-16 text-lg font-semibold bg-gradient-to-r from-amber-500/90 to-orange-600/90 hover:from-amber-400 hover:to-orange-500 rounded-2xl text-white border-0 shadow-2xl hover:shadow-amber-500/25 transition-all duration-300 transform hover:scale-[1.02] hover:-translate-y-1 backdrop-blur-sm"
                 >
-                  Forgot password?
-                </button>
-              </div>
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                      Signing in...
+                    </div>
+                  ) : (
+                    'Sign In'
+                  )}
+                </Button>
+              </form>
               
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-14 text-lg font-medium bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 rounded-xl text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                {loading ? 'Please wait...' : 'Login'}
-              </Button>
-            </form>
-            
-            <div className="mt-8 text-center">
-              <Link
-                to="/"
-                className="text-gray-500 hover:text-gray-600 text-sm"
-              >
-                ← Back to Home
-              </Link>
+              <div className="mt-10 text-center">
+                <Link
+                  to="/"
+                  className="text-white/70 hover:text-white text-sm transition-colors duration-300 inline-flex items-center hover:underline decoration-white/50"
+                >
+                  ← Back to Home
+                </Link>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
 
-      {/* Right side - Empty for image visibility */}
-      <div className="flex-1"></div>
+      {/* Right side - Space for image visibility */}
+      <div className="flex-1 hidden lg:block"></div>
     </div>
   );
 };
