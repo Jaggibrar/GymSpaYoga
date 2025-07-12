@@ -67,10 +67,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-white">
-      {/* Left side - Login Form */}
-      <div className="flex-1 flex items-center justify-center px-8 bg-gradient-to-br from-amber-50 to-orange-50">
-        <div className="w-full max-w-sm">
+    <div className="min-h-screen flex bg-white relative">
+      {/* Background Image - Full Screen */}
+      <div 
+        className="absolute inset-0 bg-no-repeat bg-center"
+        style={{
+          backgroundImage: "url('/lovable-uploads/0d1bd916-06f9-4059-adf1-8eb8bcbabb8f.png')",
+          backgroundSize: 'contain'
+        }}
+      />
+      
+      {/* Left side - Login Form with Blur */}
+      <div className="flex-1 flex items-center justify-center px-8 relative z-10">
+        <div className="backdrop-blur-md bg-white/80 rounded-2xl p-8 shadow-2xl border border-white/20">
+          <div className="w-full max-w-sm">
           {/* Logo and Icon */}
           <div className="text-center mb-12">
             <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
@@ -134,19 +144,12 @@ const Login = () => {
               </Link>
             </div>
           </div>
+          </div>
         </div>
       </div>
 
-      {/* Right side - Wellness Image */}
-      <div 
-        className="flex-1 bg-cover bg-center bg-no-repeat relative"
-        style={{
-          backgroundImage: "url('/lovable-uploads/0d1bd916-06f9-4059-adf1-8eb8bcbabb8f.png')"
-        }}
-      >
-        {/* Optional overlay to ensure text readability if needed */}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/10"></div>
-      </div>
+      {/* Right side - Empty for image visibility */}
+      <div className="flex-1"></div>
     </div>
   );
 };
