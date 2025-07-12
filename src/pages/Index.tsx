@@ -69,7 +69,7 @@ const Index = () => {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="/lovable-uploads/e5b68134-ea5a-41f3-a248-f8acb20b58c3.png"
+            src="/lovable-uploads/f0f905ef-8ae5-4c34-8db3-7a23bedbc1b5.png"
             alt="Wellness lifestyle"
             className="w-full h-full object-cover"
           />
