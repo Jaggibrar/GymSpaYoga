@@ -4,18 +4,25 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign } from 'lucide-react';
+import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
 import GoogleMapView from '@/components/GoogleMapView';
+import { useGeolocation } from '@/hooks/useGeolocation';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const Gyms = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [selectedBusiness, setSelectedBusiness] = useState(null);
+  
+  // Add geolocation hook
+  const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
 
   const { businesses, loading, error } = useOptimizedBusinessData(
     'gym',
@@ -27,6 +34,18 @@ const Gyms = () => {
   const handleSearch = () => {
     // Search is handled automatically by the hook
     console.log('Searching gyms:', { searchTerm, location });
+  };
+
+  const handleGetCurrentLocation = () => {
+    getCurrentPosition();
+    if (position) {
+      setLocation(`${position.latitude}, ${position.longitude}`);
+      toast.success('Current location detected!');
+    }
+  };
+
+  const handleViewDetails = (businessId: string) => {
+    navigate(`/gyms/${businessId}`);
   };
 
   return (
@@ -80,8 +99,18 @@ const Gyms = () => {
                         placeholder="Enter location"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
-                        className="pl-10 py-3 text-gray-900"
+                        className="pl-10 pr-12 py-3 text-gray-900"
                       />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={handleGetCurrentLocation}
+                        disabled={geoLoading}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+                      >
+                        <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
+                      </Button>
                     </div>
                     <Button 
                       onClick={handleSearch}
@@ -255,7 +284,10 @@ const Gyms = () => {
                             )}
                             
                             <div className="pt-4">
-                              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+                              <Button 
+                                onClick={() => handleViewDetails(business.id)}
+                                className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                              >
                                 View Details
                               </Button>
                             </div>
