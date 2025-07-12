@@ -241,6 +241,33 @@
       @apply py-12;
     }
   }
+
+  /* Custom animations for login page */
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%) skewX(-12deg);
+    }
+    100% {
+      transform: translateX(200%) skewX(-12deg);
+    }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 1.5s ease-in-out;
+  }
 }
 
 /* Scrollbar styling */
