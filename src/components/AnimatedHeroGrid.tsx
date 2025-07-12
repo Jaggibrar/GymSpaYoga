@@ -58,29 +58,26 @@ const AnimatedHeroGrid = () => {
             onClick={() => handleCategoryClick(category.route)}
             style={{ animationDelay: `${index * 200}ms` }}
           >
-            <div className="relative h-64 overflow-hidden rounded-lg">
+            <div className="relative h-64 overflow-hidden rounded-t-lg">
               <img 
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
               />
-              <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} group-hover:opacity-90 transition-opacity duration-300`} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
-                <div className="text-center text-white">
-                  <div className="text-lg sm:text-xl font-medium mb-2 text-white/80">
-                    {category.subtitle}
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold mb-3 transform group-hover:scale-110 transition-transform duration-300">
-                    {category.title}
-                  </h3>
-                  <p className="text-sm sm:text-base text-white/90 mb-4 max-w-md">
-                    {category.description}
-                  </p>
-                  <Badge className="bg-white/20 text-white border-white/30 group-hover:bg-white/30 transition-all duration-300 px-4 py-2">
-                    Explore Now
-                  </Badge>
-                </div>
+            </div>
+            <div className="p-6 text-center">
+              <div className="text-lg font-medium mb-2 text-muted-foreground">
+                {category.subtitle}
               </div>
+              <h3 className="text-2xl font-bold mb-3 text-foreground transform group-hover:scale-105 transition-transform duration-300">
+                {category.title}
+              </h3>
+              <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+                {category.description}
+              </p>
+              <Badge className="bg-primary text-primary-foreground group-hover:bg-primary/90 transition-all duration-300 px-4 py-2">
+                Explore Now
+              </Badge>
             </div>
           </Card>
         ))}
