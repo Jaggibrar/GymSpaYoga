@@ -132,10 +132,23 @@ const RecentListings = () => {
   };
 
   const getTierColor = (price?: number) => {
-    if (!price) return "from-green-500 to-green-600";
-    if (price >= 5000) return "from-yellow-500 to-yellow-600";
-    if (price >= 3000) return "from-blue-500 to-blue-600";
-    return "from-green-500 to-green-600";
+    if (!price) return "bg-gradient-to-r from-emerald-500 to-emerald-600";
+    if (price >= 5000) return "bg-gradient-to-r from-amber-500 to-amber-600";
+    if (price >= 3000) return "bg-gradient-to-r from-blue-500 to-blue-600";
+    return "bg-gradient-to-r from-emerald-500 to-emerald-600";
+  };
+
+  const getBusinessTypeColor = (businessType: string) => {
+    switch (businessType.toLowerCase()) {
+      case 'gym':
+        return "bg-red-500 text-white";
+      case 'spa':
+        return "bg-purple-500 text-white";
+      case 'yoga':
+        return "bg-green-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
   };
 
   if (loading) {
@@ -178,45 +191,55 @@ const RecentListings = () => {
             <p className="text-sm text-gray-500">Check back soon for new wellness destinations!</p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {listings.map((listing) => (
               <Card 
                 key={listing.id} 
-                className="overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer transform hover:scale-105 rounded-xl"
+                className="w-full max-w-sm overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer hover:-translate-y-2 rounded-xl border-0 shadow-md"
                 onClick={() => handleCardClick(listing)}
               >
-                <div className="relative h-48 w-full overflow-hidden rounded-t-xl">
+                <div className="relative h-56 w-full overflow-hidden rounded-t-xl">
                   <OptimizedImage 
                     src={listing.image_urls[0] || "/placeholder.svg"} 
                     alt={listing.business_name}
-                    className="group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     width={400}
-                    height={200}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    height={224}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
+                  {/* Business Type Badge - Top Left */}
+                  <div className="absolute top-3 left-3">
+                    <Badge className={`${getBusinessTypeColor(listing.business_type)} px-3 py-1 text-sm font-semibold shadow-lg`}>
+                      {listing.business_type.toUpperCase()}
+                    </Badge>
+                  </div>
+                  {/* Tier Badge - Top Right */}
                   <div className="absolute top-3 right-3">
-                    <Badge className={`bg-gradient-to-r ${getTierColor(listing.monthly_price || listing.session_price)} text-white`}>
+                    <Badge className={`${getTierColor(listing.monthly_price || listing.session_price)} text-white px-2 py-1 shadow-lg`}>
                       {getTierIcon(listing.monthly_price || listing.session_price)}
                     </Badge>
                   </div>
                 </div>
                 
-                <CardContent className="p-4">
-                  <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">{listing.business_name}</h3>
-                  <div className="flex items-center text-gray-600 mb-2">
-                    <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{listing.city}, {listing.state}</span>
+                <CardContent className="p-6 space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="font-bold text-xl text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
+                      {listing.business_name}
+                    </h3>
+                    <div className="flex items-center text-gray-600">
+                      <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <span className="text-sm font-medium">{listing.city}, {listing.state}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <Badge variant="outline" className="text-xs capitalize">
-                      {listing.business_type}
-                    </Badge>
-                    <div className="flex items-center text-gray-500 text-xs">
-                      <Clock className="h-3 w-3 mr-1" />
+                  
+                  <div className="flex items-center justify-between pt-2">
+                    <div className="flex items-center text-gray-500 text-sm">
+                      <Clock className="h-4 w-4 mr-1" />
                       <span>
                         {new Date(listing.created_at).toLocaleDateString()}
                       </span>
                     </div>
+                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
                   </div>
                 </CardContent>
               </Card>
