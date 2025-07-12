@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Grid3X3, Map } from 'lucide-react';
+import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
@@ -157,12 +157,113 @@ const Gyms = () => {
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className={viewMode === 'map' ? 'lg:col-span-2' : 'lg:col-span-3'}>
-                  <OptimizedBusinessGrid
-                    businesses={businesses}
-                    loading={loading}
-                    onBusinessSelect={setSelectedBusiness}
-                    selectedBusiness={selectedBusiness}
-                  />
+                  {loading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+                      {[...Array(6)].map((_, i) => (
+                        <Card key={i} className="w-full max-w-sm animate-pulse">
+                          <div className="h-56 bg-gray-200 rounded-t-xl"></div>
+                          <CardContent className="p-6">
+                            <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                            <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                            <div className="flex justify-between">
+                              <div className="h-3 bg-gray-200 rounded w-20"></div>
+                              <div className="h-3 bg-gray-200 rounded w-16"></div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : businesses.length === 0 ? (
+                    <div className="text-center py-20">
+                      <div className="text-6xl mb-4">🏋️‍♀️</div>
+                      <h3 className="text-2xl font-bold text-gray-800 mb-2">No gyms found</h3>
+                      <p className="text-gray-600 mb-6">
+                        Try adjusting your search criteria or explore different locations
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+                      {businesses.map((business) => (
+                        <Card 
+                          key={business.id} 
+                          className={`w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden cursor-pointer ${
+                            selectedBusiness?.id === business.id ? 'ring-2 ring-orange-500' : ''
+                          }`}
+                          onClick={() => setSelectedBusiness(business)}
+                        >
+                          <div className="relative h-56 overflow-hidden">
+                            <img
+                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
+                              alt={business.business_name}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute top-4 left-4">
+                              <Badge className="bg-red-500 text-white border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm">
+                                GYM
+                              </Badge>
+                            </div>
+                            <div className="absolute top-4 right-4">
+                              <Badge className="bg-white/95 text-gray-800 shadow-lg px-3 py-1">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                                4.8
+                              </Badge>
+                            </div>
+                          </div>
+                          
+                          <CardContent className="p-6 space-y-4">
+                            <div className="space-y-2">
+                              <h3 className="text-xl font-bold group-hover:text-orange-600 transition-colors leading-tight line-clamp-2">
+                                {business.business_name}
+                              </h3>
+                              <div className="flex items-center text-gray-600">
+                                <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="text-sm font-medium">{business.city}, {business.state}</span>
+                              </div>
+                            </div>
+                            
+                            <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+                              {business.description || "Premium fitness facility with modern equipment and expert trainers."}
+                            </p>
+                            
+                            <div className="grid grid-cols-1 gap-2 text-sm">
+                              <div className="flex items-center text-gray-500">
+                                <Clock className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span>{business.opening_time} - {business.closing_time}</span>
+                              </div>
+                              <div className="flex items-center text-gray-500">
+                                <DollarSign className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="font-medium">
+                                  {business.session_price ? `₹${business.session_price}/session` : 
+                                   business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact for pricing'}
+                                </span>
+                              </div>
+                            </div>
+
+                            {business.amenities && business.amenities.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {business.amenities.slice(0, 3).map((amenity) => (
+                                  <Badge key={amenity} variant="outline" className="text-xs px-2 py-1">
+                                    {amenity}
+                                  </Badge>
+                                ))}
+                                {business.amenities.length > 3 && (
+                                  <Badge variant="outline" className="text-xs px-2 py-1">
+                                    +{business.amenities.length - 3} more
+                                  </Badge>
+                                )}
+                              </div>
+                            )}
+                            
+                            <div className="pt-4">
+                              <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+                                View Details
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 
                 {viewMode === 'map' && (
