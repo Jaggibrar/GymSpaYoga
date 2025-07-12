@@ -17,8 +17,14 @@ const Yoga = () => {
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 text-white py-20 lg:py-32">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/20 rounded-full blur-3xl"></div>
+            <img 
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+              alt="Peaceful yoga environment"
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/80 via-teal-500/80 to-emerald-600/80"></div>
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/15 rounded-full blur-3xl"></div>
           </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">

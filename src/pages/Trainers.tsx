@@ -20,8 +20,16 @@ const Trainers = () => {
       
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-16">
-          <div className="container mx-auto px-4 text-center">
+        <section className="relative overflow-hidden bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-20 lg:py-32">
+          <div className="absolute inset-0">
+            <img 
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+              alt="Personal trainer"
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/80 to-indigo-600/80"></div>
+          </div>
+          <div className="relative container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-6">
               <Users className="h-12 w-12 mr-4" />
               <h1 className="text-4xl md:text-5xl font-bold">
