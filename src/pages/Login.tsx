@@ -72,7 +72,7 @@ const Login = () => {
       <div 
         className="absolute inset-0 bg-no-repeat bg-center transition-all duration-700"
         style={{
-          backgroundImage: "url('/lovable-uploads/0d1bd916-06f9-4059-adf1-8eb8bcbabb8f.png')",
+          backgroundImage: "url('/lovable-uploads/04d91ea0-0319-4c44-a2cc-25bbf4d6b004.png')",
           backgroundSize: 'cover',
           filter: 'brightness(0.9) contrast(1.1)'
         }}
