@@ -33,6 +33,15 @@ const AnimatedHeroGrid = () => {
       gradient: "from-green-500/80 to-emerald-500/80",
       route: "/yoga",
       subtitle: "Find Inner Peace"
+    },
+    {
+      id: 'trainers',
+      title: "Personal Trainers",
+      description: "Certified fitness professionals to guide your personalized workout journey",
+      image: "/lovable-uploads/81d77828-078a-4018-a4f4-ae3c6beac98d.png",
+      gradient: "from-yellow-500/80 to-amber-500/80",
+      route: "/trainers",
+      subtitle: "Expert Guidance"
     }
   ];
 
@@ -41,7 +50,7 @@ const AnimatedHeroGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-12">
         {categories.map((category, index) => (
           <Card 
             key={category.id}
