@@ -59,14 +59,15 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
           title={business.business_name}
           className="h-48 w-full"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
         <div className="absolute top-3 right-3">
-          <Badge className="bg-white/90 text-gray-800">
+          <Badge className="bg-white/95 text-gray-800 shadow-md backdrop-blur-sm">
             <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
             4.8
           </Badge>
         </div>
         <div className="absolute top-3 left-3">
-          <Badge className={`${getCategoryColor(business.business_type)} border-0 font-medium capitalize`}>
+          <Badge className={`${getCategoryColor(business.business_type)} border-0 font-medium capitalize shadow-md`}>
             {business.business_type}
           </Badge>
         </div>

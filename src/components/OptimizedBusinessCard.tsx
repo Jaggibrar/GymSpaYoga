@@ -105,13 +105,13 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
             target.src = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-        <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${getTierColor(tier)} text-white border-0 px-3 py-2 rounded-full`}>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${getTierColor(tier)} text-white border-0 px-3 py-2 rounded-full shadow-lg`}>
           {getTierIcon(tier)}
           <span className="ml-1 capitalize font-semibold">{tier}</span>
         </Badge>
         <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center gap-2 text-white">
+          <div className="flex items-center gap-2 text-white bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2">
             <Star className="h-4 w-4 fill-current text-yellow-400" />
             <span className="font-medium">4.7</span>
             <span className="text-sm opacity-90">(New listing)</span>
