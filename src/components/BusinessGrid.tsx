@@ -91,8 +91,8 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
             </div>
           </div>
           
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg group-hover:text-emerald-600 transition-colors line-clamp-1">
+          <CardHeader className="pb-4 px-6">
+            <CardTitle className="text-xl font-semibold group-hover:text-emerald-600 transition-colors line-clamp-1 mb-2">
               {business.business_name}
             </CardTitle>
             <div className="flex items-center text-gray-600 text-sm">
@@ -101,18 +101,18 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
             </div>
           </CardHeader>
           
-          <CardContent className="pt-0 space-y-4">
-            <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+          <CardContent className="pt-0 px-6 pb-6 space-y-4">
+            <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
               {business.description}
             </p>
             
-            <div className="flex items-center justify-between text-xs text-gray-500">
+            <div className="flex items-center justify-between text-sm text-gray-500">
               <div className="flex items-center">
-                <Clock className="h-3 w-3 mr-1" />
+                <Clock className="h-4 w-4 mr-2" />
                 <span>{business.opening_time} - {business.closing_time}</span>
               </div>
-              <div className="flex items-center">
-                <DollarSign className="h-3 w-3 mr-1" />
+              <div className="flex items-center font-semibold text-emerald-600 text-base">
+                <DollarSign className="h-4 w-4 mr-1" />
                 <span>
                   {business.session_price ? `₹${business.session_price}/session` : 
                    business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact'}
@@ -121,23 +121,23 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
             </div>
 
             {business.amenities && business.amenities.length > 0 && (
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-2">
                 {business.amenities.slice(0, 3).map((amenity) => (
-                  <Badge key={amenity} variant="outline" className="text-xs px-2 py-1 bg-gray-50">
+                  <Badge key={amenity} variant="outline" className="text-xs px-3 py-1 bg-gray-50 rounded-full">
                     {amenity}
                   </Badge>
                 ))}
                 {business.amenities.length > 3 && (
-                  <Badge variant="outline" className="text-xs px-2 py-1 bg-gray-50">
+                  <Badge variant="outline" className="text-xs px-3 py-1 bg-gray-50 rounded-full">
                     +{business.amenities.length - 3} more
                   </Badge>
                 )}
               </div>
             )}
             
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-3">
               <Link to={`/business/${business.id}`} className="flex-1">
-                <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm">
+                <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm py-2.5">
                   View Details
                 </Button>
               </Link>

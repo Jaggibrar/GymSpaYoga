@@ -119,37 +119,37 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
         </div>
       </div>
       
-      <CardContent className="p-6">
-        <div className="mb-4">
-          <h3 className="text-xl font-bold group-hover:text-red-600 transition-colors mb-2 line-clamp-1">
+      <CardContent className="p-8">
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold group-hover:text-red-600 transition-colors mb-3 line-clamp-1">
             {business.business_name}
           </h3>
           <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
-            <span className="text-sm truncate">{business.city}, {business.state}</span>
+            <MapPin className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+            <span className="text-base truncate">{business.city}, {business.state}</span>
           </div>
         </div>
         
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
+        <p className="text-gray-600 text-base mb-6 line-clamp-3 leading-relaxed">
           {business.description || "Modern fitness center with state-of-the-art equipment and professional trainers."}
         </p>
         
-        <div className="flex items-center gap-2 text-gray-500 text-sm mb-4">
-          <Clock className="h-4 w-4" />
+        <div className="flex items-center gap-3 text-gray-500 text-base mb-6">
+          <Clock className="h-5 w-5" />
           <span>{business.opening_time} - {business.closing_time}</span>
         </div>
         
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-red-600">
+            <p className="text-3xl font-bold text-red-600">
               {formatPrice()}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-base text-gray-500 mt-1">
               {getPriceSubtext()}
             </p>
           </div>
           <Link to={getDetailLink()}>
-            <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-xl px-6 py-3 font-semibold transform hover:scale-105 transition-all duration-300">
+            <Button className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 rounded-xl px-8 py-4 text-base font-semibold transform hover:scale-105 transition-all duration-300">
               View Details
             </Button>
           </Link>

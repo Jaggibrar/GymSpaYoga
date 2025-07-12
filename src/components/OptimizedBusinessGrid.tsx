@@ -73,8 +73,8 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
         </div>
       </div>
       
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg group-hover:text-emerald-600 transition-colors line-clamp-1">
+      <CardHeader className="pb-4 px-6">
+        <CardTitle className="text-xl font-semibold group-hover:text-emerald-600 transition-colors line-clamp-1 mb-2">
           {business.business_name}
         </CardTitle>
         <div className="flex items-center text-gray-600 text-sm">
@@ -83,52 +83,52 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0 space-y-3">
-        <p className="text-gray-600 text-sm line-clamp-2 leading-relaxed">
+      <CardContent className="pt-0 px-6 pb-6 space-y-4">
+        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
           {business.description || "Premium wellness facility with excellent services"}
         </p>
         
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center">
-            <Clock className="h-3 w-3 mr-1" />
+            <Clock className="h-4 w-4 mr-2" />
             <span>{business.opening_time} - {business.closing_time}</span>
           </div>
-          <div className="font-semibold text-emerald-600">
+          <div className="font-semibold text-emerald-600 text-base">
             {business.session_price ? `₹${business.session_price}/session` : 
              business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact'}
           </div>
         </div>
 
         {business.amenities && business.amenities.length > 0 && (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {business.amenities.slice(0, 2).map((amenity) => (
-              <Badge key={amenity} variant="outline" className="text-xs px-2 py-1 bg-gray-50">
+              <Badge key={amenity} variant="outline" className="text-xs px-3 py-1 bg-gray-50 rounded-full">
                 {amenity}
               </Badge>
             ))}
             {business.amenities.length > 2 && (
-              <Badge variant="outline" className="text-xs px-2 py-1 bg-gray-50">
+              <Badge variant="outline" className="text-xs px-3 py-1 bg-gray-50 rounded-full">
                 +{business.amenities.length - 2} more
               </Badge>
             )}
           </div>
         )}
         
-        <div className="flex gap-2 pt-2">
+        <div className="flex gap-2 pt-3">
           <Link to={`/business/${business.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
-            <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-xs">
+            <Button size="sm" className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm py-2.5">
               View Details
             </Button>
           </Link>
         </div>
         
-        <div className="flex items-center gap-4 pt-2 border-t text-xs text-gray-500">
-          <div className="flex items-center gap-1">
-            <Phone className="h-3 w-3" />
+        <div className="flex items-center gap-4 pt-3 border-t border-gray-100 text-sm text-gray-500">
+          <div className="flex items-center gap-2">
+            <Phone className="h-4 w-4" />
             <span>{business.phone}</span>
           </div>
-          <div className="flex items-center gap-1 truncate">
-            <Mail className="h-3 w-3" />
+          <div className="flex items-center gap-2 truncate">
+            <Mail className="h-4 w-4" />
             <span className="truncate">{business.email}</span>
           </div>
         </div>
