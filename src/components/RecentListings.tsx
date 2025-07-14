@@ -178,27 +178,27 @@ const RecentListings = () => {
 
   // Always show the section, even if no listings
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-12 sm:py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Recently Listed</h2>
-          <p className="text-lg text-gray-600">Discover the newest wellness destinations in your area</p>
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-3 sm:mb-4">Recently Listed</h2>
+          <p className="text-base sm:text-lg text-gray-600">Discover the newest wellness destinations in your area</p>
         </div>
 
         {listings.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-8 sm:py-12">
             <p className="text-gray-600 mb-4">No recent listings available at the moment.</p>
             <p className="text-sm text-gray-500">Check back soon for new wellness destinations!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
             {listings.map((listing) => (
               <Card 
                 key={listing.id} 
                 className="w-full max-w-sm overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer hover:-translate-y-2 rounded-xl border-0 shadow-md"
                 onClick={() => handleCardClick(listing)}
               >
-                <div className="relative h-56 w-full overflow-hidden rounded-t-xl">
+                <div className="relative h-48 sm:h-56 w-full overflow-hidden rounded-t-xl">
                   <OptimizedImage 
                     src={listing.image_urls[0] || "/placeholder.svg"} 
                     alt={listing.business_name}
@@ -208,22 +208,22 @@ const RecentListings = () => {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   {/* Business Type Badge - Top Left */}
-                  <div className="absolute top-3 left-3">
-                    <Badge className={`${getBusinessTypeColor(listing.business_type)} px-3 py-1 text-sm font-semibold shadow-lg`}>
+                  <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+                    <Badge className={`${getBusinessTypeColor(listing.business_type)} px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold shadow-lg`}>
                       {listing.business_type.toUpperCase()}
                     </Badge>
                   </div>
                   {/* Tier Badge - Top Right */}
-                  <div className="absolute top-3 right-3">
+                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                     <Badge className={`${getTierColor(listing.monthly_price || listing.session_price)} text-white px-2 py-1 shadow-lg`}>
                       {getTierIcon(listing.monthly_price || listing.session_price)}
                     </Badge>
                   </div>
                 </div>
                 
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4">
                   <div className="space-y-2">
-                    <h3 className="font-bold text-xl text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
+                    <h3 className="font-bold text-lg sm:text-xl text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
                       {listing.business_name}
                     </h3>
                     <div className="flex items-center text-gray-600">

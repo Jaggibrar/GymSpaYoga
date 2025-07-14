@@ -50,7 +50,7 @@ const AnimatedHeroGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto mb-12">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto mb-8 sm:mb-12 px-4 sm:px-0">
         {categories.map((category, index) => (
           <Card 
             key={category.id}
@@ -58,24 +58,24 @@ const AnimatedHeroGrid = () => {
             onClick={() => handleCategoryClick(category.route)}
             style={{ animationDelay: `${index * 200}ms` }}
           >
-            <div className="relative h-64 overflow-hidden rounded-t-lg">
+            <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden rounded-t-lg">
               <img 
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
               />
             </div>
-            <div className="p-6 text-center">
-              <div className="text-lg font-medium mb-2 text-muted-foreground">
+            <div className="p-4 sm:p-6 text-center">
+              <div className="text-sm sm:text-base lg:text-lg font-medium mb-2 text-muted-foreground">
                 {category.subtitle}
               </div>
-              <h3 className="text-2xl font-bold mb-3 text-foreground transform group-hover:scale-105 transition-transform duration-300">
+              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-foreground transform group-hover:scale-105 transition-transform duration-300">
                 {category.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 max-w-md mx-auto">
                 {category.description}
               </p>
-              <Badge className="bg-primary text-primary-foreground group-hover:bg-primary/90 transition-all duration-300 px-4 py-2">
+              <Badge className="bg-primary text-primary-foreground group-hover:bg-primary/90 transition-all duration-300 px-3 sm:px-4 py-1 sm:py-2 text-sm">
                 Explore Now
               </Badge>
             </div>

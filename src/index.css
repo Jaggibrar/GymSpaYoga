@@ -232,13 +232,93 @@
   }
 
   /* Mobile optimizations */
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .container-modern {
       @apply px-4;
     }
 
     .section-padding {
       @apply py-12;
+    }
+
+    /* Mobile typography scaling */
+    h1 {
+      @apply text-3xl sm:text-4xl md:text-5xl;
+    }
+
+    h2 {
+      @apply text-2xl sm:text-3xl md:text-4xl;
+    }
+
+    h3 {
+      @apply text-xl sm:text-2xl;
+    }
+
+    /* Mobile-friendly buttons */
+    .btn-primary, .btn-secondary {
+      @apply px-4 py-3 text-base;
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    /* Mobile cards */
+    .card-modern {
+      @apply rounded-xl;
+    }
+
+    /* Mobile inputs */
+    .input-modern {
+      @apply px-4 py-3 text-base;
+      min-height: 44px;
+    }
+
+    /* Reduce hero padding on mobile */
+    .hero-overlay {
+      @apply bg-gradient-to-br from-black/40 via-black/30 to-transparent;
+    }
+  }
+
+  /* Extra small mobile devices */
+  @media (max-width: 480px) {
+    .container-modern {
+      @apply px-3;
+    }
+
+    .section-padding {
+      @apply py-8;
+    }
+
+    h1 {
+      @apply text-2xl sm:text-3xl;
+    }
+
+    h2 {
+      @apply text-xl sm:text-2xl;
+    }
+
+    /* Ensure text doesn't overflow */
+    * {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+
+  /* Fix for very large text on mobile */
+  @media (max-width: 640px) {
+    .text-5xl {
+      @apply text-3xl;
+    }
+    
+    .text-6xl {
+      @apply text-4xl;
+    }
+
+    .text-7xl {
+      @apply text-4xl;
+    }
+
+    .text-8xl {
+      @apply text-5xl;
     }
   }
 

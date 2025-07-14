@@ -15,7 +15,7 @@ const Spas = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-purple-100">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 text-white py-20 lg:py-32">
+        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 text-white py-12 sm:py-16 lg:py-24 xl:py-32">
           <div className="absolute inset-0">
             <img 
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
@@ -28,11 +28,11 @@ const Spas = () => {
           </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-8">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
                   Luxury <span className="text-purple-200">Spas</span>
                 </h1>
-                <p className="text-xl md:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
                   Immerse yourself in tranquil wellness sanctuaries offering rejuvenating spa treatments, therapeutic massages, and holistic healing experiences for ultimate relaxation and renewal.
                 </p>
               </div>

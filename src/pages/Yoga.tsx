@@ -15,7 +15,7 @@ const Yoga = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 text-white py-20 lg:py-32">
+        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 text-white py-12 sm:py-16 lg:py-24 xl:py-32">
           <div className="absolute inset-0">
             <img 
               src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
@@ -28,11 +28,11 @@ const Yoga = () => {
           </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-8">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+              <div className="mb-6 sm:mb-8">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
                   Yoga <span className="text-emerald-200">Studios</span>
                 </h1>
-                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
                   Discover authentic yoga environments with certified instructors offering traditional and modern practices. Find your perfect balance through mindful movement, meditation, and spiritual wellness.
                 </p>
               </div>
