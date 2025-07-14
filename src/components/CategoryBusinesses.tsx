@@ -90,9 +90,6 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-6">{title}</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            {description}
-          </p>
         </div>
 
         {/* Search and Filter Controls */}
@@ -262,6 +259,13 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
             })}
           </div>
         )}
+
+        {/* Description Section - Moved Below Listings */}
+        <div className="text-center mt-16">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            {description}
+          </p>
+        </div>
       </div>
     </section>
   );
