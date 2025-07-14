@@ -102,7 +102,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
           if (error) {
             console.error('Error fetching business bookings:', error);
-            setError(error.message);
+            setError(`Failed to load business bookings: ${error.message}`);
             setLoading(false);
             return;
           }
@@ -129,7 +129,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
 
         if (error) {
           console.error('Error fetching user bookings:', error);
-          setError(error.message);
+          setError(`Failed to load bookings: ${error.message}`);
           setLoading(false);
           return;
         }
