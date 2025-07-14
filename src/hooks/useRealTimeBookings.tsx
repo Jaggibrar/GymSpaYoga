@@ -94,8 +94,8 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
             .from('bookings')
             .select(`
               *,
-              user_profile:user_profiles!bookings_user_id_fkey(full_name, phone),
-              business_profile:business_profiles!bookings_business_id_fkey(business_name, monthly_price, session_price)
+              user_profile:user_profiles!inner(full_name, phone),
+              business_profile:business_profiles!inner(business_name, monthly_price, session_price)
             `)
             .in('business_id', businessIds)
             .order('created_at', { ascending: false });
@@ -122,7 +122,7 @@ export const useRealTimeBookings = (businessOwnersView = false) => {
           .from('bookings')
           .select(`
             *,
-            business_profile:business_profiles!bookings_business_id_fkey(business_name, monthly_price, session_price)
+            business_profile:business_profiles!inner(business_name, monthly_price, session_price)
           `)
           .eq('user_id', user.id)
           .order('created_at', { ascending: false });
