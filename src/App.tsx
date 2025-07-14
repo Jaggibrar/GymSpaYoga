@@ -42,6 +42,7 @@ import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import UserBookings from "./pages/UserBookings";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,11 @@ const AppContent = () => {
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/user-bookings" element={
+            <ProtectedRoute>
+              <UserBookings />
             </ProtectedRoute>
           } />
           <Route path="/business-dashboard" element={
