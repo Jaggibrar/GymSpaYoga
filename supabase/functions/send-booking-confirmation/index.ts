@@ -47,8 +47,35 @@ serve(async (req) => {
       throw updateError;
     }
 
-    // Here you would integrate with email service (like Resend)
-    // For now, we'll just log the action
+    // Send email notification to user about booking status change
+    const emailSubject = action === 'confirmed' 
+      ? `✅ Booking Confirmed - ${booking.business_name || 'Your Booking'}`
+      : action === 'rejected' 
+        ? `❌ Booking Rejected - ${booking.business_name || 'Your Booking'}`
+        : `📧 Booking Update - ${booking.business_name || 'Your Booking'}`;
+
+    const emailMessage = action === 'confirmed' 
+      ? `Your booking for ${booking.booking_date} at ${booking.booking_time} has been confirmed! 🎉`
+      : action === 'rejected' 
+        ? `Unfortunately, your booking for ${booking.booking_date} at ${booking.booking_time} has been rejected. ${notes ? `Reason: ${notes}` : ''}`
+        : `Your booking status has been updated to: ${action}`;
+
+    // Get user email from booking user_id
+    const { data: userData } = await supabaseClient.auth.admin.getUserById(booking.user_id);
+    
+    if (userData?.user?.email) {
+      // Create in-app notification for user
+      await supabaseClient
+        .from('in_app_notifications')
+        .insert([{
+          user_id: booking.user_id,
+          title: emailSubject,
+          message: emailMessage,
+          type: 'booking_status',
+          booking_id: bookingId
+        }]);
+    }
+
     console.log(`Booking ${bookingId} ${action}`, { booking, notes });
 
     return new Response(JSON.stringify({ 

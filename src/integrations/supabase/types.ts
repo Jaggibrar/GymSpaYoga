@@ -340,7 +340,22 @@ export type Database = {
           updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_bookings_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_bookings_trainer_id"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       business_documents: {
         Row: {
@@ -373,6 +388,13 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "business_documents_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_business_documents_business_id"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
@@ -491,6 +513,13 @@ export type Database = {
             referencedRelation: "business_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_business_stats_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       calendar_events: {
@@ -536,6 +565,13 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "calendar_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_calendar_events_booking_id"
             columns: ["booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
@@ -711,6 +747,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_notifications_booking_id"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "in_app_notifications_booking_id_fkey"
             columns: ["booking_id"]
@@ -1118,6 +1161,13 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_wishlist_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_wishlist_business_id_fkey"
             columns: ["business_id"]

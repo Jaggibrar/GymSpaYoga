@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, ArrowLeft, Dumbbell } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookingsList } from '@/components/booking/BookingsList';
+import { ErrorBoundaryWrapper } from '@/components/ErrorBoundaryWrapper';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -44,7 +45,9 @@ const UserBookings = () => {
           </div>
           <p className="text-gray-600 text-lg">Track and manage all your fitness bookings</p>
         </div>
-        <BookingsList showBusinessActions={false} />
+        <ErrorBoundaryWrapper>
+          <BookingsList showBusinessActions={false} />
+        </ErrorBoundaryWrapper>
         {/* Add a message if no bookings visible */}
         {/* You may handle this in <BookingsList> if prop available. */}
       </div>

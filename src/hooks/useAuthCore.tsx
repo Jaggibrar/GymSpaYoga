@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('admin_permissions')
         .select('role, permissions')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       const adminStatus = data && data.permissions?.includes('super_admin');
       setIsAdmin(adminStatus || false);
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .from('user_profiles')
         .select('*')
         .eq('user_id', userId)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching user profile:', error);

@@ -38,7 +38,7 @@ export const useTrainerRegistration = () => {
         .from('trainer_profiles')
         .select('id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (existingProfile) {
         toast.error('You already have a trainer profile. Please contact support if you need to update it.');

@@ -19,7 +19,7 @@ const Gyms = () => {
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
-  const [selectedBusiness, setSelectedBusiness] = useState(null);
+  const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
   
   // Add geolocation hook
   const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
