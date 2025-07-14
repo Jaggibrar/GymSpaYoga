@@ -51,7 +51,7 @@ const BusinessDetails = () => {
         .select('*')
         .eq('id', id)
         .eq('status', 'approved')
-        .single();
+        .maybeSingle();
 
       if (error) {
         if (error.code === 'PGRST116') {
