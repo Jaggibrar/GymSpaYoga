@@ -11,6 +11,7 @@ import { CalendarIcon, Clock, MapPin, Star, ArrowLeft } from 'lucide-react';
 import { format } from 'date-fns';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
+import { useTrainers } from '@/hooks/useTrainers';
 
 const BookTrainer = () => {
   const { id } = useParams();
@@ -21,19 +22,32 @@ const BookTrainer = () => {
   const [notes, setNotes] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Mock trainer data - in real app, fetch from API
-  const trainer = {
-    id: id,
-    name: "Rahul Sharma",
-    rating: 4.9,
-    reviews: 156,
-    experience: 8,
-    hourlyRate: 1500,
-    location: "Mumbai",
-    specializations: ["Weight Training", "Bodybuilding", "HIIT"],
-    image: "/placeholder.svg",
-    bio: "Certified personal trainer with 8 years of experience in bodybuilding and strength training."
-  };
+  const { trainers, loading } = useTrainers();
+  const trainer = trainers.find(t => t.id === id);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!trainer) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="text-center p-8">
+            <h2 className="text-2xl font-bold mb-4">Trainer Not Found</h2>
+            <p className="text-muted-foreground mb-6">The trainer you're looking for doesn't exist or has been removed.</p>
+            <Button onClick={() => navigate('/trainers')}>
+              Back to Trainers
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const timeSlots = [
     '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
@@ -60,14 +74,14 @@ const BookTrainer = () => {
     }
   };
 
-  const totalCost = trainer.hourlyRate * (parseInt(duration) / 60);
+  const totalCost = trainer.hourly_rate * (parseInt(duration) / 60);
 
   return (
     <>
       <SEOHead
         title={`Book Session with ${trainer.name} - GymSpaYoga`}
-        description={`Book a training session with certified trainer ${trainer.name}. ${trainer.specializations.join(', ')}.`}
-        keywords={`book trainer, ${trainer.name}, personal training, ${trainer.specializations.join(', ')}`}
+        description={`Book a training session with certified trainer ${trainer.name}. ${trainer.specializations?.join(', ') || trainer.category}.`}
+        keywords={`book trainer, ${trainer.name}, personal training, ${trainer.specializations?.join(', ') || trainer.category}`}
       />
       
       <div className="min-h-screen bg-background">
@@ -95,15 +109,18 @@ const BookTrainer = () => {
                 <CardContent className="p-6">
                   <div className="text-center mb-6">
                     <img
-                      src={trainer.image}
+                      src={trainer.profile_image_url || "/placeholder.svg"}
                       alt={trainer.name}
                       className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.svg";
+                      }}
                     />
                     <h3 className="text-xl font-bold text-foreground">{trainer.name}</h3>
                     <div className="flex items-center justify-center mt-2">
                       <Star className="h-4 w-4 fill-yellow-400 text-yellow-400 mr-1" />
-                      <span className="font-medium">{trainer.rating}</span>
-                      <span className="text-muted-foreground ml-1">({trainer.reviews} reviews)</span>
+                      <span className="font-medium">{trainer.rating || 4.8}</span>
+                      <span className="text-muted-foreground ml-1">({trainer.reviews_count || 12} reviews)</span>
                     </div>
                   </div>
 
@@ -113,21 +130,25 @@ const BookTrainer = () => {
                       <span>{trainer.location}</span>
                     </div>
                     
-                    <div>
-                      <h4 className="font-semibold mb-2">Specializations</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {trainer.specializations.map((spec) => (
-                          <span key={spec} className="px-2 py-1 bg-muted rounded-md text-sm">
-                            {spec}
-                          </span>
-                        ))}
+                      <div>
+                        <h4 className="font-semibold mb-2">Specializations</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {trainer.specializations?.map((spec) => (
+                            <span key={spec} className="px-2 py-1 bg-muted rounded-md text-sm">
+                              {spec}
+                            </span>
+                          )) || (
+                            <span className="px-2 py-1 bg-muted rounded-md text-sm capitalize">
+                              {trainer.category}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
                     
-                    <div>
-                      <h4 className="font-semibold mb-2">Rate</h4>
-                      <p className="text-2xl font-bold text-primary">₹{trainer.hourlyRate}/hour</p>
-                    </div>
+                      <div>
+                        <h4 className="font-semibold mb-2">Rate</h4>
+                        <p className="text-2xl font-bold text-primary">₹{trainer.hourly_rate}/hour</p>
+                      </div>
                   </div>
                 </CardContent>
               </Card>
@@ -218,7 +239,7 @@ const BookTrainer = () => {
                       <div className="space-y-1 text-sm">
                         <div className="flex justify-between">
                           <span>Rate per hour:</span>
-                          <span>₹{trainer.hourlyRate}</span>
+                          <span>₹{trainer.hourly_rate}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Duration:</span>
