@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { MapPin, Clock, Phone, Mail, Star, Calendar, ArrowLeft, MessageCircle } from 'lucide-react';
-import BookingModal from '@/components/BookingModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
+import BookingForm from '@/components/booking/BookingForm';
 
 interface Business {
   id: string;
@@ -87,11 +87,7 @@ const BusinessDetails = () => {
   };
 
   const handleBookNow = () => {
-    if (business?.phone) {
-      const message = `Hi, I'm interested in booking your services at ${business.business_name}. Could you please provide more details?`;
-      const whatsappUrl = `https://wa.me/${business.phone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    }
+    // This will be handled by the BookingForm component
   };
 
   if (loading) {
@@ -278,26 +274,28 @@ const BusinessDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <Button 
-                  onClick={handleBookNow}
-                  className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
-                  size="lg"
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  Book Now via WhatsApp
-                </Button>
-                <Button 
-                  onClick={handleCall}
-                  variant="outline" 
-                  className="w-full"
-                  size="lg"
-                >
-                  <Phone className="h-4 w-4 mr-2" />
-                  Call Now
-                </Button>
-              </div>
+              {/* Booking Section */}
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-semibold mb-4 text-center">Book Your Session</h3>
+                  <BookingForm
+                    businessId={business.id}
+                    businessType={business.business_type as 'gym' | 'spa' | 'yoga' | 'trainer'}
+                    businessName={business.business_name}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Contact Button */}
+              <Button 
+                onClick={handleCall}
+                variant="outline" 
+                className="w-full"
+                size="lg"
+              >
+                <Phone className="h-4 w-4 mr-2" />
+                Call Now
+              </Button>
             </div>
           </div>
         </div>

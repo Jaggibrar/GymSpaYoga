@@ -15,8 +15,11 @@ import AdminRoute from "./components/AdminRoute";
 // Import all pages
 import Index from "./pages/Index";
 import Gyms from "./pages/Gyms";
+import GymDetails from "./pages/GymDetails";
 import Spas from "./pages/Spas";
+import SpaDetails from "./pages/SpaDetails";
 import Yoga from "./pages/Yoga";
+import YogaDetails from "./pages/YogaDetails";
 import Trainers from "./pages/Trainers";
 import TrainerDetails from "./pages/TrainerDetails";
 import BookTrainer from "./pages/BookTrainer";
@@ -64,9 +67,9 @@ const AppContent = () => {
           <Route path="/trainers/:id" element={<TrainerDetails />} />
           <Route path="/book-trainer/:id" element={<BookTrainer />} />
           <Route path="/business/:id" element={<BusinessDetails />} />
-          <Route path="/gyms/:id" element={<BusinessDetails />} />
-          <Route path="/spas/:id" element={<BusinessDetails />} />
-          <Route path="/yoga/:id" element={<BusinessDetails />} />
+          <Route path="/gyms/:id" element={<GymDetails />} />
+          <Route path="/spas/:id" element={<SpaDetails />} />
+          <Route path="/yoga/:id" element={<YogaDetails />} />
           <Route path="/register-business" element={<RegisterBusiness />} />
           <Route path="/register-trainer" element={<RegisterTrainer />} />
           <Route path="/login" element={<Login />} />

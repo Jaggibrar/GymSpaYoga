@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
-import PaymentModal from "@/components/PaymentModal";
+import BookingForm from "@/components/booking/BookingForm";
 
 interface Gym {
   id: string;
@@ -53,9 +53,6 @@ const GymDetails = () => {
   const [gym, setGym] = useState<Gym | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{ price: number; type: 'monthly' | 'session' } | null>(null);
-
   useEffect(() => {
     if (id) {
       fetchGymDetails(id);
@@ -69,9 +66,14 @@ const GymDetails = () => {
         .select('*')
         .eq('id', gymId)
         .eq('business_type', 'gym')
-        .single();
+        .eq('status', 'approved')
+        .maybeSingle();
 
       if (error) throw error;
+      if (!data) {
+        toast.error('Gym not found');
+        return;
+      }
       setGym(data);
     } catch (error) {
       console.error('Error fetching gym details:', error);
@@ -97,10 +99,6 @@ const GymDetails = () => {
     }
   };
 
-  const handleBookNow = (price: number, type: 'monthly' | 'session') => {
-    setSelectedPlan({ price, type });
-    setIsBookingModalOpen(true);
-  };
 
   if (loading) {
     return (
@@ -349,13 +347,11 @@ const GymDetails = () => {
                           <span className="text-4xl font-black text-orange-600">₹{gym.monthly_price}</span>
                           <span className="text-gray-500 ml-2">/month</span>
                         </div>
-                        <Button 
-                          onClick={() => handleBookNow(gym.monthly_price, 'monthly')}
-                          className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 font-bold py-3 text-lg rounded-xl transform hover:scale-105 transition-all duration-300"
-                        >
-                          <Calendar className="h-5 w-5 mr-2" />
-                          Book Monthly
-                        </Button>
+                         <BookingForm
+                          businessId={gym.id}
+                          businessType="gym"
+                          businessName={gym.business_name}
+                        />
                       </div>
                     </div>
                   )}
@@ -369,31 +365,27 @@ const GymDetails = () => {
                           <span className="text-3xl font-black text-blue-600">₹{gym.session_price}</span>
                           <span className="text-gray-500 ml-2">/session</span>
                         </div>
-                        <Button 
-                          onClick={() => handleBookNow(gym.session_price, 'session')}
-                          variant="outline"
-                          className="w-full border-2 border-blue-500 text-blue-600 hover:bg-blue-500 hover:text-white font-bold py-3 text-lg rounded-xl transition-all duration-300"
-                        >
-                          <Heart className="h-5 w-5 mr-2" />
-                          Book Session
-                        </Button>
+                        <BookingForm
+                          businessId={gym.id}
+                          businessType="gym"
+                          businessName={gym.business_name}
+                        />
                       </div>
                     </div>
                   )}
 
-                  {/* Contact for Pricing */}
+                  {/* Booking Form for Contact Plans */}
                   {!gym.monthly_price && !gym.session_price && (
                     <div className="p-6 bg-gradient-to-br from-gray-50 to-purple-50 rounded-2xl border border-gray-200">
-                      <div className="text-center">
+                      <div className="text-center mb-4">
                         <h3 className="text-xl font-bold text-gray-800 mb-2">Custom Plans</h3>
-                        <p className="text-gray-600 mb-4">Contact us for personalized pricing</p>
-                        <Button 
-                          onClick={() => toast.info("Please contact the gym directly for pricing information")}
-                          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 font-bold py-3 text-lg rounded-xl"
-                        >
-                          Get Quote
-                        </Button>
+                        <p className="text-gray-600">Contact us for personalized pricing</p>
                       </div>
+                      <BookingForm
+                        businessId={gym.id}
+                        businessType="gym"
+                        businessName={gym.business_name}
+                      />
                     </div>
                   )}
 
@@ -425,21 +417,6 @@ const GymDetails = () => {
         </div>
       </div>
 
-      {/* Payment Modal */}
-      {selectedPlan && (
-        <PaymentModal
-          isOpen={isBookingModalOpen}
-          onClose={() => {
-            setIsBookingModalOpen(false);
-            setSelectedPlan(null);
-          }}
-          businessId={gym.id}
-          serviceType="gym"
-          serviceName={gym.business_name}
-          price={selectedPlan.price}
-          priceType={selectedPlan.type}
-        />
-      )}
     </>
   );
 };
