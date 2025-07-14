@@ -1,46 +1,101 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Clock, Phone, Waves, Users, Wifi, Car, Shield, Camera, ArrowLeft } from "lucide-react";
+import { MapPin, Star, Clock, Phone, Waves, Users, ArrowLeft } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import BookingModal from "@/components/BookingModal";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import BookingForm from "@/components/booking/BookingForm";
+
+interface Business {
+  id: string;
+  business_name: string;
+  business_type: string;
+  description?: string;
+  address: string;
+  city: string;
+  state: string;
+  phone: string;
+  email: string;
+  opening_time: string;
+  closing_time: string;
+  amenities?: string[];
+  image_urls?: string[];
+  session_price?: number;
+  monthly_price?: number;
+  category: string;
+}
 
 const SpaDetails = () => {
   const { id } = useParams();
+  const [spa, setSpa] = useState<Business | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Mock data - in real app this would come from API
-  const spaData = {
-    1: {
-      id: 1,
-      name: "Serenity Spa & Wellness",
-      category: "Luxury",
-      rating: 4.9,
-      reviews: 89,
-      location: "Koregaon Park, Pune",
-      address: "456 North Main Road, Koregaon Park, Pune 411001",
-      price: "₹3,500/session",
-      images: ["/placeholder.svg", "/placeholder.svg", "/placeholder.svg"],
-      services: ["Swedish Massage", "Aromatherapy", "Facial", "Body Wrap", "Sauna", "Steam Bath", "Hot Stone Therapy", "Couples Massage"],
-      hours: "9:00 AM - 9:00 PM",
-      phone: "+91 98765 43220",
-      email: "info@serenityspa.com",
-      description: "Immerse yourself in tranquility at our luxury spa. We offer a comprehensive range of wellness treatments designed to rejuvenate your mind, body, and spirit in an atmosphere of pure serenity.",
-      therapists: 12,
-      facilities: ["Private Treatment Rooms", "Relaxation Lounge", "Hydrotherapy Pool", "Meditation Garden", "Herbal Steam Room"],
-      packages: [
-        { name: "Relaxation Package", price: "₹3,500", duration: "90 minutes", includes: "Swedish Massage + Facial" },
-        { name: "Detox Package", price: "₹5,500", duration: "150 minutes", includes: "Body Wrap + Sauna + Massage" },
-        { name: "Couples Retreat", price: "₹8,000", duration: "120 minutes", includes: "Couples Massage + Champagne" }
-      ]
+  useEffect(() => {
+    if (id) {
+      fetchSpaDetails(id);
+    }
+  }, [id]);
+
+  const fetchSpaDetails = async (spaId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('business_profiles')
+        .select('*')
+        .eq('id', spaId)
+        .eq('business_type', 'spa')
+        .eq('status', 'approved')
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) {
+        toast.error('Spa not found');
+        return;
+      }
+      setSpa(data);
+    } catch (error) {
+      console.error('Error fetching spa details:', error);
+      toast.error('Failed to load spa details');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const spaId = Number(id) || 1;
-  const spa = spaData[spaId as keyof typeof spaData] || spaData[1];
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-600 font-medium">Loading spa details...</p>
+        </div>
+      </div>
+    );
+  }
 
+  if (!spa) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50 flex items-center justify-center">
+        <div className="text-center space-y-6">
+          <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <Waves className="h-12 w-12 text-blue-500" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Spa not found</h2>
+            <p className="text-gray-600 mb-6">The spa you're looking for doesn't exist.</p>
+            <Link to="/spas">
+              <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Spas
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-teal-50">
       {/* Header */}
@@ -68,18 +123,18 @@ const SpaDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           <div className="lg:col-span-2">
             <div className="relative h-96 rounded-2xl overflow-hidden mb-6">
-              <img src={spa.images[0]} alt={spa.name} className="w-full h-full object-cover" />
+              <img src={spa.image_urls?.[0] || "/placeholder.svg"} alt={spa.business_name} className="w-full h-full object-cover" />
               <div className="absolute top-4 right-4">
-                <Badge className="bg-yellow-500 hover:bg-yellow-600">
+                <Badge className="bg-yellow-500 hover:bg-yellow-600 capitalize">
                   {spa.category}
                 </Badge>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
-              {spa.images.slice(1).map((image, index) => (
+              {spa.image_urls?.slice(1, 3).map((image, index) => (
                 <div key={index} className="relative h-48 rounded-xl overflow-hidden">
-                  <img src={image} alt={`${spa.name} ${index + 2}`} className="w-full h-full object-cover" />
+                  <img src={image} alt={`${spa.business_name} ${index + 2}`} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -89,15 +144,17 @@ const SpaDetails = () => {
             <Card className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 mb-2">{spa.name}</h1>
+                  <h1 className="text-3xl font-bold text-gray-800 mb-2">{spa.business_name}</h1>
                   <div className="flex items-center space-x-2 mb-2">
                     <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    <span className="text-lg font-semibold">{spa.rating}</span>
-                    <span className="text-gray-500">({spa.reviews} reviews)</span>
+                    <span className="text-lg font-semibold">4.8</span>
+                    <span className="text-gray-500">(89 reviews)</span>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-3xl font-bold text-blue-600">{spa.price}</p>
+                  {spa.session_price && (
+                    <p className="text-3xl font-bold text-blue-600">₹{spa.session_price}</p>
+                  )}
                   <p className="text-sm text-gray-500">Starting from</p>
                 </div>
               </div>
@@ -108,37 +165,27 @@ const SpaDetails = () => {
                 <div className="flex items-start space-x-3">
                   <MapPin className="h-5 w-5 text-gray-400 mt-0.5" />
                   <div>
-                    <p className="font-medium">{spa.location}</p>
+                    <p className="font-medium">{spa.city}, {spa.state}</p>
                     <p className="text-sm text-gray-600">{spa.address}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Clock className="h-5 w-5 text-gray-400" />
-                  <span>{spa.hours}</span>
+                  <span>{spa.opening_time} - {spa.closing_time}</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Phone className="h-5 w-5 text-gray-400" />
                   <span>{spa.phone}</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Users className="h-5 w-5 text-gray-400" />
-                  <span>{spa.therapists} Expert Therapists</span>
                 </div>
               </div>
 
               <Separator className="my-4" />
 
               <div className="space-y-4">
-                <BookingModal
-                  businessName={spa.name}
+                <BookingForm
+                  businessId={spa.id}
                   businessType="spa"
-                  businessId={spa.id.toString()}
-                  price={spa.price}
-                  trigger={
-                    <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-lg py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                      Book Treatment
-                    </Button>
-                  }
+                  businessName={spa.business_name}
                 />
                 <Button variant="outline" className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 text-lg py-3 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
                   Call Now
@@ -153,51 +200,51 @@ const SpaDetails = () => {
           <div className="lg:col-span-2 space-y-8">
             {/* About */}
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-4">About {spa.name}</h2>
-              <p className="text-gray-600 leading-relaxed">{spa.description}</p>
+              <h2 className="text-2xl font-bold mb-4">About {spa.business_name}</h2>
+              <p className="text-gray-600 leading-relaxed">
+                {spa.description || "Experience ultimate relaxation and rejuvenation at our luxury spa. We offer a comprehensive range of wellness treatments designed to restore your mind, body, and spirit."}
+              </p>
             </Card>
 
-            {/* Facilities */}
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Facilities</h2>
-              <div className="grid grid-cols-1 gap-3">
-                {spa.facilities.map((facility) => (
-                  <div key={facility} className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>{facility}</span>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            {/* Services */}
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Services</h2>
-              <div className="flex flex-wrap gap-2">
-                {spa.services.map((service) => (
-                  <Badge key={service} variant="outline" className="px-3 py-1">
-                    {service}
-                  </Badge>
-                ))}
-              </div>
-            </Card>
+            {/* Amenities */}
+            {spa.amenities && spa.amenities.length > 0 && (
+              <Card className="p-6">
+                <h2 className="text-2xl font-bold mb-4">Amenities</h2>
+                <div className="grid grid-cols-1 gap-3">
+                  {spa.amenities.map((amenity) => (
+                    <div key={amenity} className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="capitalize">{amenity}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
           </div>
 
-          {/* Treatment Packages */}
+          {/* Pricing Section */}
           <div>
             <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-4">Popular Packages</h2>
+              <h2 className="text-2xl font-bold mb-4">Pricing</h2>
               <div className="space-y-4">
-                {spa.packages.map((pkg) => (
-                  <div key={pkg.name} className="border rounded-lg p-4">
+                {spa.session_price && (
+                  <div className="border rounded-lg p-4">
                     <div className="mb-2">
-                      <h3 className="font-semibold">{pkg.name}</h3>
-                      <span className="text-xl font-bold text-blue-600">{pkg.price}</span>
+                      <h3 className="font-semibold">Per Session</h3>
+                      <span className="text-xl font-bold text-blue-600">₹{spa.session_price}</span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{pkg.duration}</p>
-                    <p className="text-sm text-gray-500">{pkg.includes}</p>
+                    <p className="text-sm text-gray-600">Single treatment session</p>
                   </div>
-                ))}
+                )}
+                {spa.monthly_price && (
+                  <div className="border rounded-lg p-4">
+                    <div className="mb-2">
+                      <h3 className="font-semibold">Monthly Package</h3>
+                      <span className="text-xl font-bold text-blue-600">₹{spa.monthly_price}</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Unlimited treatments for one month</p>
+                  </div>
+                )}
               </div>
             </Card>
           </div>
