@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { MapPin, Star, Phone, Mail, Award, Clock, Users, Calendar, ArrowLeft } from 'lucide-react';
+import { Award, Calendar, Users } from 'lucide-react';
 import { useTrainers } from '@/hooks/useTrainers';
-import BookingModal from '@/components/BookingModal';
 import SEOHead from '@/components/SEOHead';
+import ListingLayout from '@/components/listing/ListingLayout';
+import BookingPanel from '@/components/listing/BookingPanel';
+import AboutSection from '@/components/listing/AboutSection';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 const TrainerDetails = () => {
   const { id } = useParams();
@@ -58,156 +58,84 @@ const TrainerDetails = () => {
         keywords={`personal trainer, ${trainer.name}, fitness coach, ${trainer.specializations.join(', ')}, ${trainer.location}`}
       />
       
-      <div className="min-h-screen bg-gray-50">
-        {/* Back Button */}
-        <div className="container mx-auto px-4 pt-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/trainers')}
-            className="mb-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Trainers
-          </Button>
-        </div>
-
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Info */}
-            <div className="lg:col-span-2">
-              <Card className="mb-6">
-                <CardContent className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-shrink-0">
-                      <img
-                        src={trainer.profile_image_url || "/placeholder.svg"}
-                        alt={trainer.name}
-                        className="w-48 h-48 rounded-xl object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src = "/placeholder.svg";
-                        }}
-                      />
+      <ListingLayout
+        backLink="/trainers"
+        backText="Back to Trainers"
+        brandIcon={<Users className="h-7 w-7 text-white" />}
+        brandGradient="from-purple-500 to-indigo-600"
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            {/* Trainer Profile Card */}
+            <Card className="border-0 shadow-lg">
+              <CardContent className="p-8">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={trainer.profile_image_url || "/placeholder.svg"}
+                      alt={trainer.name}
+                      className="w-48 h-48 rounded-xl object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.svg";
+                      }}
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <h1 className="text-3xl font-bold">{trainer.name}</h1>
+                      <Badge className={`${getTierColor(trainer.trainer_tier)} border-0 font-medium capitalize`}>
+                        {trainer.trainer_tier}
+                      </Badge>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <h1 className="text-3xl font-bold">{trainer.name}</h1>
-                        <Badge className={`${getTierColor(trainer.trainer_tier)} border-0 font-medium capitalize`}>
-                          {trainer.trainer_tier}
+                    
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                      {trainer.bio}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {trainer.specializations.map((spec, index) => (
+                        <Badge key={index} variant="outline" className="bg-purple-50 border-purple-200">
+                          {spec}
                         </Badge>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 mb-4 text-gray-600">
-                        <div className="flex items-center">
-                          <MapPin className="h-4 w-4 mr-1" />
-                          <span>{trainer.location}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Award className="h-4 w-4 mr-1" />
-                          <span>{trainer.experience} years experience</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Star className="h-4 w-4 mr-1 fill-yellow-400 text-yellow-400" />
-                          <span>{trainer.rating || 4.8} ({trainer.reviews_count || 12} reviews)</span>
-                        </div>
-                      </div>
-
-                      <p className="text-gray-700 mb-6 leading-relaxed">
-                        {trainer.bio}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {trainer.specializations.map((spec, index) => (
-                          <Badge key={index} variant="outline" className="bg-purple-50 border-purple-200">
-                            {spec}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center">
-                          <Phone className="h-4 w-4 mr-1" />
-                          <span>{trainer.phone}</span>
-                        </div>
-                        <div className="flex items-center">
-                          <Mail className="h-4 w-4 mr-1" />
-                          <span>{trainer.email}</span>
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </CardContent>
+            </Card>
 
-              {/* Additional Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>About {trainer.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">Certifications</h4>
-                      <p className="text-gray-600">{trainer.certifications || 'Certified Personal Trainer, Fitness Specialist'}</p>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div>
-                      <h4 className="font-semibold mb-2">Training Categories</h4>
-                      <p className="text-gray-600 capitalize">{trainer.category}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Booking Sidebar */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-6">
-                <CardHeader>
-                  <CardTitle className="text-center">Book a Session</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center mb-6">
-                    <div className="text-3xl font-bold text-purple-600 mb-1">
-                      ₹{trainer.hourly_rate}
-                    </div>
-                    <div className="text-gray-500">per session</div>
-                  </div>
-
-                  <Button 
-                    className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white mb-4"
-                    onClick={() => setShowBookingModal(true)}
-                  >
-                    <Calendar className="h-4 w-4 mr-2" />
-                    Book Now
-                  </Button>
-
-                  <div className="text-xs text-gray-500 text-center">
-                    Free cancellation up to 24 hours before session
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <AboutSection
+              businessName={trainer.name}
+              description={`${trainer.certifications || 'Certified Personal Trainer'} with ${trainer.experience} years of experience in ${trainer.category}.`}
+              icon={<Award className="h-5 w-5 text-white" />}
+              gradient="from-purple-500 to-indigo-600"
+            />
           </div>
-        </section>
 
-        {/* Booking Modal */}
-        <BookingModal
-          businessName={trainer.name}
-          businessType="trainer"
-          businessId={trainer.id}
-          price={`₹${trainer.hourly_rate}/session`}
-          trigger={
-            showBookingModal ? (
-              <div className="fixed inset-0 z-50 flex items-center justify-center">
-                <div className="fixed inset-0 bg-black/50" onClick={() => setShowBookingModal(false)}></div>
-              </div>
-            ) : <></>
-          }
-        />
-      </div>
+          <div className="lg:col-span-1">
+            <BookingPanel
+              businessId={trainer.id}
+              businessName={trainer.name}
+              businessType="trainer"
+              rating={trainer.rating || 4.8}
+              reviewCount={trainer.reviews_count || 12}
+              location={{
+                city: trainer.location.split(',')[0] || trainer.location,
+                state: trainer.location.split(',')[1] || '',
+                address: trainer.location
+              }}
+              hours={{
+                opening: "6:00",
+                closing: "22:00"
+              }}
+              phone={trainer.phone}
+              pricing={{
+                hourly: trainer.hourly_rate
+              }}
+            />
+          </div>
+        </div>
+      </ListingLayout>
     </>
   );
 };
