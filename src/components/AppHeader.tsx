@@ -1,13 +1,16 @@
 
 import { Button } from "@/components/ui/button";
-import { Dumbbell, LogOut, Calendar, Building, Menu, X } from "lucide-react";
+import { Dumbbell, LogOut, Calendar, Building, Menu, X, MapPin, Navigation } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const AppHeader = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -18,6 +21,13 @@ const AppHeader = () => {
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleGetLocation = () => {
+    getCurrentPosition();
+    if (position) {
+      toast.success("Location access granted successfully!");
+    }
   };
 
   const navItems = [
@@ -55,6 +65,26 @@ const AppHeader = () => {
           </nav>
           
           <div className="flex items-center space-x-2 md:space-x-4">
+            {/* Location Access Button */}
+            <Button
+              onClick={handleGetLocation}
+              disabled={geoLoading}
+              variant="outline"
+              size="sm"
+              className="hidden md:flex items-center text-xs"
+              title={position ? "Location Active" : "Enable Location Access"}
+            >
+              {geoLoading ? (
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-600 mr-1"></div>
+              ) : position ? (
+                <Navigation className="h-3 w-3 mr-1 text-green-600" />
+              ) : (
+                <MapPin className="h-3 w-3 mr-1" />
+              )}
+              <span className="hidden lg:inline">
+                {position ? "Located" : "Location"}
+              </span>
+            </Button>
             {user ? (
               <>
                 <div className="hidden md:flex items-center space-x-2">
@@ -124,6 +154,24 @@ const AppHeader = () => {
                   </Link>
                 ))}
               </div>
+
+              {/* Mobile Location Button */}
+              <Button
+                onClick={handleGetLocation}
+                disabled={geoLoading}
+                variant="outline"
+                className="w-full justify-start text-sm"
+                title={position ? "Location Active" : "Enable Location Access"}
+              >
+                {geoLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-600 mr-2"></div>
+                ) : position ? (
+                  <Navigation className="h-4 w-4 mr-2 text-green-600" />
+                ) : (
+                  <MapPin className="h-4 w-4 mr-2" />
+                )}
+                {position ? "Location Active" : "Enable Location Access"}
+              </Button>
               
               {user ? (
                 <div className="flex flex-col space-y-2 pt-2 border-t border-gray-100">

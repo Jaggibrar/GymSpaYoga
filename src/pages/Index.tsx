@@ -1,30 +1,13 @@
 
-import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Dumbbell, Waves, Heart, MapPin, Star, Clock, Users, TrendingUp, Navigation, ArrowRight } from "lucide-react";
+import { Dumbbell, Waves, Heart, MapPin, Star, Users, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
-
 import { useAuth } from "@/hooks/useAuth";
-import { useGeolocation } from "@/hooks/useGeolocation";
-
 import RecentListings from "@/components/RecentListings";
-import { toast } from "sonner";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
-  const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
-  const [locationGranted, setLocationGranted] = useState(false);
-
-  const handleGetLocation = () => {
-    getCurrentPosition();
-    if (position) {
-      setLocationGranted(true);
-      toast.success("Location access granted successfully!");
-    }
-  };
 
   if (authLoading) {
     return (
@@ -113,48 +96,6 @@ const Index = () => {
               </Link>
             </div>
 
-            {/* Location Access Card */}
-            <div className="flex justify-center px-4">
-              <Card className="glass-effect max-w-lg w-full">
-              <CardContent className="p-4 sm:p-6 lg:p-8">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0" />
-                    <span className="font-semibold text-foreground text-sm sm:text-base lg:text-lg">Find Wellness Centers Near You</span>
-                  </div>
-                  {locationGranted && (
-                    <Badge variant="secondary" className="bg-green-100 text-green-700 self-start sm:self-center">
-                      <Navigation className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      Active
-                    </Badge>
-                  )}
-                </div>
-                
-                <Button 
-                  onClick={handleGetLocation}
-                  disabled={geoLoading}
-                  className="w-full btn-primary text-sm sm:text-base min-h-[48px]"
-                >
-                  {geoLoading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2 sm:mr-3"></div>
-                      Getting Location...
-                    </>
-                  ) : position ? (
-                    <>
-                      <Navigation className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      Location Active - Find Nearby Centers
-                    </>
-                  ) : (
-                    <>
-                      <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
-                      Enable Location Access
-                    </>
-                  )}
-                </Button>
-              </CardContent>
-              </Card>
-            </div>
           </div>
         </div>
       </section>
