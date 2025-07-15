@@ -6,6 +6,7 @@ import { MapPin, Clock, Star, Crown, Diamond, IndianRupee } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import OptimizedImage from '@/components/OptimizedImage';
+import { logger } from '@/utils/logger';
 
 interface RecentListing {
   id: string;
@@ -28,7 +29,7 @@ const RecentListings = () => {
   useEffect(() => {
     const fetchRecentListings = async () => {
       try {
-        console.log('Fetching recent listings...');
+        logger.debug('Fetching recent listings...');
         const { data, error } = await supabase
           .from('business_profiles')
           .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, created_at')
@@ -37,14 +38,14 @@ const RecentListings = () => {
           .limit(6);
 
         if (error) {
-          console.error('Error fetching recent listings:', error);
+          logger.error('Error fetching recent listings:', error);
           throw error;
         }
         
-        console.log('Recent listings fetched:', data);
+        logger.debug('Recent listings fetched:', data);
         setListings(data || []);
       } catch (error) {
-        console.error('Error fetching recent listings:', error);
+        logger.error('Error fetching recent listings:', error);
         // Set some sample data if there's an error or no data
         setListings([
           {

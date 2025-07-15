@@ -235,6 +235,80 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_preferences: {
+        Row: {
+          auto_confirm_bookings: boolean | null
+          created_at: string | null
+          id: string
+          max_travel_distance: number | null
+          notification_preferences: Json | null
+          preferred_business_types: string[] | null
+          preferred_time_slots: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          auto_confirm_bookings?: boolean | null
+          created_at?: string | null
+          id?: string
+          max_travel_distance?: number | null
+          notification_preferences?: Json | null
+          preferred_business_types?: string[] | null
+          preferred_time_slots?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          auto_confirm_bookings?: boolean | null
+          created_at?: string | null
+          id?: string
+          max_travel_distance?: number | null
+          notification_preferences?: Json | null
+          preferred_business_types?: string[] | null
+          preferred_time_slots?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      booking_reminders: {
+        Row: {
+          booking_id: number | null
+          created_at: string | null
+          id: string
+          reminder_type: string
+          scheduled_at: string
+          sent_at: string | null
+          status: string | null
+        }
+        Insert: {
+          booking_id?: number | null
+          created_at?: string | null
+          id?: string
+          reminder_type: string
+          scheduled_at: string
+          sent_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          booking_id?: number | null
+          created_at?: string | null
+          id?: string
+          reminder_type?: string
+          scheduled_at?: string
+          sent_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_reminders_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       booking_status_history: {
         Row: {
           booking_id: number | null
@@ -275,12 +349,15 @@ export type Database = {
       }
       bookings: {
         Row: {
+          auto_confirm: boolean | null
           booking_date: string | null
+          booking_source: string | null
           booking_time: string | null
           business_id: string | null
           business_response: string | null
           business_type: string | null
           cancellation_reason: string | null
+          cancellation_reason_category: string | null
           cancelled_at: string | null
           confirmation_code: string | null
           confirmed_at: string | null
@@ -289,6 +366,7 @@ export type Database = {
           id: number
           notes: string | null
           payment_status: string | null
+          preferred_contact_method: string | null
           response_at: string | null
           status: string | null
           total_amount: number | null
@@ -297,12 +375,15 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          auto_confirm?: boolean | null
           booking_date?: string | null
+          booking_source?: string | null
           booking_time?: string | null
           business_id?: string | null
           business_response?: string | null
           business_type?: string | null
           cancellation_reason?: string | null
+          cancellation_reason_category?: string | null
           cancelled_at?: string | null
           confirmation_code?: string | null
           confirmed_at?: string | null
@@ -311,6 +392,7 @@ export type Database = {
           id?: number
           notes?: string | null
           payment_status?: string | null
+          preferred_contact_method?: string | null
           response_at?: string | null
           status?: string | null
           total_amount?: number | null
@@ -319,12 +401,15 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          auto_confirm?: boolean | null
           booking_date?: string | null
+          booking_source?: string | null
           booking_time?: string | null
           business_id?: string | null
           business_response?: string | null
           business_type?: string | null
           cancellation_reason?: string | null
+          cancellation_reason_category?: string | null
           cancelled_at?: string | null
           confirmation_code?: string | null
           confirmed_at?: string | null
@@ -333,6 +418,7 @@ export type Database = {
           id?: number
           notes?: string | null
           payment_status?: string | null
+          preferred_contact_method?: string | null
           response_at?: string | null
           status?: string | null
           total_amount?: number | null
