@@ -1286,6 +1286,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_old_notifications: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_business_owner_from_booking: {
         Args: { booking_id_param: number }
         Returns: string
@@ -1305,6 +1309,10 @@ export type Database = {
       is_admin: {
         Args: Record<PropertyKey, never> | { user_uuid?: string }
         Returns: boolean
+      }
+      mark_old_notifications_read: {
+        Args: Record<PropertyKey, never>
+        Returns: number
       }
       update_booking_status: {
         Args: {
