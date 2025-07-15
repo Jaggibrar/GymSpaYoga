@@ -114,7 +114,8 @@ const Index = () => {
             </div>
 
             {/* Location Access Card */}
-            <Card className="glass-effect max-w-lg mx-auto mx-4">
+            <div className="flex justify-center px-4">
+              <Card className="glass-effect max-w-lg w-full">
               <CardContent className="p-4 sm:p-6 lg:p-8">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
                   <div className="flex items-center space-x-2 sm:space-x-3">
@@ -152,7 +153,8 @@ const Index = () => {
                   )}
                 </Button>
               </CardContent>
-            </Card>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
