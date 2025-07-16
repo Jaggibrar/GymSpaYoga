@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import { useAuth } from "@/hooks/useAuth";
 import RecentListings from "@/components/RecentListings";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -46,6 +47,79 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <SEOHead
+        title="India's Best Gym, Spa & Yoga Booking Platform | GymSpaYoga - Premium Fitness & Wellness"
+        description="🏋️‍♂️ Find & book premium gyms, luxury spas & authentic yoga studios across India. ⭐ 50,000+ happy members, 1000+ locations. Book instantly with verified reviews, expert trainers & exclusive wellness packages."
+        keywords="gym near me, spa booking, yoga classes, fitness center, wellness India, Mumbai gym, Delhi spa, Bangalore yoga, personal trainer, massage therapy, meditation, pilates, crossfit, luxury spa treatments, fitness membership, health club, wellness center, Indian gyms, best spas India, fitness booking platform, wellness marketplace, premium gyms India, luxury spas India, certified yoga instructors, fitness classes near me, yoga studios near me, spa treatments near me"
+        type="website"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://gymspayoga.com/#homepage",
+          "name": "GymSpaYoga - India's Premier Wellness Marketplace",
+          "description": "Find and book premium gyms, luxury spas, and authentic yoga studios across India. Join 50,000+ happy members on their wellness journey.",
+          "url": "https://gymspayoga.com/",
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Wellness Services",
+            "description": "Premium fitness and wellness services available on GymSpaYoga",
+            "numberOfItems": 4,
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                  "@type": "Service",
+                  "name": "Premium Gyms",
+                  "description": "State-of-the-art fitness centers with expert trainers",
+                  "url": "https://gymspayoga.com/gyms"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                  "@type": "Service",
+                  "name": "Luxury Spas",
+                  "description": "Rejuvenating wellness experiences for mind and body",
+                  "url": "https://gymspayoga.com/spas"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                  "@type": "Service",
+                  "name": "Yoga Studios",
+                  "description": "Find your inner peace with certified yoga instructors",
+                  "url": "https://gymspayoga.com/yoga"
+                }
+              },
+              {
+                "@type": "ListItem",
+                "position": 4,
+                "item": {
+                  "@type": "Service",
+                  "name": "Personal Trainers",
+                  "description": "Expert fitness guidance from certified professionals",
+                  "url": "https://gymspayoga.com/trainers"
+                }
+              }
+            ]
+          },
+          "breadcrumb": {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://gymspayoga.com/"
+              }
+            ]
+          }
+        }}
+      />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">

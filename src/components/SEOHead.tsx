@@ -17,8 +17,8 @@ interface SEOHeadProps {
 const SEOHead = ({ 
   title, 
   description, 
-  keywords = 'gym, spa, yoga, fitness, wellness, booking, health, personal trainer, fitness center, meditation', 
-  image = '/api/placeholder/1200/630',
+  keywords = 'gym near me, spa booking, yoga classes, fitness center, wellness, Mumbai gym, Delhi spa, Bangalore yoga, personal trainer, massage therapy, meditation, pilates, crossfit, luxury spa treatments, fitness membership, health club, wellness center, Indian gyms, best spas India, fitness booking platform, wellness marketplace, premium gyms India, luxury spas India, certified yoga instructors', 
+  image = 'https://gymspayoga.com/og-image.jpg',
   url = typeof window !== 'undefined' ? window.location.href : '',
   type = 'website',
   noindex = false,
