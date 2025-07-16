@@ -30,7 +30,7 @@ const AmenitiesGrid: React.FC<AmenitiesGridProps> = ({
   const displayAmenities = amenities.length > 0 ? amenities : defaultAmenities;
 
   return (
-    <Card className="border-0 shadow-lg">
+    <Card className="border-0 shadow-lg bg-white">
       <CardContent className="p-8">
         <SectionHeader
           icon={icon}
@@ -41,12 +41,12 @@ const AmenitiesGrid: React.FC<AmenitiesGridProps> = ({
           {displayAmenities.map((amenity, index) => (
             <div 
               key={index} 
-              className="flex items-center gap-3 p-4 bg-secondary/30 rounded-xl border border-border/50 hover:bg-secondary/50 transition-colors duration-200"
+              className="flex items-center gap-3 py-2"
             >
-              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Check className="h-4 w-4 text-white" />
+              <div className="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Check className="h-4 w-4 text-white stroke-[2.5]" />
               </div>
-              <span className="font-medium text-foreground capitalize">{amenity}</span>
+              <span className="text-gray-800 font-medium text-sm capitalize">{amenity}</span>
             </div>
           ))}
         </div>
