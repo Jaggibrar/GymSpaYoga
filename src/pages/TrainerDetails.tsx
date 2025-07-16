@@ -8,6 +8,7 @@ import BookingPanel from '@/components/listing/BookingPanel';
 import AboutSection from '@/components/listing/AboutSection';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 const TrainerDetails = () => {
   const { id } = useParams();
