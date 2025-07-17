@@ -98,6 +98,7 @@ export const useTrainerRegistration = () => {
       }
 
       // Update user profile role to business_owner (closest valid enum value for service providers)
+      // The trigger will automatically set is_trainer = true when trainer profile is created
       const { error: roleError } = await supabase
         .from('user_profiles')
         .upsert({ 

@@ -23,35 +23,20 @@ export default function RoleBasedRedirect() {
       return;
     }
 
-    // Check if user is business owner or has trainer profile
+    // Check if user is business owner or trainer
     if (userProfile?.role === 'business_owner') {
-      // Check if they have a trainer profile to determine which dashboard
-      checkTrainerProfile(user.id);
+      // Check if they are a trainer using the is_trainer field
+      if (userProfile.is_trainer) {
+        navigate('/trainer-dashboard');
+      } else {
+        navigate('/business-dashboard');
+      }
       return;
     }
 
     // Default to home page for regular users
     navigate('/');
   }, [user, userProfile, authLoading, navigate]);
-
-  const checkTrainerProfile = async (userId: string) => {
-    try {
-      const { data } = await supabase
-        .from('trainer_profiles')
-        .select('id')
-        .eq('user_id', userId)
-        .maybeSingle();
-      
-      if (data) {
-        navigate('/trainer-dashboard');
-      } else {
-        navigate('/business-dashboard');
-      }
-    } catch (error) {
-      console.error('Error checking trainer profile:', error);
-      navigate('/business-dashboard');
-    }
-  };
 
   if (authLoading) {
     return (

@@ -1179,6 +1179,7 @@ export type Database = {
           full_name: string | null
           gender: string | null
           id: string
+          is_trainer: boolean | null
           phone: string | null
           pin_code: string | null
           preferences: Json | null
@@ -1198,6 +1199,7 @@ export type Database = {
           full_name?: string | null
           gender?: string | null
           id?: string
+          is_trainer?: boolean | null
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null
@@ -1217,6 +1219,7 @@ export type Database = {
           full_name?: string | null
           gender?: string | null
           id?: string
+          is_trainer?: boolean | null
           phone?: string | null
           pin_code?: string | null
           preferences?: Json | null

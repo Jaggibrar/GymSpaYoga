@@ -12,6 +12,7 @@ interface UserProfile {
   phone?: string;
   city?: string;
   state?: string;
+  is_trainer?: boolean;
 }
 
 interface AuthContextType {
