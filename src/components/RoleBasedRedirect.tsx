@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
 export default function RoleBasedRedirect() {
@@ -16,21 +17,41 @@ export default function RoleBasedRedirect() {
       return;
     }
 
-    // Check if user is admin
-    if (userProfile?.role === 'admin') {
+    // Check if user is the specific admin email
+    if (user.email === 'jaggibrar001234@gmail.com') {
       navigate('/admin-dashboard');
       return;
     }
 
-    // Check if user is business owner
+    // Check if user is business owner or has trainer profile
     if (userProfile?.role === 'business_owner') {
-      navigate('/business-dashboard');
+      // Check if they have a trainer profile to determine which dashboard
+      checkTrainerProfile(user.id);
       return;
     }
 
     // Default to home page for regular users
     navigate('/');
   }, [user, userProfile, authLoading, navigate]);
+
+  const checkTrainerProfile = async (userId: string) => {
+    try {
+      const { data } = await supabase
+        .from('trainer_profiles')
+        .select('id')
+        .eq('user_id', userId)
+        .maybeSingle();
+      
+      if (data) {
+        navigate('/trainer-dashboard');
+      } else {
+        navigate('/business-dashboard');
+      }
+    } catch (error) {
+      console.error('Error checking trainer profile:', error);
+      navigate('/business-dashboard');
+    }
+  };
 
   if (authLoading) {
     return (

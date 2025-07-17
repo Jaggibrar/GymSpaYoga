@@ -11,6 +11,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
 
 import AdminRoute from "./components/AdminRoute";
+import TrainerRoute from "./components/TrainerRoute";
+import BusinessRoute from "./components/BusinessRoute";
 
 // Import all pages
 import Index from "./pages/Index";
@@ -45,6 +47,7 @@ import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import TrainerDashboard from "./pages/TrainerDashboard";
 import UserBookings from "./pages/UserBookings";
 
 const queryClient = new QueryClient();
@@ -100,7 +103,16 @@ const AppContent = () => {
           } />
           <Route path="/business-dashboard" element={
             <ProtectedRoute>
-              <BusinessDashboard />
+              <BusinessRoute>
+                <BusinessDashboard />
+              </BusinessRoute>
+            </ProtectedRoute>
+          } />
+          <Route path="/trainer-dashboard" element={
+            <ProtectedRoute>
+              <TrainerRoute>
+                <TrainerDashboard />
+              </TrainerRoute>
             </ProtectedRoute>
           } />
           <Route path="/create-listing" element={

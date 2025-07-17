@@ -10,6 +10,9 @@ interface AdminRouteProps {
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { user, loading, isAdmin } = useAuth();
+  
+  // Check if user is the specific admin email
+  const isSpecificAdmin = user?.email === 'jaggibrar001234@gmail.com';
 
   if (loading) {
     return (
@@ -26,7 +29,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!isAdmin) {
+  if (!isAdmin && !isSpecificAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
