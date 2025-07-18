@@ -9,6 +9,8 @@ import { AuthProvider } from "./hooks/useAuth";
 import { useScrollToTop } from '@/hooks/useScrollToTop';
 import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
+import FavoritesProvider from "./components/FavoritesProvider";
+import Breadcrumbs from "./components/Breadcrumbs";
 
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
@@ -59,6 +61,7 @@ const AppContent = () => {
     <div className="min-h-screen bg-background font-sans antialiased">
       <GlobalLoadingIndicator />
       <MainNavigation />
+      <Breadcrumbs />
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<Index />} />
@@ -153,11 +156,13 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <TooltipProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </TooltipProvider>
+          <FavoritesProvider>
+            <TooltipProvider>
+              <Router>
+                <AppContent />
+              </Router>
+            </TooltipProvider>
+          </FavoritesProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>

@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Star, Crown, Diamond, IndianRupee } from 'lucide-react';
+import { MapPin, Clock, Star, Crown, Diamond, IndianRupee, Shield, Award } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import OptimizedImage from '@/components/OptimizedImage';
+import FavoriteButton from '@/components/FavoriteButton';
 import { logger } from '@/utils/logger';
 
 interface RecentListing {
@@ -208,14 +209,29 @@ const RecentListings = () => {
                     height={224}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
-                  {/* Business Type Badge - Top Left */}
+                  
+                  {/* Favorite Button - Top Left */}
                   <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
+                    <FavoriteButton 
+                      businessId={listing.id} 
+                      size="sm"
+                      className="bg-white/90 hover:bg-white shadow-md"
+                    />
+                  </div>
+
+                  {/* Business Type Badge - Top Center */}
+                  <div className="absolute top-2 sm:top-3 left-1/2 transform -translate-x-1/2">
                     <Badge className={`${getBusinessTypeColor(listing.business_type)} px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold shadow-lg`}>
                       {listing.business_type.toUpperCase()}
                     </Badge>
                   </div>
-                  {/* Tier Badge - Top Right */}
-                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+
+                  {/* Verified Badge & Tier - Top Right */}
+                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1">
+                    <Badge className="bg-green-500 text-white px-2 py-1 shadow-lg text-xs flex items-center gap-1">
+                      <Shield className="h-3 w-3" />
+                      Verified
+                    </Badge>
                     <Badge className={`${getTierColor(listing.monthly_price || listing.session_price)} text-white px-2 py-1 shadow-lg`}>
                       {getTierIcon(listing.monthly_price || listing.session_price)}
                     </Badge>
@@ -240,7 +256,11 @@ const RecentListings = () => {
                         {new Date(listing.created_at).toLocaleDateString()}
                       </span>
                     </div>
-                    <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="text-sm font-medium text-gray-600">4.8</span>
+                      <Award className="h-4 w-4 text-blue-500 ml-2" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
