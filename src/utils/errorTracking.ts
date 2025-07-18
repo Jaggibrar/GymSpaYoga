@@ -9,8 +9,15 @@ interface ErrorReport {
   context?: Record<string, any>;
 }
 
+import { memoryManager } from './memoryManager';
+
 class ErrorTracker {
-  private errors: ErrorReport[] = [];
+  private errors;
+  
+  constructor() {
+    // Use circular buffer to prevent memory leaks (max 100 errors)
+    this.errors = memoryManager.createCircularBuffer<ErrorReport>(100);
+  }
   
   logError(error: Error | string, severity: ErrorReport['severity'] = 'medium', context?: Record<string, any>) {
     const errorReport: ErrorReport = {
@@ -22,7 +29,7 @@ class ErrorTracker {
       context,
     };
     
-    this.errors.push(errorReport);
+    this.errors.add(errorReport);
     
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
@@ -45,11 +52,11 @@ class ErrorTracker {
   }
   
   getErrors() {
-    return this.errors;
+    return this.errors.getAll();
   }
   
   clearErrors() {
-    this.errors = [];
+    this.errors.clear();
   }
 }
 

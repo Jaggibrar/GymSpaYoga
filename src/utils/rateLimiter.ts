@@ -59,7 +59,10 @@ class RateLimiter {
 
 export const rateLimiter = new RateLimiter();
 
-// Cleanup old requests every 5 minutes
-setInterval(() => {
+// Use memory manager for safe cleanup
+import { memoryManager } from './memoryManager';
+
+// Cleanup old requests every 5 minutes using memory manager
+memoryManager.createInterval(() => {
   rateLimiter.cleanup();
 }, 300000);
