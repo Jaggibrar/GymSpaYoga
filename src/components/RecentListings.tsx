@@ -179,10 +179,10 @@ const RecentListings = () => {
 
   // Always show the section, even if no listings
   return (
-    <section className="py-8 sm:py-12 bg-gray-50">
+    <section className="py-6 sm:py-8 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-6 sm:mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-3">Recently Listed</h2>
+        <div className="text-center mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Recently Listed</h2>
           <p className="text-base sm:text-lg text-gray-600">Discover the newest wellness destinations in your area</p>
         </div>
 
