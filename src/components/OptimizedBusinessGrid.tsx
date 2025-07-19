@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Clock, Star, Phone, Mail } from 'lucide-react';
+import { MapPin, Clock, Star, Phone, Mail, Verified } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ImageGallery from './ImageGallery';
 
@@ -66,9 +66,13 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
             4.8
           </Badge>
         </div>
-        <div className="absolute top-3 left-3">
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
           <Badge className={`${getCategoryColor(business.business_type)} border-0 font-medium capitalize shadow-md`}>
             {business.business_type}
+          </Badge>
+          <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1 shadow-md">
+            <Verified className="h-3 w-3" />
+            Verified
           </Badge>
         </div>
       </div>

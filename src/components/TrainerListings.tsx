@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, Phone, Mail, Users } from "lucide-react";
+import { MapPin, Star, Phone, Mail, Users, Verified } from "lucide-react";
 import { useTrainers } from "@/hooks/useTrainers";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -92,6 +92,12 @@ const TrainerListings = ({ searchTerm, location, sortBy, priceFilter }: TrainerL
                       <span className="text-sm text-gray-500">(12)</span>
                     </div>
                   </div>
+                </div>
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1 shadow-md">
+                    <Verified className="h-3 w-3" />
+                    Verified
+                  </Badge>
                 </div>
               </div>
               
