@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation } from 'lucide-react';
+import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation, Verified } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
@@ -226,9 +226,13 @@ const Gyms = () => {
                               alt={business.business_name}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             />
-                            <div className="absolute top-4 left-4">
+                            <div className="absolute top-4 left-4 flex flex-col gap-2">
                               <Badge className="bg-red-500 text-white border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm">
                                 GYM
+                              </Badge>
+                              <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1 shadow-md">
+                                <Verified className="h-3 w-3" />
+                                Verified
                               </Badge>
                             </div>
                             <div className="absolute top-4 right-4">

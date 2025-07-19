@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Clock, Phone, Mail, Search, MessageCircle, Eye } from 'lucide-react';
+import { MapPin, Star, Clock, Phone, Mail, Search, MessageCircle, Eye, Verified } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import BookingModal from '@/components/BookingModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -156,9 +156,13 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                     <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${getTierColor(tier)} text-white border-0 capitalize px-3 py-1 shadow-lg`}>
                       {tier}
                     </Badge>
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-4 left-4 flex flex-col gap-2">
                       <Badge className="bg-black/70 text-white border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm">
                         {business.business_type?.replace('_', ' ').toUpperCase()}
+                      </Badge>
+                      <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1 shadow-md">
+                        <Verified className="h-3 w-3" />
+                        Verified
                       </Badge>
                     </div>
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>

@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Dumbbell, LogOut, Calendar, Building, Menu, X, MapPin, Navigation } from "lucide-react";
+import { Dumbbell, LogOut, Calendar, Building, Menu, X, MapPin, Navigation, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useGeolocation } from "@/hooks/useGeolocation";
@@ -100,6 +100,12 @@ const AppHeader = () => {
                       Business
                     </Button>
                   </Link>
+                  <Link to="/trainer-dashboard">
+                    <Button variant="outline" className="text-xs md:text-sm">
+                      <Users className="h-3 w-3 mr-1" />
+                      Trainer
+                    </Button>
+                  </Link>
                   <Button 
                     onClick={handleLogout}
                     variant="outline" 
@@ -185,6 +191,12 @@ const AppHeader = () => {
                     <Button variant="outline" className="w-full justify-start text-sm">
                       <Building className="h-4 w-4 mr-2" />
                       Business Dashboard
+                    </Button>
+                  </Link>
+                  <Link to="/trainer-dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full justify-start text-sm">
+                      <Users className="h-4 w-4 mr-2" />
+                      Trainer Dashboard
                     </Button>
                   </Link>
                   <Button 
