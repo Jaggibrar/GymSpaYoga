@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Award, Calendar, Users } from 'lucide-react';
-import { useTrainers } from '@/hooks/useTrainers';
+import { useTrainers, Trainer } from '@/hooks/useTrainers';
 import SEOHead from '@/components/SEOHead';
 import ListingLayout from '@/components/listing/ListingLayout';
 import BookingPanel from '@/components/listing/BookingPanel';
@@ -13,10 +13,23 @@ import { Button } from '@/components/ui/button';
 const TrainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { trainers, loading } = useTrainers();
+  const { getTrainerById } = useTrainers();
+  const [trainer, setTrainer] = useState<Trainer | null>(null);
+  const [loading, setLoading] = useState(true);
   const [showBookingModal, setShowBookingModal] = useState(false);
   
-  const trainer = trainers.find(t => t.id === id);
+  useEffect(() => {
+    const fetchTrainer = async () => {
+      if (id) {
+        setLoading(true);
+        const trainerData = await getTrainerById(id);
+        setTrainer(trainerData);
+        setLoading(false);
+      }
+    };
+    
+    fetchTrainer();
+  }, [id, getTrainerById]);
 
   if (loading) {
     return (
