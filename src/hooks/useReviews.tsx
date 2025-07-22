@@ -58,7 +58,7 @@ export const useReviews = () => {
         .from('reviews')
         .insert([{ ...reviewData, user_id: user.id }])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         throw error;

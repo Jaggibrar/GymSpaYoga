@@ -74,7 +74,7 @@ export const useOrders = () => {
           updated_at: new Date().toISOString()
         }])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         throw error;
@@ -104,7 +104,7 @@ export const useOrders = () => {
         .update(updateData)
         .eq('id', orderId)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         throw error;

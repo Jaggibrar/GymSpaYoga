@@ -115,7 +115,7 @@ export const useBlogs = () => {
           meta_description: blogData.meta_description || blogData.excerpt
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error creating blog:', error);
@@ -198,7 +198,7 @@ export const useBlogs = () => {
           .from('blogs')
           .select('likes_count')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (currentBlog) {
           await supabase
@@ -219,7 +219,7 @@ export const useBlogs = () => {
           .from('blogs')
           .select('likes_count')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (currentBlog) {
           await supabase

@@ -55,7 +55,7 @@ export const useBookingConfirmation = () => {
           notes: bookingData.notes
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (bookingError) {
         console.error('useBookingConfirmation - Error creating booking:', bookingError);

@@ -108,7 +108,7 @@ export const useChat = () => {
         .from('chat_rooms')
         .insert([roomData])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       
@@ -143,7 +143,7 @@ export const useChat = () => {
         .from('chat_messages')
         .insert([messageData])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       

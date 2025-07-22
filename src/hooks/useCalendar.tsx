@@ -66,7 +66,7 @@ export const useCalendar = () => {
         .from('calendar_events')
         .insert([{ ...eventData, user_id: user.id }])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       
@@ -95,7 +95,7 @@ export const useCalendar = () => {
         .eq('id', eventId)
         .eq('user_id', user.id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 interface FavoriteItem {
   id: string;
@@ -42,7 +42,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const { toast } = useToast();
+  
 
   // Load favorites when user changes
   useEffect(() => {
@@ -89,11 +89,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
       setFavorites(formattedFavorites);
     } catch (error) {
       console.error('Error loading favorites:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load favorites',
-        variant: 'destructive',
-      });
+      toast.error('Failed to load favorites');
     } finally {
       setIsLoading(false);
     }
@@ -105,11 +101,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
 
   const addToFavorites = async (businessId: string) => {
     if (!user) {
-      toast({
-        title: 'Sign in required',
-        description: 'Please sign in to add favorites',
-        variant: 'destructive',
-      });
+      toast.error('Please sign in to add favorites');
       return;
     }
 
@@ -143,17 +135,10 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
 
       setFavorites(prev => [...prev, newFavorite]);
       
-      toast({
-        title: 'Added to favorites',
-        description: 'Business added to your favorites list',
-      });
+      toast.success('Added to favorites');
     } catch (error) {
       console.error('Error adding to favorites:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to add to favorites',
-        variant: 'destructive',
-      });
+      toast.error('Failed to add to favorites');
     }
   };
 
@@ -171,17 +156,10 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
 
       setFavorites(prev => prev.filter(fav => fav.business_id !== businessId));
       
-      toast({
-        title: 'Removed from favorites',
-        description: 'Business removed from your favorites list',
-      });
+      toast.success('Removed from favorites');
     } catch (error) {
       console.error('Error removing from favorites:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to remove from favorites',
-        variant: 'destructive',
-      });
+      toast.error('Failed to remove from favorites');
     }
   };
 
