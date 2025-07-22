@@ -94,7 +94,7 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
         .select('*')
         .eq('id', id)
         .eq('status', 'approved')
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching trainer:', error);

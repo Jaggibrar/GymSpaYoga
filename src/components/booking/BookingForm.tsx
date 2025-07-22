@@ -71,7 +71,7 @@ export const BookingForm = ({
         .from('bookings')
         .insert([bookingData])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Booking error:', error);

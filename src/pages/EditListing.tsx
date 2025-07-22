@@ -58,7 +58,7 @@ const EditListing = () => {
         .select('*')
         .eq('id', id)
         .eq('user_id', user?.id) // Ensure user can only edit their own listings
-        .single();
+        .maybeSingle();
 
       if (error) {
         if (error.code === 'PGRST116') {

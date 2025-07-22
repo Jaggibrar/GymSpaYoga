@@ -140,7 +140,7 @@ export const useBlogs = () => {
         .select(`*`)
         .eq('slug', slug)
         .eq('published', true)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching blog by slug:', error);

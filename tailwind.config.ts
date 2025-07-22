@@ -38,7 +38,7 @@ export default {
           800: '#115e59',
           900: '#134e4a',
         },
-        accent: {
+        "accent-palette": {
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',

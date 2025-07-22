@@ -70,7 +70,7 @@ export const useAdvancedSearch = () => {
         .from('search_filters')
         .insert([{ ...filterData, user_id: user.id }])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       
@@ -100,7 +100,7 @@ export const useAdvancedSearch = () => {
         .eq('id', filterId)
         .eq('user_id', user.id)
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       

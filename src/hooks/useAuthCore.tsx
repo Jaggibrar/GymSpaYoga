@@ -40,12 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkAdminStatus = async (userId: string, userEmail?: string) => {
     try {
-      // Check if this is the specific admin email
-      if (userEmail === 'jaggibrar001234@gmail.com') {
-        setIsAdmin(true);
-        return true;
-      }
-
       const { data } = await supabase
         .from('admin_permissions')
         .select('role, permissions')
@@ -80,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUserProfile(data || null);
         console.log('User profile set:', data);
         
-        // Check admin status using user email from session
+        // Check admin status
         await checkAdminStatus(userId);
         console.log('✅ Profile fetch complete');
       }
@@ -118,8 +112,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           // Fetch profile but don't block on it
           fetchUserProfile(session.user.id);
-          // Also check admin status with user email
-          checkAdminStatus(session.user.id, session.user.email);
+          // Also check admin status
+          checkAdminStatus(session.user.id);
         } else {
           setUserProfile(null);
           setIsAdmin(false);
@@ -149,8 +143,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(session);
           setUser(session.user);
           await fetchUserProfile(session.user.id);
-          // Also check admin status with user email
-          await checkAdminStatus(session.user.id, session.user.email);
+          // Also check admin status
+          await checkAdminStatus(session.user.id);
         }
         
         // Always set loading to false after initial check

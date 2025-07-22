@@ -121,7 +121,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
           business_id: businessId,
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
@@ -130,7 +130,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
         .from('business_profiles')
         .select('business_name, business_type, city, state, image_urls')
         .eq('id', businessId)
-        .single();
+        .maybeSingle();
 
       const newFavorite: FavoriteItem = {
         ...data,
