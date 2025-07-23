@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Award, Calendar, Users } from 'lucide-react';
+import { Award, Calendar, Users, Star, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { useTrainers, Trainer } from '@/hooks/useTrainers';
 import SEOHead from '@/components/SEOHead';
 import ListingLayout from '@/components/listing/ListingLayout';
 import BookingPanel from '@/components/listing/BookingPanel';
 import AboutSection from '@/components/listing/AboutSection';
+import EnhancedImageGallery from '@/components/EnhancedImageGallery';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const TrainerDetails = () => {
   const { id } = useParams();
@@ -33,20 +35,21 @@ const TrainerDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }
 
   if (!trainer) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Card className="w-full max-w-md border-0 shadow-xl">
           <CardContent className="text-center p-8">
+            <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-4">Trainer Not Found</h2>
-            <p className="text-gray-600 mb-6">The trainer you're looking for doesn't exist or has been removed.</p>
-            <Button onClick={() => navigate('/trainers')}>
+            <p className="text-muted-foreground mb-6">The trainer you're looking for doesn't exist or has been removed.</p>
+            <Button onClick={() => navigate('/trainers')} className="rounded-xl">
               Back to Trainers
             </Button>
           </CardContent>
@@ -55,14 +58,29 @@ const TrainerDetails = () => {
     );
   }
 
-  const getTierColor = (tier: string) => {
-    const colors = {
-      certified: 'bg-blue-100 text-blue-700',
-      expert: 'bg-purple-100 text-purple-700',
-      elite: 'bg-yellow-100 text-yellow-700'
+  const getTierInfo = (tier: string) => {
+    const tiers = {
+      certified: {
+        color: 'bg-blue-50 text-blue-700 border-blue-200',
+        gradient: 'from-blue-500 to-blue-600',
+        icon: CheckCircle
+      },
+      expert: {
+        color: 'bg-purple-50 text-purple-700 border-purple-200',
+        gradient: 'from-purple-500 to-purple-600',
+        icon: Award
+      },
+      elite: {
+        color: 'bg-amber-50 text-amber-700 border-amber-200',
+        gradient: 'from-amber-500 to-amber-600',
+        icon: Star
+      }
     };
-    return colors[tier as keyof typeof colors] || 'bg-gray-100 text-gray-700';
+    return tiers[tier as keyof typeof tiers] || tiers.certified;
   };
+
+  const tierInfo = getTierInfo(trainer.trainer_tier);
+  const TierIcon = tierInfo.icon;
 
   return (
     <>
@@ -78,51 +96,96 @@ const TrainerDetails = () => {
         brandIcon={<Users className="h-7 w-7 text-white" />}
         brandGradient="from-purple-500 to-indigo-600"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-2 space-y-8">
-            {/* Trainer Profile Card */}
-            <Card className="border-0 shadow-lg">
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row gap-6">
-                  <div className="flex-shrink-0">
-                    <img
-                      src={trainer.profile_image_url || "/placeholder.svg"}
-                      alt={trainer.name}
-                      className="w-48 h-48 rounded-xl object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = "/placeholder.svg";
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <h1 className="text-3xl font-bold">{trainer.name}</h1>
-                      <Badge className={`${getTierColor(trainer.trainer_tier)} border-0 font-medium capitalize`}>
-                        {trainer.trainer_tier}
-                      </Badge>
+            {/* Enhanced Profile Gallery */}
+            <div className="mb-8">
+              <EnhancedImageGallery
+                images={trainer.profile_image_url ? [trainer.profile_image_url] : []}
+                name={trainer.name}
+                category={trainer.category}
+                aspectRatio="aspect-[16/10]"
+                showThumbnails={false}
+                showControls={true}
+              />
+            </div>
+
+            {/* Enhanced Trainer Profile Card */}
+            <Card className="border-0 shadow-2xl rounded-3xl overflow-hidden">
+              <CardContent className="p-0">
+                {/* Header Section */}
+                <div className={`bg-gradient-to-r ${tierInfo.gradient} p-8 text-white`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <TierIcon className="h-8 w-8" />
+                    <div>
+                      <h1 className="text-4xl font-bold">{trainer.name}</h1>
+                      <p className="text-xl opacity-90 capitalize">{trainer.trainer_tier} Trainer</p>
                     </div>
-                    
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="flex items-center gap-2">
+                      <Star className="h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">{trainer.rating || 4.8}</p>
+                        <p className="text-sm opacity-80">Rating</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">{trainer.experience} Years</p>
+                        <p className="text-sm opacity-80">Experience</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-5 w-5" />
+                      <div>
+                        <p className="font-semibold">{trainer.location.split(',')[0]}</p>
+                        <p className="text-sm opacity-80">Location</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Section */}
+                <div className="p-8">
+                  <div className="mb-8">
+                    <h3 className="text-xl font-bold mb-4 text-foreground">About {trainer.name}</h3>
+                    <p className="text-muted-foreground leading-relaxed text-lg">
                       {trainer.bio}
                     </p>
+                  </div>
 
-                    <div className="flex flex-wrap gap-2 mb-6">
+                  <div className="mb-8">
+                    <h4 className="text-lg font-semibold mb-4 text-foreground">Specializations</h4>
+                    <div className="flex flex-wrap gap-3">
                       {trainer.specializations.map((spec, index) => (
-                        <Badge key={index} variant="outline" className="bg-purple-50 border-purple-200">
+                        <Badge 
+                          key={index} 
+                          className="bg-primary/10 text-primary border border-primary/20 px-4 py-2 text-sm font-medium"
+                        >
                           {spec}
                         </Badge>
                       ))}
                     </div>
                   </div>
+
+                  {trainer.certifications && (
+                    <div>
+                      <h4 className="text-lg font-semibold mb-4 text-foreground">Certifications</h4>
+                      <p className="text-muted-foreground">{trainer.certifications}</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
 
             <AboutSection
               businessName={trainer.name}
-              description={`${trainer.certifications || 'Certified Personal Trainer'} with ${trainer.experience} years of experience in ${trainer.category}.`}
+              description={`Professional ${trainer.category} trainer with ${trainer.experience} years of experience helping clients achieve their fitness goals.`}
               icon={<Award className="h-5 w-5 text-white" />}
-              gradient="from-purple-500 to-indigo-600"
+              gradient={tierInfo.gradient}
             />
           </div>
 
