@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { Dumbbell } from "lucide-react";
 import loginIllustration from '@/assets/login-illustration.png';
+import SEOHead from '@/components/SEOHead';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -108,7 +109,14 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans">
+    <>
+      <SEOHead
+        title="Login to GymSpaYoga"
+        description="Access your GymSpaYoga account to book gyms, spas, yoga studios and personal trainers across India."
+        keywords="login, sign in, GymSpaYoga account, gym booking login, spa booking login"
+        noindex={true}
+      />
+      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans">
       {/* Left Login Form */}
       <div className="w-full md:w-1/2 p-8 md:p-20">
         <div className="flex flex-col items-start max-w-md mx-auto">
@@ -207,6 +215,7 @@ const Login = () => {
         />
       </div>
     </div>
+    </>
   );
 };
 

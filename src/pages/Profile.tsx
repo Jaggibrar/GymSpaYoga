@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { toast } from "sonner";
 import { EnhancedProfile } from "@/components/EnhancedProfile";
+import SEOHead from "@/components/SEOHead";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -32,11 +33,19 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <>
+      <SEOHead
+        title="My Profile | GymSpaYoga"
+        description="Manage your GymSpaYoga profile, preferences, and account settings. Update your fitness goals and wellness preferences."
+        keywords="user profile, account settings, fitness goals, wellness preferences"
+        noindex={true}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="mobile-container py-6 md:py-10">
         <EnhancedProfile />
       </div>
     </div>
+    </>
   );
 };
 

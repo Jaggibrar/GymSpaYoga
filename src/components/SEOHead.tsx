@@ -1,5 +1,6 @@
 
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 
 interface SEOHeadProps {
   title: string;
@@ -26,8 +27,22 @@ const SEOHead = ({
   canonicalUrl,
   alternateUrls = []
 }: SEOHeadProps) => {
+  const location = useLocation();
   const fullTitle = title.includes('GymSpaYoga') ? title : `${title} | GymSpaYoga - Best Gyms, Spas & Yoga Studios`;
-  const finalCanonicalUrl = canonicalUrl || url;
+  
+  // Generate proper canonical URL
+  const getCanonicalURL = () => {
+    if (canonicalUrl) return canonicalUrl;
+    if (url && url !== window.location.href) return url;
+    
+    const baseURL = 'https://gymspayoga.com';
+    const path = location.pathname;
+    const cleanPath = path === '/' ? path : path.replace(/\/$/, '');
+    
+    return `${baseURL}${cleanPath}`;
+  };
+  
+  const finalCanonicalUrl = getCanonicalURL();
   
   return (
     <Helmet>

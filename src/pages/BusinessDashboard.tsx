@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Building2, Users, Calendar, TrendingUp, Loader2, Plus, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import SEOHead from "@/components/SEOHead";
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
@@ -54,7 +55,14 @@ export default function BusinessDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <>
+      <SEOHead
+        title="Business Dashboard | GymSpaYoga"
+        description="Manage your fitness business, view bookings, and track performance on GymSpaYoga platform."
+        keywords="business dashboard, gym management, spa management, yoga studio management"
+        noindex={true}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
         {/* Connection Health Monitor */}
         <ConnectionHealthMonitor onReconnect={handleReconnect} />
@@ -196,5 +204,6 @@ export default function BusinessDashboard() {
         )}
       </div>
     </div>
+    </>
   );
 }

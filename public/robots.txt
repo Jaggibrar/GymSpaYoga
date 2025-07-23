@@ -60,18 +60,38 @@ Allow: /
 
 # Disallow admin, API, and private areas
 Disallow: /admin/
+Disallow: /admin-dashboard/
 Disallow: /api/
 Disallow: /_next/
 Disallow: /dashboard/
 Disallow: /user-bookings/
 Disallow: /business-bookings/
+Disallow: /business-dashboard/
+Disallow: /trainer-dashboard/
 Disallow: /profile/
 Disallow: /manage-bookings/
 Disallow: /calendar/
+Disallow: /create-listing/
+Disallow: /edit-listing/
+Disallow: /my-blogs/
 Disallow: /login
 Disallow: /signup
 Disallow: /password-reset
 Disallow: /reset-password
+
+# Allow essential pages for indexing
+Allow: /
+Allow: /gyms
+Allow: /spas
+Allow: /yoga
+Allow: /trainers
+Allow: /blogs
+Allow: /about
+Allow: /pricing
+Allow: /support
+Allow: /explore
+Allow: /register-business
+Allow: /register-trainer
 
 # Disallow tracking parameters and duplicate content
 Disallow: /*?*utm_source=
@@ -107,9 +127,12 @@ Allow: /*.svg$
 Allow: /*.webp$
 
 # Important files and sitemaps
+Sitemap: https://gymspayoga.com/sitemap-index.xml
 Sitemap: https://gymspayoga.com/sitemap.xml
+Sitemap: https://gymspayoga.com/sitemap-enhanced.xml
 Sitemap: https://gymspayoga.com/sitemap-blogs.xml
 Sitemap: https://gymspayoga.com/sitemap-businesses.xml
+Sitemap: https://gymspayoga.com/sitemap-trainers.xml
 
 # General crawl-delay for unknown bots
 Crawl-delay: 2

@@ -5,6 +5,7 @@ import { Calendar, ArrowLeft, Dumbbell } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookingsList } from '@/components/booking/BookingsList';
 import { ErrorBoundaryWrapper } from '@/components/ErrorBoundaryWrapper';
+import SEOHead from '@/components/SEOHead';
 
 const UserBookings = () => {
   const { user } = useAuth();
@@ -16,7 +17,14 @@ const UserBookings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
+    <>
+      <SEOHead
+        title="My Bookings | GymSpaYoga"
+        description="View and manage all your gym, spa and yoga bookings. Track your fitness appointments and wellness sessions."
+        keywords="my bookings, fitness appointments, gym bookings, spa bookings, yoga bookings"
+        noindex={true}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-lg shadow-xl sticky top-0 z-50 border-b border-white/20">
         <div className="container mx-auto px-4 py-4">
@@ -52,6 +60,7 @@ const UserBookings = () => {
         {/* You may handle this in <BookingsList> if prop available. */}
       </div>
     </div>
+    </>
   );
 };
 

@@ -11,6 +11,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import GlobalLoadingIndicator from "./components/GlobalLoadingIndicator";
 import FavoritesProvider from "./components/FavoritesProvider";
 import Breadcrumbs from "./components/Breadcrumbs";
+import SEORedirectHandler from "./components/SEORedirectHandler";
+import SEOMetaManager from "./components/SEOMetaManager";
 
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
@@ -59,6 +61,8 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
+      <SEORedirectHandler />
+      <SEOMetaManager />
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
