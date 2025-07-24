@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Award, Calendar, Users, Star, MapPin, Clock, CheckCircle } from 'lucide-react';
-import { useTrainers, Trainer } from '@/hooks/useTrainers';
+import { useSingleTrainer } from '@/hooks/useSingleTrainer';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import SEOHead from '@/components/SEOHead';
 import ListingLayout from '@/components/listing/ListingLayout';
@@ -16,10 +16,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 const TrainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getTrainerById } = useTrainers();
+  const { trainer, loading, error } = useSingleTrainer(id);
   const { position, getCurrentPosition } = useGeolocation();
-  const [trainer, setTrainer] = useState<Trainer | null>(null);
-  const [loading, setLoading] = useState(true);
   const [showBookingModal, setShowBookingModal] = useState(false);
 
   // Generate short display ID from full UUID
@@ -27,44 +25,30 @@ const TrainerDetails = () => {
     return fullId.split('-')[0].toUpperCase();
   };
   
-  useEffect(() => {
-    const fetchTrainer = async () => {
-      if (!id) return;
-      
-      try {
-        setLoading(true);
-        const trainerData = await getTrainerById(id);
-        setTrainer(trainerData);
-      } catch (error) {
-        console.error('Error fetching trainer:', error);
-        setTrainer(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchTrainer();
-  }, [id, getTrainerById]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center animate-fade-in">
           <LoadingSpinner />
-          <p className="text-muted-foreground mt-4">Loading trainer profile...</p>
+          <p className="text-muted-foreground mt-4 animate-pulse">Loading trainer profile...</p>
         </div>
       </div>
     );
   }
 
-  if (!trainer) {
+  if (error || !trainer) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md border-0 shadow-xl">
+        <Card className="w-full max-w-md border-0 shadow-xl animate-scale-in">
           <CardContent className="text-center p-8">
             <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-4">Trainer Not Found</h2>
-            <p className="text-muted-foreground mb-6">The trainer you're looking for doesn't exist or has been removed.</p>
+            <h2 className="text-2xl font-bold mb-4">
+              {error ? 'Error Loading Trainer' : 'Trainer Not Found'}
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              {error || "The trainer you're looking for doesn't exist or has been removed."}
+            </p>
             <Button onClick={() => navigate('/trainers')} className="rounded-xl">
               Back to Trainers
             </Button>
@@ -105,8 +89,8 @@ const TrainerDetails = () => {
         description={`Book a session with ${trainer.name}, a certified personal trainer with ${trainer.experience} years of experience. Specializing in ${trainer.specializations.join(', ')}.`}
         keywords={`personal trainer, ${trainer.name}, fitness coach, ${trainer.specializations.join(', ')}, ${trainer.location}`}
       />
-      
-      <ListingLayout
+      <div className="animate-fade-in">
+        <ListingLayout
         backLink="/trainers"
         backText="Back to Trainers"
         brandIcon={<Users className="h-7 w-7 text-white" />}
@@ -247,6 +231,7 @@ const TrainerDetails = () => {
           </div>
         </div>
       </ListingLayout>
+      </div>
     </>
   );
 };
