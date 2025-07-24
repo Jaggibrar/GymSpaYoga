@@ -6,11 +6,6 @@ import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import { useAuth } from "@/hooks/useAuth";
 import RecentListings from "@/components/RecentListings";
 import SEOHead from "@/components/SEOHead";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import TrustBadges from "@/components/TrustBadges";
-import PartnerBrands from "@/components/PartnerBrands";
-import SecurityGuarantee from "@/components/SecurityGuarantee";
-import FAQSection from "@/components/FAQSection";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -252,33 +247,6 @@ const Index = () => {
           )}
         </div>
       </section>
-
-      {/* Trust & Security Section */}
-      <TrustBadges />
-
-      {/* Testimonials & Success Stories */}
-      <div className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Real Stories, Real Transformations
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              See how thousands of Indians have transformed their health and wellness journey with our platform
-            </p>
-          </div>
-          <TestimonialsSection />
-        </div>
-      </div>
-
-      {/* Partner Brands */}
-      <PartnerBrands />
-
-      {/* Security & Guarantee */}
-      <SecurityGuarantee />
-
-      {/* FAQ Section */}
-      <FAQSection />
 
       {/* Quick Setup Panel */}
     </div>
