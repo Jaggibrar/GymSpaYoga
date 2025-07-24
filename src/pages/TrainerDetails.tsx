@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Award, Calendar, Users, Star, MapPin, Clock, CheckCircle } from 'lucide-react';
 import { useTrainers, Trainer } from '@/hooks/useTrainers';
+import { useGeolocation } from '@/hooks/useGeolocation';
 import SEOHead from '@/components/SEOHead';
 import ListingLayout from '@/components/listing/ListingLayout';
 import BookingPanel from '@/components/listing/BookingPanel';
@@ -16,9 +17,15 @@ const TrainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getTrainerById } = useTrainers();
+  const { position, getCurrentPosition } = useGeolocation();
   const [trainer, setTrainer] = useState<Trainer | null>(null);
   const [loading, setLoading] = useState(true);
   const [showBookingModal, setShowBookingModal] = useState(false);
+
+  // Generate short display ID from full UUID
+  const getShortId = (fullId: string) => {
+    return fullId.split('-')[0].toUpperCase();
+  };
   
   useEffect(() => {
     const fetchTrainer = async () => {
@@ -114,14 +121,22 @@ const TrainerDetails = () => {
             <Card className="border-0 shadow-2xl rounded-3xl overflow-hidden">
               <CardContent className="p-0">
                 {/* Header Section */}
-                <div className={`bg-gradient-to-r ${tierInfo.gradient} p-8 text-white`}>
-                  <div className="flex items-center gap-4 mb-4">
-                    <TierIcon className="h-8 w-8" />
-                    <div>
-                      <h1 className="text-4xl font-bold">{trainer.name}</h1>
-                      <p className="text-xl opacity-90 capitalize">{trainer.trainer_tier} Trainer</p>
-                    </div>
-                  </div>
+                 <div className={`bg-gradient-to-r ${tierInfo.gradient} p-8 text-white`}>
+                   <div className="flex items-center justify-between mb-4">
+                     <div className="flex items-center gap-4">
+                       <TierIcon className="h-8 w-8" />
+                       <div>
+                         <h1 className="text-4xl font-bold">{trainer.name}</h1>
+                         <p className="text-xl opacity-90 capitalize">{trainer.trainer_tier} Trainer</p>
+                       </div>
+                     </div>
+                     <div className="text-right">
+                       <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
+                         <p className="text-xs opacity-80">Trainer ID</p>
+                         <p className="font-mono font-semibold text-sm">{getShortId(trainer.id)}</p>
+                       </div>
+                     </div>
+                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
                     <div className="flex items-center gap-2">
@@ -138,13 +153,23 @@ const TrainerDetails = () => {
                         <p className="text-sm opacity-80">Experience</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-5 w-5" />
-                      <div>
-                        <p className="font-semibold">{trainer.location.split(',')[0]}</p>
-                        <p className="text-sm opacity-80">Location</p>
-                      </div>
-                    </div>
+                     <div className="flex items-center gap-2">
+                       <MapPin className="h-5 w-5" />
+                       <div>
+                         <p className="font-semibold">{trainer.location.split(',')[0]}</p>
+                         <p className="text-sm opacity-80">
+                           {position ? 'Near you' : 'Location'}
+                         </p>
+                         {position && (
+                           <button 
+                             onClick={getCurrentPosition}
+                             className="text-xs opacity-60 hover:opacity-80 transition-opacity"
+                           >
+                             Update location
+                           </button>
+                         )}
+                       </div>
+                     </div>
                   </div>
                 </div>
 
