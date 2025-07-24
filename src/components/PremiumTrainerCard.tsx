@@ -27,14 +27,14 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const handleViewProfile = () => {
+  const handleViewProfile = React.useCallback(() => {
     navigate(`/trainers/${trainer.id}`);
-  };
+  }, [navigate, trainer.id]);
 
-  const handleBookSession = (e: React.MouseEvent) => {
+  const handleBookSession = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/book-trainer/${trainer.id}`);
-  };
+  }, [navigate, trainer.id]);
 
   const getTierInfo = (tier: string) => {
     const tiers = {
@@ -63,7 +63,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
     return tiers[tier as keyof typeof tiers] || tiers.certified;
   };
 
-  const tierInfo = getTierInfo(trainer.trainer_tier);
+  const tierInfo = React.useMemo(() => getTierInfo(trainer.trainer_tier), [trainer.trainer_tier]);
   const TierIcon = tierInfo.icon;
 
   return (
@@ -229,4 +229,4 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
   );
 };
 
-export default PremiumTrainerCard;
+export default React.memo(PremiumTrainerCard);

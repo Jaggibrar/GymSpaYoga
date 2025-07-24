@@ -29,10 +29,16 @@ const TrainerDetails = () => {
   
   useEffect(() => {
     const fetchTrainer = async () => {
-      if (id) {
+      if (!id) return;
+      
+      try {
         setLoading(true);
         const trainerData = await getTrainerById(id);
         setTrainer(trainerData);
+      } catch (error) {
+        console.error('Error fetching trainer:', error);
+        setTrainer(null);
+      } finally {
         setLoading(false);
       }
     };
@@ -43,7 +49,10 @@ const TrainerDetails = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <LoadingSpinner />
+        <div className="text-center">
+          <LoadingSpinner />
+          <p className="text-muted-foreground mt-4">Loading trainer profile...</p>
+        </div>
       </div>
     );
   }

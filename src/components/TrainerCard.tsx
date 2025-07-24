@@ -117,4 +117,4 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
   );
 };
 
-export default TrainerCard;
+export default React.memo(TrainerCard);
