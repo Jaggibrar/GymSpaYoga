@@ -28,12 +28,8 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
 
   const images = [
     {
-      src: "/lovable-uploads/f0f905ef-8ae5-4c34-8db3-7a23bedbc1b5.png",
-      alt: "Wellness lifestyle"
-    },
-    {
-      src: "/lovable-uploads/dff015a7-a5ee-4388-a12c-c0256e98eac2.png", 
-      alt: "Fitness and wellness services"
+      src: "/lovable-uploads/108f077e-70d1-4f2b-a023-2d90eea38865.png",
+      alt: "Wellness lifestyle - gym, spa and yoga"
     }
   ];
 
