@@ -30,6 +30,10 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     {
       src: "/lovable-uploads/108f077e-70d1-4f2b-a023-2d90eea38865.png",
       alt: "Wellness lifestyle - gym, spa and yoga"
+    },
+    {
+      src: "/lovable-uploads/8fcd29bd-308b-4b88-879e-8b25e29eea84.png",
+      alt: "Serene wellness and meditation space"
     }
   ];
 

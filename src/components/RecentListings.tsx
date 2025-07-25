@@ -19,6 +19,7 @@ interface RecentListing {
   image_urls: string[];
   monthly_price?: number;
   session_price?: number;
+  amenities?: string[];
   created_at: string;
 }
 
@@ -33,7 +34,7 @@ const RecentListings = () => {
         logger.debug('Fetching recent listings...');
         const { data, error } = await supabase
           .from('business_profiles')
-          .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, created_at')
+          .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, amenities, created_at')
           .eq('status', 'approved')
           .order('created_at', { ascending: false })
           .limit(6);
@@ -58,6 +59,7 @@ const RecentListings = () => {
             state: 'Maharashtra',
             image_urls: ['https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
             monthly_price: 2500,
+            amenities: ['Cardio Equipment', 'Weight Training', 'Personal Trainer'],
             created_at: new Date().toISOString()
           },
           {
@@ -69,6 +71,7 @@ const RecentListings = () => {
             state: 'Karnataka',
             image_urls: ['https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
             session_price: 1200,
+            amenities: ['Massage Therapy', 'Facial Treatments', 'Aromatherapy'],
             created_at: new Date().toISOString()
           },
           {
@@ -80,6 +83,7 @@ const RecentListings = () => {
             state: 'Delhi',
             image_urls: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
             monthly_price: 1800,
+            amenities: ['Hatha Yoga', 'Meditation', 'Pranayama'],
             created_at: new Date().toISOString()
           }
         ]);
@@ -249,13 +253,44 @@ const RecentListings = () => {
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between pt-2">
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>
-                        {new Date(listing.created_at).toLocaleDateString()}
-                      </span>
+                  {/* Price Tags */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {listing.monthly_price && (
+                      <Badge className="bg-primary/10 text-primary border-primary/20 px-2 py-1 text-xs font-medium">
+                        ₹{listing.monthly_price}/month
+                      </Badge>
+                    )}
+                    {listing.session_price && (
+                      <Badge className="bg-secondary/10 text-secondary-foreground border-secondary/20 px-2 py-1 text-xs font-medium">
+                        ₹{listing.session_price}/session
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  {/* Amenities */}
+                  {listing.amenities && listing.amenities.length > 0 && (
+                    <div className="flex flex-wrap gap-1 pt-2">
+                      {listing.amenities.slice(0, 3).map((amenity, index) => (
+                        <Badge 
+                          key={index}
+                          variant="outline"
+                          className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-muted"
+                        >
+                          {amenity}
+                        </Badge>
+                      ))}
+                      {listing.amenities.length > 3 && (
+                        <Badge 
+                          variant="outline"
+                          className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-muted"
+                        >
+                          +{listing.amenities.length - 3} more
+                        </Badge>
+                      )}
                     </div>
+                  )}
+                  
+                  <div className="flex items-center justify-end pt-2">
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
                       <span className="text-sm font-medium text-gray-600">4.8</span>
