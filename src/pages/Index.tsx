@@ -49,8 +49,8 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="India's Best Gym, Spa & Yoga Booking Platform | GymSpaYoga - Premium Fitness & Wellness"
-        description="🏋️‍♂️ Find & book premium gyms, luxury spas & authentic yoga studios across India. ⭐ 50,000+ happy members, 1000+ locations. Book instantly with verified reviews, expert trainers & exclusive wellness packages."
+        title="Global Premium Gym, Spa & Yoga Booking Platform | GymSpaYoga - Premium Fitness & Wellness"
+        description="🏋️‍♂️ Find & book premium gyms, luxury spas & authentic yoga studios worldwide. ⭐ 50,000+ happy members, 1000+ locations. Book instantly with verified reviews, expert trainers & exclusive wellness packages."
         keywords="gym near me, spa booking, yoga classes, fitness center, wellness India, Mumbai gym, Delhi spa, Bangalore yoga, personal trainer, massage therapy, meditation, pilates, crossfit, luxury spa treatments, fitness membership, health club, wellness center, Indian gyms, best spas India, fitness booking platform, wellness marketplace, premium gyms India, luxury spas India, certified yoga instructors, fitness classes near me, yoga studios near me, spa treatments near me"
         type="website"
         structuredData={{
@@ -134,7 +134,7 @@ const Index = () => {
                 </span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
-                India's premier wellness marketplace connecting you with premium gyms, luxury spas, authentic yoga studios, and certified trainers. Your path to holistic health starts here.
+                The world's premier wellness marketplace connecting you with premium gyms, luxury spas, authentic yoga studios, and certified trainers. Your path to holistic health starts here.
               </p>
             </div>
             
