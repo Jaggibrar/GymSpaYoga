@@ -6,6 +6,7 @@ import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
 import { useAuth } from "@/hooks/useAuth";
 import RecentListings from "@/components/RecentListings";
 import SEOHead from "@/components/SEOHead";
+import HeroCarousel from "@/components/HeroCarousel";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -122,19 +123,8 @@ const Index = () => {
       />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img 
-            src="/lovable-uploads/f0f905ef-8ae5-4c34-8db3-7a23bedbc1b5.png"
-            alt="Wellness lifestyle"
-            className="w-full h-full object-cover"
-          />
-          <div className="hero-overlay"></div>
-        </div>
-        
-        {/* Content */}
-        <div className="relative z-10 container-modern">
+      <HeroCarousel>
+        <div className="container-modern">
           <div className="max-w-6xl mx-auto text-center text-white">
             <div className="mb-8 sm:mb-12">
               <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight px-2">
@@ -172,7 +162,7 @@ const Index = () => {
 
           </div>
         </div>
-      </section>
+      </HeroCarousel>
 
       {/* Categories Section */}
       <section className="py-12 sm:py-16 lg:py-20 bg-background">
