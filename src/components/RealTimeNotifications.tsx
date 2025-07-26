@@ -25,55 +25,77 @@ export const RealTimeNotifications = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   useEffect(() => {
-    if (!user) return;
+    if (!user || isSubscribed) return;
 
-    // Fetch existing notifications
-    const fetchNotifications = async () => {
-      const { data, error } = await supabase
-        .from('in_app_notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10);
+    let mounted = true;
+    let channel: any = null;
 
-      if (error) {
-        console.error('Error fetching notifications:', error);
-        return;
+    const setupNotifications = async () => {
+      if (!mounted || isSubscribed) return;
+
+      // Fetch existing notifications
+      try {
+        const { data, error } = await supabase
+          .from('in_app_notifications')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) {
+          console.error('Error fetching notifications:', error);
+        } else {
+          setNotifications(data || []);
+          setUnreadCount(data?.filter(n => !n.is_read).length || 0);
+        }
+      } catch (error) {
+        console.error('Error in notification fetch:', error);
       }
 
-      setNotifications(data || []);
-      setUnreadCount(data?.filter(n => !n.is_read).length || 0);
+      // Set up real-time subscription with unique channel name
+      const channelName = `notifications_${user.id}_${Date.now()}`;
+      
+      channel = supabase
+        .channel(channelName)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'in_app_notifications',
+            filter: `user_id=eq.${user.id}`
+          },
+          (payload) => {
+            if (!mounted) return;
+            const newNotification = payload.new as Notification;
+            setNotifications(prev => [newNotification, ...prev.slice(0, 9)]);
+            setUnreadCount(prev => prev + 1);
+            
+            // Show toast notification
+            toast.success(newNotification.title, {
+              description: newNotification.message,
+            });
+          }
+        )
+        .subscribe((status) => {
+          if (mounted && status === 'SUBSCRIBED') {
+            setIsSubscribed(true);
+            console.log('Real-time notifications subscribed successfully');
+          }
+        });
     };
 
-    fetchNotifications();
-
-    // Set up real-time subscription for new notifications
-    const channel = supabase
-      .channel('notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'in_app_notifications',
-          filter: `user_id=eq.${user.id}`
-        },
-        (payload) => {
-          const newNotification = payload.new as Notification;
-          setNotifications(prev => [newNotification, ...prev.slice(0, 9)]);
-          setUnreadCount(prev => prev + 1);
-          
-          // Show toast notification
-          toast.success(newNotification.title, {
-            description: newNotification.message,
-          });
-        }
-      )
-      .subscribe();
+    setupNotifications();
 
     return () => {
-      supabase.removeChannel(channel);
+      mounted = false;
+      setIsSubscribed(false);
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
   }, [user]);
 
