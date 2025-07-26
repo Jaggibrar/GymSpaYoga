@@ -34,6 +34,10 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
     {
       src: "/lovable-uploads/8fcd29bd-308b-4b88-879e-8b25e29eea84.png",
       alt: "Serene wellness and meditation space"
+    },
+    {
+      src: "/lovable-uploads/997a0643-e3e2-4626-a26e-3cbc0eaba954.png",
+      alt: "Spa wellness setup with dumbbells, yoga mat and towels"
     }
   ];
 
