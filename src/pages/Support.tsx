@@ -134,14 +134,14 @@ const Support = () => {
                     <Phone className="h-5 w-5 text-emerald-600" />
                     <div>
                       <p className="font-semibold">Phone Support</p>
-                      <p className="text-gray-600">+91 98765 43210</p>
+                      <p className="text-gray-600">+91 7596958097</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
                     <Mail className="h-5 w-5 text-blue-600" />
                     <div>
                       <p className="font-semibold">Email Support</p>
-                      <p className="text-gray-600">support@gymspaYoga.com</p>
+                      <p className="text-gray-600">gymspayoga@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
