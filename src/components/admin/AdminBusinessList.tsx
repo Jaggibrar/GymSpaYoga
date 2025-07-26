@@ -5,7 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { CheckCircle, XCircle, Clock, Building2 } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Building2, Edit, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface BusinessProfile {
   id: string;
@@ -17,6 +21,8 @@ interface BusinessProfile {
   address: string;
   city: string;
   state: string;
+  pin_code?: string;
+  description?: string;
   status: string;
   created_at: string;
 }
@@ -25,6 +31,8 @@ export const AdminBusinessList = () => {
   const [businesses, setBusinesses] = useState<BusinessProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [editingBusiness, setEditingBusiness] = useState<BusinessProfile | null>(null);
+  const [editFormData, setEditFormData] = useState<Partial<BusinessProfile>>({});
 
   useEffect(() => {
     fetchBusinesses();
@@ -67,6 +75,42 @@ export const AdminBusinessList = () => {
     } catch (error) {
       console.error('Error updating business status:', error);
       toast.error('Failed to update business status');
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const handleEditBusiness = (business: BusinessProfile) => {
+    setEditingBusiness(business);
+    setEditFormData(business);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingBusiness) return;
+    
+    setUpdating(editingBusiness.id);
+    try {
+      const { error } = await supabase
+        .from('business_profiles')
+        .update({
+          ...editFormData,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', editingBusiness.id);
+
+      if (error) throw error;
+
+      setBusinesses(prev => 
+        prev.map(business => 
+          business.id === editingBusiness.id ? { ...business, ...editFormData } : business
+        )
+      );
+
+      toast.success('Business updated successfully');
+      setEditingBusiness(null);
+    } catch (error) {
+      console.error('Error updating business:', error);
+      toast.error('Failed to update business');
     } finally {
       setUpdating(null);
     }
@@ -122,28 +166,164 @@ export const AdminBusinessList = () => {
                   </div>
                 </div>
                 
-                {business.status === 'pending' && (
-                  <div className="flex space-x-2 mt-4">
-                    <Button
-                      onClick={() => updateBusinessStatus(business.id, 'approved')}
-                      disabled={updating === business.id}
-                      className="bg-green-600 hover:bg-green-700"
-                      size="sm"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Approve
-                    </Button>
-                    <Button
-                      onClick={() => updateBusinessStatus(business.id, 'rejected')}
-                      disabled={updating === business.id}
-                      variant="destructive"
-                      size="sm"
-                    >
-                      <XCircle className="h-4 w-4 mr-1" />
-                      Reject
-                    </Button>
-                  </div>
-                )}
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {/* Always show View Details button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      // You can implement a view-only modal here
+                      toast.info('View details functionality can be added');
+                    }}
+                  >
+                    <Eye className="h-4 w-4 mr-1" />
+                    View Details
+                  </Button>
+
+                  {/* Edit button for all businesses */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditBusiness(business)}
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Edit
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Edit Business - {business.business_name}</DialogTitle>
+                      </DialogHeader>
+                      
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium">Business Name</label>
+                            <Input
+                              value={editFormData.business_name || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, business_name: e.target.value }))}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Email</label>
+                            <Input
+                              value={editFormData.email || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, email: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium">Phone</label>
+                            <Input
+                              value={editFormData.phone || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, phone: e.target.value }))}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Status</label>
+                            <Select
+                              value={editFormData.status || ''}
+                              onValueChange={(value) => setEditFormData(prev => ({ ...prev, status: value }))}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="approved">Approved</SelectItem>
+                                <SelectItem value="rejected">Rejected</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium">Address</label>
+                          <Input
+                            value={editFormData.address || ''}
+                            onChange={(e) => setEditFormData(prev => ({ ...prev, address: e.target.value }))}
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                          <div>
+                            <label className="text-sm font-medium">City</label>
+                            <Input
+                              value={editFormData.city || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, city: e.target.value }))}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">State</label>
+                            <Input
+                              value={editFormData.state || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, state: e.target.value }))}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium">Pin Code</label>
+                            <Input
+                              value={editFormData.pin_code || ''}
+                              onChange={(e) => setEditFormData(prev => ({ ...prev, pin_code: e.target.value }))}
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium">Description</label>
+                          <Textarea
+                            value={editFormData.description || ''}
+                            onChange={(e) => setEditFormData(prev => ({ ...prev, description: e.target.value }))}
+                            rows={3}
+                          />
+                        </div>
+
+                        <div className="flex justify-end gap-2 pt-4">
+                          <Button
+                            variant="outline"
+                            onClick={() => setEditingBusiness(null)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleSaveEdit}
+                            disabled={updating === editingBusiness?.id}
+                          >
+                            {updating === editingBusiness?.id ? 'Saving...' : 'Save Changes'}
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+
+                  {/* Approve/Reject buttons only for pending */}
+                  {business.status === 'pending' && (
+                    <>
+                      <Button
+                        onClick={() => updateBusinessStatus(business.id, 'approved')}
+                        disabled={updating === business.id}
+                        className="bg-green-600 hover:bg-green-700"
+                        size="sm"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Approve
+                      </Button>
+                      <Button
+                        onClick={() => updateBusinessStatus(business.id, 'rejected')}
+                        disabled={updating === business.id}
+                        variant="destructive"
+                        size="sm"
+                      >
+                        <XCircle className="h-4 w-4 mr-1" />
+                        Reject
+                      </Button>
+                    </>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ))}
