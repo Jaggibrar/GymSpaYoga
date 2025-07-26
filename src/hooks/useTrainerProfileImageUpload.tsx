@@ -38,11 +38,10 @@ export const useTrainerProfileImageUpload = () => {
     setUploading(true);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/profile.${fileExt}`;
+      const fileName = `${user.id}/profile_${Date.now()}.${fileExt}`;
       
       console.log(`Uploading trainer profile image to: trainer-images/${fileName}`);
       
-      // Try to upload directly without checking buckets first
       const { error: uploadError } = await supabase.storage
         .from('trainer-images')
         .upload(fileName, file, { 
@@ -52,13 +51,7 @@ export const useTrainerProfileImageUpload = () => {
       
       if (uploadError) {
         console.error('Trainer profile image upload error:', uploadError);
-        
-        // If bucket doesn't exist, provide a more helpful error
-        if (uploadError.message?.includes('not found') || uploadError.message?.includes('does not exist')) {
-          toast.error('Storage bucket configuration issue. Please refresh the page and try again.');
-        } else {
-          toast.error(`Upload failed: ${uploadError.message}`);
-        }
+        toast.error(`Upload failed: ${uploadError.message}`);
         return null;
       }
       
@@ -67,19 +60,45 @@ export const useTrainerProfileImageUpload = () => {
         .getPublicUrl(fileName);
       
       toast.success('Trainer profile image uploaded successfully!');
-      console.log('Trainer profile upload successful, public URL:', data.publicUrl);
       return data.publicUrl;
     } catch (err) {
       console.error('Error uploading trainer profile image:', err);
-      toast.error('Failed to upload trainer profile image. Please refresh the page and try again.');
+      toast.error('Failed to upload trainer profile image.');
       return null;
     } finally {
       setUploading(false);
     }
   };
 
+  const deleteTrainerImage = async (imageUrl: string): Promise<boolean> => {
+    try {
+      const urlParts = imageUrl.split('/');
+      const fileName = urlParts[urlParts.length - 1];
+      const userId = urlParts[urlParts.length - 2];
+      const filePath = `${userId}/${fileName}`;
+
+      const { error } = await supabase.storage
+        .from('trainer-images')
+        .remove([filePath]);
+
+      if (error) {
+        console.error('Delete error:', error);
+        toast.error(`Failed to delete image: ${error.message}`);
+        return false;
+      }
+
+      toast.success('Image deleted successfully');
+      return true;
+    } catch (error) {
+      console.error('Unexpected delete error:', error);
+      toast.error('Failed to delete image');
+      return false;
+    }
+  };
+
   return {
     uploadTrainerProfileImage,
+    deleteTrainerImage,
     uploading,
     validateFile
   };

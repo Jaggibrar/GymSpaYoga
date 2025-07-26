@@ -10,6 +10,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTrainerProfileImageUpload } from '@/hooks/useTrainerProfileImageUpload';
+import { Upload, Trash2, ImageIcon } from 'lucide-react';
 
 interface TrainerProfile {
   id: string;
@@ -25,6 +27,7 @@ interface TrainerProfile {
   certifications?: string;
   status: string;
   created_at: string;
+  profile_image_url?: string;
 }
 
 export const AdminTrainerList = () => {
@@ -33,6 +36,7 @@ export const AdminTrainerList = () => {
   const [updating, setUpdating] = useState<string | null>(null);
   const [editingTrainer, setEditingTrainer] = useState<TrainerProfile | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<TrainerProfile>>({});
+  const { uploadTrainerProfileImage, deleteTrainerImage, uploading } = useTrainerProfileImageUpload();
 
   useEffect(() => {
     fetchTrainers();
@@ -292,16 +296,75 @@ export const AdminTrainerList = () => {
                           />
                         </div>
 
-                        <div>
-                          <label className="text-sm font-medium">Certifications</label>
-                          <Textarea
-                            value={editFormData.certifications || ''}
-                            onChange={(e) => setEditFormData(prev => ({ ...prev, certifications: e.target.value }))}
-                            rows={2}
-                          />
-                        </div>
+                         <div>
+                           <label className="text-sm font-medium">Certifications</label>
+                           <Textarea
+                             value={editFormData.certifications || ''}
+                             onChange={(e) => setEditFormData(prev => ({ ...prev, certifications: e.target.value }))}
+                             rows={2}
+                           />
+                         </div>
 
-                        <div className="flex justify-end gap-2 pt-4">
+                         {/* Profile Image Management */}
+                         <div className="space-y-4 border-t pt-4">
+                           <div>
+                             <label className="text-sm font-medium mb-2 block">Profile Image</label>
+                             
+                             {/* Current Image Display */}
+                             {editFormData.profile_image_url && (
+                               <div className="mb-4">
+                                 <div className="relative inline-block">
+                                   <img
+                                     src={editFormData.profile_image_url}
+                                     alt="Profile"
+                                     className="w-24 h-24 rounded-full object-cover"
+                                   />
+                                   <Button
+                                     type="button"
+                                     variant="destructive"
+                                     size="sm"
+                                     className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
+                                     onClick={async () => {
+                                       if (await deleteTrainerImage(editFormData.profile_image_url!)) {
+                                         setEditFormData(prev => ({ ...prev, profile_image_url: '' }));
+                                       }
+                                     }}
+                                   >
+                                     <Trash2 className="h-3 w-3" />
+                                   </Button>
+                                 </div>
+                               </div>
+                             )}
+
+                             {/* Upload New Image */}
+                             <div className="flex items-center gap-2">
+                               <Input
+                                 type="file"
+                                 accept="image/*"
+                                 onChange={async (e) => {
+                                   const file = e.target.files?.[0];
+                                   if (file) {
+                                     const url = await uploadTrainerProfileImage(file);
+                                     if (url) {
+                                       setEditFormData(prev => ({ ...prev, profile_image_url: url }));
+                                     }
+                                   }
+                                 }}
+                                 className="hidden"
+                                 id="trainer-image-upload"
+                               />
+                               <label
+                                 htmlFor="trainer-image-upload"
+                                 className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
+                               >
+                                 <Upload className="h-4 w-4 mr-2" />
+                                 {uploading ? 'Uploading...' : 'Upload Image'}
+                               </label>
+                             </div>
+                           </div>
+                         </div>
+
+                         <div className="flex justify-end gap-2 pt-4">
                           <Button
                             variant="outline"
                             onClick={() => setEditingTrainer(null)}
