@@ -37,6 +37,7 @@ export const useStableBusinessData = (
   const abortControllerRef = useRef<AbortController | null>(null);
   const cacheRef = useRef<Map<string, { data: Business[]; timestamp: number }>>(new Map());
   const isInitialLoadRef = useRef(true);
+  const mountedRef = useRef(true);
 
   const getCacheKey = useCallback(() => {
     return `${businessType || 'all'}-${searchTerm || ''}-${locationFilter || ''}-${sortBy}`;
@@ -96,20 +97,28 @@ export const useStableBusinessData = (
       
       setBusinesses(businessData);
     } catch (err: any) {
-      if (err.name !== 'AbortError') {
-        console.error('Error fetching businesses:', err);
-        setError(err.message || 'Failed to load businesses');
+      // Don't log abort errors and don't set them as real errors
+      if (err.name === 'AbortError' || err.message?.includes('AbortError') || err.message?.includes('signal is aborted')) {
+        console.log('Request was cancelled - this is normal during component cleanup');
+        return; // Don't set error state for aborted requests
       }
+      
+      console.error('Error fetching businesses:', err);
+      setError(err.message || 'Failed to load businesses');
     } finally {
-      setLoading(false);
-      isInitialLoadRef.current = false;
+      if (!abortControllerRef.current?.signal.aborted && mountedRef.current) {
+        setLoading(false);
+        isInitialLoadRef.current = false;
+      }
     }
   }, [businessType, searchTerm, locationFilter, sortBy, getCacheKey]);
 
   useEffect(() => {
+    mountedRef.current = true;
     fetchBusinesses();
 
     return () => {
+      mountedRef.current = false;
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }

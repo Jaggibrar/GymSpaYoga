@@ -33,9 +33,15 @@ interface BusinessWithDistance {
 
 export const GeolocationRecommendations = () => {
   const { position, error, loading: geoLoading, getCurrentPosition } = useGeolocation();
-  const { businesses, loading: businessLoading } = useStableBusinessData();
+  const { businesses, loading: businessLoading, error: businessError } = useStableBusinessData();
   const [nearbyBusinesses, setNearbyBusinesses] = useState<BusinessWithDistance[]>([]);
   const [maxDistance, setMaxDistance] = useState(10); // km
+
+  // Don't render if there's an error loading businesses to prevent crashes
+  if (businessError) {
+    console.log('GeolocationRecommendations: Skipping render due to business data error');
+    return null;
+  }
 
   useEffect(() => {
     if (position && businesses.length > 0) {
