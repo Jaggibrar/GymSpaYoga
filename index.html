@@ -4,6 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" type="image/png">
+    <link rel="apple-touch-icon" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>India's Best Gym, Spa & Yoga Booking Platform | GymSpaYoga - Premium Fitness & Wellness</title>
     <meta name="description" content="🏋️‍♂️ Find & book premium gyms, luxury spas & authentic yoga studios across India. ⭐ 50,000+ happy members, 1000+ locations. Book instantly with verified reviews, expert trainers & exclusive wellness packages." />
@@ -25,6 +26,10 @@
     <meta name="geo.placename" content="India" />
     <meta name="ICBM" content="20.5937, 78.9629" />
     <meta name="language" content="en-IN" />
+    <meta name="rating" content="general" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="distribution" content="global" />
+    <meta name="format-detection" content="telephone=no" />
     
     <!-- Preconnect to external domains for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -35,6 +40,9 @@
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://gymspayoga.com/" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/site.webmanifest" />
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -114,8 +122,8 @@
         "@type": "ImageObject",
         "url": "https://gymspayoga.com/logo.png"
       },
-      "telephone": "+91-800-GYM-SPA",
-      "email": "hello@gymspayoga.com",
+      "telephone": "+91-7596958097",
+      "email": "gymspayoga@gmail.com",
       "address": {
         "@type": "PostalAddress",
         "addressCountry": "IN",
@@ -250,6 +258,20 @@
         "https://youtube.com/@gymspayoga"
       ]
     }
+    </script>
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
     </script>
   </head>
   <body>

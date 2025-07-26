@@ -14,6 +14,7 @@ import FavoritesProvider from "./components/FavoritesProvider";
 import Breadcrumbs from "./components/Breadcrumbs";
 import SEORedirectHandler from "./components/SEORedirectHandler";
 import SEOMetaManager from "./components/SEOMetaManager";
+import AdvancedSEOManager from "./components/AdvancedSEOManager";
 
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
@@ -64,6 +65,7 @@ const AppContent = () => {
     <div className="min-h-screen bg-background font-sans antialiased">
       <SEORedirectHandler />
       <SEOMetaManager />
+      <AdvancedSEOManager />
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
