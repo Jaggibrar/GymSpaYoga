@@ -71,13 +71,14 @@ export const useUserProfile = () => {
     }
 
     try {
+      // First try to update existing profile
       const { data, error } = await supabase
         .from('user_profiles')
-        .upsert({
-          user_id: user.id,
+        .update({
           ...updates,
           updated_at: new Date().toISOString()
         })
+        .eq('user_id', user.id)
         .select()
         .maybeSingle();
 
@@ -87,7 +88,29 @@ export const useUserProfile = () => {
 
       if (data) {
         setProfile(data);
+        toast.success('Profile updated successfully!');
+        return true;
       }
+
+      // If no data returned, profile might not exist, create it
+      const { data: newData, error: insertError } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: user.id,
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .select()
+        .maybeSingle();
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      if (newData) {
+        setProfile(newData);
+      }
+      
       toast.success('Profile updated successfully!');
       return true;
     } catch (err) {
