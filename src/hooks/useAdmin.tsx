@@ -27,7 +27,7 @@ export const useAdmin = () => {
         }
 
         const { data, error } = await supabase
-          .from('admin_users')
+          .from('admin_permissions')
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
