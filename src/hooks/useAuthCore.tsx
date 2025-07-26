@@ -89,6 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     console.log('🚀 Initializing auth...');
 
     let initialized = false;
+    let authSubscription: { unsubscribe: () => void } | null = null;
 
     // Much shorter timeout to avoid persistent loading
     const loadingTimeout = setTimeout(() => {
@@ -99,37 +100,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }, 500); // 500ms timeout
 
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('🔄 Auth state changed:', event, session?.user?.id);
-        
-        if (!mountedRef.current) return;
-
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Fetch profile but don't block on it
-          fetchUserProfile(session.user.id);
-          // Also check admin status
-          checkAdminStatus(session.user.id);
-        } else {
-          setUserProfile(null);
-          setIsAdmin(false);
-        }
-        
-        // Always clear loading immediately after auth state change
-        if (mountedRef.current && !initialized) {
-          setLoading(false);
-          initialized = true;
-          clearTimeout(loadingTimeout);
-          console.log('✅ Auth state processed - loading cleared');
-        }
+    // Ensure we only set up one subscription
+    const setupAuthSubscription = () => {
+      if (authSubscription) {
+        console.log('🚫 Auth subscription already exists, skipping...');
+        return;
       }
-    );
 
-    subscriptionRef.current = subscription;
+      console.log('📡 Setting up auth state listener...');
+      
+      // Set up auth state listener
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (event, session) => {
+          console.log('🔄 Auth state changed:', event, session?.user?.id);
+          
+          if (!mountedRef.current) return;
+
+          setSession(session);
+          setUser(session?.user ?? null);
+          
+          if (session?.user) {
+            // Defer profile fetching to avoid blocking auth flow
+            setTimeout(() => {
+              if (mountedRef.current) {
+                fetchUserProfile(session.user.id);
+                checkAdminStatus(session.user.id);
+              }
+            }, 0);
+          } else {
+            setUserProfile(null);
+            setIsAdmin(false);
+          }
+          
+          // Always clear loading immediately after auth state change
+          if (mountedRef.current && !initialized) {
+            setLoading(false);
+            initialized = true;
+            clearTimeout(loadingTimeout);
+            console.log('✅ Auth state processed - loading cleared');
+          }
+        }
+      );
+
+      authSubscription = subscription;
+      subscriptionRef.current = subscription;
+    };
+
+    // Set up the subscription
+    setupAuthSubscription();
 
     // Check for existing session
     const initializeAuth = async () => {
@@ -142,9 +160,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.log('✅ Existing session found');
           setSession(session);
           setUser(session.user);
-          await fetchUserProfile(session.user.id);
-          // Also check admin status
-          await checkAdminStatus(session.user.id);
+          // Defer profile operations
+          setTimeout(() => {
+            if (mountedRef.current) {
+              fetchUserProfile(session.user.id);
+              checkAdminStatus(session.user.id);
+            }
+          }, 0);
         }
         
         // Always set loading to false after initial check
@@ -171,12 +193,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       mountedRef.current = false;
       clearTimeout(loadingTimeout);
       
+      if (authSubscription) {
+        authSubscription.unsubscribe();
+        authSubscription = null;
+      }
+      
       if (subscriptionRef.current) {
         subscriptionRef.current.unsubscribe();
         subscriptionRef.current = null;
       }
     };
-  }, []);
+  }, []); // Empty dependency array is crucial
 
   const signIn = async (email: string, password: string) => {
     try {

@@ -23,12 +23,23 @@ export const NotificationCenter = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [hasSetupSubscription, setHasSetupSubscription] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (user && !hasSetupSubscription) {
+      fetchNotifications();
+      subscribeToNotifications();
+      setHasSetupSubscription(true);
+    } else if (!user) {
+      setHasSetupSubscription(false);
+      setNotifications([]);
+      setUnreadCount(0);
+      setLoading(false);
+    }
 
-    fetchNotifications();
-    subscribeToNotifications();
+    return () => {
+      setHasSetupSubscription(false);
+    };
   }, [user]);
 
   const fetchNotifications = async () => {
@@ -54,10 +65,10 @@ export const NotificationCenter = () => {
   };
 
   const subscribeToNotifications = () => {
-    if (!user) return;
+    if (!user || hasSetupSubscription) return;
 
     const subscription = supabase
-      .channel('user_notifications')
+      .channel(`user_notifications_${user.id}`)
       .on(
         'postgres_changes',
         {

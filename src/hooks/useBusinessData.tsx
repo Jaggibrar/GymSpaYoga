@@ -166,10 +166,12 @@ export const useBusinessData = (
     let trainerChannel: any = null;
 
     const setupRealtimeSubscription = () => {
+      if (!mounted) return;
+      
       try {
-        // Business profiles subscription
+        // Business profiles subscription with unique channel name
         businessChannel = supabase
-          .channel('business-changes')
+          .channel(`business-changes-${Date.now()}-${Math.random()}`)
           .on(
             'postgres_changes',
             {
@@ -188,9 +190,9 @@ export const useBusinessData = (
           )
           .subscribe();
 
-        // Trainer profiles subscription
+        // Trainer profiles subscription with unique channel name
         trainerChannel = supabase
-          .channel('trainer-changes')
+          .channel(`trainer-changes-${Date.now()}-${Math.random()}`)
           .on(
             'postgres_changes',
             {
