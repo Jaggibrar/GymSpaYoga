@@ -10,6 +10,7 @@ import { Calendar, Clock, ArrowLeft, Share2, Heart, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import BlogComments from '@/components/blog/BlogComments';
+import DOMPurify from 'dompurify';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -198,7 +199,7 @@ const BlogPost = () => {
                 <CardContent className="p-8 md:p-12">
                   <div 
                     className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-emerald-600 prose-strong:text-gray-900"
-                    dangerouslySetInnerHTML={{ __html: blog.content.replace(/\n/g, '<br />') }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content.replace(/\n/g, '<br />')) }}
                   />
                 </CardContent>
               </Card>

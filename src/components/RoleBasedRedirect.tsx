@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
 export default function RoleBasedRedirect() {
-  const { user, userProfile, loading: authLoading } = useAuth();
+  const { user, userProfile, loading: authLoading, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,8 +17,8 @@ export default function RoleBasedRedirect() {
       return;
     }
 
-    // Check if user is the specific admin email
-    if (user.email === 'jaggibrar001234@gmail.com') {
+    // Check if user has admin permissions
+    if (userProfile?.role === 'admin' || isAdmin) {
       navigate('/admin-dashboard');
       return;
     }

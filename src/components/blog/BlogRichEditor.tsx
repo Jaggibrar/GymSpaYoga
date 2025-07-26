@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Plus, Eye, Save } from 'lucide-react';
 import { Blog } from '@/hooks/useBlogs';
+import DOMPurify from 'dompurify';
 
 interface BlogRichEditorProps {
   onSubmit: (blogData: any) => Promise<void>;
@@ -144,7 +145,7 @@ const BlogRichEditor: React.FC<BlogRichEditorProps> = ({
             <div 
               className="prose max-w-none"
               dangerouslySetInnerHTML={{ 
-                __html: formatContentForPreview(formData.content) 
+                __html: DOMPurify.sanitize(formatContentForPreview(formData.content)) 
               }}
             />
             {formData.tags.length > 0 && (
