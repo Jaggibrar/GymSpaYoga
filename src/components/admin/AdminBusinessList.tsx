@@ -5,11 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { CheckCircle, XCircle, Clock, Building2, Edit, Eye } from 'lucide-react';
+import { CheckCircle, XCircle, Clock, Building2, Edit, Eye, Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useBusinessImageUpload } from '@/hooks/useBusinessImageUpload';
 
 interface BusinessProfile {
   id: string;
@@ -23,6 +24,7 @@ interface BusinessProfile {
   state: string;
   pin_code?: string;
   description?: string;
+  image_urls?: string[];
   status: string;
   created_at: string;
 }
@@ -33,6 +35,7 @@ export const AdminBusinessList = () => {
   const [updating, setUpdating] = useState<string | null>(null);
   const [editingBusiness, setEditingBusiness] = useState<BusinessProfile | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<BusinessProfile>>({});
+  const { uploadMultipleImages, uploading } = useBusinessImageUpload();
 
   useEffect(() => {
     fetchBusinesses();
@@ -116,6 +119,33 @@ export const AdminBusinessList = () => {
     }
   };
 
+  const handleImageUpload = async (file: File) => {
+    if (!editingBusiness) return;
+    
+    try {
+      const uploadedUrls = await uploadMultipleImages([file]);
+      if (uploadedUrls.length > 0) {
+        const currentImages = editFormData.image_urls || [];
+        setEditFormData(prev => ({
+          ...prev,
+          image_urls: [...currentImages, ...uploadedUrls]
+        }));
+        toast.success('Image uploaded successfully');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    const currentImages = editFormData.image_urls || [];
+    setEditFormData(prev => ({
+      ...prev,
+      image_urls: currentImages.filter((_, index) => index !== indexToRemove)
+    }));
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'approved': return 'bg-green-100 text-green-800';
@@ -159,12 +189,36 @@ export const AdminBusinessList = () => {
                   <div>
                     <p><strong>Email:</strong> {business.email}</p>
                     <p><strong>Phone:</strong> {business.phone}</p>
+                    <p><strong>Type:</strong> {business.business_type}</p>
                   </div>
                   <div>
                     <p><strong>Location:</strong> {business.city}, {business.state}</p>
                     <p><strong>Applied:</strong> {new Date(business.created_at).toLocaleDateString()}</p>
+                    <p><strong>Images:</strong> {business.image_urls?.length || 0} uploaded</p>
                   </div>
                 </div>
+
+                {/* Show business images if available */}
+                {business.image_urls && business.image_urls.length > 0 && (
+                  <div className="mt-4">
+                    <p className="text-sm font-medium mb-2">Current Images:</p>
+                    <div className="flex gap-2 overflow-x-auto">
+                      {business.image_urls.slice(0, 4).map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`${business.business_name} ${index + 1}`}
+                          className="w-16 h-16 object-cover rounded-lg border flex-shrink-0"
+                        />
+                      ))}
+                      {business.image_urls.length > 4 && (
+                        <div className="w-16 h-16 bg-gray-100 rounded-lg border flex items-center justify-center flex-shrink-0">
+                          <span className="text-xs text-gray-600">+{business.image_urls.length - 4}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="flex flex-wrap gap-2 mt-4">
                   {/* Always show View Details button */}
@@ -282,7 +336,68 @@ export const AdminBusinessList = () => {
                           />
                         </div>
 
-                        <div className="flex justify-end gap-2 pt-4">
+                        {/* Image Management Section */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Business Images</label>
+                            
+                            {/* Current Images */}
+                            {editFormData.image_urls && editFormData.image_urls.length > 0 && (
+                              <div className="grid grid-cols-3 gap-2 mb-4">
+                                {editFormData.image_urls.map((url, index) => (
+                                  <div key={index} className="relative group">
+                                    <img
+                                      src={url}
+                                      alt={`Business ${index + 1}`}
+                                      className="w-full h-24 object-cover rounded-lg border"
+                                    />
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveImage(index)}
+                                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {/* Upload New Image */}
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) handleImageUpload(file);
+                                }}
+                                className="hidden"
+                                id="image-upload"
+                                disabled={uploading}
+                              />
+                              <label
+                                htmlFor="image-upload"
+                                className="flex flex-col items-center justify-center cursor-pointer"
+                              >
+                                {uploading ? (
+                                  <div className="flex items-center gap-2">
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                                    <span className="text-sm text-gray-600">Uploading...</span>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <Upload className="h-8 w-8 text-gray-400 mb-2" />
+                                    <span className="text-sm text-gray-600">Click to upload image</span>
+                                    <span className="text-xs text-gray-400">PNG, JPG up to 10MB</span>
+                                  </>
+                                )}
+                              </label>
+                            </div>
+                          </div>
+                         </div>
+
+                         <div className="flex justify-end gap-2 pt-4">
                           <Button
                             variant="outline"
                             onClick={() => setEditingBusiness(null)}
