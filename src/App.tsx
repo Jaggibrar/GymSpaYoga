@@ -55,6 +55,7 @@ import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import TrainerDashboard from "./pages/TrainerDashboard";
 import UserBookings from "./pages/UserBookings";
+import Favorites from "./pages/Favorites";
 
 const queryClient = new QueryClient();
 
@@ -109,6 +110,11 @@ const AppContent = () => {
           <Route path="/user-bookings" element={
             <ProtectedRoute>
               <UserBookings />
+            </ProtectedRoute>
+          } />
+          <Route path="/favorites" element={
+            <ProtectedRoute>
+              <Favorites />
             </ProtectedRoute>
           } />
           <Route path="/business-dashboard" element={

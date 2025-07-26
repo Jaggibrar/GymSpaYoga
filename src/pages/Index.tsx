@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import RecentListings from "@/components/RecentListings";
 import SEOHead from "@/components/SEOHead";
 import HeroCarousel from "@/components/HeroCarousel";
+import { GeolocationRecommendations } from "@/components/GeolocationRecommendations";
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -204,6 +205,13 @@ const Index = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Geolocation Recommendations Section */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <GeolocationRecommendations />
         </div>
       </section>
 

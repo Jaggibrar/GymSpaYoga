@@ -6,6 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
+import NotificationSystem from '@/components/NotificationSystem';
+import { Heart } from 'lucide-react';
 
 const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -90,6 +92,16 @@ const MainNavigation = () => {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
+                {/* Favorites Link */}
+                <Link to="/favorites">
+                  <Button variant="ghost" size="sm">
+                    <Heart className="h-5 w-5" />
+                  </Button>
+                </Link>
+                
+                {/* Notification System */}
+                <NotificationSystem />
+                
                 {/* Real-time Notifications */}
                 <RealTimeNotifications />
 
