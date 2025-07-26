@@ -25,6 +25,8 @@ export const RealTimeNotifications = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
 
+  if (!user) return null;
+
   const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
