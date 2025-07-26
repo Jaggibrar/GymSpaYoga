@@ -62,7 +62,7 @@ export const FavoritesProvider: React.FC<FavoritesProviderProps> = ({ children }
         .from('user_wishlist')
         .select(`
           *,
-          business_profiles:business_id (
+          business_profiles!user_wishlist_business_id_fkey (
             business_name,
             business_type,
             city,
