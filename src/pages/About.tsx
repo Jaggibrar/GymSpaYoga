@@ -125,41 +125,60 @@ const About = () => {
           </div>
         </section>
 
-        {/* Team Section - Only Jagdeep Singh */}
-        <section className="py-20 px-4">
+        {/* Leadership Section - Elegant Card Design */}
+        <section className="py-20 px-4 bg-gradient-to-br from-background via-background/50 to-muted/30">
           <div className="container mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">Leadership</h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h2 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent mb-6">
+                Leadership
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Meet the visionary behind GymSpaYoga's mission to revolutionize wellness accessibility.
               </p>
             </div>
             
-            <div className="max-w-md mx-auto">
-              <Card className="text-center border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                <CardContent className="p-8">
-                  <div className="relative mb-6">
-                    <div className="w-32 h-32 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-4xl font-bold text-white">JS</span>
+            <div className="max-w-lg mx-auto">
+              <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-card via-card/95 to-background shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-[1.02]">
+                {/* Elegant Background Pattern */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <CardContent className="relative p-8 text-center">
+                  {/* Profile Avatar with Elegant Design */}
+                  <div className="relative mb-8">
+                    <div className="relative mx-auto">
+                      <div className="w-28 h-28 bg-gradient-to-br from-primary via-primary/90 to-primary/70 rounded-full flex items-center justify-center mx-auto shadow-lg ring-4 ring-primary/20 ring-offset-4 ring-offset-background">
+                        <span className="text-3xl font-bold text-primary-foreground">JS</span>
+                      </div>
+                      {/* Floating Badge */}
+                      <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
+                        <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-4 py-2 shadow-lg border-2 border-background font-medium">
+                          Founder & CEO
+                        </Badge>
+                      </div>
                     </div>
-                    <Badge className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-1">
-                      Founder & CEO
-                    </Badge>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">Jagdeep Singh</h3>
-                  <p className="text-emerald-600 font-semibold mb-4">Founder & CEO</p>
+                  {/* Name and Title */}
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-foreground mb-2">Jagdeep Singh</h3>
+                    <p className="text-primary font-semibold">Founder & CEO</p>
+                  </div>
                   
-                  <p className="text-gray-600 leading-relaxed mb-6">
-                    "Our vision is to create a world where wellness is not a luxury, but an accessible 
-                    part of everyone's daily life. Through GymSpaYoga, we're democratizing access to 
-                    health and happiness, one booking at a time."
-                  </p>
+                  {/* Vision Quote */}
+                  <div className="mb-6">
+                    <blockquote className="text-muted-foreground leading-relaxed italic text-center relative">
+                      <span className="text-4xl text-primary/30 absolute -top-2 -left-2">"</span>
+                      Our vision is to create a world where wellness is not a luxury, but an accessible 
+                      part of everyone's daily life. Through GymSpaYoga, we're democratizing access to 
+                      health and happiness, one booking at a time.
+                      <span className="text-4xl text-primary/30 absolute -bottom-6 -right-2">"</span>
+                    </blockquote>
+                  </div>
                   
-                  <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-lg p-4">
-                    <p className="text-sm text-gray-700 italic">
-                      "Every person deserves the opportunity to live their healthiest, happiest life. 
-                      GymSpaYoga is our commitment to making that vision a reality."
+                  {/* Mission Statement */}
+                  <div className="bg-gradient-to-r from-muted/50 via-muted/30 to-muted/50 rounded-2xl p-6 border border-border/50">
+                    <p className="text-sm text-muted-foreground italic leading-relaxed">
+                      "Every person deserves the opportunity to live their healthiest, happiest life. GymSpaYoga is our commitment to making that vision a reality."
                     </p>
                   </div>
                 </CardContent>
