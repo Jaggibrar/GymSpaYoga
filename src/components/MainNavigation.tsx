@@ -101,9 +101,6 @@ const MainNavigation = () => {
                 
                 {/* Notification System */}
                 <NotificationSystem />
-                
-                {/* Real-time Notifications */}
-                <RealTimeNotifications />
 
                 {/* User Menu */}
                 <div className="relative group">
