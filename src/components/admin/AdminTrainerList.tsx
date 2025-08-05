@@ -35,6 +35,7 @@ export const AdminTrainerList = () => {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [editingTrainer, setEditingTrainer] = useState<TrainerProfile | null>(null);
+  const [viewingTrainer, setViewingTrainer] = useState<TrainerProfile | null>(null);
   const [editFormData, setEditFormData] = useState<Partial<TrainerProfile>>({});
   const { uploadTrainerProfileImage, deleteTrainerImage, uploading } = useTrainerProfileImageUpload();
 
@@ -199,16 +200,134 @@ export const AdminTrainerList = () => {
                 
                 <div className="flex flex-wrap gap-2 mt-4">
                   {/* View Details button */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      toast.info('View details functionality can be added');
-                    }}
-                  >
-                    <Eye className="h-4 w-4 mr-1" />
-                    View Details
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setViewingTrainer(trainer)}
+                      >
+                        <Eye className="h-4 w-4 mr-1" />
+                        View Details
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Trainer Details - {trainer.name}</DialogTitle>
+                        <DialogDescription>
+                          Complete trainer profile information and application details.
+                        </DialogDescription>
+                      </DialogHeader>
+                      
+                      <div className="grid gap-6 py-4">
+                        {/* Profile Image */}
+                        {trainer.profile_image_url && (
+                          <div className="flex justify-center">
+                            <img
+                              src={trainer.profile_image_url}
+                              alt={`${trainer.name} profile`}
+                              className="w-24 h-24 rounded-full object-cover"
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Status Badge */}
+                        <div className="flex justify-center">
+                          <Badge className={getStatusColor(trainer.status)}>
+                            {trainer.status.toUpperCase()}
+                          </Badge>
+                        </div>
+                        
+                        {/* Basic Information */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-lg border-b pb-2">Basic Information</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Name</p>
+                              <p className="font-medium">{trainer.name}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Email</p>
+                              <p className="font-medium">{trainer.email}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Phone</p>
+                              <p className="font-medium">{trainer.phone}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Location</p>
+                              <p className="font-medium">{trainer.location}</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Professional Details */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-lg border-b pb-2">Professional Details</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Category</p>
+                              <Badge variant="outline" className="capitalize mt-1">
+                                {trainer.category}
+                              </Badge>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Trainer Tier</p>
+                              <Badge className={getTierColor(trainer.trainer_tier) + " mt-1"}>
+                                <Star className="h-3 w-3 mr-1" />
+                                {trainer.trainer_tier}
+                              </Badge>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Experience</p>
+                              <p className="font-medium">{trainer.experience} years</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Hourly Rate</p>
+                              <p className="font-medium">₹{trainer.hourly_rate}/hour</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Bio */}
+                        {trainer.bio && (
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-lg border-b pb-2">Bio</h4>
+                            <p className="text-sm leading-relaxed">{trainer.bio}</p>
+                          </div>
+                        )}
+                        
+                        {/* Certifications */}
+                        {trainer.certifications && (
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-lg border-b pb-2">Certifications</h4>
+                            <p className="text-sm leading-relaxed">{trainer.certifications}</p>
+                          </div>
+                        )}
+                        
+                        {/* Application Details */}
+                        <div className="space-y-4">
+                          <h4 className="font-semibold text-lg border-b pb-2">Application Details</h4>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Applied On</p>
+                              <p className="font-medium">{new Date(trainer.created_at).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-muted-foreground">Application ID</p>
+                              <p className="font-mono text-xs">{trainer.id}</p>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-end pt-4">
+                          <Button variant="outline" onClick={() => setViewingTrainer(null)}>
+                            Close
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
 
                   {/* Edit button for all trainers */}
                   <Dialog>
