@@ -94,15 +94,25 @@ export const AdminTrainerList = () => {
     
     setUpdating(editingTrainer.id);
     try {
-      const { error } = await supabase
+      console.log('Saving trainer data:', editFormData);
+      const updateData = {
+        ...editFormData,
+        updated_at: new Date().toISOString()
+      };
+      console.log('Update data:', updateData);
+      
+      const { error, data } = await supabase
         .from('trainer_profiles')
-        .update({
-          ...editFormData,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', editingTrainer.id);
+        .update(updateData)
+        .eq('id', editingTrainer.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw error;
+      }
+      
+      console.log('Update successful:', data);
 
       setTrainers(prev => 
         prev.map(trainer => 
