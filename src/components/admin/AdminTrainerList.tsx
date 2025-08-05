@@ -110,11 +110,13 @@ export const AdminTrainerList = () => {
 
       if (error) {
         console.error('Database error:', error);
-        throw error;
+        toast.error(`Failed to update trainer: ${error.message}`);
+        return;
       }
       
       console.log('Update successful:', data);
 
+      // Update local state immediately with the form data
       setTrainers(prev => 
         prev.map(trainer => 
           trainer.id === editingTrainer.id ? { ...trainer, ...editFormData } : trainer
@@ -123,12 +125,64 @@ export const AdminTrainerList = () => {
 
       toast.success('Trainer updated successfully');
       setEditingTrainer(null);
+      setEditFormData({});
+      
+      // Refresh the data to ensure consistency
+      await fetchTrainers();
     } catch (error) {
       console.error('Error updating trainer:', error);
       toast.error('Failed to update trainer');
     } finally {
       setUpdating(null);
     }
+  };
+
+  const handleImageUpload = async (trainerId: string, file: File) => {
+    try {
+      const imageUrl = await uploadTrainerProfileImage(file);
+      if (imageUrl) {
+        // Update the form data immediately
+        setEditFormData(prev => ({ ...prev, profile_image_url: imageUrl }));
+        
+        // Update the local trainer state immediately
+        setTrainers(prev => 
+          prev.map(trainer => 
+            trainer.id === trainerId ? { ...trainer, profile_image_url: imageUrl } : trainer
+          )
+        );
+        
+        toast.success('Image uploaded successfully');
+        return imageUrl;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    }
+    return null;
+  };
+
+  const handleImageDelete = async (trainerId: string, imageUrl: string) => {
+    try {
+      const success = await deleteTrainerImage(imageUrl);
+      if (success) {
+        // Update the form data immediately
+        setEditFormData(prev => ({ ...prev, profile_image_url: '' }));
+        
+        // Update the local trainer state immediately
+        setTrainers(prev => 
+          prev.map(trainer => 
+            trainer.id === trainerId ? { ...trainer, profile_image_url: null } : trainer
+          )
+        );
+        
+        toast.success('Image deleted successfully');
+        return true;
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+      toast.error('Failed to delete image');
+    }
+    return false;
   };
 
   const getStatusColor = (status: string) => {
@@ -456,11 +510,11 @@ export const AdminTrainerList = () => {
                                      variant="destructive"
                                      size="sm"
                                      className="absolute -top-2 -right-2 h-6 w-6 p-0 rounded-full"
-                                     onClick={async () => {
-                                       if (await deleteTrainerImage(editFormData.profile_image_url!)) {
-                                         setEditFormData(prev => ({ ...prev, profile_image_url: '' }));
-                                       }
-                                     }}
+                                      onClick={async () => {
+                                        if (editFormData.profile_image_url) {
+                                          await handleImageDelete(editingTrainer.id, editFormData.profile_image_url);
+                                        }
+                                      }}
                                    >
                                      <Trash2 className="h-3 w-3" />
                                    </Button>
@@ -473,15 +527,12 @@ export const AdminTrainerList = () => {
                                <Input
                                  type="file"
                                  accept="image/*"
-                                 onChange={async (e) => {
-                                   const file = e.target.files?.[0];
-                                   if (file) {
-                                     const url = await uploadTrainerProfileImage(file);
-                                     if (url) {
-                                       setEditFormData(prev => ({ ...prev, profile_image_url: url }));
-                                     }
-                                   }
-                                 }}
+                                  onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file && editingTrainer) {
+                                      await handleImageUpload(editingTrainer.id, file);
+                                    }
+                                  }}
                                  className="hidden"
                                  id="trainer-image-upload"
                                />
