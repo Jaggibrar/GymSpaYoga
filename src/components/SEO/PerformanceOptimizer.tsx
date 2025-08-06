@@ -1,142 +1,302 @@
-import { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
+import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
-export const PerformanceOptimizer = () => {
+const PerformanceOptimizer: React.FC = () => {
+  const location = useLocation();
+
   useEffect(() => {
-    // Preload critical resources
-    const preloadCriticalResources = () => {
-      const preloadLink1 = document.createElement('link');
-      preloadLink1.rel = 'preload';
-      preloadLink1.href = '/fonts/inter-var.woff2';
-      preloadLink1.as = 'font';
-      preloadLink1.type = 'font/woff2';
-      preloadLink1.crossOrigin = 'anonymous';
-      document.head.appendChild(preloadLink1);
+    // Core Web Vitals optimization
+    const optimizePerformance = () => {
+      // Optimize images
+      optimizeImages();
+      
+      // Add resource hints
+      addResourceHints();
+      
+      // Optimize fonts
+      optimizeFonts();
+      
+      // Implement intersection observer for lazy loading
+      implementLazyLoading();
+      
+      // Add critical CSS
+      addCriticalCSS();
+      
+      // Optimize JavaScript loading
+      optimizeJavaScript();
+      
+      // Service Worker for caching
+      registerServiceWorker();
+      
+      // Preload critical resources
+      preloadCriticalResources();
+    };
 
-      // Preload hero images
-      const heroImages = [
-        '/hero-gym.webp',
-        '/hero-spa.webp', 
-        '/hero-yoga.webp'
-      ];
+    const optimizeImages = () => {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        // Add loading attribute if not present
+        if (!img.getAttribute('loading')) {
+          // First few images should be eager, rest lazy
+          const rect = img.getBoundingClientRect();
+          const isAboveFold = rect.top < window.innerHeight;
+          img.setAttribute('loading', isAboveFold ? 'eager' : 'lazy');
+        }
 
-      heroImages.forEach(src => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = src;
-        link.as = 'image';
-        document.head.appendChild(link);
+        // Add decoding attribute
+        if (!img.getAttribute('decoding')) {
+          img.setAttribute('decoding', 'async');
+        }
+
+        // Optimize image dimensions
+        if (!img.width && !img.height && !img.style.width && !img.style.height) {
+          img.style.width = 'auto';
+          img.style.height = 'auto';
+        }
+
+        // Add fetchpriority for hero images
+        if (img.classList.contains('hero-image') || img.closest('.hero')) {
+          img.setAttribute('fetchpriority', 'high');
+        }
       });
     };
 
-    // Lazy load non-critical CSS
-    const loadNonCriticalCSS = () => {
-      const nonCriticalCSS = [
-        'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'
+    const addResourceHints = () => {
+      const head = document.head;
+      
+      // DNS prefetch for external domains
+      const dnsPrefetchDomains = [
+        'fonts.googleapis.com',
+        'fonts.gstatic.com',
+        'www.google-analytics.com',
+        'www.googletagmanager.com',
+        'pihmoaogjjiicfnkmpbe.supabase.co'
       ];
 
-      nonCriticalCSS.forEach(href => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = href;
-        link.media = 'print';
-        link.onload = function() {
-          (this as HTMLLinkElement).media = 'all';
-        };
-        document.head.appendChild(link);
+      dnsPrefetchDomains.forEach(domain => {
+        if (!document.querySelector(`link[href="//${domain}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'dns-prefetch';
+          link.href = `//${domain}`;
+          head.appendChild(link);
+        }
+      });
+
+      // Preconnect to critical origins
+      const preconnectOrigins = [
+        'https://fonts.googleapis.com',
+        'https://fonts.gstatic.com',
+        'https://pihmoaogjjiicfnkmpbe.supabase.co'
+      ];
+
+      preconnectOrigins.forEach(origin => {
+        if (!document.querySelector(`link[href="${origin}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'preconnect';
+          link.href = origin;
+          if (origin.includes('fonts.gstatic.com')) {
+            link.crossOrigin = 'anonymous';
+          }
+          head.appendChild(link);
+        }
       });
     };
 
-    // Initialize performance optimizations
-    preloadCriticalResources();
-    loadNonCriticalCSS();
-
-    // Service Worker for caching
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('SW registered: ', registration);
-        })
-        .catch(registrationError => {
-          console.log('SW registration failed: ', registrationError);
-        });
-    }
-
-    // Resource hints for external domains
-    const resourceHints = [
-      { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
-      { rel: 'dns-prefetch', href: '//fonts.gstatic.com' },
-      { rel: 'dns-prefetch', href: '//www.google-analytics.com' },
-      { rel: 'dns-prefetch', href: '//www.googletagmanager.com' },
-      { rel: 'preconnect', href: 'https://pihmoaogjjiicfnkmpbe.supabase.co' }
-    ];
-
-    resourceHints.forEach(hint => {
-      const link = document.createElement('link');
-      link.rel = hint.rel;
-      link.href = hint.href;
-      if (hint.rel === 'preconnect') {
-        link.crossOrigin = 'anonymous';
-      }
-      document.head.appendChild(link);
-    });
-
-  }, []);
-
-  return (
-    <Helmet>
-      {/* Critical CSS inlined for above-the-fold content */}
-      <style>
-        {`
-          /* Critical path CSS */
-          body { font-family: system-ui, -apple-system, sans-serif; }
-          .hero-section { min-height: 100vh; display: flex; align-items: center; }
-          .loading-spinner { animation: spin 1s linear infinite; }
-          @keyframes spin { to { transform: rotate(360deg); } }
-          
-          /* Optimize font loading */
+    const optimizeFonts = () => {
+      // Add font-display swap to improve loading performance
+      const style = document.getElementById('font-optimization');
+      if (!style) {
+        const fontOptimization = document.createElement('style');
+        fontOptimization.id = 'font-optimization';
+        fontOptimization.textContent = `
           @font-face {
             font-family: 'Inter';
-            src: url('/fonts/inter-var.woff2') format('woff2');
-            font-weight: 100 900;
             font-display: swap;
           }
-        `}
-      </style>
+          @font-face {
+            font-family: 'Poppins';
+            font-display: swap;
+          }
+        `;
+        document.head.appendChild(fontOptimization);
+      }
+    };
 
-      {/* Preload critical assets */}
-      <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-      <link rel="preload" href="/hero-gym.webp" as="image" />
+    const implementLazyLoading = () => {
+      // Lazy load components that are below the fold
+      const lazyElements = document.querySelectorAll('.lazy-load, [data-lazy]');
       
-      {/* Prefetch likely next pages */}
-      <link rel="prefetch" href="/gyms" />
-      <link rel="prefetch" href="/spas" />
-      <link rel="prefetch" href="/yoga" />
-      <link rel="prefetch" href="/trainers" />
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const element = entry.target as HTMLElement;
+              
+              // Load images
+              if (element.tagName === 'IMG') {
+                const img = element as HTMLImageElement;
+                const dataSrc = img.getAttribute('data-src');
+                if (dataSrc) {
+                  img.src = dataSrc;
+                  img.removeAttribute('data-src');
+                }
+              }
+              
+              // Load other content
+              const dataSrc = element.getAttribute('data-src');
+              if (dataSrc) {
+                element.setAttribute('src', dataSrc);
+                element.removeAttribute('data-src');
+              }
+              
+              element.classList.remove('lazy-load');
+              imageObserver.unobserve(element);
+            }
+          });
+        }, {
+          rootMargin: '50px'
+        });
+
+        lazyElements.forEach(el => imageObserver.observe(el));
+      }
+    };
+
+    const addCriticalCSS = () => {
+      // Inline critical CSS for above-the-fold content
+      const criticalCSSId = 'critical-css';
+      if (!document.getElementById(criticalCSSId)) {
+        const criticalCSS = document.createElement('style');
+        criticalCSS.id = criticalCSSId;
+        criticalCSS.textContent = `
+          /* Critical CSS for above-the-fold content */
+          body {
+            margin: 0;
+            font-family: Inter, system-ui, sans-serif;
+            background-color: hsl(var(--background));
+            color: hsl(var(--foreground));
+          }
+          
+          .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          
+          /* Prevent layout shift */
+          img {
+            max-width: 100%;
+            height: auto;
+          }
+          
+          /* Loading skeleton */
+          .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+          }
+          
+          @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+        `;
+        document.head.appendChild(criticalCSS);
+      }
+    };
+
+    const optimizeJavaScript = () => {
+      // Add loading strategies for non-critical scripts
+      const scripts = document.querySelectorAll('script[src]');
+      scripts.forEach(script => {
+        const src = script.getAttribute('src');
+        if (src && !script.hasAttribute('async') && !script.hasAttribute('defer')) {
+          // Non-critical third-party scripts should be deferred
+          if (src.includes('analytics') || src.includes('gtm') || src.includes('facebook')) {
+            script.setAttribute('defer', '');
+          }
+        }
+      });
+    };
+
+    const registerServiceWorker = () => {
+      if ('serviceWorker' in navigator && location.pathname !== '/') {
+        // Only register on production builds
+        if (import.meta.env.PROD) {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            // Fail silently
+          });
+        }
+      }
+    };
+
+    const preloadCriticalResources = () => {
+      const currentPath = location.pathname;
       
-      {/* Resource hints */}
-      <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-      <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      
-      {/* Optimize images */}
-      <meta name="format-detection" content="telephone=no" />
-      <meta name="msapplication-tap-highlight" content="no" />
-      
-      {/* PWA optimizations */}
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-      <meta name="mobile-web-app-capable" content="yes" />
-      
-      {/* Security headers */}
-      <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-      <meta httpEquiv="X-Frame-Options" content="DENY" />
-      <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
-      <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-      
-      {/* Optimize loading */}
-      <meta httpEquiv="Accept-CH" content="DPR, Viewport-Width, Width" />
-    </Helmet>
-  );
+      // Preload critical resources based on route
+      const criticalResources: Record<string, string[]> = {
+        '/': ['/api/businesses/featured', '/api/trainers/featured'],
+        '/gyms': ['/api/businesses?category=gym'],
+        '/spas': ['/api/businesses?category=spa'],
+        '/yoga': ['/api/businesses?category=yoga'],
+        '/trainers': ['/api/trainers']
+      };
+
+      const resources = criticalResources[currentPath];
+      if (resources) {
+        resources.forEach(resource => {
+          if (!document.querySelector(`link[href="${resource}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = resource;
+            document.head.appendChild(link);
+          }
+        });
+      }
+    };
+
+    // Implement performance monitoring
+    const monitorPerformance = () => {
+      // Measure Core Web Vitals
+      if ('web-vital' in window) {
+        // This would typically use the web-vitals library
+        // For now, we'll use the Performance API
+        
+        // Measure Largest Contentful Paint (LCP)
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          // Send to analytics
+          if (window.gtag) {
+            window.gtag('event', 'web_vitals', {
+              name: 'LCP',
+              value: lastEntry.startTime,
+              event_category: 'Performance'
+            });
+          }
+        }).observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // Performance monitoring simplified to avoid type conflicts
+      }
+    };
+
+    // Add viewport meta tag if missing
+    if (!document.querySelector('meta[name="viewport"]')) {
+      const viewport = document.createElement('meta');
+      viewport.name = 'viewport';
+      viewport.content = 'width=device-width, initial-scale=1, maximum-scale=5';
+      document.head.appendChild(viewport);
+    }
+
+    // Run optimizations
+    setTimeout(optimizePerformance, 0);
+    setTimeout(monitorPerformance, 1000);
+
+  }, [location.pathname]);
+
+  return null;
 };
+
+// Performance types are handled globally
+
+export default PerformanceOptimizer;

@@ -1,48 +1,47 @@
-// Service Worker for GymSpaYoga - Optimizing Performance & SEO
-const CACHE_NAME = 'gymspayoga-v1.0.0';
-const STATIC_CACHE = 'gymspayoga-static-v1.0.0';
-const DYNAMIC_CACHE = 'gymspayoga-dynamic-v1.0.0';
+// Service Worker for caching and performance optimization
+const CACHE_NAME = 'gymspayyoga-v1';
+const STATIC_CACHE_NAME = 'gymspayyoga-static-v1';
+const API_CACHE_NAME = 'gymspayyoga-api-v1';
 
-// Critical resources to cache for performance
+// Assets to cache immediately
 const STATIC_ASSETS = [
   '/',
-  '/gyms',
-  '/spas', 
-  '/yoga',
-  '/trainers',
-  '/blogs',
-  '/about',
-  '/pricing',
-  '/support',
   '/manifest.json',
-  '/offline.html'
+  '/offline.html',
+  // Add critical CSS and JS files here
 ];
 
-// Install Service Worker
+// API endpoints to cache
+const API_ENDPOINTS = [
+  '/api/businesses',
+  '/api/trainers',
+  '/api/blogs'
+];
+
+// Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installing...');
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then((cache) => {
-        console.log('Pre-caching static assets');
+    Promise.all([
+      caches.open(STATIC_CACHE_NAME).then((cache) => {
         return cache.addAll(STATIC_ASSETS);
-      })
-      .catch((error) => {
-        console.error('Failed to cache static assets:', error);
-      })
+      }),
+      caches.open(API_CACHE_NAME)
+    ])
   );
   self.skipWaiting();
 });
 
-// Activate Service Worker  
+// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activating...');
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-            console.log('Deleting old cache:', cacheName);
+          if (
+            cacheName !== CACHE_NAME &&
+            cacheName !== STATIC_CACHE_NAME &&
+            cacheName !== API_CACHE_NAME
+          ) {
             return caches.delete(cacheName);
           }
         })
@@ -52,149 +51,72 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Strategy - Network First with Cache Fallback
+// Fetch event - serve from cache when available
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests
-  if (request.method !== 'GET') {
+  // Handle API requests
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      caches.open(API_CACHE_NAME).then((cache) => {
+        return fetch(request)
+          .then((response) => {
+            // Only cache successful responses
+            if (response.ok) {
+              cache.put(request, response.clone());
+            }
+            return response;
+          })
+          .catch(() => {
+            // Serve from cache if network fails
+            return cache.match(request);
+          });
+      })
+    );
     return;
   }
 
-  // Handle API requests differently
-  if (url.pathname.startsWith('/api/') || url.hostname !== location.hostname) {
+  // Handle static assets
+  if (request.destination === 'image') {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(request).then((response) => {
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+
+  // Handle navigation requests
+  if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Cache successful API responses
-          if (response.status === 200) {
-            const responseClone = response.clone();
-            caches.open(DYNAMIC_CACHE)
-              .then((cache) => cache.put(request, responseClone));
-          }
           return response;
         })
         .catch(() => {
-          // Return cached version if available
-          return caches.match(request);
+          // Serve offline page
+          return caches.match('/offline.html');
         })
     );
     return;
   }
 
-  // Static assets - Cache First Strategy
-  if (STATIC_ASSETS.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(request)
-        .then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          return fetch(request)
-            .then((response) => {
-              const responseClone = response.clone();
-              caches.open(STATIC_CACHE)
-                .then((cache) => cache.put(request, responseClone));
-              return response;
-            });
-        })
-    );
-    return;
-  }
-
-  // Dynamic content - Network First Strategy
+  // Handle other requests with cache-first strategy
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Only cache successful responses
-        if (response.status === 200) {
-          const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE)
-            .then((cache) => cache.put(request, responseClone));
-        }
-        return response;
-      })
-      .catch(() => {
-        // Return cached version or offline page
-        return caches.match(request)
-          .then((cachedResponse) => {
-            if (cachedResponse) {
-              return cachedResponse;
-            }
-            // Return offline page for navigation requests
-            if (request.destination === 'document') {
-              return caches.match('/offline.html');
-            }
-          });
-      })
+    caches.match(request).then((cachedResponse) => {
+      return cachedResponse || fetch(request);
+    })
   );
-});
-
-// Background Sync for better SEO crawling
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'background-sync') {
-    event.waitUntil(
-      // Preload critical pages for better SEO
-      preloadCriticalPages()
-    );
-  }
-});
-
-async function preloadCriticalPages() {
-  const criticalPages = ['/gyms', '/spas', '/yoga', '/trainers', '/blogs'];
-  const cache = await caches.open(DYNAMIC_CACHE);
-  
-  for (const page of criticalPages) {
-    try {
-      const response = await fetch(page);
-      if (response.status === 200) {
-        await cache.put(page, response);
-      }
-    } catch (error) {
-      console.error(`Failed to preload ${page}:`, error);
-    }
-  }
-}
-
-// Handle push notifications for better engagement
-self.addEventListener('push', (event) => {
-  if (!event.data) return;
-
-  const options = {
-    body: event.data.text(),
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/badge-72x72.png',
-    vibrate: [200, 100, 200],
-    data: {
-      url: '/'
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'Explore Now',
-        icon: '/icons/explore-icon.png'
-      },
-      {
-        action: 'dismiss',
-        title: 'Dismiss',
-        icon: '/icons/dismiss-icon.png'
-      }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification('GymSpaYoga Update', options)
-  );
-});
-
-// Handle notification clicks
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  if (event.action === 'explore') {
-    event.waitUntil(
-      clients.openWindow('/')
-    );
-  }
 });

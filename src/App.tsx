@@ -15,6 +15,8 @@ import Breadcrumbs from "./components/Breadcrumbs";
 import SEORedirectHandler from "./components/SEORedirectHandler";
 import SEOMetaManager from "./components/SEOMetaManager";
 import AdvancedSEOManager from "./components/AdvancedSEOManager";
+import AccessibilityEnhancer from "./components/SEO/AccessibilityEnhancer";
+import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
@@ -67,6 +69,8 @@ const AppContent = () => {
       <SEORedirectHandler />
       <SEOMetaManager />
       <AdvancedSEOManager />
+      <AccessibilityEnhancer />
+      <PerformanceOptimizer />
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
