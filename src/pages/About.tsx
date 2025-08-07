@@ -9,9 +9,9 @@ const About = () => {
   return (
     <>
       <SEOHead
-        title="About GymSpaYoga - Your Ultimate Wellness Platform"
-        description="Learn about GymSpaYoga's mission to make wellness accessible to everyone. Discover our story, values, and commitment to connecting you with the best fitness and wellness services."
-        keywords="about gymspa yoga, wellness platform, fitness community, health services"
+        title="About GymSpaYoga - Your Ultimate Wellness Platform | India's Leading Fitness Marketplace"
+        description="Learn about GymSpaYoga's mission to make wellness accessible to everyone in India. Founded by Jagdeep Singh, we connect 50K+ users with premium gyms, luxury spas, and authentic yoga studios. Discover our story, values, and commitment to transforming India's fitness landscape."
+        keywords="about gymspayoga, wellness platform India, fitness community, health services, Jagdeep Singh founder, gym booking platform, spa yoga marketplace"
       />
       
       <div className="min-h-screen bg-white">

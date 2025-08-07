@@ -52,8 +52,8 @@ const Gyms = () => {
     <>
       <SEOHead
         title="Premium Gyms Near You - GymSpaYoga | Find & Book Top Fitness Centers"
-        description="Discover and book the best gyms in your city. Premium fitness centers with state-of-the-art equipment, expert trainers, and flexible membership options."
-        keywords="gyms near me, fitness center, premium gym, gym membership, workout facilities, fitness training"
+        description="Discover and book the best gyms in India with state-of-the-art equipment, expert trainers, and flexible membership options. Find premium fitness centers near you with verified ratings and real photos."
+        keywords="gyms near me, fitness center, premium gym, gym membership, workout facilities, fitness training, best gyms India"
       />
       
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-orange-100">

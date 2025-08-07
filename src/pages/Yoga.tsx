@@ -9,8 +9,8 @@ const Yoga = () => {
     <>
       <SEOHead
         title="Yoga Studios & Classes Near You - GymSpaYoga | Find Inner Peace"
-        description="Discover authentic yoga studios and certified instructors. From Hatha to Vinyasa, find the perfect yoga practice for your mind, body, and soul."
-        keywords="yoga classes, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness"
+        description="Discover authentic yoga studios and certified instructors across India. From Hatha to Vinyasa, book your perfect yoga practice for mind, body, and soul with verified reviews and real photos."
+        keywords="yoga classes near me, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness, best yoga classes India"
       />
       
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100">

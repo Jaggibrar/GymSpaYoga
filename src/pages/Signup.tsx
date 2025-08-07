@@ -105,8 +105,9 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-emerald-50 py-12 px-4">
       <SEOHead
-        title="Sign Up - GymSpaYoga"
-        description="Create your account and start your wellness journey with GymSpaYoga"
+        title="Sign Up - Create Your Account | GymSpaYoga"
+        description="Join GymSpaYoga today and discover premium gyms, luxury spas, and authentic yoga studios near you. Start your wellness journey with verified listings and instant booking."
+        keywords="sign up gymspayoga, create account, wellness platform registration, gym membership, spa booking, yoga classes"
       />
 
       <Card className="w-full max-w-md">
