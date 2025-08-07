@@ -9,67 +9,43 @@ import { AdvancedSEOManager } from '@/components/SEO/AdvancedSEOManager';
 const Pricing = () => {
   const businessPlans = [
     {
-      name: "Budget Plan",
-      icon: <Building2 className="h-8 w-8" />,
+      name: "💙 Budget Plan",
+      icon: <Heart className="h-8 w-8" />,
       registrationFee: "₹5,999",
       monthlyFee: "₹1,500",
       leadCharge: "₹20",
-      description: "Perfect for local gyms, affordable wellness studios, and community centers",
-      features: [
-        "Basic listing with photos",
-        "Contact details display",
-        "Review system integration",
-        "Search visibility",
-        "Mobile-optimized profile",
-        "Basic analytics",
-        "Email support"
-      ],
+      description: "Perfect for emerging gyms, local wellness centers, and community-based yoga spaces",
+      longDescription: "Get discovered by new customers in your area with ease. This plan is designed for businesses that want to build visibility and credibility on a budget. A great way to start your digital journey and attract steady leads without upfront complexity.",
+      tagline: "Your first step to online visibility begins here.",
       isPopular: false,
       gradient: "from-blue-500 to-blue-600",
       badge: null
     },
     {
-      name: "Premium Plan",
+      name: "💚 Premium Plan",
       icon: <Sparkles className="h-8 w-8" />,
       registrationFee: "₹8,999",
       monthlyFee: "₹1,500",
       leadCharge: "₹20",
-      description: "Ideal for well-established gyms, urban spas, and branded yoga studios",
-      features: [
-        "Enhanced listing with gallery",
-        "Priority in search results",
-        "Advanced booking system",
-        "Customer management tools",
-        "Detailed analytics dashboard",
-        "Social media integration",
-        "Priority customer support",
-        "Marketing toolkit"
-      ],
+      description: "Ideal for growing gyms, branded yoga studios, and trusted urban wellness destinations",
+      longDescription: "Upgrade your brand presence with a more prominent profile, detailed insights, and a smoother customer experience. Designed to help you attract, engage, and retain more customers with powerful tools built to grow your wellness business.",
+      tagline: "Get the spotlight your business deserves.",
       isPopular: true,
       gradient: "from-primary to-primary-dark",
       badge: "Most Popular"
     },
     {
-      name: "Luxury Plan",
+      name: "🧡 Luxury Plan",
       icon: <Crown className="h-8 w-8" />,
       registrationFee: "₹10,000",
       monthlyFee: "₹2,000",
       leadCharge: "₹20",
-      description: "Premium solution for high-end gyms, luxury spas, and exclusive yoga retreats",
-      features: [
-        "Premium listing with video content",
-        "Top placement in search",
-        "Advanced CRM integration",
-        "Custom branding options",
-        "Real-time notifications",
-        "Dedicated account manager",
-        "White-label booking system",
-        "Advanced reporting suite",
-        "24/7 premium support"
-      ],
+      description: "Perfect for premium gyms, luxury spas, and elite yoga retreats",
+      longDescription: "Put your brand on top and offer a world-class experience to your clients. This premium plan is built for scale, trust, and prestige — with tools that ensure high-converting leads, top placement in search results, and premium support tailored to your growth.",
+      tagline: "Make your brand unforgettable — lead the wellness revolution.",
       isPopular: false,
       gradient: "from-accent to-wellness-gold",
-      badge: "Premium"
+      badge: "Premium Tier"
     }
   ];
 
@@ -229,49 +205,48 @@ const Pricing = () => {
                     </div>
                   )}
 
-                  <div className={`bg-gradient-to-r ${plan.gradient} text-white p-6 text-center`}>
-                    <div className="opacity-90 mb-3">
+                   <div className={`bg-gradient-to-r ${plan.gradient} text-white p-8 text-center`}>
+                    <div className="opacity-90 mb-4">
                       {plan.icon}
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                    <p className="opacity-90 text-sm leading-relaxed">
+                    <h3 className="text-2xl font-bold mb-3">{plan.name}</h3>
+                    <p className="opacity-90 text-sm leading-relaxed mb-4">
                       {plan.description}
                     </p>
+                    
+                    <div className="space-y-3">
+                      <div className="text-3xl font-black">
+                        {plan.registrationFee} <span className="text-sm font-normal opacity-75">one-time registration</span>
+                      </div>
+                      <div className="text-xl font-semibold">
+                        {plan.monthlyFee}/month <span className="text-sm font-normal opacity-75">(starts after 6 months)</span>
+                      </div>
+                      <div className="text-lg font-medium bg-white/20 rounded-lg py-2 px-4 inline-block">
+                        {plan.leadCharge} per lead <span className="text-sm opacity-75">(only on successful bookings)</span>
+                      </div>
+                    </div>
                   </div>
 
                   <CardContent className="p-8">
-                    <div className="space-y-6 mb-8">
-                      <div className="text-center">
-                        <div className="text-4xl font-black text-foreground mb-1">
-                          {plan.registrationFee}
-                        </div>
-                        <p className="text-muted-foreground text-sm font-medium">One-time registration</p>
-                      </div>
-
-                      <div className="bg-muted/50 rounded-xl p-4 text-center">
-                        <div className="text-2xl font-bold text-foreground mb-1">
-                          {plan.monthlyFee}<span className="text-lg font-normal">/month</span>
-                        </div>
-                        <p className="text-muted-foreground text-sm">After 6 months</p>
-                      </div>
-
-                      <div className="bg-accent/10 rounded-xl p-4 text-center border border-accent/20">
-                        <div className="text-xl font-bold text-accent mb-1">
-                          {plan.leadCharge} per lead
-                        </div>
-                        <p className="text-muted-foreground text-sm">Only successful bookings</p>
-                      </div>
+                    <div className="mb-6">
+                      <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                        ✨ {plan.longDescription}
+                      </p>
+                      <p className="text-primary font-medium text-sm">
+                        📌 {plan.tagline}
+                      </p>
                     </div>
 
-                    <div className="space-y-3 mb-8">
-                      {plan.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-center gap-3">
-                          <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                            <Check className="h-3 w-3 text-primary-foreground" />
-                          </div>
-                          <span className="text-muted-foreground text-sm">{feature}</span>
-                        </div>
-                      ))}
+                    {/* Trust Badges */}
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
+                        <Check className="h-4 w-4 text-green-600 mx-auto mb-1" />
+                        <span className="text-xs text-green-700 font-medium">No hidden fees</span>
+                      </div>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
+                        <Shield className="h-4 w-4 text-blue-600 mx-auto mb-1" />
+                        <span className="text-xs text-blue-700 font-medium">100% verified leads</span>
+                      </div>
                     </div>
 
                     <Link to="/register-business" className="block">
