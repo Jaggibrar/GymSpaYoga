@@ -168,10 +168,10 @@ export const AdvancedSEOManager = ({
       <meta name="cache-control" content="no-cache" />
       
       {/* Favicon and App Icons */}
-      <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+      <link rel="icon" type="image/png" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
       <link rel="manifest" href="/site.webmanifest" />
     </Helmet>
   );
