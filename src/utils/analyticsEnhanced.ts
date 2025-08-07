@@ -2,7 +2,7 @@
 
 declare global {
   interface Window {
-    gtag: (command: string, targetId: string, config?: any) => void;
+    gtag: (...args: any[]) => void;
     dataLayer: any[];
     fbq: (...args: any[]) => void;
     clarity: (...args: any[]) => void;
