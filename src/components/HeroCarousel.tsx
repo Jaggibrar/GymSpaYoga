@@ -58,6 +58,12 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover"
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={index === 0 ? 'high' : 'low'}
+                sizes="100vw"
+                width={1920}
+                height={1080}
               />
               <div className="hero-overlay"></div>
             </CarouselItem>
@@ -73,10 +79,12 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
           {images.map((_, index) => (
             <button
               key={index}
-              className="w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-colors"
+              className="min-w-[44px] min-h-[44px] p-2 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               onClick={() => api?.scrollTo(index)}
               aria-label={`Go to slide ${index + 1}`}
-            />
+            >
+              <span className="w-2 h-2 rounded-full bg-white/50 hover:bg-white/80 transition-colors"></span>
+            </button>
           ))}
         </div>
       </Carousel>

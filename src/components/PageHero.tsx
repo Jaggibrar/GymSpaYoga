@@ -56,6 +56,10 @@ const PageHero = ({ title, subtitle, description, backgroundImage, colorScheme =
         src={backgroundImage}
         alt={`${title} background`}
         className="w-full h-full object-cover"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        sizes="100vw"
       />
       <div className="absolute inset-0 bg-black/50"></div>
       <div 

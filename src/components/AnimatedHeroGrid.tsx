@@ -63,6 +63,9 @@ const AnimatedHeroGrid = () => {
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                decoding="async"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             <div className="p-4 sm:p-6 text-center">

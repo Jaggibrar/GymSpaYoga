@@ -25,7 +25,7 @@ export const AdvancedSEOManager = ({
   breadcrumbs
 }: SEOProps) => {
   const location = useLocation();
-  const currentUrl = `https://gymspayyoga.com${location.pathname}`;
+  const currentUrl = `https://gymspayoga.com${location.pathname}`;
   const canonicalUrl = canonical || currentUrl;
   
   // Default structured data for the website
@@ -34,10 +34,10 @@ export const AdvancedSEOManager = ({
     "@type": "WebSite",
     "name": "GymSpaYoga.com",
     "description": description,
-    "url": "https://gymspayyoga.com",
+    "url": "https://gymspayoga.com",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://gymspayyoga.com/search?q={search_term_string}",
+      "target": "https://gymspayoga.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     },
     "publisher": {
@@ -45,7 +45,7 @@ export const AdvancedSEOManager = ({
       "name": "GymSpaYoga.com",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://gymspayyoga.com/logo.png"
+        "url": "https://gymspayoga.com/logo.png"
       }
     }
   };
@@ -55,8 +55,8 @@ export const AdvancedSEOManager = ({
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "GymSpaYoga.com",
-    "url": "https://gymspayyoga.com",
-    "logo": "https://gymspayyoga.com/logo.png",
+    "url": "https://gymspayoga.com",
+    "logo": "https://gymspayoga.com/logo.png",
     "description": "Premier platform connecting users with verified fitness trainers, spa services, and yoga instructors",
     "contactPoint": {
       "@type": "ContactPoint",
@@ -79,7 +79,7 @@ export const AdvancedSEOManager = ({
       "@type": "ListItem",
       "position": index + 1,
       "name": crumb.name,
-      "item": `https://gymspayyoga.com${crumb.url}`
+      "item": `https://gymspayoga.com${crumb.url}`
     }))
   } : null;
 
@@ -162,16 +162,10 @@ export const AdvancedSEOManager = ({
       {/* Additional SEO Meta Tags */}
       <meta name="rating" content="general" />
       <meta name="distribution" content="global" />
-      <meta name="revisit-after" content="1 days" />
-      <meta name="expires" content="never" />
-      <meta name="pragma" content="no-cache" />
-      <meta name="cache-control" content="no-cache" />
       
       {/* Favicon and App Icons */}
-      <link rel="icon" type="image/png" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/lovable-uploads/24f407c0-1878-496c-9cc1-9406daf962fe.png" />
+      <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2310b981'/%3E%3Ctext x='50' y='62' font-size='60' text-anchor='middle' fill='white'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+      <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2310b981'/%3E%3Ctext x='50' y='62' font-size='60' text-anchor='middle' fill='white'%3E%F0%9F%8F%8B%EF%B8%8F%3C/text%3E%3C/svg%3E" />
       <link rel="manifest" href="/site.webmanifest" />
     </Helmet>
   );
