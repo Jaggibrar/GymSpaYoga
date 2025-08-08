@@ -1,13 +1,13 @@
-
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Dumbbell, Waves, Heart, MapPin, Star, Users, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import AnimatedHeroGrid from "@/components/AnimatedHeroGrid";
+const AnimatedHeroGrid = React.lazy(() => import("@/components/AnimatedHeroGrid"));
 import { useAuth } from "@/hooks/useAuth";
-import RecentListings from "@/components/RecentListings";
+const RecentListings = React.lazy(() => import("@/components/RecentListings"));
 import SEOHead from "@/components/SEOHead";
 import HeroCarousel from "@/components/HeroCarousel";
-import { GeolocationRecommendations } from "@/components/GeolocationRecommendations";
+const GeolocationRecommendations = React.lazy(() => import("@/components/GeolocationRecommendations").then(m => ({ default: m.GeolocationRecommendations })));
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
@@ -177,13 +177,17 @@ const Index = () => {
             </p>
           </div>
           
-          <AnimatedHeroGrid />
+          <React.Suspense fallback={null}>
+            <AnimatedHeroGrid />
+          </React.Suspense>
         </div>
       </section>
 
       {/* Recent Listings Section - Reduced gap */}
       <div className="-mt-4">
-        <RecentListings />
+          <React.Suspense fallback={null}>
+            <RecentListings />
+          </React.Suspense>
       </div>
 
       {/* Stats Section */}
@@ -211,7 +215,9 @@ const Index = () => {
       {/* Geolocation Recommendations Section */}
       <section className="py-12 sm:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <GeolocationRecommendations />
+          <React.Suspense fallback={null}>
+            <GeolocationRecommendations />
+          </React.Suspense>
         </div>
       </section>
 

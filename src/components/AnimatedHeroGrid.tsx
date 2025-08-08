@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from 'react-router-dom';
-
+import OptimizedImage from "@/components/OptimizedImage";
 const AnimatedHeroGrid = () => {
   const navigate = useNavigate();
 
@@ -59,13 +59,15 @@ const AnimatedHeroGrid = () => {
             style={{ animationDelay: `${index * 200}ms` }}
           >
             <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden rounded-t-lg">
-              <img 
+              <OptimizedImage 
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
                 decoding="async"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                width={600}
+                height={256}
               />
             </div>
             <div className="p-4 sm:p-6 text-center">

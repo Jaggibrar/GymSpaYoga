@@ -21,43 +21,42 @@ import AnalyticsTracker from "./components/AnalyticsTracker";
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
 import BusinessRoute from "./components/BusinessRoute";
-
-// Import all pages
-import Index from "./pages/Index";
-import Gyms from "./pages/Gyms";
-import GymDetails from "./pages/GymDetails";
-import Spas from "./pages/Spas";
-import SpaDetails from "./pages/SpaDetails";
-import Yoga from "./pages/Yoga";
-import YogaDetails from "./pages/YogaDetails";
-import Trainers from "./pages/Trainers";
-import TrainerDetails from "./pages/TrainerDetails";
-import BookTrainer from "./pages/BookTrainer";
-import Blogs from "./pages/Blogs";
-import BlogPost from "./pages/BlogPost";
-import MyBlogs from "./pages/MyBlogs";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import About from "./pages/About";
-import Support from "./pages/Support";
-import Pricing from "./pages/Pricing";
-import RegisterBusiness from "./pages/RegisterBusiness";
-import RegisterTrainer from "./pages/RegisterTrainer";
-import Explore from "./pages/Explore";
-import BusinessDashboard from "./pages/BusinessDashboard";
-import EditListing from "./pages/EditListing";
-import BusinessDetails from "./pages/BusinessDetails";
-import CreateListing from "./pages/CreateListing";
-import NotFound from "./pages/NotFound";
 import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Profile from "./pages/Profile";
-import AdminDashboard from "./pages/AdminDashboard";
-import TrainerDashboard from "./pages/TrainerDashboard";
-import UserBookings from "./pages/UserBookings";
-import Favorites from "./pages/Favorites";
+// Lazy-load pages to improve initial load performance
+const Index = React.lazy(() => import("./pages/Index"));
+const Gyms = React.lazy(() => import("./pages/Gyms"));
+const GymDetails = React.lazy(() => import("./pages/GymDetails"));
+const Spas = React.lazy(() => import("./pages/Spas"));
+const SpaDetails = React.lazy(() => import("./pages/SpaDetails"));
+const Yoga = React.lazy(() => import("./pages/Yoga"));
+const YogaDetails = React.lazy(() => import("./pages/YogaDetails"));
+const Trainers = React.lazy(() => import("./pages/Trainers"));
+const TrainerDetails = React.lazy(() => import("./pages/TrainerDetails"));
+const BookTrainer = React.lazy(() => import("./pages/BookTrainer"));
+const Blogs = React.lazy(() => import("./pages/Blogs"));
+const BlogPost = React.lazy(() => import("./pages/BlogPost"));
+const MyBlogs = React.lazy(() => import("./pages/MyBlogs"));
+const PrivacyPolicy = React.lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = React.lazy(() => import("./pages/TermsOfService"));
+const Login = React.lazy(() => import("./pages/Login"));
+const Signup = React.lazy(() => import("./pages/Signup"));
+const About = React.lazy(() => import("./pages/About"));
+const Support = React.lazy(() => import("./pages/Support"));
+const Pricing = React.lazy(() => import("./pages/Pricing"));
+const RegisterBusiness = React.lazy(() => import("./pages/RegisterBusiness"));
+const RegisterTrainer = React.lazy(() => import("./pages/RegisterTrainer"));
+const Explore = React.lazy(() => import("./pages/Explore"));
+const BusinessDashboard = React.lazy(() => import("./pages/BusinessDashboard"));
+const EditListing = React.lazy(() => import("./pages/EditListing"));
+const BusinessDetails = React.lazy(() => import("./pages/BusinessDetails"));
+const CreateListing = React.lazy(() => import("./pages/CreateListing"));
+const NotFound = React.lazy(() => import("./pages/NotFound"));
+const Profile = React.lazy(() => import("./pages/Profile"));
+const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
+const TrainerDashboard = React.lazy(() => import("./pages/TrainerDashboard"));
+const UserBookings = React.lazy(() => import("./pages/UserBookings"));
+const Favorites = React.lazy(() => import("./pages/Favorites"));
 
 const queryClient = new QueryClient();
 
@@ -176,7 +175,9 @@ const App = () => {
           <FavoritesProvider>
             <TooltipProvider>
               <Router>
-                <AppContent />
+                <React.Suspense fallback={<GlobalLoadingIndicator />}>
+                  <AppContent />
+                </React.Suspense>
               </Router>
             </TooltipProvider>
           </FavoritesProvider>

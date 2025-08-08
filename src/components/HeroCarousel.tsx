@@ -7,6 +7,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface HeroCarouselProps {
   children: React.ReactNode;
@@ -54,7 +55,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
         <CarouselContent className="h-screen">
           {images.map((image, index) => (
             <CarouselItem key={index} className="relative h-full">
-              <img 
+              <OptimizedImage 
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover"
@@ -64,6 +65,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
                 sizes="100vw"
                 width={1920}
                 height={1080}
+                priority={index === 0}
               />
               <div className="hero-overlay"></div>
             </CarouselItem>
