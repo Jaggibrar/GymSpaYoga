@@ -7,9 +7,14 @@ const AccessibilityEnhancer: React.FC = () => {
   useEffect(() => {
     // Enhance accessibility on route change
     const enhanceAccessibility = () => {
-      // Ensure focus management
-      if (document.activeElement && document.activeElement !== document.body) {
-        (document.activeElement as HTMLElement).blur();
+      // Avoid interfering with user typing/focus
+      const ae = document.activeElement as HTMLElement | null;
+      const tag = ae?.tagName?.toLowerCase();
+      const isTyping =
+        ae && (tag === 'input' || tag === 'textarea' || tag === 'select' || ae.isContentEditable);
+      if (!isTyping && ae && ae !== document.body) {
+        // Only blur non-typing elements to reset unwanted focus outlines
+        (ae as HTMLElement).blur();
       }
 
       // Add skip links if not present
@@ -151,16 +156,18 @@ const AccessibilityEnhancer: React.FC = () => {
           }
         }
 
-        // Add proper focus styles
-        if (!(button as HTMLElement).style.outline) {
-        button.addEventListener('focus', () => {
-          (button as HTMLElement).style.outline = '2px solid hsl(var(--ring))';
-          (button as HTMLElement).style.outlineOffset = '2px';
-        });
-        button.addEventListener('blur', () => {
-          (button as HTMLElement).style.outline = '';
-          (button as HTMLElement).style.outlineOffset = '';
-        });
+        // Add proper focus styles (ensure we only attach once)
+        const el = button as HTMLElement;
+        if (!el.dataset.a11yEnhanced) {
+          el.dataset.a11yEnhanced = 'true';
+          el.addEventListener('focus', () => {
+            el.style.outline = '2px solid hsl(var(--ring))';
+            el.style.outlineOffset = '2px';
+          });
+          el.addEventListener('blur', () => {
+            el.style.outline = '';
+            el.style.outlineOffset = '';
+          });
         }
       });
     };
@@ -173,12 +180,19 @@ const AccessibilityEnhancer: React.FC = () => {
           element.setAttribute('tabindex', '0');
         }
 
-        element.addEventListener('keydown', (e: KeyboardEvent) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            (element as HTMLElement).click();
-          }
-        });
+        const el = element as HTMLElement;
+        if (!el.dataset.a11yEnhanced) {
+          el.dataset.a11yEnhanced = 'true';
+          el.addEventListener('keydown', (e: KeyboardEvent) => {
+            const target = e.target as HTMLElement;
+            const tag = target.tagName.toLowerCase();
+            const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+            if (!typing && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              el.click();
+            }
+          });
+        }
       });
     };
 
@@ -242,12 +256,28 @@ const AccessibilityEnhancer: React.FC = () => {
       });
     };
 
-    // Run enhancements after a short delay to ensure DOM is ready
-    setTimeout(enhanceAccessibility, 100);
+    // Throttled enhancement scheduler
+    let enhanceTimeout: number | null = null;
 
-    // Also run on dynamic content changes
+    const scheduleEnhance = (delay = 150) => {
+      if (enhanceTimeout) {
+        clearTimeout(enhanceTimeout);
+      }
+      enhanceTimeout = window.setTimeout(() => {
+        enhanceAccessibility();
+      }, delay);
+    };
+
+    // Run enhancements after a short delay to ensure DOM is ready
+    scheduleEnhance(100);
+
+    // Also run on dynamic content changes with debounce
     const observer = new MutationObserver(() => {
-      setTimeout(enhanceAccessibility, 100);
+      // Do not interfere while the user is typing in form fields
+      const ae = document.activeElement as HTMLElement | null;
+      const tag = ae?.tagName?.toLowerCase();
+      const isTyping = ae && (tag === 'input' || tag === 'textarea' || tag === 'select' || ae.isContentEditable);
+      scheduleEnhance(isTyping ? 400 : 150);
     });
 
     observer.observe(document.body, {
@@ -259,6 +289,9 @@ const AccessibilityEnhancer: React.FC = () => {
 
     return () => {
       observer.disconnect();
+      if (enhanceTimeout) {
+        clearTimeout(enhanceTimeout);
+      }
     };
   }, [location.pathname]);
 
