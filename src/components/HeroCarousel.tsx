@@ -55,17 +55,13 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
         <CarouselContent className="h-screen">
           {images.map((image, index) => (
             <CarouselItem key={index} className="relative h-full">
-              <OptimizedImage 
+              <img 
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-full object-cover"
                 loading={index === 0 ? 'eager' : 'lazy'}
                 decoding="async"
                 fetchPriority={index === 0 ? 'high' : 'low'}
-                sizes="100vw"
-                width={1920}
-                height={1080}
-                priority={index === 0}
               />
               <div className="hero-overlay"></div>
             </CarouselItem>
