@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import { Dumbbell } from "lucide-react";
 import loginIllustration from '@/assets/login-illustration.png';
 import SEOHead from '@/components/SEOHead';
+import { loginSchema, signupSchema } from '@/schemas/authSchemas';
+import { z } from 'zod';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,9 +31,17 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // Validate input using schema
+      const validation = loginSchema.safeParse({ email, password });
+      if (!validation.success) {
+        toast.error(validation.error.errors[0].message);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: validation.data.email,
+        password: validation.data.password,
       });
       
       if (error) {
@@ -49,23 +59,26 @@ const Login = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (password !== confirmPassword) {
-      toast.error("Passwords don't match");
-      return;
-    }
-
-    if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
-      return;
-    }
-
     setLoading(true);
 
     try {
+      // Validate input using schema
+      const validation = signupSchema.safeParse({ 
+        fullName: email.split('@')[0], // Use email prefix as temporary full name
+        email, 
+        password, 
+        confirmPassword 
+      });
+      
+      if (!validation.success) {
+        toast.error(validation.error.errors[0].message);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validation.data.email,
+        password: validation.data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/`
         }

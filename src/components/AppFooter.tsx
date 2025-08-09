@@ -38,7 +38,7 @@ const AppFooter = () => {
 
             {/* Payment Methods - Left aligned */}
             <div className="text-left">
-              <h6 className="text-xs lg:text-sm font-semibold text-gray-400 mb-2 lg:mb-3">We Accept</h6>
+              <p className="text-xs lg:text-sm font-semibold text-gray-400 mb-2 lg:mb-3">We Accept</p>
               <div className="flex space-x-2 lg:space-x-3 justify-start flex-wrap">
                 <div className="bg-white rounded-lg p-1 lg:p-2 mb-2">
                   <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-4 w-6 lg:h-6 lg:w-10" />
