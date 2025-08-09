@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Plus, Upload } from 'lucide-react';
 import { useTrainerRegistration } from '@/hooks/useTrainerRegistration';
+import { useTrainerValidation } from '@/hooks/useTrainerValidation';
+import { toast } from 'sonner';
 
 interface TrainerRegistrationFormProps {
   onSuccess?: () => void;
@@ -20,6 +22,7 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   onCancel 
 }) => {
   const { registerTrainer, loading } = useTrainerRegistration();
+  const { validateForm, getFieldError, clearValidationError } = useTrainerValidation();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -58,6 +61,8 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear validation error when user starts typing
+    clearValidationError(field);
   };
 
   const handleAddSpecialization = () => {
@@ -93,12 +98,14 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+    // Validate form before submission
+    if (!validateForm(formData)) {
       return;
     }
 
     const success = await registerTrainer(formData);
     if (success && onSuccess) {
+      toast.success('Registration successful! Welcome to GymSpaYoga!');
       onSuccess();
     }
   };
@@ -119,7 +126,7 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-4">
-              <div>
+               <div>
                 <Label htmlFor="name" className="text-base font-medium">Full Name *</Label>
                 <Input
                   id="name"
@@ -127,8 +134,11 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Enter your full name"
                   required
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('name') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('name') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('name')}</p>
+                )}
               </div>
 
               <div>
@@ -140,8 +150,11 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your@email.com"
                   required
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('email') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('email') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('email')}</p>
+                )}
               </div>
 
               <div>
@@ -152,8 +165,11 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="+91 9876543210"
                   required
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('phone') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('phone') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('phone')}</p>
+                )}
               </div>
 
               <div>
@@ -164,8 +180,11 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   placeholder="City, State"
                   required
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('location') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('location') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('location')}</p>
+                )}
               </div>
 
               <div>
@@ -208,12 +227,15 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                 <Input
                   id="experience"
                   type="number"
-                  min="0"
+                  min="1"
                   max="50"
                   value={formData.experience}
                   onChange={(e) => handleInputChange('experience', parseInt(e.target.value) || 0)}
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('experience') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('experience') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('experience')}</p>
+                )}
               </div>
 
               <div>
@@ -222,14 +244,18 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   id="hourly_rate"
                   type="number"
                   min="100"
+                  max="10000"
                   value={formData.hourly_rate}
                   onChange={(e) => handleInputChange('hourly_rate', parseInt(e.target.value) || 0)}
-                  className="mt-1"
+                  className={`mt-1 ${getFieldError('hourly_rate') ? 'border-red-500' : ''}`}
                 />
+                {getFieldError('hourly_rate') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('hourly_rate')}</p>
+                )}
               </div>
 
               <div>
-                <Label className="text-base font-medium">Specializations</Label>
+                <Label className="text-base font-medium">Specializations *</Label>
                 <div className="flex gap-2 mt-1">
                   <Input
                     value={currentSpecialization}
@@ -260,6 +286,12 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                     </Badge>
                   ))}
                 </div>
+                {getFieldError('specializations') && (
+                  <p className="text-red-500 text-sm mt-1">{getFieldError('specializations')}</p>
+                )}
+                {formData.specializations.length === 0 && (
+                  <p className="text-gray-500 text-sm mt-1">Add at least one specialization</p>
+                )}
               </div>
 
               <div>
@@ -303,10 +335,14 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                 id="bio"
                 value={formData.bio}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
-                placeholder="Tell us about yourself, your training philosophy, and what makes you unique..."
+                placeholder="Tell us about yourself, your training philosophy, and what makes you unique... (minimum 50 characters)"
                 required
-                className="mt-1 min-h-[120px]"
+                className={`mt-1 min-h-[120px] ${getFieldError('bio') ? 'border-red-500' : ''}`}
               />
+              {getFieldError('bio') && (
+                <p className="text-red-500 text-sm mt-1">{getFieldError('bio')}</p>
+              )}
+              <p className="text-gray-500 text-sm mt-1">{formData.bio.length}/1000 characters</p>
             </div>
 
             <div>
@@ -329,7 +365,7 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
             )}
             <Button
               type="submit"
-              disabled={loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim()}
+              disabled={loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.bio.trim()}
               className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
             >
               {loading ? (
