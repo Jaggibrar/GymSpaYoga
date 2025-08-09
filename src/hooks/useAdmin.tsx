@@ -26,18 +26,18 @@ export const useAdmin = () => {
           return;
         }
 
-        const { data, error } = await supabase
-          .from('admin_permissions')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle();
-
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error checking admin status:', error);
-          setIsAdmin(false);
-        } else if (data) {
+        // Only allow access to specific email address
+        const allowedAdminEmail = 'jaggibrar001234@gmail.com';
+        
+        if (user.email?.toLowerCase() === allowedAdminEmail.toLowerCase()) {
           setIsAdmin(true);
-          setAdminData(data);
+          setAdminData({
+            id: 'admin-override',
+            user_id: user.id,
+            role: 'super_admin',
+            permissions: ['all'],
+            created_at: new Date().toISOString()
+          });
         } else {
           setIsAdmin(false);
         }
