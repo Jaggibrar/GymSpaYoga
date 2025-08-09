@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import BookingModal from '@/components/BookingModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { getTierFromPricing, getTierColor } from '@/utils/businessUtils';
+import ViewModeToggle, { ViewMode } from '@/components/ui/ViewModeToggle';
 
 interface CategoryBusinessesProps {
   category: string;
@@ -26,6 +27,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   
   const { businesses, loading, error } = useOptimizedBusinessData(
     category,

@@ -9,12 +9,14 @@ import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import ImageGallery from '@/components/ImageGallery';
+import ViewModeToggle, { ViewMode } from '@/components/ui/ViewModeToggle';
 
 const Explore = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [sortBy, setSortBy] = useState('created_at');
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   const { businesses, loading, error } = useOptimizedBusinessData(
     activeFilter === 'all' ? undefined : activeFilter,
@@ -153,9 +155,10 @@ const Explore = () => {
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
                     {businesses.length} places found
                   </h2>
+                  <ViewModeToggle mode={viewMode} onChange={setViewMode} />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
+                <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center' : 'grid grid-cols-1 gap-4 sm:gap-6'}>
                   {businesses.map((business) => (
                     <Card key={business.id} className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden">
                       <div className="relative h-48 sm:h-56 overflow-hidden">

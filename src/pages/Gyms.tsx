@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation, Verified } from 'lucide-react';
+import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation, Verified, List } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
@@ -18,7 +18,7 @@ const Gyms = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
   
   // Add geolocation hook
@@ -155,6 +155,14 @@ const Gyms = () => {
                   Grid
                 </Button>
                 <Button
+                  variant={viewMode === 'list' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setViewMode('list')}
+                >
+                  <List className="h-4 w-4 mr-1" />
+                  List
+                </Button>
+                <Button
                   variant={viewMode === 'map' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('map')}
@@ -211,7 +219,7 @@ const Gyms = () => {
                       </p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+                    <div className={viewMode === 'list' ? 'grid grid-cols-1 gap-6' : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center'}>
                       {businesses.map((business) => (
                         <Card 
                           key={business.id} 
