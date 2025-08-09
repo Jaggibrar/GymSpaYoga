@@ -19,6 +19,12 @@ const Support = () => {
   });
   const [sending, setSending] = useState(false);
 
+  // Prevent any global hotkeys from hijacking typing in the textarea
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    e.stopPropagation();
+    setFormData((p) => ({ ...p, message: e.target.value }));
+  };
+
   const faqs = [
     {
       question: 'How do I book a session?',
@@ -156,7 +162,11 @@ const Support = () => {
                         rows={6}
                         placeholder="Describe your issue or question with as much detail as possible"
                         value={formData.message}
-                        onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))}
+                        onChange={handleMessageChange}
+                        onKeyDown={(e) => e.stopPropagation()}
+                        autoComplete="off"
+                        autoCorrect="off"
+                        spellCheck={false}
                         required
                       />
                     </div>
