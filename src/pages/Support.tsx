@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { MessageCircle, Phone, Mail, Clock, ChevronDown, ChevronUp } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
+import { supabase } from '@/integrations/supabase/client';
 
 const Support = () => {
   const [formData, setFormData] = useState({
@@ -41,12 +42,39 @@ const Support = () => {
     }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast.success("Your message has been sent! We'll get back to you within 24 hours.");
-    setFormData({ name: '', email: '', subject: '', message: '' });
-  };
+  const [sending, setSending] = useState(false);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+
+    setSending(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-support-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to: 'gymspayoga@gmail.com'
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success("Your message has been sent! We'll get back to you within 24 hours.");
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (err: any) {
+      console.error('Support email error:', err);
+      toast.error(err?.message || 'Email service not configured. Please try again later.');
+    } finally {
+      setSending(false);
+    }
+  };
   return (
     <>
       <SEOHead
@@ -116,8 +144,8 @@ const Support = () => {
                       required
                     />
                   </div>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-emerald-500 to-blue-600">
-                    Send Message
+                  <Button type="submit" disabled={sending} aria-busy={sending} className="w-full bg-gradient-to-r from-emerald-500 to-blue-600">
+                    {sending ? 'Sending…' : 'Send Message'}
                   </Button>
                 </form>
               </CardContent>
