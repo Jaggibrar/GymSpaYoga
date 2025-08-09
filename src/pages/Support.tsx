@@ -19,12 +19,8 @@ const Support = () => {
   });
   const [sending, setSending] = useState(false);
 
-  // Prevent any global hotkeys from hijacking typing in the textarea
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    e.stopPropagation();
-    setFormData((p) => ({ ...p, message: e.target.value }));
-  };
-
+  // Character limit for message to ensure smooth typing
+  const MESSAGE_MAX = 2000;
   const faqs = [
     {
       question: 'How do I book a session?',
@@ -162,13 +158,14 @@ const Support = () => {
                         rows={6}
                         placeholder="Describe your issue or question with as much detail as possible"
                         value={formData.message}
-                        onChange={handleMessageChange}
-                        onKeyDown={(e) => e.stopPropagation()}
+                        onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value.slice(0, MESSAGE_MAX) }))}
                         autoComplete="off"
                         autoCorrect="off"
                         spellCheck={false}
+                        maxLength={MESSAGE_MAX}
                         required
                       />
+                      <p className="text-xs text-muted-foreground text-right">{formData.message.length}/{MESSAGE_MAX}</p>
                     </div>
 
                     <div className="flex items-center justify-between">
