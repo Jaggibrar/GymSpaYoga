@@ -145,6 +145,21 @@ export const useChat = () => {
     }
   };
 
+  const markMessagesRead = async (chatRoomId: string) => {
+    if (!user) return;
+    try {
+      // Mark all incoming messages as read
+      const { error } = await supabase
+        .from('chat_messages')
+        .update({ is_read: true })
+        .eq('chat_room_id', chatRoomId)
+        .neq('sender_id', user.id);
+      if (error) throw error;
+    } catch (err) {
+      console.error('Error marking messages read:', err);
+    }
+  };
+
   const createChatRoom = async (businessId?: string, trainerId?: string) => {
     if (!user) throw new Error('User not authenticated');
     if (!businessId && !trainerId) throw new Error('Either business or trainer ID required');
@@ -347,6 +362,7 @@ export const useChat = () => {
     confirmBooking,
     fetchMessages,
     subscribeToMessages,
+    markMessagesRead,
     refetch: fetchChatRooms
   };
 };

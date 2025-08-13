@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useChat, ChatRoom, ChatMessage } from "@/hooks/useChat";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -24,6 +25,7 @@ const ChatPage: React.FC = () => {
     sendPriceQuote,
     confirmBooking,
     subscribeToMessages,
+    markMessagesRead,
   } = useChat();
 
   const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null);
@@ -43,7 +45,10 @@ const ChatPage: React.FC = () => {
 
   useEffect(() => {
     if (!selectedRoom) return;
-    fetchMessages(selectedRoom.id);
+    (async () => {
+      await fetchMessages(selectedRoom.id);
+      await markMessagesRead(selectedRoom.id);
+    })();
     const unsub = subscribeToMessages(selectedRoom.id);
     return () => unsub();
   }, [selectedRoom?.id]);
@@ -63,6 +68,7 @@ const ChatPage: React.FC = () => {
     try {
       await sendMessage(selectedRoom.id, newMessage.trim());
       setNewMessage("");
+      await markMessagesRead(selectedRoom.id);
     } catch (e) {
       // toast handled in hook
     }
@@ -94,6 +100,7 @@ const ChatPage: React.FC = () => {
     setConfirmingId(m.id);
     try {
       await confirmBooking(selectedRoom, m);
+      await markMessagesRead(selectedRoom.id);
     } catch (e) {}
     finally { setConfirmingId(null); }
   };
@@ -105,6 +112,31 @@ const ChatPage: React.FC = () => {
     return "/chat";
   }, []);
 
+  // Mark read on new incoming messages
+  useEffect(() => {
+    if (!selectedRoom) return;
+    const hasUnreadIncoming = messages.some(m => m.chat_room_id === selectedRoom.id && m.sender_id !== user?.id && !m.is_read);
+    if (hasUnreadIncoming) {
+      markMessagesRead(selectedRoom.id);
+    }
+  }, [messages, selectedRoom?.id, user?.id, markMessagesRead]);
+
+  // Update my online status while on chat page
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      try {
+        await supabase.rpc('update_owner_status', { p_user_id: user.id, p_is_online: true });
+      } catch (e) { console.error('Failed to set online status', e); }
+    })();
+    return () => {
+      (async () => {
+        try {
+          await supabase.rpc('update_owner_status', { p_user_id: user.id, p_is_online: false });
+        } catch (e) { console.error('Failed to set offline status', e); }
+      })();
+    };
+  }, [user?.id]);
   return (
     <div className="container mx-auto px-4 py-6">
       <Helmet>
@@ -112,6 +144,12 @@ const ChatPage: React.FC = () => {
         <meta name="description" content="Chat with businesses and trainers, get price quotes, and confirm bookings instantly." />
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
+
+      {/* Update my online status while on chat page */}
+      {user && (
+        <span className="sr-only">Online</span>
+      )}
+
 
       <header className="mb-4">
         <h1 className="text-2xl font-semibold text-foreground">Chat with Businesses & Trainers</h1>
@@ -219,8 +257,11 @@ const ChatPage: React.FC = () => {
                           ) : (
                             <div className={`rounded-md px-3 py-2 border ${mine ? "bg-accent" : "bg-background"}`}>
                               <div className="whitespace-pre-wrap text-foreground">{m.message}</div>
-                              <div className="text-[10px] text-muted-foreground mt-1">
-                                {new Date(m.created_at).toLocaleTimeString()}
+                              <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-2">
+                                <span>{new Date(m.created_at).toLocaleTimeString()}</span>
+                                {mine && m.is_read && (
+                                  <span className="uppercase tracking-wide">Seen</span>
+                                )}
                               </div>
                             </div>
                           )}
