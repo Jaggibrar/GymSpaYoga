@@ -57,6 +57,7 @@ const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const TrainerDashboard = React.lazy(() => import("./pages/TrainerDashboard"));
 const UserBookings = React.lazy(() => import("./pages/UserBookings"));
 const Favorites = React.lazy(() => import("./pages/Favorites"));
+const Chat = React.lazy(() => import("./pages/Chat"));
 
 const queryClient = new QueryClient();
 
@@ -118,6 +119,11 @@ const AppContent = () => {
           <Route path="/favorites" element={
             <ProtectedRoute>
               <Favorites />
+            </ProtectedRoute>
+          } />
+          <Route path="/chat" element={
+            <ProtectedRoute>
+              <Chat />
             </ProtectedRoute>
           } />
           <Route path="/business-dashboard" element={
