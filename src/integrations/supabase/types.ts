@@ -665,6 +665,66 @@ export type Database = {
           },
         ]
       }
+      chat_bookings: {
+        Row: {
+          booking_status: string | null
+          business_id: string | null
+          chat_room_id: string
+          created_at: string
+          customer_id: string
+          id: string
+          message_id: string | null
+          platform_fee: number | null
+          price_amount: number
+          service_details: Json
+          trainer_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_status?: string | null
+          business_id?: string | null
+          chat_room_id: string
+          created_at?: string
+          customer_id: string
+          id?: string
+          message_id?: string | null
+          platform_fee?: number | null
+          price_amount: number
+          service_details: Json
+          trainer_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_status?: string | null
+          business_id?: string | null
+          chat_room_id?: string
+          created_at?: string
+          customer_id?: string
+          id?: string
+          message_id?: string | null
+          platform_fee?: number | null
+          price_amount?: number
+          service_details?: Json
+          trainer_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_bookings_chat_room_id_fkey"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_bookings_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           chat_room_id: string
@@ -672,7 +732,9 @@ export type Database = {
           id: string
           is_read: boolean | null
           message: string
+          message_subtype: string | null
           message_type: string | null
+          price_quote: Json | null
           sender_id: string
         }
         Insert: {
@@ -681,7 +743,9 @@ export type Database = {
           id?: string
           is_read?: boolean | null
           message: string
+          message_subtype?: string | null
           message_type?: string | null
+          price_quote?: Json | null
           sender_id: string
         }
         Update: {
@@ -690,7 +754,9 @@ export type Database = {
           id?: string
           is_read?: boolean | null
           message?: string
+          message_subtype?: string | null
           message_type?: string | null
+          price_quote?: Json | null
           sender_id?: string
         }
         Relationships: [
@@ -972,6 +1038,33 @@ export type Database = {
         }
         Relationships: []
       }
+      owner_status: {
+        Row: {
+          auto_reply_message: string | null
+          id: string
+          is_online: boolean | null
+          last_seen: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_reply_message?: string | null
+          id?: string
+          is_online?: boolean | null
+          last_seen?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_reply_message?: string | null
+          id?: string
+          is_online?: boolean | null
+          last_seen?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           created_at: string
@@ -989,6 +1082,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      platform_billing: {
+        Row: {
+          billing_month: string
+          booking_id: string
+          business_owner_id: string
+          created_at: string
+          fee_amount: number
+          id: string
+          status: string | null
+        }
+        Insert: {
+          billing_month?: string
+          booking_id: string
+          business_owner_id: string
+          created_at?: string
+          fee_amount?: number
+          id?: string
+          status?: string | null
+        }
+        Update: {
+          billing_month?: string
+          booking_id?: string
+          business_owner_id?: string
+          created_at?: string
+          fee_amount?: number
+          id?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_billing_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "chat_bookings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -1293,6 +1424,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      create_chat_booking: {
+        Args: {
+          p_chat_room_id: string
+          p_customer_id: string
+          p_business_id: string
+          p_trainer_id: string
+          p_message_id: string
+          p_service_details: Json
+          p_price_amount: number
+        }
+        Returns: string
+      }
       get_business_owner_from_booking: {
         Args: { booking_id_param: number }
         Returns: string
@@ -1328,6 +1471,10 @@ export type Database = {
       }
       update_business_profile_visit: {
         Args: { business_profile_id: string }
+        Returns: undefined
+      }
+      update_owner_status: {
+        Args: { p_user_id: string; p_is_online?: boolean }
         Returns: undefined
       }
     }
