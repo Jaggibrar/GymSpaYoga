@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Award, Calendar, Users, Star, MapPin, Clock, CheckCircle } from 'lucide-react';
+import { Award, Calendar, Users, Star, MapPin, Clock, CheckCircle, MessageCircle } from 'lucide-react';
 import { useSingleTrainer } from '@/hooks/useSingleTrainer';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import SEOHead from '@/components/SEOHead';
@@ -12,13 +12,19 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { useChat } from '@/hooks/useChat';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 const TrainerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { createChatRoom } = useChat();
   const { trainer, loading, error } = useSingleTrainer(id);
   const { position, getCurrentPosition } = useGeolocation();
   const [showBookingModal, setShowBookingModal] = useState(false);
+  const [creatingChat, setCreatingChat] = useState(false);
 
   // Generate short display ID from full UUID
   const getShortId = (fullId: string) => {
@@ -81,6 +87,27 @@ const TrainerDetails = () => {
 
   const tierInfo = getTierInfo(trainer.trainer_tier);
   const TierIcon = tierInfo.icon;
+
+  const handleChatNow = async () => {
+    if (!user) {
+      toast.error('Please login to start a chat');
+      navigate('/login');
+      return;
+    }
+    
+    if (!trainer?.id) return;
+    
+    setCreatingChat(true);
+    try {
+      await createChatRoom(undefined, trainer.id);
+      navigate('/chat');
+      toast.success('Chat started successfully!');
+    } catch (error) {
+      toast.error('Failed to start chat');
+    } finally {
+      setCreatingChat(false);
+    }
+  };
 
   return (
     <>
@@ -207,7 +234,22 @@ const TrainerDetails = () => {
             />
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
+            {/* Chat Button */}
+            <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+              <CardContent className="p-6">
+                <Button 
+                  onClick={handleChatNow}
+                  disabled={creatingChat}
+                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                  size="lg"
+                >
+                  <MessageCircle className="h-5 w-5 mr-2" />
+                  {creatingChat ? 'Starting Chat...' : 'Chat with Trainer'}
+                </Button>
+              </CardContent>
+            </Card>
+
             <BookingPanel
               businessId={trainer.id}
               businessName={trainer.name}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +9,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import BookingForm from '@/components/booking/BookingForm';
+import { useChat } from '@/hooks/useChat';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Business {
   id: string;
@@ -31,9 +33,13 @@ interface Business {
 
 const BusinessDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { createChatRoom } = useChat();
   const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
+  const [creatingChat, setCreatingChat] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -88,6 +94,27 @@ const BusinessDetails = () => {
 
   const handleBookNow = () => {
     // This will be handled by the BookingForm component
+  };
+
+  const handleChatNow = async () => {
+    if (!user) {
+      toast.error('Please login to start a chat');
+      navigate('/login');
+      return;
+    }
+    
+    if (!business?.id) return;
+    
+    setCreatingChat(true);
+    try {
+      await createChatRoom(business.id);
+      navigate('/chat');
+      toast.success('Chat started successfully!');
+    } catch (error) {
+      toast.error('Failed to start chat');
+    } finally {
+      setCreatingChat(false);
+    }
   };
 
   if (loading) {
@@ -286,16 +313,28 @@ const BusinessDetails = () => {
                 </CardContent>
               </Card>
 
-              {/* Contact Button */}
-              <Button 
-                onClick={handleCall}
-                variant="outline" 
-                className="w-full"
-                size="lg"
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                Call Now
-              </Button>
+              {/* Contact Buttons */}
+              <div className="space-y-3">
+                <Button 
+                  onClick={handleChatNow}
+                  disabled={creatingChat}
+                  className="w-full"
+                  size="lg"
+                >
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  {creatingChat ? 'Starting Chat...' : 'Chat Now'}
+                </Button>
+                
+                <Button 
+                  onClick={handleCall}
+                  variant="outline" 
+                  className="w-full"
+                  size="lg"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </Button>
+              </div>
             </div>
           </div>
         </div>

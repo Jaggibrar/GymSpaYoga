@@ -3,9 +3,13 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Phone, Mail, Users, ArrowRight } from 'lucide-react';
+import { MapPin, Star, Phone, Mail, Users, ArrowRight, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Trainer } from '@/hooks/useTrainers';
+import { useChat } from '@/hooks/useChat';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 interface TrainerCardProps {
   trainer: Trainer;
@@ -13,6 +17,9 @@ interface TrainerCardProps {
 
 const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { createChatRoom } = useChat();
+  const [creatingChat, setCreatingChat] = useState(false);
 
   const handleViewDetails = () => {
     navigate(`/trainers/${trainer.id}`);
@@ -21,6 +28,26 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
   const handleBookNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/book-trainer/${trainer.id}`);
+  };
+
+  const handleChatNow = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      toast.error('Please login to start a chat');
+      navigate('/login');
+      return;
+    }
+    
+    setCreatingChat(true);
+    try {
+      await createChatRoom(undefined, trainer.id);
+      navigate('/chat');
+      toast.success('Chat started successfully!');
+    } catch (error) {
+      toast.error('Failed to start chat');
+    } finally {
+      setCreatingChat(false);
+    }
   };
 
   const getTierColor = (tier: string) => {
@@ -96,21 +123,32 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
           )}
         </div>
         
-        <div className="flex gap-2">
+        <div className="space-y-2">
           <Button 
             variant="outline" 
-            className="flex-1"
+            className="w-full"
             onClick={handleViewDetails}
           >
             View Details
             <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
-          <Button 
-            className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
-            onClick={handleBookNow}
-          >
-            Book Now
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              className="flex-1"
+              onClick={handleChatNow}
+              disabled={creatingChat}
+            >
+              <MessageCircle className="h-4 w-4 mr-1" />
+              {creatingChat ? 'Starting...' : 'Chat'}
+            </Button>
+            <Button 
+              className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
+              onClick={handleBookNow}
+            >
+              Book Now
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
