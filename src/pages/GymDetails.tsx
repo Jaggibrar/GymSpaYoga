@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useScrollToTop } from "@/hooks/useScrollToTop";
 import { supabase } from "@/integrations/supabase/client";
-import { Dumbbell, Crown, Diamond, IndianRupee, Award, Zap } from "lucide-react";
+import { Dumbbell, Crown, Diamond, IndianRupee, Award, Zap, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 import ListingLayout from "@/components/listing/ListingLayout";
@@ -11,6 +11,10 @@ import BookingPanel from "@/components/listing/BookingPanel";
 import AboutSection from "@/components/listing/AboutSection";
 import AmenitiesGrid from "@/components/listing/AmenitiesGrid";
 import PricingBox from "@/components/listing/PricingBox";
+import { useChat } from "@/hooks/useChat";
+import { useAuth } from "@/hooks/useAuth";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface Gym {
   id: string;
@@ -34,9 +38,13 @@ interface Gym {
 const GymDetails = () => {
   useScrollToTop();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { createChatRoom } = useChat();
   const [gym, setGym] = useState<Gym | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [creatingChat, setCreatingChat] = useState(false);
   useEffect(() => {
     if (id) {
       fetchGymDetails(id);
@@ -80,6 +88,27 @@ const GymDetails = () => {
       case 'luxury': return "from-yellow-500 to-yellow-600";
       case 'premium': return "from-blue-500 to-blue-600";
       default: return "from-green-500 to-green-600";
+    }
+  };
+
+  const handleChatNow = async () => {
+    if (!user) {
+      toast.error('Please login to start a chat');
+      navigate('/login');
+      return;
+    }
+    
+    if (!gym?.id) return;
+    
+    setCreatingChat(true);
+    try {
+      await createChatRoom(gym.id);
+      navigate('/chat');
+      toast.success('Chat started successfully!');
+    } catch (error) {
+      toast.error('Failed to start chat');
+    } finally {
+      setCreatingChat(false);
     }
   };
 
@@ -194,7 +223,22 @@ const GymDetails = () => {
           </div>
 
           {/* Right Column - Booking Panel */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
+            {/* Chat Button */}
+            <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+              <CardContent className="p-6">
+                <Button 
+                  onClick={handleChatNow}
+                  disabled={creatingChat}
+                  className="w-full bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white"
+                  size="lg"
+                >
+                  <MessageCircle className="h-5 w-5 mr-2" />
+                  {creatingChat ? 'Starting Chat...' : 'Chat with Gym'}
+                </Button>
+              </CardContent>
+            </Card>
+
             <BookingPanel
               businessId={gym.id}
               businessName={gym.business_name}
