@@ -7,6 +7,7 @@ import { MapPin, Clock, DollarSign, Star, Users, Verified } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Business } from '@/hooks/useBusinessData';
 import ImageGallery from './ImageGallery';
+import ChatNowButton from './chat/ChatNowButton';
 
 interface BusinessGridProps {
   businesses: Business[];
@@ -145,6 +146,10 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
                   View Details
                 </Button>
               </Link>
+            </div>
+            
+            <div className="flex gap-2 mt-2">
+              <ChatNowButton businessId={business.id} />
             </div>
           </CardContent>
         </Card>

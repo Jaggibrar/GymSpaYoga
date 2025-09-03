@@ -2,11 +2,9 @@ import React, { memo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Star, Clock, Crown, Diamond, IndianRupee, MessageCircle } from 'lucide-react';
+import { MapPin, Star, Clock, Crown, Diamond, IndianRupee } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useChat } from '@/hooks/useChat';
-import { useAuth } from '@/hooks/useAuth';
-import { toast } from 'sonner';
+import ChatNowButton from '@/components/chat/ChatNowButton';
 
 interface Business {
   id: string;
@@ -29,9 +27,6 @@ interface OptimizedBusinessCardProps {
 
 const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { createChatRoom } = useChat();
-  const [creatingChat, setCreatingChat] = useState(false);
   // Determine tier based on pricing
   const getTier = () => {
     // First check if category is already a tier
@@ -99,26 +94,6 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
     return "for pricing";
   };
 
-  const handleChatNow = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!user) {
-      toast.error('Please login to start a chat');
-      navigate('/login');
-      return;
-    }
-    
-    setCreatingChat(true);
-    try {
-      await createChatRoom(business.id);
-      navigate('/chat');
-      toast.success('Chat started successfully!');
-    } catch (error) {
-      toast.error('Failed to start chat');
-    } finally {
-      setCreatingChat(false);
-    }
-  };
-
   return (
     <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 rounded-3xl overflow-hidden bg-white">
       <div className="relative overflow-hidden h-48">
@@ -183,15 +158,13 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
             </Link>
           </div>
           
-          <Button 
-            onClick={handleChatNow}
-            disabled={creatingChat}
-            variant="outline"
-            className="w-full border-green-500 text-green-600 hover:bg-green-50 rounded-xl py-3 font-semibold"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" />
-            {creatingChat ? 'Starting Chat...' : 'Chat Now'}
-          </Button>
+          <div className="space-y-4">
+            <ChatNowButton 
+              businessId={business.id} 
+              variant="outline" 
+              className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
