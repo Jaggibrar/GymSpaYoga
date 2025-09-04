@@ -270,6 +270,37 @@
       ]
     }
     </script>
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PLACEHOLDER123"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-PLACEHOLDER123', {
+        page_title: document.title,
+        page_location: window.location.href,
+        anonymize_ip: true,
+        cookie_flags: 'SameSite=None;Secure'
+      });
+      
+      // Track user interactions
+      function trackEvent(action, category, label, value) {
+        gtag('event', action, {
+          event_category: category,
+          event_label: label,
+          value: value
+        });
+      }
+      window.trackEvent = trackEvent;
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PLACEHOLDER');</script>
+
     <!-- Service Worker Registration -->
     <script>
       if ('serviceWorker' in navigator) {
@@ -286,6 +317,17 @@
     </script>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/gtm.ns.html?id=GTM-PLACEHOLDER"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+    <!-- Skip Links for Accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all">
+      Skip to main content
+    </a>
+    <a href="#navigation" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all">
+      Skip to navigation
+    </a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

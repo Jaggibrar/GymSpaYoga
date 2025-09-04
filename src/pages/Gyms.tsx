@@ -12,9 +12,12 @@ import GoogleMapView from '@/components/GoogleMapView';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
+import OptimizedImage from '@/components/performance/ImageOptimizer';
 
 const Gyms = () => {
   const navigate = useNavigate();
+  const { trackSearch, trackUserAction } = useAnalytics();
   const [searchTerm, setSearchTerm] = useState('');
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
@@ -32,7 +35,9 @@ const Gyms = () => {
   );
 
   const handleSearch = () => {
-    // Search is handled automatically by the hook
+    // Track search analytics
+    trackSearch(searchTerm, location, businesses.length);
+    trackUserAction('gym_search', { searchTerm, location, resultCount: businesses.length });
     console.log('Searching gyms:', { searchTerm, location });
   };
 
@@ -58,17 +63,20 @@ const Gyms = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-orange-100">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 text-white py-20 lg:py-32">
-          <div className="absolute inset-0">
-            <img 
-              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-              alt="Modern gym equipment"
-              className="w-full h-full object-cover opacity-25"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/85 via-red-500/85 to-orange-600/85"></div>
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-orange-200/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-200/15 rounded-full blur-3xl"></div>
-          </div>
+          <section className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 text-white py-20 lg:py-32">
+            <div className="absolute inset-0">
+              <OptimizedImage 
+                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+                alt="Modern gym equipment and fitness facility interior"
+                className="w-full h-full object-cover opacity-25"
+                priority={true}
+                width={1920}
+                height={600}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/85 via-red-500/85 to-orange-600/85"></div>
+              <div className="absolute top-0 left-1/4 w-72 h-72 bg-orange-200/20 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-200/15 rounded-full blur-3xl"></div>
+            </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
               <div className="mb-8">
@@ -227,12 +235,23 @@ const Gyms = () => {
                             selectedBusiness?.id === business.id ? 'ring-2 ring-orange-500' : ''
                           }`}
                           onClick={() => setSelectedBusiness(business)}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`View details for ${business.business_name}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setSelectedBusiness(business);
+                            }
+                          }}
                         >
                           <div className="relative h-56 overflow-hidden">
-                            <img
+                            <OptimizedImage
                               src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-                              alt={business.business_name}
+                              alt={`${business.business_name} gym facility interior`}
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              width={400}
+                              height={224}
                             />
                             <div className="absolute top-4 left-4 flex flex-col gap-2">
                               <Badge className="bg-red-500 text-white border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm">
