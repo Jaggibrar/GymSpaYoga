@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import ChatSidebar from "@/components/chat/ChatSidebar";
 import ModernChatInterface from "@/components/chat/ModernChatInterface";
-import { useChat, ChatRoom } from "@/hooks/useChat";
+import { useChatWithNames as useChat, ChatRoom } from "@/hooks/useChatWithNames";
 import { toast } from "sonner";
 
 const ChatPage: React.FC = () => {

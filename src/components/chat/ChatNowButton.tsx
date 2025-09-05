@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useChat } from '@/hooks/useChat';
+import { useChatWithNames as useChat } from '@/hooks/useChatWithNames';
 import { toast } from 'sonner';
 
 interface ChatNowButtonProps {
