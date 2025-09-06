@@ -5,12 +5,14 @@ import { supabase } from "@/integrations/supabase/client";
 import ChatSidebar from "@/components/chat/ChatSidebar";
 import ModernChatInterface from "@/components/chat/ModernChatInterface";
 import { useChatWithNames as useChat, ChatRoom } from "@/hooks/useChatWithNames";
-import { toast } from "sonner";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ChatPage: React.FC = () => {
   const { user } = useAuth();
   const { chatRooms, loading, error } = useChat();
   const [selectedRoom, setSelectedRoom] = useState<ChatRoom | null>(null);
+  const [showChatList, setShowChatList] = useState(true);
 
   const canonicalUrl = React.useMemo(() => {
     if (typeof window !== "undefined") {
@@ -21,6 +23,12 @@ const ChatPage: React.FC = () => {
 
   const handleRoomSelect = (room: ChatRoom) => {
     setSelectedRoom(room);
+    setShowChatList(false); // Hide chat list on mobile when room is selected
+  };
+
+  const handleBackToList = () => {
+    setShowChatList(true);
+    setSelectedRoom(null);
   };
 
   // Update online status
@@ -43,27 +51,53 @@ const ChatPage: React.FC = () => {
       })();
     };
   }, [user?.id]);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/10">
+    <div className="h-screen bg-white">
       <Helmet>
-        <title>Modern Chat - GymSpaYoga.com</title>
+        <title>Chat - GymSpaYoga.com</title>
         <meta name="description" content="Real-time chat with businesses and trainers. Get instant quotes and book services directly through our modern chat interface." />
         <link rel="canonical" href={canonicalUrl} />
         <meta name="keywords" content="gym chat, spa chat, yoga chat, trainer chat, instant booking, price quotes" />
       </Helmet>
 
-      <div className="flex h-screen">
-        <ChatSidebar 
-          chatRooms={chatRooms}
-          selectedRoom={selectedRoom}
-          onRoomSelect={handleRoomSelect}
-          loading={loading}
-          error={error}
-        />
-        <div className="flex-1 flex">
+      <div className="flex h-full">
+        {/* Desktop: Always show both panels. Mobile: Show conditionally */}
+        <div className={`
+          w-full md:w-1/3 border-r border-gray-200 
+          ${showChatList ? 'block' : 'hidden md:block'}
+        `}>
+          <ChatSidebar 
+            chatRooms={chatRooms}
+            selectedRoom={selectedRoom}
+            onRoomSelect={handleRoomSelect}
+            loading={loading}
+            error={error}
+          />
+        </div>
+        
+        {/* Chat Window */}
+        <div className={`
+          w-full md:w-2/3 
+          ${showChatList ? 'hidden md:block' : 'block'}
+        `}>
+          {selectedRoom && (
+            <div className="md:hidden flex items-center p-4 border-b border-gray-200 bg-white">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleBackToList}
+                className="mr-3"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <span className="font-medium">Back to Chats</span>
+            </div>
+          )}
           <ModernChatInterface 
             selectedRoom={selectedRoom}
             onRoomSelect={handleRoomSelect}
+            onBackToList={handleBackToList}
           />
         </div>
       </div>

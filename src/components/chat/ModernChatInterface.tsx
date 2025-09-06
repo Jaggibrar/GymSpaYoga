@@ -1,39 +1,37 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Send, 
-  MoreVertical, 
-  Clock, 
-  CheckCheck, 
-  User, 
-  Briefcase,
+  Smile,
+  MessageCircle,
   DollarSign,
-  Calendar
+  Calendar,
+  CheckCheck,
+  Clock,
+  MoreVertical
 } from "lucide-react";
 import { useChatWithNames as useChat, ChatRoom, ChatMessage } from "@/hooks/useChatWithNames";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 interface ModernChatInterfaceProps {
   selectedRoom: ChatRoom | null;
   onRoomSelect: (room: ChatRoom) => void;
+  onBackToList?: () => void;
 }
 
 const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({ 
   selectedRoom, 
-  onRoomSelect 
+  onRoomSelect,
+  onBackToList
 }) => {
   const { user } = useAuth();
   const {
-    chatRooms,
     messages,
     loading,
     error,
@@ -56,7 +54,6 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
   const [quoteAmount, setQuoteAmount] = useState("");
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
-  const [onlineStatus, setOnlineStatus] = useState<Record<string, boolean>>({});
   const [typingTimer, setTypingTimer] = useState<NodeJS.Timeout | null>(null);
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -94,7 +91,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
   // Format timestamp
   const formatTime = (timestamp: string) => {
     return new Date(timestamp).toLocaleTimeString('en-US', {
-      hour: '2-digit',
+      hour: 'numeric',
       minute: '2-digit',
       hour12: true
     });
@@ -213,13 +210,13 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
 
   if (!selectedRoom) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-        <div className="w-32 h-32 bg-gradient-to-br from-primary/10 to-accent/10 rounded-full flex items-center justify-center mb-6">
-          <Briefcase className="h-16 w-16 text-primary/60" />
+      <div className="h-full flex flex-col items-center justify-center bg-gray-50 text-center p-8">
+        <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6">
+          <MessageCircle className="h-16 w-16 text-gray-400" />
         </div>
-        <h3 className="text-xl font-semibold mb-2">Welcome to Chat</h3>
-        <p className="text-muted-foreground max-w-sm">
-          Select a conversation to start chatting with businesses and trainers
+        <h3 className="text-xl font-semibold text-gray-700 mb-2">Select a Chat</h3>
+        <p className="text-gray-500 max-w-sm">
+          Choose a conversation from the list to start messaging
         </p>
       </div>
     );
@@ -227,30 +224,24 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
 
   return (
     <ErrorBoundary>
-      <div className="flex flex-col h-full bg-gradient-to-br from-background to-muted/30">
-        {/* Chat Header */}
-        <CardHeader className="bg-white/80 backdrop-blur-sm border-b px-6 py-4">
+      <div className="h-full bg-white flex flex-col">
+        {/* Sticky Header */}
+        <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12 ring-2 ring-primary/20">
+            <div className="flex items-center">
+              <Avatar className="h-10 w-10 mr-3">
                 <AvatarImage src={selectedRoom.other_party_avatar || "/placeholder.svg"} />
-                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                  {selectedRoom.other_party_name ? selectedRoom.other_party_name.charAt(0).toUpperCase() : (selectedRoom.room_type === "business" ? "B" : "T")}
+                <AvatarFallback className="bg-gray-300 text-gray-700">
+                  {selectedRoom.other_party_name ? selectedRoom.other_party_name.charAt(0).toUpperCase() : 'U'}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-semibold text-lg">
-                  {selectedRoom.other_party_name || `Chat with ${selectedRoom.room_type === "business" ? "Business" : "Trainer"}`}
+                <h3 className="font-medium text-gray-900">
+                  {selectedRoom.other_party_name || `${selectedRoom.room_type === "business" ? "Business" : "Trainer"}`}
                 </h3>
-                <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${selectedRoom.other_party_online ? 'bg-green-500' : 'bg-gray-400'}`} />
-                  <span className="text-sm text-muted-foreground">
-                    {selectedRoom.other_party_online ? 'Online' : 'Offline'}
-                  </span>
-                  {isOwner && (
-                    <Badge variant="secondary" className="ml-2">Owner</Badge>
-                  )}
-                </div>
+                <p className="text-sm text-gray-500">
+                  {selectedRoom.other_party_online ? 'Online' : 'Offline'}
+                </p>
               </div>
             </div>
             
@@ -258,9 +249,9 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
               {isOwner && (
                 <Dialog open={quoteOpen} onOpenChange={setQuoteOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" className="bg-primary hover:bg-primary/90">
+                    <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
                       <DollarSign className="h-4 w-4 mr-1" />
-                      Send Quote
+                      Quote
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
@@ -275,24 +266,21 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                         placeholder="Service (e.g., Monthly membership)" 
                         value={quoteService} 
                         onChange={(e) => setQuoteService(e.target.value)} 
-                        className="border-primary/20 focus:border-primary"
                       />
                       <Input 
                         placeholder="Details (optional)" 
                         value={quoteDetails} 
                         onChange={(e) => setQuoteDetails(e.target.value)}
-                        className="border-primary/20 focus:border-primary"
                       />
                       <Input 
                         placeholder="Amount in INR (e.g., 1499)" 
                         value={quoteAmount} 
                         onChange={(e) => setQuoteAmount(e.target.value)}
                         type="number"
-                        className="border-primary/20 focus:border-primary"
                       />
                     </div>
                     <DialogFooter>
-                      <Button onClick={handleSendQuote} className="w-full">
+                      <Button onClick={handleSendQuote} className="w-full bg-blue-500 hover:bg-blue-600">
                         Send Quote
                       </Button>
                     </DialogFooter>
@@ -304,160 +292,131 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
               </Button>
             </div>
           </div>
-        </CardHeader>
+        </div>
 
         {/* Messages Area */}
-        <ScrollArea className="flex-1 p-6">
-          <ErrorBoundary>
-            <div className="space-y-6">
-              {Object.entries(groupedMessages).map(([dateKey, dayMessages]) => (
-                <div key={dateKey}>
-                  {/* Date Divider */}
-                  <div className="flex items-center justify-center my-4">
-                    <div className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground">
-                      {dateKey}
-                    </div>
-                  </div>
-
-                  {/* Messages for this date */}
-                  <div className="space-y-3">
-                    {dayMessages.map((message, index) => {
-                      const mine = message.sender_id === user?.id;
-                      const isQuote = message.message_subtype === "price_quote" && message.price_quote;
-                      const showAvatar = !mine && (index === 0 || dayMessages[index - 1]?.sender_id !== message.sender_id);
-                      
-                      return (
-                        <ErrorBoundary key={message.id}>
-                          <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
-                            <div className="flex items-end gap-2 max-w-[80%]">
-                              {showAvatar && !mine && (
-                                <Avatar className="h-8 w-8 mb-1">
-                                  <AvatarImage src={message.sender_avatar || "/placeholder.svg"} />
-                                  <AvatarFallback className="text-xs">
-                                    {message.sender_name ? message.sender_name.charAt(0).toUpperCase() : "U"}
-                                  </AvatarFallback>
-                                </Avatar>
-                              )}
-                              
-                              <div className={`${!mine && !showAvatar ? 'ml-10' : ''}`}>
-                                {/* Show sender name for non-mine messages */}
-                                {!mine && showAvatar && (
-                                  <div className="text-xs text-muted-foreground mb-1 px-1">
-                                    {message.sender_name || 'Unknown'}
-                                  </div>
-                                )}
-                                
-                                {isQuote ? (
-                                  <Card className={`${mine ? 'bg-primary text-primary-foreground' : 'bg-white border-primary/20'} shadow-lg`}>
-                                    <CardContent className="p-4">
-                                      <div className="flex items-center gap-2 mb-2">
-                                        <DollarSign className="h-4 w-4" />
-                                        <span className="text-sm font-medium">Price Quote</span>
-                                      </div>
-                                      <div className="space-y-2">
-                                        <div className="font-semibold">{message.price_quote?.service}</div>
-                                        {message.price_quote?.details && (
-                                          <div className="text-sm opacity-90">{message.price_quote.details}</div>
-                                        )}
-                                        <div className="text-lg font-bold">{formatINR(message.price_quote!.amount)}</div>
-                                      </div>
-                                      {!mine && (
-                                        <div className="mt-3 flex gap-2">
-                                          <Button 
-                                            size="sm" 
-                                            onClick={() => handleConfirm(message)} 
-                                            disabled={confirmingId === message.id}
-                                            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-                                          >
-                                            <Calendar className="h-3 w-3 mr-1" />
-                                            {confirmingId === message.id ? "Confirming..." : "Accept & Book"}
-                                          </Button>
-                                        </div>
-                                      )}
-                                    </CardContent>
-                                  </Card>
-                                ) : (
-                                  <div className={`rounded-2xl px-4 py-3 ${
-                                    mine 
-                                      ? 'bg-primary text-primary-foreground' 
-                                      : 'bg-white border border-border shadow-sm'
-                                  }`}>
-                                    <div className="whitespace-pre-wrap break-words">{message.message}</div>
-                                  </div>
-                                )}
-                                
-                                {/* Message metadata */}
-                                <div className={`flex items-center gap-2 mt-1 px-1 ${mine ? 'justify-end' : 'justify-start'}`}>
-                                  <span className="text-xs text-muted-foreground">
-                                    {formatTime(message.created_at)}
-                                  </span>
-                                  {mine && (
-                                    <div className="flex items-center">
-                                      {message.is_read ? (
-                                        <CheckCheck className="h-3 w-3 text-primary" />
-                                      ) : (
-                                        <Clock className="h-3 w-3 text-muted-foreground" />
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </ErrorBoundary>
-                      );
-                    })}
+        <ScrollArea className="flex-1 bg-gray-50">
+          <div className="p-4">
+            {Object.entries(groupedMessages).map(([dateKey, dayMessages]) => (
+              <div key={dateKey}>
+                {/* Date Divider */}
+                <div className="flex justify-center my-4">
+                  <div className="bg-white px-3 py-1 rounded-full text-xs text-gray-500 shadow-sm">
+                    {dateKey}
                   </div>
                 </div>
-              ))}
-              <div ref={bottomRef} />
-            </div>
-          </ErrorBoundary>
+
+                {/* Messages for this date */}
+                <div className="space-y-2">
+                  {dayMessages.map((message) => {
+                    const mine = message.sender_id === user?.id;
+                    const isQuote = message.message_subtype === "price_quote" && message.price_quote;
+                    
+                    return (
+                      <div key={message.id} className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+                        <div className={`max-w-xs lg:max-w-md ${mine ? 'order-2' : 'order-1'}`}>
+                          {isQuote ? (
+                            <div className={`rounded-2xl p-4 shadow-sm ${
+                              mine ? 'bg-blue-500 text-white' : 'bg-white text-gray-900 border'
+                            }`}>
+                              <div className="flex items-center gap-2 mb-2">
+                                <DollarSign className="h-4 w-4" />
+                                <span className="text-sm font-medium">Price Quote</span>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="font-semibold">{message.price_quote?.service}</div>
+                                {message.price_quote?.details && (
+                                  <div className="text-sm opacity-90">{message.price_quote.details}</div>
+                                )}
+                                <div className="text-lg font-bold">{formatINR(message.price_quote!.amount)}</div>
+                              </div>
+                              {!mine && (
+                                <div className="mt-3">
+                                  <Button 
+                                    size="sm" 
+                                    onClick={() => handleConfirm(message)} 
+                                    disabled={confirmingId === message.id}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                                  >
+                                    <Calendar className="h-3 w-3 mr-1" />
+                                    {confirmingId === message.id ? "Confirming..." : "Accept & Book"}
+                                  </Button>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className={`rounded-2xl px-4 py-2 shadow-sm ${
+                              mine 
+                                ? 'bg-blue-500 text-white' 
+                                : 'bg-gray-200 text-black'
+                            }`}>
+                              <div className="break-words">{message.message}</div>
+                            </div>
+                          )}
+                          
+                          {/* Timestamp and status */}
+                          <div className={`flex items-center gap-1 mt-1 px-2 ${mine ? 'justify-end' : 'justify-start'}`}>
+                            <span className="text-xs text-gray-500">
+                              {formatTime(message.created_at)}
+                            </span>
+                            {mine && (
+                              <div className="flex items-center">
+                                {message.is_read ? (
+                                  <CheckCheck className="h-3 w-3 text-blue-500" />
+                                ) : (
+                                  <Clock className="h-3 w-3 text-gray-400" />
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+            
+            {/* Typing Indicator */}
+            {Object.keys(typingUsers).filter(userId => userId !== user?.id).length > 0 && (
+              <div className="flex justify-start mb-4">
+                <div className="bg-gray-200 rounded-2xl px-4 py-2">
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            <div ref={bottomRef} />
+          </div>
         </ScrollArea>
 
-        {/* Typing Indicator */}
-        {Object.keys(typingUsers).filter(userId => userId !== user?.id).length > 0 && (
-          <div className="px-6 py-2">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                <div className="w-2 h-2 bg-primary/60 rounded-full animate-bounce"></div>
-              </div>
-              <span>
-                {Object.entries(typingUsers)
-                  .filter(([userId]) => userId !== user?.id)
-                  .map(([, userName]) => userName)
-                  .slice(0, 2)
-                  .join(', ')} 
-                {Object.keys(typingUsers).filter(userId => userId !== user?.id).length > 2 
-                  ? ` and ${Object.keys(typingUsers).filter(userId => userId !== user?.id).length - 2} others` 
-                  : ''} is typing...
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* Message Input */}
-        <div className="p-6 bg-white/80 backdrop-blur-sm border-t">
-          <div className="flex items-end gap-3">
-            <div className="flex-1 relative">
-              <Input
-                ref={inputRef}
-                placeholder="Type your message..."
-                value={newMessage}
-                onChange={(e) => {
-                  setNewMessage(e.target.value);
-                  handleTypingIndicator(e.target.value);
-                }}
-                onKeyPress={handleKeyPress}
-                className="pr-12 border-primary/20 focus:border-primary rounded-2xl bg-background/50 backdrop-blur-sm"
-              />
-            </div>
+        {/* Sticky Footer - Input Bar */}
+        <div className="p-4 border-t border-gray-200 bg-white">
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" className="p-2">
+              <Smile className="h-5 w-5 text-gray-400" />
+            </Button>
+            <Input
+              ref={inputRef}
+              placeholder="Type a message..."
+              value={newMessage}
+              onChange={(e) => {
+                setNewMessage(e.target.value);
+                handleTypingIndicator(e.target.value);
+              }}
+              onKeyPress={handleKeyPress}
+              className="flex-1 rounded-full border-gray-300 bg-gray-100"
+              disabled={loading}
+            />
             <Button 
               onClick={handleSend}
-              disabled={!newMessage.trim()}
-              className="rounded-2xl h-11 w-11 p-0 bg-primary hover:bg-primary/90"
+              disabled={!newMessage.trim() || loading}
+              size="sm"
+              className="rounded-full p-2 bg-blue-500 hover:bg-blue-600 text-white"
             >
               <Send className="h-4 w-4" />
             </Button>

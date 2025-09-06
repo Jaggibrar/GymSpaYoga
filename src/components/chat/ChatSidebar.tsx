@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { 
   Search, 
-  MessageCircle, 
-  Users, 
-  Settings,
+  MessageCircle,
   Briefcase,
-  User,
-  Clock,
-  Star
+  User
 } from "lucide-react";
 import { ChatRoom } from "@/hooks/useChatWithNames";
 import { cn } from "@/lib/utils";
@@ -34,15 +28,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   error
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeTab, setActiveTab] = useState<'all' | 'business' | 'trainer'>('all');
 
-  // Filter rooms based on search and tab
+  // Filter rooms based on search
   const filteredRooms = chatRooms.filter(room => {
-    const matchesSearch = !searchQuery || 
+    return !searchQuery || 
       (room.other_party_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
        room.last_message?.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesTab = activeTab === 'all' || room.room_type === activeTab;
-    return matchesSearch && matchesTab;
   });
 
   const formatLastUpdated = (timestamp: string) => {
@@ -50,204 +41,135 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     
-    if (diff < 60000) return 'Just now';
+    if (diff < 60000) return 'now';
     if (diff < 3600000) return `${Math.floor(diff / 60000)}m`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h`;
-    return `${Math.floor(diff / 86400000)}d`;
+    if (diff < 86400000) {
+      return date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      });
+    }
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
-  const getRoomIcon = (roomType: string) => {
-    return roomType === 'business' ? Briefcase : User;
-  };
-
-  const getRoomBadgeColor = (roomType: string) => {
-    return roomType === 'business' 
-      ? 'bg-blue-100 text-blue-700' 
-      : 'bg-purple-100 text-purple-700';
+  const getInitials = (name: string | null | undefined, roomType: string) => {
+    if (name) return name.charAt(0).toUpperCase();
+    return roomType === 'business' ? 'B' : 'T';
   };
 
   return (
     <ErrorBoundary>
-      <div className="w-80 bg-white/95 backdrop-blur-sm border-r flex flex-col h-full">
-        {/* Sidebar Header */}
-        <div className="p-6 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              Chats
-            </h2>
-            <Button variant="ghost" size="sm">
-              <Settings className="h-4 w-4" />
-            </Button>
-          </div>
+      <div className="h-full bg-white flex flex-col">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-200">
+          <h1 className="text-xl font-semibold text-gray-900 mb-4">Chats</h1>
           
           {/* Search */}
-          <div className="relative mb-4">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-primary/20 focus:border-primary bg-background/50"
+              className="pl-10 bg-gray-100 border-0 rounded-lg"
             />
-          </div>
-
-          {/* Filter Tabs */}
-          <div className="flex gap-2">
-            <Button
-              variant={activeTab === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveTab('all')}
-              className="flex-1 text-xs"
-            >
-              All
-            </Button>
-            <Button
-              variant={activeTab === 'business' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveTab('business')}
-              className="flex-1 text-xs"
-            >
-              Business
-            </Button>
-            <Button
-              variant={activeTab === 'trainer' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setActiveTab('trainer')}
-              className="flex-1 text-xs"
-            >
-              Trainers
-            </Button>
           </div>
         </div>
 
         {/* Chat List */}
         <ScrollArea className="flex-1">
-          <div className="p-2">
-            {loading ? (
-              <div className="space-y-3 p-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="animate-pulse flex items-center gap-3">
-                    <div className="w-12 h-12 bg-muted rounded-full" />
-                    <div className="flex-1 space-y-2">
-                      <div className="h-4 bg-muted rounded w-3/4" />
-                      <div className="h-3 bg-muted rounded w-1/2" />
-                    </div>
+          {loading ? (
+            <div className="p-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex items-center p-3 animate-pulse">
+                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-3" />
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-gray-200 rounded w-1/2" />
                   </div>
-                ))}
+                </div>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="p-8 text-center">
+              <div className="text-gray-500 mb-4">
+                <MessageCircle className="h-12 w-12 mx-auto mb-2" />
+                <p>No chats yet</p>
               </div>
-            ) : error ? (
-              <div className="p-4 text-center text-destructive">
-                {error}
-              </div>
-            ) : filteredRooms.length === 0 ? (
-              <div className="p-8 text-center">
-                <MessageCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="font-medium mb-2">
-                  {searchQuery ? 'No matching conversations' : 'No conversations yet'}
-                </h3>
-                <p className="text-sm text-muted-foreground">
+            </div>
+          ) : filteredRooms.length === 0 ? (
+            <div className="p-8 text-center">
+              <div className="text-gray-500 mb-4">
+                <MessageCircle className="h-12 w-12 mx-auto mb-2" />
+                <p>{searchQuery ? 'No matching conversations' : 'No chats yet'}</p>
+                <p className="text-sm mt-2">
                   {searchQuery 
-                    ? 'Try adjusting your search terms'
-                    : 'Start chatting with businesses and trainers to see them here'
+                    ? 'Try different search terms'
+                    : 'Start chatting with businesses and trainers'
                   }
                 </p>
               </div>
-            ) : (
-              <div className="space-y-1">
-                {filteredRooms.map((room) => {
-                  const Icon = getRoomIcon(room.room_type);
-                  const isSelected = selectedRoom?.id === room.id;
-                  
-                  return (
-                    <ErrorBoundary key={room.id}>
-                      <button
-                        onClick={() => onRoomSelect(room)}
-                        className={cn(
-                          "w-full p-4 rounded-lg text-left transition-all hover:bg-muted/50",
-                          isSelected && "bg-primary/10 border border-primary/20"
+            </div>
+          ) : (
+            <div>
+              {filteredRooms.map((room) => {
+                const isSelected = selectedRoom?.id === room.id;
+                const unreadCount = room.unread_count || 0;
+                
+                return (
+                  <ErrorBoundary key={room.id}>
+                    <button
+                      onClick={() => onRoomSelect(room)}
+                      className={cn(
+                        "w-full p-3 flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100",
+                        isSelected && "bg-blue-50"
+                      )}
+                    >
+                      {/* Profile Picture */}
+                      <div className="relative mr-3">
+                        <Avatar className="h-12 w-12">
+                          <AvatarImage src={room.other_party_avatar || "/placeholder.svg"} />
+                          <AvatarFallback className="bg-gray-300 text-gray-700">
+                            {getInitials(room.other_party_name, room.room_type)}
+                          </AvatarFallback>
+                        </Avatar>
+                        {/* Online indicator */}
+                        {room.other_party_online && (
+                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
                         )}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="relative">
-                            <Avatar className="h-12 w-12">
-                              <AvatarImage src={room.other_party_avatar || "/placeholder.svg"} />
-                              <AvatarFallback className={cn(
-                                "text-sm font-semibold",
-                                room.room_type === 'business' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
-                              )}>
-                                {room.other_party_name ? room.other_party_name.charAt(0).toUpperCase() : <Icon className="h-5 w-5" />}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <h4 className="font-medium text-sm truncate">
-                                {room.other_party_name || (room.room_type === 'business' ? 'Business Chat' : 'Trainer Chat')}
-                              </h4>
-                              <span className="text-xs text-muted-foreground">
-                                {formatLastUpdated(room.last_message_time || room.updated_at)}
-                              </span>
-                            </div>
-                            
-                            <div className="flex items-center justify-between">
-                              <p className="text-xs text-muted-foreground truncate">
-                                {room.last_message || 'Start a conversation'}
-                              </p>
-                              <div className="flex items-center gap-2">
-                                <Badge 
-                                  variant="outline" 
-                                  className={cn(
-                                    "text-xs capitalize",
-                                    getRoomBadgeColor(room.room_type)
-                                  )}
-                                >
-                                  {room.room_type}
-                                </Badge>
-                              </div>
-                            </div>
-
-                            {/* Status indicators */}
-                            <div className="flex items-center gap-2 mt-2">
-                              <Badge 
-                                variant={room.status === 'active' ? 'default' : 'secondary'} 
-                                className="text-xs"
-                              >
-                                {room.status}
-                              </Badge>
-                              {/* Unread count */}
-                              {room.unread_count && room.unread_count > 0 && (
-                                <Badge variant="destructive" className="text-xs px-2">
-                                  {room.unread_count}
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
+                      </div>
+                      
+                      <div className="flex-1 min-w-0 text-left">
+                        {/* Name and Timestamp */}
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-medium text-gray-900 truncate">
+                            {room.other_party_name || (room.room_type === 'business' ? 'Business' : 'Trainer')}
+                          </h3>
+                          <span className="text-xs text-gray-500 ml-2">
+                            {formatLastUpdated(room.last_message_time || room.updated_at)}
+                          </span>
                         </div>
-                      </button>
-                    </ErrorBoundary>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+                        
+                        {/* Last Message and Unread Badge */}
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-gray-600 truncate">
+                            {room.last_message || 'Start a conversation'}
+                          </p>
+                          {unreadCount > 0 && (
+                            <div className="bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ml-2">
+                              {unreadCount > 9 ? '9+' : unreadCount}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  </ErrorBoundary>
+                );
+              })}
+            </div>
+          )}
         </ScrollArea>
-
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t bg-muted/20">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">{filteredRooms.length} conversations</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 text-yellow-500" />
-              <span className="text-muted-foreground">4.8 rating</span>
-            </div>
-          </div>
-        </div>
       </div>
     </ErrorBoundary>
   );
