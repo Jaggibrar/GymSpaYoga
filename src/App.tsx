@@ -185,19 +185,19 @@ const App = () => {
     <ErrorBoundary>
       <PerformanceWrapper>
         <QueryClientProvider client={queryClient}>
-          <AnalyticsProvider>
-            <AuthProvider>
-              <FavoritesProvider>
-                <TooltipProvider>
-                  <Router>
+          <AuthProvider>
+            <FavoritesProvider>
+              <TooltipProvider>
+                <Router>
+                  <AnalyticsProvider>
                     <React.Suspense fallback={<GlobalLoadingIndicator />}>
                       <AppContent />
                     </React.Suspense>
-                  </Router>
-                </TooltipProvider>
-              </FavoritesProvider>
-            </AuthProvider>
-          </AnalyticsProvider>
+                  </AnalyticsProvider>
+                </Router>
+              </TooltipProvider>
+            </FavoritesProvider>
+          </AuthProvider>
         </QueryClientProvider>
       </PerformanceWrapper>
     </ErrorBoundary>
