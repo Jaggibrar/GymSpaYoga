@@ -17,6 +17,9 @@ import { AdvancedSEOManager } from "./components/SEO/AdvancedSEOManager";
 import AccessibilityEnhancer from "./components/SEO/AccessibilityEnhancer";
 import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import { AnalyticsProvider } from "./components/analytics/AnalyticsProvider";
+
+import PerformanceWrapper from "./components/PerformanceWrapper";
 
 import AdminRoute from "./components/AdminRoute";
 import TrainerRoute from "./components/TrainerRoute";
@@ -74,7 +77,7 @@ const AppContent = () => {
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
-      <main className="flex-1">
+      <main className="flex-1" id="main-content">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/explore" element={<Explore />} />
@@ -123,13 +126,17 @@ const AppContent = () => {
           } />
           <Route path="/chat" element={
             <ProtectedRoute>
-              <Chat />
+              <ErrorBoundary>
+                <Chat />
+              </ErrorBoundary>
             </ProtectedRoute>
           } />
           <Route path="/business-dashboard" element={
             <ProtectedRoute>
               <BusinessRoute>
-                <BusinessDashboard />
+                <ErrorBoundary>
+                  <BusinessDashboard />
+                </ErrorBoundary>
               </BusinessRoute>
             </ProtectedRoute>
           } />
@@ -176,19 +183,23 @@ const AppContent = () => {
 const App = () => {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <FavoritesProvider>
-            <TooltipProvider>
-              <Router>
-                <React.Suspense fallback={<GlobalLoadingIndicator />}>
-                  <AppContent />
-                </React.Suspense>
-              </Router>
-            </TooltipProvider>
-          </FavoritesProvider>
-        </AuthProvider>
-      </QueryClientProvider>
+      <PerformanceWrapper>
+        <QueryClientProvider client={queryClient}>
+          <AnalyticsProvider>
+            <AuthProvider>
+              <FavoritesProvider>
+                <TooltipProvider>
+                  <Router>
+                    <React.Suspense fallback={<GlobalLoadingIndicator />}>
+                      <AppContent />
+                    </React.Suspense>
+                  </Router>
+                </TooltipProvider>
+              </FavoritesProvider>
+            </AuthProvider>
+          </AnalyticsProvider>
+        </QueryClientProvider>
+      </PerformanceWrapper>
     </ErrorBoundary>
   );
 };
