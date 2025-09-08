@@ -238,6 +238,11 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
               <div>
                 <h3 className="font-medium text-gray-900">
                   {selectedRoom.other_party_name || `${selectedRoom.room_type === "business" ? "Business" : "Trainer"}`}
+                  {selectedRoom.other_party_category && (
+                    <span className="ml-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">
+                      {selectedRoom.other_party_category}
+                    </span>
+                  )}
                 </h3>
                 <p className="text-sm text-gray-500">
                   {selectedRoom.other_party_online ? 'Online' : 'Offline'}

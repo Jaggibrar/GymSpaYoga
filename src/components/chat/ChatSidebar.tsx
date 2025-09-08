@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Search, 
   MessageCircle,
   Briefcase,
-  User
+  User,
+  Dumbbell,
+  Flower2,
+  Waves
 } from "lucide-react";
 import { ChatRoom } from "@/hooks/useChatWithNames";
 import { cn } from "@/lib/utils";
@@ -54,8 +58,48 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   };
 
   const getInitials = (name: string | null | undefined, roomType: string) => {
-    if (name) return name.charAt(0).toUpperCase();
+    if (name && name !== 'Unknown Business' && name !== 'Unknown Trainer') {
+      return name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2);
+    }
     return roomType === 'business' ? 'B' : 'T';
+  };
+
+  const getCategoryBadge = (category: string | undefined, businessType: string | undefined) => {
+    const type = category || businessType || '';
+    const badgeColor = {
+      'gym': 'bg-red-100 text-red-800',
+      'spa': 'bg-pink-100 text-pink-800', 
+      'yoga': 'bg-purple-100 text-purple-800',
+      'trainer': 'bg-blue-100 text-blue-800',
+      'business': 'bg-gray-100 text-gray-800'
+    };
+    
+    const displayType = type.toLowerCase();
+    const color = badgeColor[displayType as keyof typeof badgeColor] || badgeColor.business;
+    
+    return (
+      <span className={`px-2 py-1 text-xs rounded-full font-medium ${color}`}>
+        {displayType === 'trainer' ? 'Trainer' : type.charAt(0).toUpperCase() + type.slice(1)}
+      </span>
+    );
+  };
+
+  const getCategoryIcon = (category: string | undefined, businessType: string | undefined) => {
+    const type = (category || businessType || '').toLowerCase();
+    const iconProps = { className: "h-4 w-4", strokeWidth: 2 };
+    
+    switch (type) {
+      case 'gym':
+        return <Dumbbell {...iconProps} />;
+      case 'spa':
+        return <Flower2 {...iconProps} />;
+      case 'yoga':
+        return <Waves {...iconProps} />;
+      case 'trainer':
+        return <User {...iconProps} />;
+      default:
+        return <Briefcase {...iconProps} />;
+    }
   };
 
   return (
@@ -142,12 +186,18 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                       </div>
                       
                       <div className="flex-1 min-w-0 text-left">
-                        {/* Name and Timestamp */}
+                        {/* Name, Category and Timestamp */}
                         <div className="flex items-center justify-between mb-1">
-                          <h3 className="font-medium text-gray-900 truncate">
-                            {room.other_party_name || (room.room_type === 'business' ? 'Business' : 'Trainer')}
-                          </h3>
-                          <span className="text-xs text-gray-500 ml-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <div className="flex items-center gap-1">
+                              {getCategoryIcon(room.other_party_category, room.business_type)}
+                              <h3 className="font-medium text-gray-900 truncate">
+                                {room.other_party_name || (room.room_type === 'business' ? 'Business' : 'Trainer')}
+                              </h3>
+                            </div>
+                            {getCategoryBadge(room.other_party_category, room.business_type)}
+                          </div>
+                          <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
                             {formatLastUpdated(room.last_message_time || room.updated_at)}
                           </span>
                         </div>
@@ -158,7 +208,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                             {room.last_message || 'Start a conversation'}
                           </p>
                           {unreadCount > 0 && (
-                            <div className="bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ml-2">
+                            <div className="bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ml-2">
                               {unreadCount > 9 ? '9+' : unreadCount}
                             </div>
                           )}

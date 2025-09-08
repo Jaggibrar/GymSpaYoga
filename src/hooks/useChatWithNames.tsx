@@ -14,6 +14,8 @@ export interface ChatRoom {
   updated_at: string;
   other_party_name?: string;
   other_party_avatar?: string;
+  other_party_category?: string;
+  business_type?: string;
   other_party_online?: boolean;
   unread_count?: number;
   last_message?: string;
@@ -107,11 +109,11 @@ export const useChatWithNames = () => {
       const [businessData, trainerData] = await Promise.all([
         businessIds.length > 0 ? supabase
           .from('business_profiles')
-          .select('id, business_name, profile_image')
+          .select('id, business_name, business_type, category, image_urls')
           .in('id', businessIds) : Promise.resolve({ data: [] }),
         trainerIds.length > 0 ? supabase
           .from('trainer_profiles')
-          .select('id, name, profile_image')
+          .select('id, name, category, profile_image_url')
           .in('id', trainerIds) : Promise.resolve({ data: [] })
       ]);
 
@@ -123,15 +125,20 @@ export const useChatWithNames = () => {
       const enrichedRooms: ChatRoom[] = userRooms.map((room: any) => {
         let otherPartyName = 'Unknown';
         let otherPartyAvatar = null;
+        let otherPartyCategory = '';
+        let businessType = '';
 
         if (room.room_type === 'business' && room.business_id) {
           const business = businessMap.get(room.business_id);
           otherPartyName = business?.business_name || 'Unknown Business';
-          otherPartyAvatar = business?.profile_image || null;
+          otherPartyAvatar = business?.image_urls?.[0] || null;
+          otherPartyCategory = business?.category || business?.business_type || 'Business';
+          businessType = business?.business_type || '';
         } else if (room.room_type === 'trainer' && room.trainer_id) {
           const trainer = trainerMap.get(room.trainer_id);
           otherPartyName = trainer?.name || 'Unknown Trainer';
-          otherPartyAvatar = trainer?.profile_image || null;
+          otherPartyAvatar = trainer?.profile_image_url || null;
+          otherPartyCategory = 'Trainer';
         }
 
         return {
@@ -145,6 +152,8 @@ export const useChatWithNames = () => {
           updated_at: room.updated_at,
           other_party_name: otherPartyName,
           other_party_avatar: otherPartyAvatar,
+          other_party_category: otherPartyCategory,
+          business_type: businessType,
           other_party_online: false,
           unread_count: 0,
           last_message: '',
