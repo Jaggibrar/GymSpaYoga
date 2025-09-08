@@ -75,8 +75,8 @@ export const useChatWithNames = () => {
     }
   };
 
-  // Simplified fetch for better performance
-  const fetchChatRooms = useCallback(async () => {
+  // Enhanced fetch with proper business/trainer names
+  const fetchChatRooms = useCallback(async (retryCount = 0) => {
     if (!user) {
       setLoading(false);
       return;
@@ -95,42 +95,87 @@ export const useChatWithNames = () => {
 
       if (roomsError) throw roomsError;
 
-      // Filter and transform rooms
+      // Filter rooms for current user
       const userRooms = (rooms || []).filter(room => 
-        room.user_id === user.id || 
-        // Add owner filtering logic here if needed
-        false
+        room.user_id === user.id
       );
 
-      const enrichedRooms: ChatRoom[] = userRooms.map((room: any) => ({
-        id: room.id,
-        user_id: room.user_id,
-        business_id: room.business_id || undefined,
-        trainer_id: room.trainer_id || undefined,
-        room_type: room.room_type as 'business' | 'trainer',
-        status: room.status as 'active' | 'closed' | 'archived',
-        created_at: room.created_at,
-        updated_at: room.updated_at,
-        other_party_name: room.room_type === 'business' ? 'Business' : 'Trainer',
-        other_party_online: false,
-        unread_count: 0,
-        last_message: '',
-        last_message_time: room.updated_at
-      }));
+      // Get business and trainer names in parallel
+      const businessIds = userRooms.filter(r => r.business_id).map(r => r.business_id);
+      const trainerIds = userRooms.filter(r => r.trainer_id).map(r => r.trainer_id);
+      
+      const [businessData, trainerData] = await Promise.all([
+        businessIds.length > 0 ? supabase
+          .from('business_profiles')
+          .select('id, business_name, profile_image')
+          .in('id', businessIds) : Promise.resolve({ data: [] }),
+        trainerIds.length > 0 ? supabase
+          .from('trainer_profiles')
+          .select('id, name, profile_image')
+          .in('id', trainerIds) : Promise.resolve({ data: [] })
+      ]);
+
+      // Create lookup maps
+      const businessMap = new Map((businessData.data || []).map(b => [b.id, b]));
+      const trainerMap = new Map((trainerData.data || []).map(t => [t.id, t]));
+
+      // Enrich rooms with real names and avatars
+      const enrichedRooms: ChatRoom[] = userRooms.map((room: any) => {
+        let otherPartyName = 'Unknown';
+        let otherPartyAvatar = null;
+
+        if (room.room_type === 'business' && room.business_id) {
+          const business = businessMap.get(room.business_id);
+          otherPartyName = business?.business_name || 'Unknown Business';
+          otherPartyAvatar = business?.profile_image || null;
+        } else if (room.room_type === 'trainer' && room.trainer_id) {
+          const trainer = trainerMap.get(room.trainer_id);
+          otherPartyName = trainer?.name || 'Unknown Trainer';
+          otherPartyAvatar = trainer?.profile_image || null;
+        }
+
+        return {
+          id: room.id,
+          user_id: room.user_id,
+          business_id: room.business_id || undefined,
+          trainer_id: room.trainer_id || undefined,
+          room_type: room.room_type as 'business' | 'trainer',
+          status: room.status as 'active' | 'closed' | 'archived',
+          created_at: room.created_at,
+          updated_at: room.updated_at,
+          other_party_name: otherPartyName,
+          other_party_avatar: otherPartyAvatar,
+          other_party_online: false,
+          unread_count: 0,
+          last_message: '',
+          last_message_time: room.updated_at
+        };
+      });
 
       setChatRooms(enrichedRooms);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch chat rooms';
-      setError(errorMessage);
       console.error('Error fetching chat rooms:', err);
+      
+      // Exponential backoff retry logic (max 3 retries)
+      if (retryCount < 3) {
+        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s
+        setTimeout(() => fetchChatRooms(retryCount + 1), delay);
+        return;
+      }
+      
+      // Only set error after max retries
+      const errorMessage = err instanceof Error ? err.message : 'Unable to load chats';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   }, [user?.id]);
 
-  // Fetch messages with sender names
-  const fetchMessages = async (chatRoomId: string) => {
+  // Fetch messages with better error handling
+  const fetchMessages = async (chatRoomId: string, retryCount = 0) => {
     try {
+      setError(null); // Clear any existing errors
+      
       const { data, error } = await supabase
         .from('chat_messages')
         .select(`
@@ -163,7 +208,16 @@ export const useChatWithNames = () => {
       setMessages(transformedMessages);
     } catch (err) {
       console.error('Error fetching messages:', err);
-      toast.error('Failed to fetch messages');
+      
+      // Retry with exponential backoff (max 2 retries for messages)
+      if (retryCount < 2) {
+        const delay = Math.pow(2, retryCount) * 1000;
+        setTimeout(() => fetchMessages(chatRoomId, retryCount + 1), delay);
+        return;
+      }
+      
+      // Set error state instead of showing toast spam
+      setError('Unable to load messages. Please check your connection.');
     }
   };
 
@@ -433,7 +487,7 @@ export const useChatWithNames = () => {
     loading,
     error,
     typingUsers,
-    fetchMessages,
+    fetchMessages: (chatRoomId: string, retryCount?: number) => Promise<void>,
     sendMessage,
     sendPriceQuote,
     confirmBooking,

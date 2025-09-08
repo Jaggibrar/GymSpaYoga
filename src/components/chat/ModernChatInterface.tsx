@@ -297,7 +297,24 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
         {/* Messages Area */}
         <ScrollArea className="flex-1 bg-gray-50">
           <div className="p-4">
-            {Object.entries(groupedMessages).map(([dateKey, dayMessages]) => (
+            {error ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center p-8">
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <p className="text-red-600 font-medium mb-2">⚠️ Unable to load messages</p>
+                    <p className="text-red-500 text-sm">{error}</p>
+                    <Button 
+                      onClick={() => selectedRoom && fetchMessages(selectedRoom.id)}
+                      variant="outline" 
+                      size="sm" 
+                      className="mt-3"
+                    >
+                      Retry
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : Object.entries(groupedMessages).map(([dateKey, dayMessages]) => (
               <div key={dateKey}>
                 {/* Date Divider */}
                 <div className="flex justify-center my-4">

@@ -93,9 +93,10 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             </div>
           ) : error ? (
             <div className="p-8 text-center">
-              <div className="text-gray-500 mb-4">
-                <MessageCircle className="h-12 w-12 mx-auto mb-2" />
-                <p>No chats yet</p>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <p className="text-red-600 font-medium mb-2">⚠️ Unable to load chats</p>
+                <p className="text-red-500 text-sm">{error}</p>
+                <p className="text-red-400 text-xs mt-2">Please check your connection and try again</p>
               </div>
             </div>
           ) : filteredRooms.length === 0 ? (
