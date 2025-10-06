@@ -140,7 +140,7 @@ const Index = () => {
             </div>
             
             {/* Enhanced CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-6 justify-center mb-12 sm:mb-16 px-4">
+            <div className="flex flex-row flex-wrap gap-3 sm:gap-4 lg:gap-6 justify-center mb-12 sm:mb-16 px-4">
               <Link to="/gyms" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto btn-primary text-base sm:text-lg px-6 sm:px-8 lg:px-12 py-4 sm:py-5 lg:py-6 text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:scale-105 min-h-[48px]">
                   <Dumbbell className="mr-2 sm:mr-3 h-5 w-5 sm:h-6 sm:w-6" />
