@@ -51,11 +51,12 @@ const PageHero = ({ title, subtitle, description, backgroundImage, colorScheme =
   const colors = getColorScheme();
 
   return (
-    <section className="relative h-96 overflow-hidden">
+    <section className="relative h-[50vh] md:h-96 overflow-hidden">
       <img 
         src={backgroundImage}
         alt={`${title} background`}
         className="w-full h-full object-cover"
+        style={{ objectPosition: 'center 40%' }}
         loading="eager"
         decoding="async"
         fetchPriority="high"
