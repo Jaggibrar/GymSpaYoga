@@ -37,9 +37,9 @@ export const useYogaStudios = () => {
       setLoading(true);
       setError(null);
       
-      // Remove status filter to show all listings
+      // Fetch approved yoga studios from secure public view
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('*')
         .eq('business_type', 'yoga')
         .order('created_at', { ascending: false });

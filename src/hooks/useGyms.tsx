@@ -37,12 +37,11 @@ export const useGyms = () => {
       setLoading(true);
       setError(null);
       
-      // Fetch approved gym businesses
+      // Fetch approved gym businesses from secure public view
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('*')
         .eq('business_type', 'gym')
-        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) {
@@ -54,16 +53,7 @@ export const useGyms = () => {
       setGyms(data || []);
       
       if ((data?.length || 0) === 0) {
-        console.log('No approved gyms found. Checking for pending gyms...');
-        
-        // Check for pending gyms for debugging
-        const { data: pendingData } = await supabase
-          .from('business_profiles')
-          .select('*')
-          .eq('business_type', 'gym')
-          .eq('status', 'pending');
-          
-        console.log(`Found ${pendingData?.length || 0} pending gym listings`);
+        console.log('No approved gyms found.');
       }
       
     } catch (err: any) {

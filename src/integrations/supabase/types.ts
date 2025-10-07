@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -435,6 +435,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_bookings_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fk_bookings_trainer_id"
             columns: ["trainer_id"]
             isOneToOne: false
@@ -480,10 +487,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "business_documents_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fk_business_documents_business_id"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_business_documents_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -600,10 +621,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "business_stats_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "fk_business_stats_business_id"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_business_stats_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -842,6 +877,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_inquiries_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -1389,10 +1431,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_wishlist_business_id"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "user_wishlist_business_id_fkey"
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_wishlist_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
             referencedColumns: ["id"]
           },
         ]
@@ -1417,7 +1473,78 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_business_listings: {
+        Row: {
+          address: string | null
+          amenities: string[] | null
+          business_name: string | null
+          business_type: string | null
+          category: string | null
+          city: string | null
+          closing_time: string | null
+          created_at: string | null
+          description: string | null
+          email: string | null
+          id: string | null
+          image_urls: string[] | null
+          monthly_price: number | null
+          opening_time: string | null
+          phone: string | null
+          pin_code: string | null
+          session_price: number | null
+          state: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          amenities?: string[] | null
+          business_name?: string | null
+          business_type?: string | null
+          category?: string | null
+          city?: string | null
+          closing_time?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          id?: string | null
+          image_urls?: string[] | null
+          monthly_price?: number | null
+          opening_time?: string | null
+          phone?: never
+          pin_code?: string | null
+          session_price?: number | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          amenities?: string[] | null
+          business_name?: string | null
+          business_type?: string | null
+          category?: string | null
+          city?: string | null
+          closing_time?: string | null
+          created_at?: string | null
+          description?: string | null
+          email?: never
+          id?: string | null
+          image_urls?: string[] | null
+          monthly_price?: number | null
+          opening_time?: string | null
+          phone?: never
+          pin_code?: string | null
+          session_price?: number | null
+          state?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleanup_old_notifications: {
@@ -1426,15 +1553,22 @@ export type Database = {
       }
       create_chat_booking: {
         Args: {
+          p_business_id: string
           p_chat_room_id: string
           p_customer_id: string
-          p_business_id: string
-          p_trainer_id: string
           p_message_id: string
-          p_service_details: Json
           p_price_amount: number
+          p_service_details: Json
+          p_trainer_id: string
         }
         Returns: string
+      }
+      get_business_contact_info: {
+        Args: { business_id_param: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
       }
       get_business_owner_from_booking: {
         Args: { booking_id_param: number }
@@ -1464,8 +1598,8 @@ export type Database = {
         Args: {
           booking_id_param: number
           new_status_param: string
-          user_id_param?: string
           notes_param?: string
+          user_id_param?: string
         }
         Returns: undefined
       }
@@ -1474,7 +1608,7 @@ export type Database = {
         Returns: undefined
       }
       update_owner_status: {
-        Args: { p_user_id: string; p_is_online?: boolean }
+        Args: { p_is_online?: boolean; p_user_id: string }
         Returns: undefined
       }
     }

@@ -37,9 +37,9 @@ export const useSpas = () => {
       setLoading(true);
       setError(null);
       
-      // Remove status filter to show all listings
+      // Fetch approved spa businesses from secure public view
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('*')
         .eq('business_type', 'spa')
         .order('created_at', { ascending: false });

@@ -91,11 +91,10 @@ export const useBusinessData = (
         return transformedTrainers;
       }
 
-      // For regular businesses, use optimized query
+      // For regular businesses, use optimized query with secure public view
       let query = supabase
-        .from('business_profiles')
-        .select('*')
-        .eq('status', 'approved');
+        .from('public_business_listings')
+        .select('*');
 
       // Apply category filter (exclude trainer as it's handled above)
       if (category && category !== 'all' && category !== 'trainer') {
