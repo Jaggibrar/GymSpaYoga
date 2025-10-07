@@ -445,6 +445,13 @@ export type Database = {
             foreignKeyName: "fk_bookings_trainer_id"
             columns: ["trainer_id"]
             isOneToOne: false
+            referencedRelation: "public_trainer_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_bookings_trainer_id"
+            columns: ["trainer_id"]
+            isOneToOne: false
             referencedRelation: "trainer_profiles"
             referencedColumns: ["id"]
           },
@@ -1545,6 +1552,66 @@ export type Database = {
         }
         Relationships: []
       }
+      public_trainer_listings: {
+        Row: {
+          bio: string | null
+          category: string | null
+          certifications: string | null
+          created_at: string | null
+          email: string | null
+          experience: number | null
+          hourly_rate: number | null
+          id: string | null
+          location: string | null
+          name: string | null
+          phone: string | null
+          profile_image_url: string | null
+          specializations: string[] | null
+          status: string | null
+          trainer_tier: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          category?: string | null
+          certifications?: string | null
+          created_at?: string | null
+          email?: never
+          experience?: number | null
+          hourly_rate?: number | null
+          id?: string | null
+          location?: string | null
+          name?: string | null
+          phone?: never
+          profile_image_url?: string | null
+          specializations?: string[] | null
+          status?: string | null
+          trainer_tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          category?: string | null
+          certifications?: string | null
+          created_at?: string | null
+          email?: never
+          experience?: number | null
+          hourly_rate?: number | null
+          id?: string | null
+          location?: string | null
+          name?: string | null
+          phone?: never
+          profile_image_url?: string | null
+          specializations?: string[] | null
+          status?: string | null
+          trainer_tier?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       cleanup_old_notifications: {
@@ -1577,6 +1644,13 @@ export type Database = {
       get_pricing_tier: {
         Args: { monthly_price: number; session_price: number }
         Returns: string
+      }
+      get_trainer_contact_info: {
+        Args: { trainer_id_param: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
       }
       grant_admin_access: {
         Args: { user_email: string }
