@@ -26,17 +26,24 @@ export const useAdmin = () => {
           return;
         }
 
-        // Only allow access to specific email address
-        const allowedAdminEmail = 'jaggibrar001234@gmail.com';
-        
-        if (user.email?.toLowerCase() === allowedAdminEmail.toLowerCase()) {
+        // Check admin status from database using secure function
+        const { data, error } = await supabase
+          .from('admin_permissions')
+          .select('id, role, permissions, created_at')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error('Error checking admin status:', error);
+          setIsAdmin(false);
+        } else if (data && data.permissions?.includes('super_admin')) {
           setIsAdmin(true);
           setAdminData({
-            id: 'admin-override',
+            id: data.id,
             user_id: user.id,
-            role: 'super_admin',
-            permissions: ['all'],
-            created_at: new Date().toISOString()
+            role: data.role,
+            permissions: data.permissions,
+            created_at: data.created_at
           });
         } else {
           setIsAdmin(false);

@@ -68,30 +68,6 @@ export type Database = {
         }
         Relationships: []
       }
-      admin_users: {
-        Row: {
-          created_at: string
-          id: string
-          permissions: string[] | null
-          role: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          permissions?: string[] | null
-          role?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          permissions?: string[] | null
-          role?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       blog_comments: {
         Row: {
           blog_id: string
@@ -844,6 +820,62 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_access_log: {
+        Row: {
+          access_reason: string | null
+          business_id: string | null
+          created_at: string | null
+          id: string
+          trainer_id: string | null
+          user_id: string
+        }
+        Insert: {
+          access_reason?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          trainer_id?: string | null
+          user_id: string
+        }
+        Update: {
+          access_reason?: string | null
+          business_id?: string | null
+          created_at?: string | null
+          id?: string
+          trainer_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_access_log_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_access_log_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_access_log_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "public_trainer_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_access_log_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_inquiries: {
         Row: {
           business_id: string | null
@@ -1257,6 +1289,36 @@ export type Database = {
         }
         Relationships: []
       }
+      security_audit_log: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       spas: {
         Row: {
           created_at: string
@@ -1637,6 +1699,13 @@ export type Database = {
           phone: string
         }[]
       }
+      get_business_contact_info_secure: {
+        Args: { business_id_param: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
+      }
       get_business_owner_from_booking: {
         Args: { booking_id_param: number }
         Returns: string
@@ -1646,6 +1715,13 @@ export type Database = {
         Returns: string
       }
       get_trainer_contact_info: {
+        Args: { trainer_id_param: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
+      }
+      get_trainer_contact_info_secure: {
         Args: { trainer_id_param: string }
         Returns: {
           email: string
@@ -1663,6 +1739,14 @@ export type Database = {
       is_admin: {
         Args: Record<PropertyKey, never> | { user_uuid?: string }
         Returns: boolean
+      }
+      is_super_admin: {
+        Args: { user_uuid?: string }
+        Returns: boolean
+      }
+      log_admin_action: {
+        Args: { p_event_data?: Json; p_event_type: string }
+        Returns: undefined
       }
       mark_old_notifications_read: {
         Args: Record<PropertyKey, never>

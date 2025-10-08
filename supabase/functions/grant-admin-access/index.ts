@@ -18,23 +18,59 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Get current user
+    // Get current user (caller)
     const authHeader = req.headers.get('Authorization')!;
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabase.auth.getUser(token);
+    const { data: { user: caller } } = await supabase.auth.getUser(token);
 
-    if (!user) {
+    if (!caller) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
-    // Grant admin access to current user
+    // SECURITY: Check if caller is already a super admin
+    const { data: callerPerms } = await supabase
+      .from('admin_permissions')
+      .select('permissions')
+      .eq('user_id', caller.id)
+      .maybeSingle();
+
+    if (!callerPerms || !callerPerms.permissions?.includes('super_admin')) {
+      console.error('Unauthorized admin grant attempt by:', caller.email);
+      return new Response(JSON.stringify({ error: 'Forbidden: Only super admins can grant admin access' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Get target user email from request body
+    const { targetEmail } = await req.json();
+    
+    if (!targetEmail) {
+      return new Response(JSON.stringify({ error: 'Target email is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Find target user by email
+    const { data: { users }, error: userError } = await supabase.auth.admin.listUsers();
+    const targetUser = users?.find(u => u.email === targetEmail);
+
+    if (!targetUser) {
+      return new Response(JSON.stringify({ error: 'User not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Grant admin access to target user
     const { data, error } = await supabase
       .from('admin_permissions')
       .insert({
-        user_id: user.id,
+        user_id: targetUser.id,
         role: 'super_admin',
         permissions: ['view_dashboard', 'manage_listings', 'manage_users', 'manage_payments', 'manage_content', 'view_analytics', 'super_admin']
       })
@@ -49,7 +85,7 @@ serve(async (req) => {
           role: 'super_admin',
           permissions: ['view_dashboard', 'manage_listings', 'manage_users', 'manage_payments', 'manage_content', 'view_analytics', 'super_admin']
         })
-        .eq('user_id', user.id)
+        .eq('user_id', targetUser.id)
         .select()
         .single();
 
@@ -61,18 +97,30 @@ serve(async (req) => {
         });
       }
 
+      // Log the admin grant
+      await supabase.rpc('log_admin_action', {
+        p_event_type: 'admin_granted',
+        p_event_data: { granted_to: targetUser.email, granted_by: caller.email }
+      });
+
       return new Response(JSON.stringify({ 
         success: true, 
-        message: 'Admin permissions updated successfully',
+        message: `Admin permissions updated for ${targetEmail}`,
         data: updateData 
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
+    // Log the admin grant
+    await supabase.rpc('log_admin_action', {
+      p_event_type: 'admin_granted',
+      p_event_data: { granted_to: targetUser.email, granted_by: caller.email }
+    });
+
     return new Response(JSON.stringify({ 
       success: true, 
-      message: 'Admin access granted successfully',
+      message: `Admin access granted to ${targetEmail}`,
       data 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
