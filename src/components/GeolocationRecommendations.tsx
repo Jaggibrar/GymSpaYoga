@@ -37,12 +37,7 @@ export const GeolocationRecommendations = () => {
   const [nearbyBusinesses, setNearbyBusinesses] = useState<BusinessWithDistance[]>([]);
   const [maxDistance, setMaxDistance] = useState(10); // km
 
-  // Don't render if there's an error loading businesses to prevent crashes
-  if (businessError) {
-    console.log('GeolocationRecommendations: Skipping render due to business data error');
-    return null;
-  }
-
+  // ALL HOOKS MUST BE CALLED BEFORE ANY CONDITIONAL RETURNS
   useEffect(() => {
     if (position && businesses.length > 0) {
       const businessesWithDistance = businesses
@@ -66,6 +61,12 @@ export const GeolocationRecommendations = () => {
       setNearbyBusinesses(businessesWithDistance);
     }
   }, [position, businesses, maxDistance]);
+
+  // Now safe to do conditional returns after all hooks
+  if (businessError) {
+    console.log('GeolocationRecommendations: Skipping render due to business data error');
+    return null;
+  }
 
   const formatDistance = (distance: number) => {
     if (distance < 1) {
