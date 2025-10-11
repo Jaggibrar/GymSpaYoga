@@ -241,6 +241,19 @@
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 
+  /* Card depth enhancements */
+  .card-elevated {
+    @apply shadow-medium hover:shadow-strong transition-shadow duration-300;
+  }
+
+  .card-interactive {
+    @apply shadow-soft hover:shadow-medium hover:-translate-y-1 transition-all duration-300 cursor-pointer;
+  }
+
+  .card-flat {
+    @apply shadow-none border-2;
+  }
+
   /* Animations */
   .animate-fade-in {
     animation: fadeIn 0.6s ease-in-out;
