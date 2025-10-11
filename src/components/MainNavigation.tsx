@@ -8,14 +8,19 @@ import { useAuth } from '@/hooks/useAuth';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 import NotificationSystem from '@/components/NotificationSystem';
 import { Heart } from 'lucide-react';
+import { useScrollDirection } from '@/hooks/useScrollDirection';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut, isAdmin } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { scrollDirection, scrollY } = useScrollDirection();
 
   const isActive = (path: string) => location.pathname === path;
+  const isScrolled = scrollY > 50;
+  const shouldHide = scrollDirection === 'down' && scrollY > 100;
 
   const handleSignOut = async () => {
     try {
@@ -28,19 +33,27 @@ const MainNavigation = () => {
   };
 
   return (
-    <nav className="bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-white/20">
+    <nav 
+      className={`bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-white/20 transition-all duration-300 ${
+        shouldHide ? '-translate-y-full' : 'translate-y-0'
+      } ${isScrolled ? 'shadow-strong' : 'shadow-lg'}`}
+    >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="h-10 w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <Dumbbell className="h-6 w-6 text-white" />
+            <div className={`bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 ${
+              isScrolled ? 'h-8 w-8' : 'h-10 w-10'
+            }`}>
+              <Dumbbell className={`text-white transition-all duration-300 ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <h1 className={`font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent transition-all duration-300 ${
+                isScrolled ? 'text-lg' : 'text-xl'
+              }`}>
                 GymSpaYoga
               </h1>
-              <p className="text-xs text-gray-500 -mt-1">One Platform. All Wellness.</p>
+              {!isScrolled && <p className="text-xs text-gray-500 -mt-1">One Platform. All Wellness.</p>}
             </div>
           </Link>
 
@@ -90,6 +103,9 @@ const MainNavigation = () => {
 
           {/* Right side - Auth & Notifications */}
           <div className="flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             {user ? (
               <>
                 {/* Favorites Link */}

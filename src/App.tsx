@@ -18,6 +18,7 @@ import AccessibilityEnhancer from "./components/SEO/AccessibilityEnhancer";
 import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import { AnalyticsProvider } from "./components/analytics/AnalyticsProvider";
+import ScrollProgressBar from "./components/ScrollProgressBar";
 
 import PerformanceWrapper from "./components/PerformanceWrapper";
 
@@ -69,6 +70,7 @@ const AppContent = () => {
 
   return (
     <div className="min-h-screen bg-background font-sans antialiased">
+      <ScrollProgressBar />
       <SEORedirectHandler />
       <AdvancedSEOManager />
       <AccessibilityEnhancer />

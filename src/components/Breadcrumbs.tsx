@@ -61,35 +61,51 @@ const Breadcrumbs = () => {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200" aria-label="Breadcrumb">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center space-x-2 py-3">
-          <ol className="flex items-center space-x-2 text-sm">
-            {breadcrumbs.map((item, index) => (
-              <li key={item.href} className="flex items-center">
-                {index > 0 && (
-                  <ChevronRight className="h-4 w-4 text-gray-400 mx-2" aria-hidden="true" />
-                )}
-                
-                {item.current ? (
-                  <span className="text-gray-500 font-medium" aria-current="page">
-                    {item.label}
-                  </span>
-                ) : (
-                  <Link
-                    to={item.href}
-                    className="text-blue-600 hover:text-blue-800 transition-colors duration-200 flex items-center"
-                  >
-                    {index === 0 && <Home className="h-4 w-4 mr-1" />}
-                    {item.label}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ol>
+    <>
+      {/* Schema.org markup for breadcrumbs */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: breadcrumbs.map((item, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: item.label,
+            item: `${window.location.origin}${item.href}`
+          }))
+        })}
+      </script>
+      
+      <nav className="bg-background/80 backdrop-blur-sm border-b border-border" aria-label="Breadcrumb">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center space-x-2 py-3">
+            <ol className="flex items-center space-x-2 text-sm">
+              {breadcrumbs.map((item, index) => (
+                <li key={item.href} className="flex items-center">
+                  {index > 0 && (
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground mx-1.5" aria-hidden="true" />
+                  )}
+                  
+                  {item.current ? (
+                    <span className="text-foreground font-semibold" aria-current="page">
+                      {item.label}
+                    </span>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="text-primary hover:text-primary/80 transition-all duration-200 flex items-center hover:underline underline-offset-2"
+                    >
+                      {index === 0 && <Home className="h-4 w-4 mr-1" />}
+                      {item.label}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 
