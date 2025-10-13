@@ -53,7 +53,7 @@ const ChatPage: React.FC = () => {
   }, [user?.id]);
 
   return (
-    <div className="h-screen bg-white">
+    <div className="h-screen bg-background">
       <Helmet>
         <title>Chat - GymSpaYoga.com</title>
         <meta name="description" content="Real-time chat with businesses and trainers. Get instant quotes and book services directly through our modern chat interface." />
@@ -64,7 +64,7 @@ const ChatPage: React.FC = () => {
       <div className="flex h-full">
         {/* Desktop: Always show both panels. Mobile: Show conditionally */}
         <div className={`
-          w-full md:w-1/3 border-r border-gray-200 
+          w-full md:w-1/3 border-r border-border 
           ${showChatList ? 'block' : 'hidden md:block'}
         `}>
           <ChatSidebar 
@@ -82,7 +82,7 @@ const ChatPage: React.FC = () => {
           ${showChatList ? 'hidden md:block' : 'block'}
         `}>
           {selectedRoom && (
-            <div className="md:hidden flex items-center p-4 border-b border-gray-200 bg-white">
+            <div className="md:hidden flex items-center p-4 border-b border-border bg-card">
               <Button
                 variant="ghost"
                 size="sm"

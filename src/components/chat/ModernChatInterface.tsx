@@ -210,12 +210,12 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
 
   if (!selectedRoom) {
     return (
-      <div className="h-full flex flex-col items-center justify-center bg-gray-50 text-center p-8">
-        <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center mb-6">
-          <MessageCircle className="h-16 w-16 text-gray-400" />
+      <div className="h-full flex flex-col items-center justify-center bg-muted/30 text-center p-8">
+        <div className="w-32 h-32 bg-muted rounded-full flex items-center justify-center mb-6">
+          <MessageCircle className="h-16 w-16 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-semibold text-gray-700 mb-2">Select a Chat</h3>
-        <p className="text-gray-500 max-w-sm">
+        <h3 className="text-xl font-semibold text-foreground mb-2">Select a Chat</h3>
+        <p className="text-muted-foreground max-w-sm">
           Choose a conversation from the list to start messaging
         </p>
       </div>
@@ -224,27 +224,27 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
 
   return (
     <ErrorBoundary>
-      <div className="h-full bg-white flex flex-col">
+      <div className="h-full bg-background flex flex-col">
         {/* Sticky Header */}
-        <div className="p-4 border-b border-gray-200 bg-white">
+        <div className="p-4 border-b border-border bg-card">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Avatar className="h-10 w-10 mr-3">
                 <AvatarImage src={selectedRoom.other_party_avatar || "/placeholder.svg"} />
-                <AvatarFallback className="bg-gray-300 text-gray-700">
+                <AvatarFallback className="bg-muted text-muted-foreground">
                   {selectedRoom.other_party_name ? selectedRoom.other_party_name.charAt(0).toUpperCase() : 'U'}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="font-medium text-gray-900">
+                <h3 className="font-medium text-foreground">
                   {selectedRoom.other_party_name || `${selectedRoom.room_type === "business" ? "Business" : "Trainer"}`}
                   {selectedRoom.other_party_category && (
-                    <span className="ml-2 px-2 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full">
+                    <span className="ml-2 px-2 py-0.5 text-xs bg-muted text-muted-foreground rounded-full">
                       {selectedRoom.other_party_category}
                     </span>
                   )}
                 </h3>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {selectedRoom.other_party_online ? 'Online' : 'Offline'}
                 </p>
               </div>
@@ -254,7 +254,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
               {isOwner && (
                 <Dialog open={quoteOpen} onOpenChange={setQuoteOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                    <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                       <DollarSign className="h-4 w-4 mr-1" />
                       Quote
                     </Button>
@@ -285,7 +285,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                       />
                     </div>
                     <DialogFooter>
-                      <Button onClick={handleSendQuote} className="w-full bg-blue-500 hover:bg-blue-600">
+                      <Button onClick={handleSendQuote} className="w-full bg-primary hover:bg-primary/90">
                         Send Quote
                       </Button>
                     </DialogFooter>
@@ -300,14 +300,14 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
         </div>
 
         {/* Messages Area */}
-        <ScrollArea className="flex-1 bg-gray-50">
+        <ScrollArea className="flex-1 bg-muted/30">
           <div className="p-4">
             {error ? (
               <div className="flex items-center justify-center h-full">
                 <div className="text-center p-8">
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                    <p className="text-red-600 font-medium mb-2">⚠️ Unable to load messages</p>
-                    <p className="text-red-500 text-sm">{error}</p>
+                  <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-4">
+                    <p className="text-destructive font-medium mb-2">⚠️ Unable to load messages</p>
+                    <p className="text-destructive/80 text-sm">{error}</p>
                     <Button 
                       onClick={() => selectedRoom && fetchMessages(selectedRoom.id)}
                       variant="outline" 
@@ -323,7 +323,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
               <div key={dateKey}>
                 {/* Date Divider */}
                 <div className="flex justify-center my-4">
-                  <div className="bg-white px-3 py-1 rounded-full text-xs text-gray-500 shadow-sm">
+                  <div className="bg-card px-3 py-1 rounded-full text-xs text-muted-foreground shadow-sm border border-border">
                     {dateKey}
                   </div>
                 </div>
@@ -339,7 +339,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                         <div className={`max-w-xs lg:max-w-md ${mine ? 'order-2' : 'order-1'}`}>
                           {isQuote ? (
                             <div className={`rounded-2xl p-4 shadow-sm ${
-                              mine ? 'bg-blue-500 text-white' : 'bg-white text-gray-900 border'
+                              mine ? 'bg-primary text-primary-foreground' : 'bg-card text-foreground border border-border'
                             }`}>
                               <div className="flex items-center gap-2 mb-2">
                                 <DollarSign className="h-4 w-4" />
@@ -358,7 +358,7 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                                     size="sm" 
                                     onClick={() => handleConfirm(message)} 
                                     disabled={confirmingId === message.id}
-                                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
                                   >
                                     <Calendar className="h-3 w-3 mr-1" />
                                     {confirmingId === message.id ? "Confirming..." : "Accept & Book"}
@@ -369,8 +369,8 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                           ) : (
                             <div className={`rounded-2xl px-4 py-2 shadow-sm ${
                               mine 
-                                ? 'bg-blue-500 text-white' 
-                                : 'bg-gray-200 text-black'
+                                ? 'bg-primary text-primary-foreground' 
+                                : 'bg-muted text-foreground'
                             }`}>
                               <div className="break-words">{message.message}</div>
                             </div>
@@ -378,15 +378,15 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                           
                           {/* Timestamp and status */}
                           <div className={`flex items-center gap-1 mt-1 px-2 ${mine ? 'justify-end' : 'justify-start'}`}>
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-muted-foreground">
                               {formatTime(message.created_at)}
                             </span>
                             {mine && (
                               <div className="flex items-center">
                                 {message.is_read ? (
-                                  <CheckCheck className="h-3 w-3 text-blue-500" />
+                                  <CheckCheck className="h-3 w-3 text-primary" />
                                 ) : (
-                                  <Clock className="h-3 w-3 text-gray-400" />
+                                  <Clock className="h-3 w-3 text-muted-foreground" />
                                 )}
                               </div>
                             )}

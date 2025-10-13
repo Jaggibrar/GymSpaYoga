@@ -67,11 +67,11 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
   const getCategoryBadge = (category: string | undefined, businessType: string | undefined) => {
     const type = category || businessType || '';
     const badgeColor = {
-      'gym': 'bg-red-100 text-red-800',
-      'spa': 'bg-pink-100 text-pink-800', 
-      'yoga': 'bg-purple-100 text-purple-800',
-      'trainer': 'bg-blue-100 text-blue-800',
-      'business': 'bg-gray-100 text-gray-800'
+      'gym': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+      'spa': 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300', 
+      'yoga': 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+      'trainer': 'bg-primary/10 text-primary dark:bg-primary/20',
+      'business': 'bg-muted text-muted-foreground'
     };
     
     const displayType = type.toLowerCase();
@@ -104,19 +104,19 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
 
   return (
     <ErrorBoundary>
-      <div className="h-full bg-white flex flex-col">
+      <div className="h-full bg-background flex flex-col">
         {/* Header */}
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-semibold text-gray-900 mb-4">Chats</h1>
+        <div className="p-4 border-b border-border bg-card">
+          <h1 className="text-xl font-semibold text-foreground mb-4">Chats</h1>
           
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-gray-100 border-0 rounded-lg"
+              className="pl-10 bg-muted border-0 rounded-lg text-foreground"
             />
           </div>
         </div>
@@ -127,25 +127,25 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
             <div className="p-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <div key={i} className="flex items-center p-3 animate-pulse">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-3" />
+                  <div className="w-12 h-12 bg-muted rounded-full mr-3" />
                   <div className="flex-1">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                    <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                    <div className="h-3 bg-muted rounded w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : error ? (
             <div className="p-8 text-center">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-red-600 font-medium mb-2">⚠️ Unable to load chats</p>
-                <p className="text-red-500 text-sm">{error}</p>
-                <p className="text-red-400 text-xs mt-2">Please check your connection and try again</p>
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-4">
+                <p className="text-destructive font-medium mb-2">⚠️ Unable to load chats</p>
+                <p className="text-destructive/80 text-sm">{error}</p>
+                <p className="text-destructive/60 text-xs mt-2">Please check your connection and try again</p>
               </div>
             </div>
           ) : filteredRooms.length === 0 ? (
             <div className="p-8 text-center">
-              <div className="text-gray-500 mb-4">
+              <div className="text-muted-foreground mb-4">
                 <MessageCircle className="h-12 w-12 mx-auto mb-2" />
                 <p>{searchQuery ? 'No matching conversations' : 'No chats yet'}</p>
                 <p className="text-sm mt-2">
@@ -167,21 +167,21 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                     <button
                       onClick={() => onRoomSelect(room)}
                       className={cn(
-                        "w-full p-3 flex items-center hover:bg-gray-50 transition-colors border-b border-gray-100",
-                        isSelected && "bg-blue-50"
+                        "w-full p-3 flex items-center hover:bg-accent/50 transition-colors border-b border-border",
+                        isSelected && "bg-accent border-l-4 border-l-primary"
                       )}
                     >
                       {/* Profile Picture */}
                       <div className="relative mr-3">
                         <Avatar className="h-12 w-12">
                           <AvatarImage src={room.other_party_avatar || "/placeholder.svg"} />
-                          <AvatarFallback className="bg-gray-300 text-gray-700">
+                          <AvatarFallback className="bg-muted text-muted-foreground">
                             {getInitials(room.other_party_name, room.room_type)}
                           </AvatarFallback>
                         </Avatar>
                         {/* Online indicator */}
                         {room.other_party_online && (
-                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-card" />
                         )}
                       </div>
                       
@@ -191,24 +191,24 @@ const ChatSidebar: React.FC<ChatSidebarProps> = ({
                           <div className="flex items-center gap-2 min-w-0 flex-1">
                             <div className="flex items-center gap-1">
                               {getCategoryIcon(room.other_party_category, room.business_type)}
-                              <h3 className="font-medium text-gray-900 truncate">
+                              <h3 className="font-medium text-foreground truncate">
                                 {room.other_party_name || (room.room_type === 'business' ? 'Business' : 'Trainer')}
                               </h3>
                             </div>
                             {getCategoryBadge(room.other_party_category, room.business_type)}
                           </div>
-                          <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                          <span className="text-xs text-muted-foreground ml-2 flex-shrink-0">
                             {formatLastUpdated(room.last_message_time || room.updated_at)}
                           </span>
                         </div>
                         
                         {/* Last Message and Unread Badge */}
                         <div className="flex items-center justify-between">
-                          <p className="text-sm text-gray-600 truncate">
+                          <p className="text-sm text-muted-foreground truncate">
                             {room.last_message || 'Start a conversation'}
                           </p>
                           {unreadCount > 0 && (
-                            <div className="bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ml-2">
+                            <div className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium ml-2">
                               {unreadCount > 9 ? '9+' : unreadCount}
                             </div>
                           )}

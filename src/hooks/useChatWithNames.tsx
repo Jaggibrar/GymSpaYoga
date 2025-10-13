@@ -189,7 +189,7 @@ export const useChatWithNames = () => {
         .from('chat_messages')
         .select(`
           *,
-          user_profiles!sender_id (
+          user_profiles!chat_messages_sender_id_fkey (
             full_name,
             avatar_url
           )
@@ -244,7 +244,7 @@ export const useChatWithNames = () => {
         }])
         .select(`
           *,
-          user_profiles!sender_id (
+          user_profiles!chat_messages_sender_id_fkey (
             full_name,
             avatar_url
           )
