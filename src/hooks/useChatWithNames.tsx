@@ -49,35 +49,7 @@ export const useChatWithNames = () => {
   const [typingUsers, setTypingUsers] = useState<Record<string, string>>({});
   const { user } = useAuth();
 
-  // Helper function to get user's business IDs
-  const getUserBusinessIds = async (): Promise<string> => {
-    if (!user) return '';
-    try {
-      const { data } = await supabase
-        .from('business_profiles')
-        .select('id')
-        .eq('user_id', user.id);
-      return (data || []).map(b => b.id).join(',') || 'none';
-    } catch {
-      return 'none';
-    }
-  };
-
-  // Helper function to get user's trainer IDs
-  const getUserTrainerIds = async (): Promise<string> => {
-    if (!user) return '';
-    try {
-      const { data } = await supabase
-        .from('trainer_profiles')
-        .select('id')
-        .eq('user_id', user.id);
-      return (data || []).map(t => t.id).join(',') || 'none';
-    } catch {
-      return 'none';
-    }
-  };
-
-  // Enhanced fetch with proper business/trainer names
+  // Enhanced fetch with proper business/trainer names AND owner visibility
   const fetchChatRooms = useCallback(async (retryCount = 0) => {
     if (!user) {
       setLoading(false);
@@ -88,18 +60,29 @@ export const useChatWithNames = () => {
       setLoading(true);
       setError(null);
 
-      // Get basic rooms first
+      // Get user's owned businesses and trainers
+      const [{ data: ownedBusinesses }, { data: ownedTrainers }] = await Promise.all([
+        supabase.from('business_profiles').select('id').eq('user_id', user.id),
+        supabase.from('trainer_profiles').select('id').eq('user_id', user.id)
+      ]);
+
+      const ownedBusinessIds = (ownedBusinesses || []).map(b => b.id);
+      const ownedTrainerIds = (ownedTrainers || []).map(t => t.id);
+
+      // Get all active rooms
       const { data: rooms, error: roomsError } = await supabase
         .from('chat_rooms')
         .select('*')
         .eq('status', 'active')
-        .limit(20);
+        .limit(50);
 
       if (roomsError) throw roomsError;
 
-      // Filter rooms for current user
+      // Filter rooms: user is customer OR user owns the business/trainer
       const userRooms = (rooms || []).filter(room => 
-        room.user_id === user.id
+        room.user_id === user.id || 
+        (room.business_id && ownedBusinessIds.includes(room.business_id)) ||
+        (room.trainer_id && ownedTrainerIds.includes(room.trainer_id))
       );
 
       // Get business and trainer names in parallel
@@ -296,7 +279,7 @@ export const useChatWithNames = () => {
         }])
         .select(`
           *,
-          user_profiles!sender_id (
+          user_profiles!chat_messages_sender_id_fkey (
             full_name,
             avatar_url
           )
@@ -482,6 +465,56 @@ export const useChatWithNames = () => {
 
     return () => {
       supabase.removeChannel(channel);
+    };
+  }, [user?.id]);
+
+  // Real-time chat list updates
+  useEffect(() => {
+    if (!user) return;
+
+    const messagesChannel = supabase
+      .channel('all-chat-messages')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'chat_messages'
+      }, (payload) => {
+        const newMsg: any = payload.new;
+        // Update last message in chat rooms
+        setChatRooms(prev => prev.map(room => 
+          room.id === newMsg.chat_room_id 
+            ? { 
+                ...room, 
+                last_message: newMsg.message.substring(0, 50),
+                last_message_time: newMsg.created_at,
+                unread_count: newMsg.sender_id !== user.id ? (room.unread_count || 0) + 1 : room.unread_count
+              }
+            : room
+        ));
+      })
+      .subscribe();
+
+    const statusChannel = supabase
+      .channel('owner-status-changes')
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'owner_status'
+      }, (payload) => {
+        const status: any = payload.new;
+        setChatRooms(prev => prev.map(room => {
+          // Check if this status update is for the business/trainer owner of this room
+          if (room.business_id || room.trainer_id) {
+            return { ...room, other_party_online: status.is_online };
+          }
+          return room;
+        }));
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(messagesChannel);
+      supabase.removeChannel(statusChannel);
     };
   }, [user?.id]);
 

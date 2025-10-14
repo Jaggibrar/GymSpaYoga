@@ -402,11 +402,11 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
             {/* Typing Indicator */}
             {Object.keys(typingUsers).filter(userId => userId !== user?.id).length > 0 && (
               <div className="flex justify-start mb-4">
-                <div className="bg-gray-200 rounded-2xl px-4 py-2">
+                <div className="bg-muted rounded-2xl px-4 py-2">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                    <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                    <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                   </div>
                 </div>
               </div>
@@ -417,10 +417,10 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
         </ScrollArea>
 
         {/* Sticky Footer - Input Bar */}
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="p-4 border-t border-border bg-card">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="p-2">
-              <Smile className="h-5 w-5 text-gray-400" />
+            <Button variant="ghost" size="sm" className="p-2 text-muted-foreground hover:text-foreground">
+              <Smile className="h-5 w-5" />
             </Button>
             <Input
               ref={inputRef}
@@ -431,14 +431,14 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
                 handleTypingIndicator(e.target.value);
               }}
               onKeyPress={handleKeyPress}
-              className="flex-1 rounded-full border-gray-300 bg-gray-100"
+              className="flex-1 rounded-full border-border bg-muted text-foreground placeholder:text-muted-foreground"
               disabled={loading}
             />
             <Button 
               onClick={handleSend}
               disabled={!newMessage.trim() || loading}
               size="sm"
-              className="rounded-full p-2 bg-blue-500 hover:bg-blue-600 text-white"
+              className="rounded-full p-2 bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               <Send className="h-4 w-4" />
             </Button>

@@ -11,6 +11,8 @@ import SEOHead from '@/components/SEOHead';
 import BookingForm from '@/components/booking/BookingForm';
 import { useChat } from '@/hooks/useChat';
 import { useAuth } from '@/hooks/useAuth';
+import { BusinessStructuredData } from '@/components/SEO/BusinessStructuredData';
+import { generateImageAlt, getImageLoadingStrategy, getImageFetchPriority } from '@/utils/imageOptimization';
 
 interface Business {
   id: string;
@@ -20,6 +22,7 @@ interface Business {
   address: string;
   city: string;
   state: string;
+  pin_code: string;
   phone: string;
   email: string;
   opening_time: string;
@@ -150,6 +153,7 @@ const BusinessDetails = () => {
         description={business.description || `Book ${business.business_name} - Professional ${business.business_type} services in ${business.city}, ${business.state}`}
         keywords={`${business.business_type}, ${business.city}, fitness, wellness, booking`}
       />
+      <BusinessStructuredData business={business} />
       
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
@@ -245,7 +249,9 @@ const BusinessDetails = () => {
                         <img
                           key={index}
                           src={url}
-                          alt={`${business.business_name} ${index + 1}`}
+                          alt={generateImageAlt(business.business_name, business.business_type, business.category, `${business.city}, ${business.state}`)}
+                          loading={getImageLoadingStrategy(index)}
+                          fetchPriority={getImageFetchPriority(index)}
                           className="w-full h-48 object-cover rounded-lg"
                         />
                       ))}

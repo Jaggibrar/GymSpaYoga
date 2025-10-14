@@ -25,9 +25,10 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-dialog', '@radix-ui/react-popover', '@radix-ui/react-select'],
-          utils: ['clsx', 'tailwind-merge', 'date-fns']
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-select', '@radix-ui/react-scroll-area'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-utils': ['clsx', 'tailwind-merge', 'date-fns']
         }
       }
     },

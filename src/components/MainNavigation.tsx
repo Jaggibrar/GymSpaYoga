@@ -34,7 +34,7 @@ const MainNavigation = () => {
 
   return (
     <nav 
-      className={`bg-white/95 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-white/20 transition-all duration-300 ${
+      className={`bg-background/95 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-border dark:bg-card/95 transition-all duration-300 ${
         shouldHide ? '-translate-y-full' : 'translate-y-0'
       } ${isScrolled ? 'shadow-strong' : 'shadow-lg'}`}
     >
@@ -61,40 +61,40 @@ const MainNavigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link 
               to="/gyms" 
-              className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors ${
-                isActive('/gyms') ? 'text-emerald-600' : ''
+              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
+                isActive('/gyms') ? 'text-primary after:w-full' : ''
               }`}
             >
               Gyms
             </Link>
             <Link 
               to="/spas" 
-              className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors ${
-                isActive('/spas') ? 'text-emerald-600' : ''
+              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
+                isActive('/spas') ? 'text-primary after:w-full' : ''
               }`}
             >
               Spas
             </Link>
             <Link 
               to="/yoga" 
-              className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors ${
-                isActive('/yoga') ? 'text-emerald-600' : ''
+              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
+                isActive('/yoga') ? 'text-primary after:w-full' : ''
               }`}
             >
               Yoga
             </Link>
             <Link 
               to="/trainers" 
-              className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors ${
-                isActive('/trainers') ? 'text-emerald-600' : ''
+              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
+                isActive('/trainers') ? 'text-primary after:w-full' : ''
               }`}
             >
               Trainers
             </Link>
             <Link 
               to="/explore" 
-              className={`text-gray-700 hover:text-emerald-600 font-medium transition-colors ${
-                isActive('/explore') ? 'text-emerald-600' : ''
+              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
+                isActive('/explore') ? 'text-primary after:w-full' : ''
               }`}
             >
               Explore
@@ -125,12 +125,12 @@ const MainNavigation = () => {
                     <span className="hidden sm:inline">Account</span>
                   </Button>
                   
-                  {/* Dropdown Menu */}
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-xl border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                   {/* Dropdown Menu */}
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-xl border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="py-2">
                       <Link 
                         to="/profile" 
-                        className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                        className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
                       >
                         <User className="h-4 w-4" />
                         <span>Profile</span>
@@ -138,7 +138,7 @@ const MainNavigation = () => {
                       {isAdmin && (
                         <Link 
                           to="/admin-dashboard" 
-                          className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                          className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
                         >
                           <Settings className="h-4 w-4" />
                           <span>Admin Dashboard</span>
@@ -146,22 +146,22 @@ const MainNavigation = () => {
                       )}
                        <Link 
                          to="/my-blogs" 
-                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                         className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
                        >
                          <Edit className="h-4 w-4" />
                          <span>My Blogs</span>
                        </Link>
                        <Link 
                          to="/business-dashboard" 
-                         className="flex items-center space-x-2 px-4 py-2 text-gray-700 hover:bg-gray-50"
+                         className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
                        >
                          <Building className="h-4 w-4" />
                          <span>Business Dashboard</span>
                        </Link>
-                      <hr className="my-2" />
+                      <hr className="my-2 border-border" />
                       <button 
                         onClick={handleSignOut}
-                        className="flex items-center space-x-2 px-4 py-2 text-red-600 hover:bg-red-50 w-full text-left"
+                        className="flex items-center space-x-2 px-4 py-2 text-destructive hover:bg-destructive/10 w-full text-left transition-colors"
                       >
                         <LogOut className="h-4 w-4" />
                         <span>Sign Out</span>
@@ -173,12 +173,12 @@ const MainNavigation = () => {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link to="/login">
-                  <Button variant="ghost" className="text-gray-700 hover:text-emerald-600">
+                  <Button variant="ghost" className="text-foreground hover:text-primary">
                     Sign In
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white">
+                  <Button className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground">
                     Get Started
                   </Button>
                 </Link>
@@ -199,70 +199,70 @@ const MainNavigation = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-3">
               <Link 
                 to="/gyms" 
-                className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Gyms
               </Link>
               <Link 
                 to="/spas" 
-                className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Spas
               </Link>
               <Link 
                 to="/yoga" 
-                className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Yoga
               </Link>
               <Link 
                 to="/trainers" 
-                className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Trainers
               </Link>
               <Link 
                 to="/explore" 
-                className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Explore
               </Link>
               {user && (
                 <>
-                  <hr className="my-2" />
+                  <hr className="my-2 border-border" />
                   <Link 
                     to="/profile" 
-                    className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                    className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                    <Link 
                      to="/my-blogs" 
-                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                     className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                      onClick={() => setIsMenuOpen(false)}
                    >
                      My Blogs
                    </Link>
                    <Link 
                      to="/business-dashboard" 
-                     className="text-gray-700 hover:text-emerald-600 font-medium px-2 py-1"
+                     className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                      onClick={() => setIsMenuOpen(false)}
                    >
                      Business Dashboard
                    </Link>
                   <button 
                     onClick={handleSignOut}
-                    className="text-red-600 hover:text-red-700 font-medium px-2 py-1 text-left"
+                    className="text-destructive hover:opacity-80 font-medium px-2 py-1 text-left transition-opacity"
                   >
                     Sign Out
                   </button>

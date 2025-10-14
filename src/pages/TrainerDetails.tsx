@@ -15,6 +15,8 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { useChat } from '@/hooks/useChat';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { TrainerStructuredData } from '@/components/SEO/TrainerStructuredData';
+import { generateImageAlt, getImageLoadingStrategy, getImageFetchPriority } from '@/utils/imageOptimization';
 
 const TrainerDetails = () => {
   const { id } = useParams();
@@ -116,6 +118,7 @@ const TrainerDetails = () => {
         description={`Book a session with ${trainer.name}, a certified personal trainer with ${trainer.experience} years of experience. Specializing in ${trainer.specializations.join(', ')}.`}
         keywords={`personal trainer, ${trainer.name}, fitness coach, ${trainer.specializations.join(', ')}, ${trainer.location}`}
       />
+      <TrainerStructuredData trainer={trainer} />
       <div className="animate-fade-in">
         <ListingLayout
         backLink="/trainers"
