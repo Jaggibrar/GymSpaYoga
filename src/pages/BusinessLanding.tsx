@@ -113,50 +113,64 @@ const BusinessLanding = () => {
       />
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-gradient-to-br from-purple-50 via-blue-50 to-cyan-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <div className="mb-6">
-                <Badge className="bg-orange-100 text-orange-700 px-4 py-2 text-lg font-bold mb-4">
-                  🚀 Beta Launch - Limited to 100 Businesses
+                <Badge className="bg-cyan-100 text-cyan-700 px-4 py-2 text-sm font-medium mb-4 inline-flex items-center gap-2 rounded-full">
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+                  </svg>
+                  For Business Owners
                 </Badge>
-                <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6">
-                  Be a Founding Partner of
-                  <span className="block text-transparent bg-gradient-to-r from-blue-600 to-emerald-500 bg-clip-text">
-                    India's Next Big Fitness Platform
-                  </span>
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                  List Your Wellness Business on FIT Friend
                 </h1>
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  We're launching soon! Join our beta program and
-                  <span className="font-bold text-emerald-600"> lock in ₹20/lead pricing forever.</span>
-                  <span className="block mt-2 text-lg">No customers yet, but big dreams and solid tech.</span>
+                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                  Join hundreds of successful wellness businesses already growing their client base with FIT Friend. Easy setup, powerful tools, real results.
                 </p>
               </div>
 
+              {/* Benefits List */}
               <div className="space-y-4 mb-8">
-                {[
-                  "✅ First 100 businesses get lifetime beta pricing",
-                  "✅ Direct founder support during setup",
-                  "✅ Shape the platform with your feedback",
-                  "✅ Premium features included at launch"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center text-lg">
-                    <span className="mr-3">{item}</span>
+                <div className="flex items-start gap-3">
+                  <div className="bg-cyan-100 rounded-full p-2">
+                    <Users className="h-6 w-6 text-cyan-600" />
                   </div>
-                ))}
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Reach More Clients</h3>
+                    <p className="text-gray-600 text-sm">Connect with thousands of potential customers</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-cyan-100 rounded-full p-2">
+                    <TrendingUp className="h-6 w-6 text-cyan-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Grow Your Business</h3>
+                    <p className="text-gray-600 text-sm">Increase bookings and revenue</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="bg-cyan-100 rounded-full p-2">
+                    <Shield className="h-6 w-6 text-cyan-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Verified Listings</h3>
+                    <p className="text-gray-600 text-sm">Build trust with verified badges</p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
                 <Link to="/register-business">
-                  <Button size="xl" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white font-black px-8 py-4 text-xl">
-                    Join Beta Program
-                    <ArrowRight className="ml-2 h-6 w-6" />
+                  <Button size="lg" className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-bold px-8 py-3 text-lg rounded-full">
+                    Get Started Free
                   </Button>
                 </Link>
-                <Button variant="outline" size="xl" className="border-2 border-gray-300 text-gray-700 font-bold px-8 py-4 text-xl">
-                  <PlayCircle className="mr-2 h-6 w-6" />
-                  See Platform Demo
+                <Button variant="outline" size="lg" className="border-2 border-gray-300 text-gray-700 font-semibold px-8 py-3 text-lg rounded-full hover:bg-gray-50">
+                  Learn More
                 </Button>
               </div>
 
@@ -172,63 +186,30 @@ const BusinessLanding = () => {
               </div>
             </div>
 
-            {/* Beta Calculator */}
-            <div className="bg-white rounded-2xl shadow-2xl p-8 border border-gray-200">
-              <div className="text-center mb-6">
-                <Calculator className="h-12 w-12 mx-auto mb-4 text-blue-600" />
-                <h3 className="text-2xl font-bold text-gray-800 mb-2">Beta Partnership Calculator</h3>
-                <p className="text-gray-600">Estimate your potential with our platform</p>
-              </div>
-
+            {/* Mockup Illustration */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-gray-200">
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Expected Monthly Visitors
-                  </label>
-                  <Input
-                    type="number"
-                    value={monthlyVisitors}
-                    onChange={(e) => setMonthlyVisitors(e.target.value)}
-                    className="text-lg"
-                    placeholder="Your estimate"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Target Conversion Rate (%)
-                  </label>
-                  <Input
-                    type="number"
-                    step="0.1"
-                    value={conversionRate}
-                    onChange={(e) => setConversionRate(e.target.value)}
-                    className="text-lg"
-                    placeholder="Your goal"
-                  />
-                </div>
-
-                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-xl p-6 border-l-4 border-emerald-500">
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-black text-emerald-600">{leads}</div>
-                      <div className="text-sm text-gray-600">Potential Leads</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-black text-blue-600">₹{cost.toLocaleString()}</div>
-                      <div className="text-sm text-gray-600">Beta Cost</div>
-                    </div>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="text-center">
-                      <div className="text-3xl font-black text-green-600">₹{potentialRevenue.toLocaleString()}</div>
-                      <div className="text-sm text-gray-600">Projected Revenue</div>
-                      <Badge className="bg-orange-100 text-orange-700 text-xs mt-2">
-                        Beta Pricing Locked Forever
-                      </Badge>
-                    </div>
+                {/* Header mockup */}
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-blue-400"></div>
+                  <div className="space-y-2 flex-1">
+                    <div className="h-3 bg-gray-200 rounded-full w-3/4"></div>
+                    <div className="h-3 bg-gray-200 rounded-full w-1/2"></div>
                   </div>
                 </div>
+                
+                {/* Card mockups */}
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="bg-gradient-to-br from-purple-100 via-blue-100 to-cyan-100 rounded-2xl p-6 space-y-3" style={{animationDelay: `${i * 0.1}s`}}>
+                    <div className="flex gap-3">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 to-purple-400"></div>
+                      <div className="flex-1 space-y-2">
+                        <div className="h-2 bg-white/60 rounded-full w-2/3"></div>
+                        <div className="h-2 bg-white/60 rounded-full w-1/2"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -128,39 +128,58 @@ const Index = () => {
         <div className="container-modern">
           <div className="max-w-6xl mx-auto text-center text-white">
             <div className="mb-8 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl font-bold mb-6 sm:mb-8 leading-tight px-2">
-                Transform Your
-                <span className="block bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-                  Wellness Journey
-                </span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-2">
+                Your Wellness <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">Journey</span> Starts Here
               </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-12 px-4">
-                The world's premier wellness marketplace connecting you with premium gyms, luxury spas, authentic yoga studios, and certified trainers. Your path to holistic health starts here.
+              <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 px-4">
+                Discover gyms, spas, yoga studios, trainers, and therapists near you. Your perfect fitness match is just a search away.
               </p>
             </div>
             
-            {/* Enhanced CTA Buttons */}
-            <div className="flex flex-row flex-wrap items-center justify-center gap-2 sm:gap-4 lg:gap-6 mb-12 sm:mb-16 px-4">
-              <Link to="/gyms" className="inline-flex">
-                <Button size="lg" className="btn-primary text-sm sm:text-base md:text-lg px-4 sm:px-6 lg:px-10 py-3 sm:py-4 md:py-5 text-white bg-gradient-to-r from-orange-500 to-amber-500 hover:scale-105 min-h-[44px] whitespace-nowrap">
-                  <Dumbbell className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
-                  Explore Gyms
-                </Button>
-              </Link>
-              <Link to="/spas" className="inline-flex">
-                <Button size="lg" className="btn-secondary border-2 border-white/80 text-white hover:bg-white/20 text-sm sm:text-base md:text-lg px-4 sm:px-6 lg:px-10 py-3 sm:py-4 md:py-5 min-h-[44px] whitespace-nowrap">
-                  <Waves className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
-                  Find Spas
-                </Button>
-              </Link>
-              <Link to="/yoga" className="inline-flex">
-                <Button size="lg" className="btn-secondary border-2 border-white/80 text-white hover:bg-white/20 text-sm sm:text-base md:text-lg px-4 sm:px-6 lg:px-10 py-3 sm:py-4 md:py-5 min-h-[44px] whitespace-nowrap">
-                  <Heart className="mr-2 sm:mr-3 h-4 w-4 sm:h-5 sm:w-5" />
-                  Yoga Studios
-                </Button>
-              </Link>
+            {/* Search Bar */}
+            <div className="max-w-3xl mx-auto mb-12 px-4">
+              <div className="bg-white rounded-full shadow-2xl p-2 flex flex-col sm:flex-row gap-2">
+                <div className="flex-1 flex items-center px-4">
+                  <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input 
+                    type="text" 
+                    placeholder="Search for gyms, spas, yoga..." 
+                    className="w-full outline-none text-gray-800 placeholder-gray-500"
+                  />
+                </div>
+                <div className="flex-1 flex items-center px-4 border-l border-gray-200">
+                  <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+                  <input 
+                    type="text" 
+                    placeholder="Enter your location" 
+                    className="w-full outline-none text-gray-800 placeholder-gray-500"
+                  />
+                </div>
+                <Link to="/explore" className="inline-flex">
+                  <Button className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold px-8 py-3 rounded-full whitespace-nowrap">
+                    Search
+                  </Button>
+                </Link>
+              </div>
             </div>
 
+            {/* Stats */}
+            <div className="flex flex-wrap justify-center gap-8 px-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-cyan-400">500+</div>
+                <div className="text-sm text-white/80">Verified Businesses</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-orange-400">10k+</div>
+                <div className="text-sm text-white/80">Happy Members</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-400">50+</div>
+                <div className="text-sm text-white/80">Cities Covered</div>
+              </div>
+            </div>
           </div>
         </div>
       </HeroCarousel>

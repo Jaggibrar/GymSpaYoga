@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { MapPin, Clock, Star, Crown, Diamond, IndianRupee, Shield, Award } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
@@ -184,11 +185,14 @@ const RecentListings = () => {
 
   // Always show the section, even if no listings
   return (
-    <section className="py-6 sm:py-8 bg-gray-50">
+    <section className="py-12 sm:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-4 sm:mb-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Recently Listed</h2>
-          <p className="text-base sm:text-lg text-gray-600">Discover the newest wellness destinations in your area</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Featured Near You</h2>
+            <p className="text-base text-gray-600">Top-rated wellness providers in your area</p>
+          </div>
+          <Button variant="outline" className="hidden sm:inline-flex">View All</Button>
         </div>
 
         {listings.length === 0 ? (
@@ -197,105 +201,78 @@ const RecentListings = () => {
             <p className="text-sm text-gray-500">Check back soon for new wellness destinations!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
-            {listings.map((listing) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {listings.slice(0, 4).map((listing) => (
               <Card 
                 key={listing.id} 
-                className="w-full max-w-sm overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer hover:-translate-y-2 rounded-xl border-0 shadow-md"
+                className="overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer rounded-2xl border border-gray-200"
                 onClick={() => handleCardClick(listing)}
               >
-                <div className="relative h-48 sm:h-56 w-full overflow-hidden rounded-t-xl">
+                <div className="relative h-52 w-full overflow-hidden">
                   <OptimizedImage 
                     src={listing.image_urls[0] || "/placeholder.svg"} 
                     alt={listing.business_name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     width={400}
-                    height={224}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    height={208}
                   />
                   
-                  {/* Favorite Button - Top Left */}
-                  <div className="absolute top-2 sm:top-3 left-2 sm:left-3">
-                    <FavoriteButton 
-                      businessId={listing.id} 
-                      size="sm"
-                      className="bg-white/90 hover:bg-white shadow-md"
-                    />
-                  </div>
-
-                  {/* Business Type Badge - Top Center */}
-                  <div className="absolute top-2 sm:top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className={`${getBusinessTypeColor(listing.business_type)} px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold shadow-lg`}>
-                      {listing.business_type.toUpperCase()}
+                  {/* Featured Badge - Top Right */}
+                  <div className="absolute top-3 right-3">
+                    <Badge className="bg-orange-500 text-white px-3 py-1 text-sm font-bold rounded-full">
+                      Featured
                     </Badge>
                   </div>
 
-                  {/* Verified Badge & Tier - Top Right */}
-                  <div className="absolute top-2 sm:top-3 right-2 sm:right-3 flex flex-col gap-1">
-                    <Badge className="bg-green-500 text-white px-2 py-1 shadow-lg text-xs flex items-center gap-1">
-                      <Shield className="h-3 w-3" />
-                      Verified
-                    </Badge>
-                    <Badge className={`${getTierColor(listing.monthly_price || listing.session_price)} text-white px-2 py-1 shadow-lg`}>
-                      {getTierIcon(listing.monthly_price || listing.session_price)}
-                    </Badge>
+                  {/* Favorite Button - Bottom Left */}
+                  <div className="absolute bottom-3 left-3">
+                    <div className="bg-white rounded-full p-2 shadow-lg">
+                      <FavoriteButton 
+                        businessId={listing.id} 
+                        size="sm"
+                      />
+                    </div>
                   </div>
                 </div>
                 
-                <CardContent className="p-4 sm:p-6 space-y-3 sm:space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="font-bold text-lg sm:text-xl text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
+                <CardContent className="p-5 space-y-3">
+                  <div>
+                    <h3 className="font-bold text-xl text-gray-900 mb-2 line-clamp-1">
                       {listing.business_name}
                     </h3>
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
-                      <span className="text-sm font-medium">{listing.city}, {listing.state}</span>
+                    
+                    {/* Rating */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-orange-500 fill-orange-500" />
+                        <span className="text-sm font-semibold text-gray-900 ml-1">4.9</span>
+                        <span className="text-sm text-gray-500 ml-1">(89)</span>
+                      </div>
                     </div>
-                  </div>
-                  
-                  {/* Price Tags */}
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {listing.monthly_price && (
-                      <Badge className="bg-primary/10 text-primary border-primary/20 px-2 py-1 text-xs font-medium">
-                        ₹{listing.monthly_price}/month
-                      </Badge>
-                    )}
-                    {listing.session_price && (
-                      <Badge className="bg-secondary/10 text-secondary-foreground border-secondary/20 px-2 py-1 text-xs font-medium">
-                        ₹{listing.session_price}/session
-                      </Badge>
-                    )}
-                  </div>
-                  
-                  {/* Amenities */}
-                  {listing.amenities && listing.amenities.length > 0 && (
-                    <div className="flex flex-wrap gap-1 pt-2">
-                      {listing.amenities.slice(0, 3).map((amenity, index) => (
-                        <Badge 
-                          key={index}
-                          variant="outline"
-                          className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-muted"
-                        >
-                          {amenity}
-                        </Badge>
-                      ))}
-                      {listing.amenities.length > 3 && (
-                        <Badge 
-                          variant="outline"
-                          className="text-xs px-2 py-1 bg-muted/50 text-muted-foreground border-muted"
-                        >
-                          +{listing.amenities.length - 3} more
-                        </Badge>
-                      )}
+
+                    {/* Location */}
+                    <div className="flex items-center text-gray-600 mb-2">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      <span className="text-sm">{listing.city}, {listing.state}</span>
                     </div>
-                  )}
-                  
-                  <div className="flex items-center justify-end pt-2">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="text-sm font-medium text-gray-600">4.8</span>
-                      <Award className="h-4 w-4 text-blue-500 ml-2" />
+
+                    {/* Hours */}
+                    <div className="flex items-center text-gray-600 mb-3">
+                      <Clock className="h-4 w-4 mr-1" />
+                      <span className="text-sm">6 AM - 9 PM</span>
                     </div>
+
+                    {/* Price */}
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-gray-800 font-semibold text-lg">
+                        {listing.monthly_price ? '$$$$' : listing.session_price && listing.session_price > 1500 ? '$$$' : '$$'}
+                      </span>
+                    </div>
+
+                    {/* View Details Button */}
+                    <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 font-medium">
+                      View Details
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
