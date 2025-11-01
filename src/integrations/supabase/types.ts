@@ -1302,7 +1302,7 @@ export type Database = {
           event_data: Json | null
           event_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string | null
         }
@@ -1311,7 +1311,7 @@ export type Database = {
           event_data?: Json | null
           event_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
         }
@@ -1320,7 +1320,7 @@ export type Database = {
           event_data?: Json | null
           event_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
         }
@@ -1683,10 +1683,7 @@ export type Database = {
       }
     }
     Functions: {
-      cleanup_old_notifications: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      cleanup_old_notifications: { Args: never; Returns: number }
       create_chat_booking: {
         Args: {
           p_business_id: string
@@ -1735,30 +1732,20 @@ export type Database = {
           phone: string
         }[]
       }
-      grant_admin_access: {
-        Args: { user_email: string }
-        Returns: boolean
-      }
+      grant_admin_access: { Args: { user_email: string }; Returns: boolean }
       has_admin_permission: {
         Args: { permission_name: string; user_uuid?: string }
         Returns: boolean
       }
-      is_admin: {
-        Args: Record<PropertyKey, never> | { user_uuid?: string }
-        Returns: boolean
-      }
-      is_super_admin: {
-        Args: { user_uuid?: string }
-        Returns: boolean
-      }
+      is_admin:
+        | { Args: { user_uuid?: string }; Returns: boolean }
+        | { Args: never; Returns: boolean }
+      is_super_admin: { Args: { user_uuid?: string }; Returns: boolean }
       log_admin_action: {
         Args: { p_event_data?: Json; p_event_type: string }
         Returns: undefined
       }
-      mark_old_notifications_read: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      mark_old_notifications_read: { Args: never; Returns: number }
       update_booking_status: {
         Args: {
           booking_id_param: number
