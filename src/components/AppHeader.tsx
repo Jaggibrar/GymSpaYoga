@@ -41,27 +41,35 @@ const AppHeader = () => {
     <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2" id="navigation">
-            <div className="h-8 md:h-10 w-8 md:w-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-              <Dumbbell className="h-4 md:h-6 w-4 md:w-6 text-white" />
+          <Link to="/" className="flex items-center gap-2" id="navigation">
+            <div className="h-10 w-10 bg-gradient-to-br from-primary via-accent to-secondary rounded-xl flex items-center justify-center shadow-md">
+              <Dumbbell className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
-              GymSpaYoga
+            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              FIT Friend
             </h1>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 relative group"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-emerald-600 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-8">
+            <Link
+              to="/explore"
+              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
+            >
+              Find Services
+            </Link>
+            <Link
+              to="/explore"
+              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
+            >
+              Categories
+            </Link>
+            <Link
+              to="/business-landing"
+              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
+            >
+              For Business
+            </Link>
           </nav>
           
           <div className="flex items-center space-x-2 md:space-x-4">
@@ -117,15 +125,15 @@ const AppHeader = () => {
                 </div>
               </>
             ) : (
-              <div className="hidden md:flex items-center space-x-2">
+              <div className="hidden md:flex items-center gap-3">
                 <Link to="/login">
-                  <Button variant="outline" className="text-sm">
-                    Login
+                  <Button variant="ghost" className="text-sm font-medium">
+                    Sign In
                   </Button>
                 </Link>
-                <Link to="/signup">
-                  <Button className="text-sm bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
-                    Sign Up
+                <Link to="/register-business">
+                  <Button variant="hero" className="text-sm">
+                    List Your Business
                   </Button>
                 </Link>
               </div>

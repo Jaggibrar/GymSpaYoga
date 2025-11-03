@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Star, Clock, DollarSign } from 'lucide-react';
+import { Search, MapPin, Filter, Star, Clock, DollarSign, Dumbbell } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
@@ -57,79 +57,106 @@ const Explore = () => {
       />
       
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/* Hero Search Section */}
-        <section className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white py-12 sm:py-16">
+        {/* Hero Section */}
+        <section className="py-20 bg-gradient-to-b from-background to-muted/30">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6">Explore Wellness Near You</h1>
-              <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8">
-                Discover amazing gyms, relaxing spas, and peaceful yoga studios in your area
+            <div className="max-w-3xl mx-auto text-center">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6">
+                Find Your Perfect Wellness Service
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground mb-8">
+                Browse through our comprehensive directory of wellness services, organized by category and price range
               </p>
-              
-              {/* Search Bar */}
-              <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-2xl">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input
-                      placeholder="What are you looking for?"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 py-3 text-gray-900 min-h-[48px]"
-                    />
-                  </div>
-                  <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input
-                      placeholder="Enter location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 py-3 text-gray-900 min-h-[48px]"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handleSearch}
-                    className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 py-3 min-h-[48px]"
-                  >
-                    <Search className="mr-2 h-5 w-5" />
-                    Search
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* Filters */}
-        <section className="py-6 sm:py-8 bg-white shadow-sm">
+        {/* Category Cards */}
+        <section className="pb-20">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-              <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-                {categories.map((category) => (
-                  <Button
-                    key={category.id}
-                    variant={activeFilter === category.id ? 'default' : 'outline'}
-                    onClick={() => setActiveFilter(category.id)}
-                    className="rounded-full text-xs sm:text-sm px-3 sm:px-4 py-2 min-h-[40px]"
-                  >
-                    {category.name}
-                    <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
-                      {category.count}
-                    </Badge>
-                  </Button>
-                ))}
-              </div>
-              <div className="w-full sm:w-auto">
-                <select 
-                  className="w-full sm:w-auto px-3 sm:px-4 py-2 border border-gray-300 rounded-lg text-sm min-h-[40px]"
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <option value="created_at">Sort by: Latest</option>
-                  <option value="name">Sort by: Name</option>
-                  <option value="price">Sort by: Price</option>
-                </select>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {/* Gyms */}
+              <Link to="/gyms">
+                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
+                      <Dumbbell className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">Gyms</h3>
+                    <p className="text-muted-foreground mb-4">Find fully-equipped fitness centers</p>
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-secondary text-white">150+ Available</Badge>
+                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              {/* Spas */}
+              <Link to="/spas">
+                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4">
+                      <Star className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">Spas</h3>
+                    <p className="text-muted-foreground mb-4">Relaxation and rejuvenation services</p>
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-secondary text-white">80+ Available</Badge>
+                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              {/* Yoga Studios */}
+              <Link to="/yoga">
+                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center mb-4">
+                      <Star className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">Yoga Studios</h3>
+                    <p className="text-muted-foreground mb-4">Mindful movement and meditation</p>
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-secondary text-white">120+ Available</Badge>
+                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              {/* Personal Trainers */}
+              <Link to="/trainers">
+                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
+                      <Clock className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-2">Personal Trainers</h3>
+                    <p className="text-muted-foreground mb-4">One-on-one fitness coaching</p>
+                    <div className="flex items-center justify-between">
+                      <Badge className="bg-secondary text-white">200+ Available</Badge>
+                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+
+              {/* Therapists */}
+              <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-primary flex items-center justify-center mb-4">
+                    <MapPin className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">Therapists</h3>
+                  <p className="text-muted-foreground mb-4">Mental wellness professionals</p>
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-secondary text-white">100+ Available</Badge>
+                    <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
