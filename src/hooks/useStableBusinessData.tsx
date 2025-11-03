@@ -68,9 +68,8 @@ export const useStableBusinessData = (
       setError(null);
 
       let query = supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('*')
-        .eq('status', 'approved')
         .order(sortBy, { ascending: false })
         .limit(50);
 

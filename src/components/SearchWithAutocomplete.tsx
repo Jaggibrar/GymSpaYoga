@@ -86,9 +86,8 @@ const SearchWithAutocomplete: React.FC<SearchWithAutocompleteProps> = ({
   const fetchSuggestions = async (searchQuery: string) => {
     try {
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('id, business_name, business_type, category, city, state')
-        .eq('status', 'approved')
         .or(`business_name.ilike.%${searchQuery}%,city.ilike.%${searchQuery}%,category.ilike.%${searchQuery}%`)
         .limit(8);
 

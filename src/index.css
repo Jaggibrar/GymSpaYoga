@@ -5,87 +5,83 @@
 
 @layer base {
   :root {
-    /* Modern wellness design system */
-    --background: 0 0% 98%;
-    --foreground: 220 15% 10%;
-
+    /* FIT Friend Design System */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 10%;
-
+    --card-foreground: 222.2 84% 4.9%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 10%;
-
-    /* Primary: Sophisticated emerald */
-    --primary: 155 65% 45%;
+    --popover-foreground: 222.2 84% 4.9%;
+    
+    /* Primary: Vibrant Teal/Cyan */
+    --primary: 189 85% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 155 45% 95%;
-    --primary-dark: 155 75% 35%;
-
-    /* Secondary: Warm neutrals */
-    --secondary: 25 15% 95%;
-    --secondary-foreground: 220 15% 25%;
-
-    --muted: 25 10% 96%;
-    --muted-foreground: 220 10% 45%;
-
-    /* Accent: Warm copper */
-    --accent: 25 65% 60%;
+    --primary-glow: 189 85% 60%;
+    
+    /* Secondary: Coral Pink */
+    --secondary: 339 82% 65%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Muted: Light gray backgrounds */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    /* Accent: Purple */
+    --accent: 280 75% 65%;
     --accent-foreground: 0 0% 100%;
-    --accent-light: 25 45% 95%;
-
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 220 15% 90%;
-    --input: 220 15% 95%;
-    --ring: 155 65% 45%;
-
-    /* Wellness color palette */
-    --wellness-sage: 155 25% 65%;
-    --wellness-terracotta: 15 65% 65%;
-    --wellness-cream: 45 35% 92%;
-    --wellness-charcoal: 220 15% 20%;
-    --wellness-gold: 45 85% 70%;
-    --wellness-stone: 25 8% 75%;
-
-    /* Modern gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(var(--wellness-sage) / 0.9), hsl(var(--wellness-terracotta) / 0.8));
-    --gradient-gym: linear-gradient(135deg, hsl(15 75% 55%), hsl(25 85% 65%));
-    --gradient-spa: linear-gradient(135deg, hsl(155 35% 75%), hsl(45 45% 85%));
-    --gradient-yoga: linear-gradient(135deg, hsl(155 45% 65%), hsl(180 35% 75%));
-    --gradient-trainer: linear-gradient(135deg, hsl(25 65% 60%), hsl(45 75% 70%));
-
+    
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 189 85% 45%;
+    
+    /* FIT Friend Design System - Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(189, 85%, 45%), hsl(189, 85%, 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(280, 75%, 65%), hsl(339, 82%, 65%));
+    --gradient-hero: linear-gradient(90deg, hsl(189, 85%, 45%), hsl(189, 85%, 60%), hsl(280, 75%, 65%));
+    
+    /* Enhanced shadows */
+    --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --shadow-medium: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-strong: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --shadow-elegant: 0 10px 40px -10px hsl(189 85% 45% / 0.3);
+    
     --radius: 0.75rem;
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
-    --card: 222.2 47.4% 11.2%;
+    
+    --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 47.4% 11.2%;
+    
+    --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
-    --primary: 142 76% 36%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
+    
+    --primary: 189 85% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 189 85% 60%;
+    
+    --secondary: 339 82% 65%;
+    --secondary-foreground: 0 0% 100%;
+    
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 20%;
-    --accent-foreground: 210 40% 98%;
-
+    
+    --accent: 280 75% 65%;
+    --accent-foreground: 0 0% 100%;
+    
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 20%;
-    --input: 217.2 32.6% 20%;
-    --ring: 142 76% 36%;
+    
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 189 85% 45%;
   }
 }
 

@@ -34,9 +34,8 @@ const RecentListings = () => {
       try {
         logger.debug('Fetching recent listings...');
         const { data, error } = await supabase
-          .from('business_profiles')
+          .from('public_business_listings')
           .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, amenities, created_at')
-          .eq('status', 'approved')
           .order('created_at', { ascending: false })
           .limit(6);
 

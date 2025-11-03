@@ -21,6 +21,7 @@ const buttonVariants = cva(
         link: "text-emerald-600 underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
         gradient: "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 font-black border-0",
         urgent: "bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 font-black animate-pulse border-0",
+        hero: "bg-gradient-to-r from-primary to-primary-glow text-white shadow-[var(--shadow-elegant)] hover:shadow-lg hover:scale-105 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2 min-h-[40px] text-sm",
