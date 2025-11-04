@@ -66,18 +66,29 @@ const ModernChatInterface: React.FC<ModernChatInterfaceProps> = ({
 
   // Handle room selection
   useEffect(() => {
-    if (!selectedRoom) return;
-    (async () => {
-      await fetchMessages(selectedRoom.id);
-      await markMessagesRead(selectedRoom.id);
-    })();
-    const unsubMessages = subscribeToMessages(selectedRoom.id);
-    const unsubTyping = subscribeToTyping(selectedRoom.id);
-    return () => {
-      unsubMessages();
-      unsubTyping();
+    if (!selectedRoom?.id) return;
+    
+    let unsubMessages: (() => void) | undefined;
+    let unsubTyping: (() => void) | undefined;
+    
+    const setupRoom = async () => {
+      try {
+        await fetchMessages(selectedRoom.id);
+        await markMessagesRead(selectedRoom.id);
+        unsubMessages = subscribeToMessages(selectedRoom.id);
+        unsubTyping = subscribeToTyping(selectedRoom.id);
+      } catch (error) {
+        console.error('Error setting up chat room:', error);
+      }
     };
-  }, [selectedRoom?.id, fetchMessages, subscribeToMessages, subscribeToTyping, markMessagesRead]);
+    
+    setupRoom();
+    
+    return () => {
+      if (unsubMessages) unsubMessages();
+      if (unsubTyping) unsubTyping();
+    };
+  }, [selectedRoom?.id]);
 
   // Determine ownership
   useEffect(() => {

@@ -69,7 +69,7 @@ const AppContent = () => {
   useScrollToTop();
 
   return (
-    <div className="min-h-screen bg-background font-sans antialiased">
+    <div className="min-h-screen bg-background font-sans antialiased overflow-x-hidden max-w-full w-full">
       <ScrollProgressBar />
       <SEORedirectHandler />
       <AdvancedSEOManager />
@@ -79,7 +79,7 @@ const AppContent = () => {
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
-      <main className="flex-1" id="main-content">
+      <main className="flex-1 overflow-x-hidden w-full" id="main-content">
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/explore" element={<Explore />} />

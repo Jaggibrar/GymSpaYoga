@@ -31,48 +31,38 @@ const AppHeader = () => {
   };
 
   const navItems = [
-    { name: "Gyms", href: "/gyms" },
-    { name: "Spas", href: "/spas" },
-    { name: "Yoga", href: "/yoga" },
-    { name: "Trainers", href: "/trainers" },
+    { name: "Find services", href: "/explore" },
+    { name: "Categories", href: "/gyms" },
+    { name: "For business", href: "/register-business" },
   ];
 
   return (
-    <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2" id="navigation">
+    <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100 overflow-x-hidden w-full">
+      <div className="container mx-auto px-4 py-4 max-w-full">
+        <div className="flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0" id="navigation">
             <div className="h-10 w-10 bg-gradient-to-br from-primary via-accent to-secondary rounded-xl flex items-center justify-center shadow-md">
               <Dumbbell className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              FIT Friend
+            <h1 className="text-lg md:text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent whitespace-nowrap">
+              GymSpaYoga
             </h1>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            <Link
-              to="/explore"
-              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
-            >
-              Find Services
-            </Link>
-            <Link
-              to="/explore"
-              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
-            >
-              Categories
-            </Link>
-            <Link
-              to="/business-landing"
-              className="text-foreground hover:text-primary font-medium transition-colors duration-200"
-            >
-              For Business
-            </Link>
+          <nav className="hidden lg:flex items-center gap-8 flex-1 justify-center">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="text-foreground hover:text-primary font-medium transition-colors duration-200 whitespace-nowrap"
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
           
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-3 flex-shrink-0">
             {/* Location Access Button */}
             <Button
               onClick={handleGetLocation}
@@ -97,43 +87,44 @@ const AppHeader = () => {
               <>
                 <div className="hidden md:flex items-center space-x-2">
                   <Link to="/user-bookings">
-                    <Button variant="outline" className="text-xs md:text-sm">
-                      <Calendar className="h-3 w-3 mr-1" />
-                      My Bookings
+                    <Button variant="outline" size="sm" className="whitespace-nowrap">
+                      <Calendar className="h-3 w-3 md:mr-1" />
+                      <span className="hidden lg:inline">My Bookings</span>
                     </Button>
                   </Link>
                   <Link to="/business-dashboard">
-                    <Button variant="outline" className="text-xs md:text-sm">
-                      <Building className="h-3 w-3 mr-1" />
-                      Business
+                    <Button variant="outline" size="sm" className="whitespace-nowrap">
+                      <Building className="h-3 w-3 md:mr-1" />
+                      <span className="hidden lg:inline">Business</span>
                     </Button>
                   </Link>
                   <Link to="/trainer-dashboard">
-                    <Button variant="outline" className="text-xs md:text-sm">
-                      <Users className="h-3 w-3 mr-1" />
-                      Trainer
+                    <Button variant="outline" size="sm" className="whitespace-nowrap">
+                      <Users className="h-3 w-3 md:mr-1" />
+                      <span className="hidden lg:inline">Trainer</span>
                     </Button>
                   </Link>
                   <Button 
                     onClick={handleLogout}
                     variant="outline" 
-                    className="text-xs md:text-sm text-red-600 border-red-200 hover:bg-red-50"
+                    size="sm"
+                    className="text-red-600 border-red-200 hover:bg-red-50 whitespace-nowrap"
                   >
-                    <LogOut className="h-3 w-3 mr-1" />
-                    Logout
+                    <LogOut className="h-3 w-3 md:mr-1" />
+                    <span className="hidden lg:inline">Logout</span>
                   </Button>
                 </div>
               </>
             ) : (
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2">
                 <Link to="/login">
-                  <Button variant="ghost" className="text-sm font-medium">
+                  <Button variant="ghost" size="sm" className="whitespace-nowrap">
                     Sign In
                   </Button>
                 </Link>
-                <Link to="/register-business">
-                  <Button variant="hero" className="text-sm">
-                    List Your Business
+                <Link to="/signup">
+                  <Button variant="hero" size="sm" className="whitespace-nowrap">
+                    Sign Up
                   </Button>
                 </Link>
               </div>
@@ -153,15 +144,15 @@ const AppHeader = () => {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100">
-            <div className="flex flex-col space-y-3 pt-4">
-              {/* Mobile Navigation Items - Scrollable */}
-              <div className="flex overflow-x-auto space-x-4 pb-2">
+          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100 w-full overflow-x-hidden">
+            <div className="flex flex-col space-y-3 pt-4 w-full">
+              {/* Mobile Navigation Items */}
+              <div className="flex flex-col space-y-2 w-full">
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className="text-gray-700 hover:text-emerald-600 font-medium whitespace-nowrap px-2 py-1"
+                    className="text-gray-700 hover:text-primary font-medium px-2 py-2 w-full transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}

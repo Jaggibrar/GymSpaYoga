@@ -33,27 +33,24 @@ const ChatPage: React.FC = () => {
 
   // Update online status
   useEffect(() => {
-    if (!user) return;
-    (async () => {
+    if (!user?.id) return;
+    
+    const updateStatus = async (isOnline: boolean) => {
       try {
-        await supabase.rpc('update_owner_status', { p_user_id: user.id, p_is_online: true });
+        await supabase.rpc('update_owner_status', { p_user_id: user.id, p_is_online: isOnline });
       } catch (e) { 
-        console.error('Failed to set online status', e); 
+        console.error(`Failed to set ${isOnline ? 'online' : 'offline'} status`, e); 
       }
-    })();
+    };
+    
+    updateStatus(true);
     return () => {
-      (async () => {
-        try {
-          await supabase.rpc('update_owner_status', { p_user_id: user.id, p_is_online: false });
-        } catch (e) { 
-          console.error('Failed to set offline status', e); 
-        }
-      })();
+      updateStatus(false);
     };
   }, [user?.id]);
 
   return (
-    <div className="h-screen bg-background">
+    <div className="h-screen w-full overflow-hidden bg-background">
       <Helmet>
         <title>Chat - GymSpaYoga.com</title>
         <meta name="description" content="Real-time chat with businesses and trainers. Get instant quotes and book services directly through our modern chat interface." />
@@ -61,10 +58,10 @@ const ChatPage: React.FC = () => {
         <meta name="keywords" content="gym chat, spa chat, yoga chat, trainer chat, instant booking, price quotes" />
       </Helmet>
 
-      <div className="flex h-full">
+      <div className="flex h-full w-full overflow-hidden">
         {/* Desktop: Always show both panels. Mobile: Show conditionally */}
         <div className={`
-          w-full md:w-1/3 border-r border-border 
+          w-full md:w-1/3 border-r border-border overflow-hidden
           ${showChatList ? 'block' : 'hidden md:block'}
         `}>
           <ChatSidebar 
@@ -78,7 +75,7 @@ const ChatPage: React.FC = () => {
         
         {/* Chat Window */}
         <div className={`
-          w-full md:w-2/3 
+          w-full md:w-2/3 overflow-hidden
           ${showChatList ? 'hidden md:block' : 'block'}
         `}>
           {selectedRoom && (
