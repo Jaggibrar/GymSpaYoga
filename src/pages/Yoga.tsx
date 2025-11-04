@@ -13,29 +13,17 @@ const Yoga = () => {
         keywords="yoga classes near me, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness, best yoga classes India"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-emerald-100">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 text-white py-12 sm:py-16 lg:py-24 xl:py-32">
-          <div className="absolute inset-0">
-            <img 
-              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-              alt="Peaceful yoga environment"
-              className="w-full h-full object-cover opacity-20"
-            />
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/80 via-teal-500/80 to-emerald-600/80"></div>
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200/15 rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative container mx-auto px-4">
-            <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-6 sm:mb-8">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
-                  Yoga <span className="text-emerald-200">Studios</span>
-                </h1>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
-                  Discover authentic yoga environments with certified instructors offering traditional and modern practices. Find your perfect balance through mindful movement, meditation, and spiritual wellness.
-                </p>
-              </div>
+        <section className="relative overflow-hidden bg-muted/50 text-foreground py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                Find Your Perfect Yoga Studio
+              </h1>
+              <p className="text-lg text-muted-foreground">
+                Browse yoga studios across all price ranges - from budget-friendly options to luxury wellness centers
+              </p>
             </div>
           </div>
         </section>
@@ -44,7 +32,7 @@ const Yoga = () => {
         <CategoryBusinesses
           category="yoga"
           title="Authentic Yoga Studios & Classes"
-          description="Embark on a transformative yoga journey with our network of authentic yoga studios and certified instructors. Whether you're a beginner seeking gentle Hatha classes or an experienced practitioner looking for dynamic Vinyasa flows, find the perfect studio that aligns with your spiritual and physical wellness goals. Experience the ancient art of yoga in modern, peaceful environments."
+          description="Embark on a transformative yoga journey with our network of authentic yoga studios and certified instructors."
         />
 
         {/* Expert Instructors */}

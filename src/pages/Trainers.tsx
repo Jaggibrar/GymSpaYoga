@@ -18,90 +18,17 @@ const Trainers = () => {
         keywords="personal trainer, fitness coach, strength training, weight loss, fitness guidance"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-purple-500 to-indigo-600 text-white py-20 lg:py-32">
-          <div className="absolute inset-0">
-            <img 
-              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-              alt="Personal trainer"
-              className="w-full h-full object-cover opacity-20"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/80 to-indigo-600/80"></div>
-          </div>
-          <div className="relative container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
-              <Users className="h-12 w-12 mr-4" />
-              <h1 className="text-4xl md:text-5xl font-bold">
-                Expert Personal Trainers
+        <section className="relative overflow-hidden bg-muted/50 text-foreground py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                Find Your Perfect Personal Trainer
               </h1>
-            </div>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Connect with certified fitness coaches who will guide you to achieve your goals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register-trainer">
-                <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
-                  <Award className="mr-2 h-5 w-5" />
-                  Become a Trainer
-                </Button>
-              </Link>
-              <Link to="/explore">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-                  Explore All Categories
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Filter Section */}
-        <section className="container mx-auto px-4 py-8">
-          <div className="bg-gray-50 rounded-lg p-6">
-            <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              <div className="flex flex-wrap gap-3">
-                <Button
-                  variant={priceFilter === '' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('')}
-                  className="rounded-full"
-                >
-                  All Trainers
-                </Button>
-                <Button
-                  variant={priceFilter === 'budget' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('budget')}
-                  className="rounded-full"
-                >
-                  Budget Friendly
-                </Button>
-                <Button
-                  variant={priceFilter === 'premium' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('premium')}
-                  className="rounded-full"
-                >
-                  Premium
-                </Button>
-                <Button
-                  variant={priceFilter === 'luxury' ? 'default' : 'outline'}
-                  onClick={() => setPriceFilter('luxury')}
-                  className="rounded-full"
-                >
-                  Elite Trainers
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <option value="created_at">Newest First</option>
-                  <option value="session_price">Price: Low to High</option>
-                  <option value="-session_price">Price: High to Low</option>
-                </select>
-              </div>
+              <p className="text-lg text-muted-foreground">
+                Browse trainers across all price ranges - from budget-friendly options to elite fitness coaches
+              </p>
             </div>
           </div>
         </section>
