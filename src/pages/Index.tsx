@@ -132,7 +132,7 @@ const Index = () => {
                 Your Wellness <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">Journey</span> Starts Here
               </h1>
               <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 px-4">
-                Discover gyms, spas, yoga studios, trainers, and therapists near you. Your perfect fitness match is just a search away.
+                Discover gyms, spas, yoga studios, personal trainers, and wellness therapists near you. Your perfect fitness match is just a search away.
               </p>
             </div>
             

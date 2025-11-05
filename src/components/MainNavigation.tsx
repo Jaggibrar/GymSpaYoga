@@ -9,7 +9,6 @@ import RealTimeNotifications from '@/components/RealTimeNotifications';
 import NotificationSystem from '@/components/NotificationSystem';
 import { Heart } from 'lucide-react';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
-import ThemeToggle from '@/components/ThemeToggle';
 
 const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -41,16 +40,16 @@ const MainNavigation = () => {
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center space-x-2">
             <div className={`bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center transition-all duration-300 ${
               isScrolled ? 'h-8 w-8' : 'h-10 w-10'
             }`}>
               <Heart className={`text-white transition-all duration-300 ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
             </div>
-            <h1 className={`font-semibold text-blue-500 transition-all duration-300 ${
+            <h1 className={`font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent transition-all duration-300 ${
               isScrolled ? 'text-lg' : 'text-xl'
             }`}>
-              FIT Friend
+              GymSpaYoga
             </h1>
           </Link>
 
@@ -65,14 +64,6 @@ const MainNavigation = () => {
               Find Services
             </Link>
             <Link 
-              to="/gyms" 
-              className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
-                isActive('/gyms') ? 'text-blue-500' : ''
-              }`}
-            >
-              Categories
-            </Link>
-            <Link 
               to="/register-business" 
               className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
                 isActive('/register-business') ? 'text-blue-500' : ''
@@ -84,9 +75,6 @@ const MainNavigation = () => {
 
           {/* Right side - Auth & Notifications */}
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-            
             {user ? (
               <>
                 {/* Favorites Link */}
@@ -188,13 +176,6 @@ const MainNavigation = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Find Services
-              </Link>
-              <Link 
-                to="/gyms" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Categories
               </Link>
               <Link 
                 to="/register-business" 
