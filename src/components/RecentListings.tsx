@@ -85,6 +85,18 @@ const RecentListings = () => {
             monthly_price: 1800,
             amenities: ['Hatha Yoga', 'Meditation', 'Pranayama'],
             created_at: new Date().toISOString()
+          },
+          {
+            id: 'sample-4',
+            business_name: 'Urban Fitness Club',
+            business_type: 'gym',
+            category: 'fitness',
+            city: 'Pune',
+            state: 'Maharashtra',
+            image_urls: ['https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+            monthly_price: 2200,
+            amenities: ['Free Weights', 'Group Classes', 'Locker Rooms'],
+            created_at: new Date().toISOString()
           }
         ]);
       } finally {

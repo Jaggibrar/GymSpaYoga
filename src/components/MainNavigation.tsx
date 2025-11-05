@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dumbbell, Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 import NotificationSystem from '@/components/NotificationSystem';
@@ -34,70 +34,51 @@ const MainNavigation = () => {
 
   return (
     <nav 
-      className={`bg-background/95 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-border dark:bg-card/95 transition-all duration-300 ${
+      className={`bg-white sticky top-0 z-50 border-b border-gray-200 transition-all duration-300 ${
         shouldHide ? '-translate-y-full' : 'translate-y-0'
-      } ${isScrolled ? 'shadow-strong' : 'shadow-lg'}`}
+      } ${isScrolled ? 'shadow-sm' : 'shadow-sm'}`}
     >
       <div className="container mx-auto px-4">
         <div className={`flex items-center justify-between transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}>
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className={`bg-gradient-to-r from-emerald-500 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 ${
+            <div className={`bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center transition-all duration-300 ${
               isScrolled ? 'h-8 w-8' : 'h-10 w-10'
             }`}>
-              <Dumbbell className={`text-white transition-all duration-300 ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
+              <Heart className={`text-white transition-all duration-300 ${isScrolled ? 'h-5 w-5' : 'h-6 w-6'}`} />
             </div>
-            <div className="flex flex-col">
-              <h1 className={`font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent transition-all duration-300 ${
-                isScrolled ? 'text-lg' : 'text-xl'
-              }`}>
-                GymSpaYoga
-              </h1>
-              {!isScrolled && <p className="text-xs text-gray-500 -mt-1">One Platform. All Wellness.</p>}
-            </div>
+            <h1 className={`font-semibold text-blue-500 transition-all duration-300 ${
+              isScrolled ? 'text-lg' : 'text-xl'
+            }`}>
+              FIT Friend
+            </h1>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <Link 
-              to="/gyms" 
-              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
-                isActive('/gyms') ? 'text-primary after:w-full' : ''
-              }`}
-            >
-              Gyms
-            </Link>
-            <Link 
-              to="/spas" 
-              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
-                isActive('/spas') ? 'text-primary after:w-full' : ''
-              }`}
-            >
-              Spas
-            </Link>
-            <Link 
-              to="/yoga" 
-              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
-                isActive('/yoga') ? 'text-primary after:w-full' : ''
-              }`}
-            >
-              Yoga
-            </Link>
-            <Link 
-              to="/trainers" 
-              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
-                isActive('/trainers') ? 'text-primary after:w-full' : ''
-              }`}
-            >
-              Trainers
-            </Link>
-            <Link 
               to="/explore" 
-              className={`text-foreground hover:text-primary font-medium transition-colors relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-primary after:transition-all hover:after:w-full ${
-                isActive('/explore') ? 'text-primary after:w-full' : ''
+              className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
+                isActive('/explore') ? 'text-blue-500' : ''
               }`}
             >
-              Explore
+              Find Services
+            </Link>
+            <Link 
+              to="/gyms" 
+              className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
+                isActive('/gyms') ? 'text-blue-500' : ''
+              }`}
+            >
+              Categories
+            </Link>
+            <Link 
+              to="/register-business" 
+              className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
+                isActive('/register-business') ? 'text-blue-500' : ''
+              }`}
+            >
+              For Business
             </Link>
           </div>
 
@@ -173,13 +154,13 @@ const MainNavigation = () => {
             ) : (
               <div className="flex items-center space-x-2">
                 <Link to="/login">
-                  <Button variant="ghost" className="text-foreground hover:text-primary">
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-500">
                     Sign In
                   </Button>
                 </Link>
-                <Link to="/signup">
-                  <Button className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground">
-                    Get Started
+                <Link to="/register-business">
+                  <Button className="bg-gradient-to-r from-cyan-400 to-purple-500 hover:from-cyan-500 hover:to-purple-600 text-white">
+                    List Your Business
                   </Button>
                 </Link>
               </div>
@@ -202,39 +183,25 @@ const MainNavigation = () => {
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-3">
               <Link 
-                to="/gyms" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Gyms
-              </Link>
-              <Link 
-                to="/spas" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Spas
-              </Link>
-              <Link 
-                to="/yoga" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Yoga
-              </Link>
-              <Link 
-                to="/trainers" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Trainers
-              </Link>
-              <Link 
                 to="/explore" 
                 className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Explore
+                Find Services
+              </Link>
+              <Link 
+                to="/gyms" 
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Categories
+              </Link>
+              <Link 
+                to="/register-business" 
+                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                For Business
               </Link>
               {user && (
                 <>
