@@ -498,6 +498,30 @@
   background: #059669;
 }
 
+/* Hide scrollbar for horizontal scroll containers */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Smooth scroll snap */
+.snap-x {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.snap-mandatory {
+  scroll-snap-type: x mandatory;
+}
+
 /* Selection styling */
 ::selection {
   background-color: #10b981;

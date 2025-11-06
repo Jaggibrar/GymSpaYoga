@@ -59,45 +59,92 @@ const AnimatedHeroGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto mb-8 sm:mb-12 px-4 sm:px-0">
+    <>
+      {/* Mobile: Horizontal Scroll */}
+      <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4">
+        <div className="flex gap-4 pb-4">
+          {categories.map((category, index) => (
+            <Card 
+              key={category.id}
+              shadow="interactive"
+              className="group relative overflow-hidden cursor-pointer flex-shrink-0 w-[250px] h-[420px] flex flex-col transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-1"
+              onClick={() => handleCategoryClick(category.route)}
+            >
+              <div className="relative h-44 overflow-hidden rounded-t-lg flex-shrink-0">
+                <OptimizedImage 
+                  src={category.image}
+                  alt={category.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  decoding="async"
+                  sizes="250px"
+                  width={250}
+                  height={176}
+                />
+              </div>
+              <div className="p-4 text-center flex flex-col flex-grow">
+                <div className="text-xs font-medium mb-1 text-muted-foreground">
+                  {category.subtitle}
+                </div>
+                <h3 className="text-base font-bold mb-2 text-foreground">
+                  {category.title}
+                </h3>
+                <p className="text-xs text-muted-foreground mb-3 flex-grow line-clamp-3">
+                  {category.description}
+                </p>
+                <div className="mt-auto">
+                  <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-4 py-1.5 text-xs font-semibold rounded-full">
+                    Explore Now
+                  </Badge>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: 5 Column Grid */}
+      <div className="hidden lg:grid lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
         {categories.map((category, index) => (
           <Card 
             key={category.id}
-            className="group relative overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:-translate-y-2 flex flex-col h-full min-h-[480px] sm:min-h-[520px]"
+            shadow="interactive"
+            className="group relative overflow-hidden cursor-pointer flex flex-col h-[500px] transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-2"
             onClick={() => handleCategoryClick(category.route)}
-            style={{ animationDelay: `${index * 200}ms` }}
+            style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="relative h-48 sm:h-56 overflow-hidden rounded-t-lg flex-shrink-0">
+            <div className="relative h-52 overflow-hidden rounded-t-lg flex-shrink-0">
               <OptimizedImage 
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
                 decoding="async"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                width={600}
-                height={256}
+                sizes="300px"
+                width={300}
+                height={208}
               />
             </div>
-            <div className="p-4 sm:p-6 text-center flex flex-col flex-grow">
-              <div className="text-sm sm:text-base font-medium mb-2 text-muted-foreground">
+            <div className="p-5 text-center flex flex-col flex-grow">
+              <div className="text-sm font-medium mb-2 text-muted-foreground">
                 {category.subtitle}
               </div>
-              <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 sm:mb-3 text-foreground transform group-hover:scale-105 transition-transform duration-300">
+              <h3 className="text-lg font-bold mb-2 text-foreground">
                 {category.title}
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-4 flex-grow">
+              <p className="text-sm text-muted-foreground mb-4 flex-grow">
                 {category.description}
               </p>
               <div className="mt-auto">
-                <Badge className="bg-primary text-primary-foreground group-hover:bg-primary/90 transition-all duration-300 px-4 sm:px-6 py-2 text-sm font-semibold rounded-full inline-block">
+                <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-6 py-2 text-sm font-semibold rounded-full">
                   Explore Now
                 </Badge>
               </div>
             </div>
           </Card>
         ))}
-    </div>
+      </div>
+    </>
   );
 };
 

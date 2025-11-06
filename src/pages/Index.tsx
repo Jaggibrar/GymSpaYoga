@@ -125,40 +125,41 @@ const Index = () => {
       
       {/* Hero Section */}
       <HeroCarousel>
-        <div className="container-modern">
-          <div className="max-w-6xl mx-auto text-center text-white">
-            <div className="mb-8 sm:mb-12">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-2">
+        <div className="container mx-auto px-4 h-full">
+          <div className="max-w-4xl mx-auto text-center text-white flex flex-col justify-center h-full py-8 md:py-12">
+            <div className="mb-6 md:mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
                 Your Wellness <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">Journey</span> Starts Here
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-8 px-4">
-                Discover gyms, spas, yoga studios, personal trainers, and wellness therapists near you. Your perfect fitness match is just a search away.
+              <p className="text-sm sm:text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+                Discover gyms, spas, yoga studios, personal trainers, and wellness therapists near you
               </p>
             </div>
             
-            {/* Search Bar */}
-            <div className="max-w-3xl mx-auto mb-12 px-4">
-              <div className="bg-white rounded-full shadow-2xl p-2 flex flex-col sm:flex-row gap-2">
-                <div className="flex-1 flex items-center px-4">
-                  <svg className="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Search Bar - Horizontal Layout */}
+            <div className="max-w-3xl mx-auto mb-6 md:mb-8">
+              <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-2 flex flex-row gap-2">
+                <div className="flex-1 flex items-center px-3 min-w-0">
+                  <svg className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input 
                     type="text" 
-                    placeholder="Search for gyms, spas, yoga, therapists..." 
-                    className="w-full outline-none text-gray-800 placeholder-gray-500"
+                    placeholder="Gyms, spas..." 
+                    className="w-full outline-none text-sm md:text-base text-gray-800 placeholder-gray-500 bg-transparent"
                   />
                 </div>
-                <div className="flex-1 flex items-center px-4 border-l border-gray-200">
-                  <MapPin className="h-5 w-5 text-gray-400 mr-2" />
+                <div className="w-px bg-gray-200"></div>
+                <div className="flex-1 flex items-center px-3 min-w-0">
+                  <MapPin className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
                   <input 
                     type="text" 
-                    placeholder="Enter your location" 
-                    className="w-full outline-none text-gray-800 placeholder-gray-500"
+                    placeholder="Location" 
+                    className="w-full outline-none text-sm md:text-base text-gray-800 placeholder-gray-500 bg-transparent"
                   />
                 </div>
-                <Link to="/explore" className="inline-flex">
-                  <Button className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold px-8 py-3 rounded-full whitespace-nowrap">
+                <Link to="/explore">
+                  <Button className="bg-gradient-to-r from-primary to-accent hover:shadow-[var(--shadow-glow)] text-white font-semibold px-4 md:px-6 py-2 rounded-xl whitespace-nowrap transition-all duration-300">
                     Search
                   </Button>
                 </Link>
@@ -166,18 +167,18 @@ const Index = () => {
             </div>
 
             {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 px-4">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-cyan-400">500+</div>
-                <div className="text-sm text-white/80">Verified Businesses</div>
+                <div className="text-2xl md:text-3xl font-bold text-primary-glow">500+</div>
+                <div className="text-xs md:text-sm text-white/80">Businesses</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-400">10k+</div>
-                <div className="text-sm text-white/80">Happy Members</div>
+                <div className="text-2xl md:text-3xl font-bold text-secondary">10k+</div>
+                <div className="text-xs md:text-sm text-white/80">Members</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-400">50+</div>
-                <div className="text-sm text-white/80">Cities Covered</div>
+                <div className="text-2xl md:text-3xl font-bold text-accent">50+</div>
+                <div className="text-xs md:text-sm text-white/80">Cities</div>
               </div>
             </div>
           </div>

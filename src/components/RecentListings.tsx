@@ -171,26 +171,31 @@ const RecentListings = () => {
 
   if (loading) {
     return (
-      <div className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Recently Listed</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <div className="h-48 bg-gray-200 rounded-t-lg"></div>
-                <CardContent className="p-4">
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded mb-4"></div>
-                  <div className="flex justify-between">
-                    <div className="h-3 bg-gray-200 rounded w-20"></div>
-                    <div className="h-3 bg-gray-200 rounded w-16"></div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <div className="h-8 w-48 bg-muted animate-pulse rounded mb-2"></div>
+              <div className="h-4 w-64 bg-muted animate-pulse rounded"></div>
+            </div>
+          </div>
+          <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
+            <div className="flex gap-4 lg:grid lg:grid-cols-4">
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} shadow="elevated" className="flex-shrink-0 w-[280px] lg:w-auto animate-pulse">
+                  <div className="h-48 bg-muted rounded-t-lg"></div>
+                  <CardContent className="p-4 space-y-3">
+                    <div className="h-5 bg-muted rounded"></div>
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                    <div className="h-10 bg-muted rounded-lg"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -200,83 +205,139 @@ const RecentListings = () => {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-foreground">Featured Near You</h2>
-            <p className="text-muted-foreground">Top-rated wellness providers in your area</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Featured Near You</h2>
+            <p className="text-sm md:text-base text-muted-foreground">Top-rated wellness providers in your area</p>
           </div>
-          <Button variant="outline">View All</Button>
+          <Button variant="outline" className="hidden sm:inline-flex">View All</Button>
         </div>
 
         {listings.length === 0 ? (
-          <div className="text-center py-6 sm:py-8">
-            <p className="text-gray-600 mb-4">No recent listings available at the moment.</p>
-            <p className="text-sm text-gray-500">Check back soon for new wellness destinations!</p>
+          <div className="text-center py-8 bg-card rounded-xl border border-border">
+            <p className="text-muted-foreground mb-2">No recent listings available at the moment.</p>
+            <p className="text-sm text-muted-foreground/70">Check back soon for new wellness destinations!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {listings.map((listing) => (
-              <Card 
-                key={listing.id} 
-                className="overflow-hidden hover:shadow-lg transition-all duration-300 group cursor-pointer"
-                onClick={() => handleCardClick(listing)}
-              >
-                <div className="relative h-48 w-full overflow-hidden">
-                  <OptimizedImage 
-                    src={listing.image_urls[0] || "/placeholder.svg"} 
-                    alt={listing.business_name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    width={400}
-                    height={192}
-                  />
-                  
-                  <div className="absolute top-3 left-3">
-                    <Badge className="bg-secondary text-white px-3 py-1 font-semibold shadow-lg">
-                      Featured
-                    </Badge>
-                  </div>
-                </div>
-                
-                <CardHeader className="pb-2">
-                  <h3 className="font-bold text-lg leading-tight line-clamp-1">
-                    {listing.business_name}
-                  </h3>
-                </CardHeader>
-                
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-primary text-primary" />
-                      <span className="font-semibold">4.8</span>
-                      <span className="text-sm text-muted-foreground">(124)</span>
-                    </div>
-                    <span className="text-lg font-bold">
-                      {listing.monthly_price && listing.monthly_price > 5000 ? '$$$$' :
-                       listing.session_price && listing.session_price > 1500 ? '$$$' : '$$'}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4 flex-shrink-0" />
-                    <span className="line-clamp-1">{listing.city}, {listing.state}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Clock className="h-4 w-4 flex-shrink-0" />
-                    <span>6 AM - 9 PM</span>
-                  </div>
-                  
-                  <Button 
-                    className="w-full bg-primary hover:bg-primary/90 text-white" 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCardClick(listing);
-                    }}
+          <>
+            {/* Mobile & Tablet: Horizontal Scroll */}
+            <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 snap-x snap-mandatory">
+              <div className="flex gap-4">
+                {listings.map((listing) => (
+                  <Card 
+                    key={listing.id}
+                    shadow="interactive"
+                    className="flex-shrink-0 w-[280px] overflow-hidden cursor-pointer snap-start transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-1"
+                    onClick={() => handleCardClick(listing)}
                   >
-                    View Details
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <div className="relative h-44 w-full overflow-hidden rounded-t-lg">
+                      <OptimizedImage 
+                        src={listing.image_urls[0] || "/placeholder.svg"} 
+                        alt={listing.business_name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        width={280}
+                        height={176}
+                      />
+                      <div className="absolute top-2 left-2">
+                        <Badge className="bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-semibold shadow-md">
+                          Featured
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <CardContent className="p-4 space-y-2.5">
+                      <h3 className="font-bold text-base leading-tight line-clamp-1">
+                        {listing.business_name}
+                      </h3>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+                          <span className="font-semibold text-sm">4.8</span>
+                          <span className="text-xs text-muted-foreground">(124)</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                        <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="line-clamp-1">{listing.city}</span>
+                      </div>
+                      
+                      <Button 
+                        className="w-full bg-primary hover:shadow-[var(--shadow-glow)] text-white transition-all duration-300" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCardClick(listing);
+                        }}
+                      >
+                        View Details
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: 4 Column Grid */}
+            <div className="hidden lg:grid lg:grid-cols-4 gap-6">
+              {listings.map((listing) => (
+                <Card 
+                  key={listing.id}
+                  shadow="interactive"
+                  className="overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-2"
+                  onClick={() => handleCardClick(listing)}
+                >
+                  <div className="relative h-48 w-full overflow-hidden">
+                    <OptimizedImage 
+                      src={listing.image_urls[0] || "/placeholder.svg"} 
+                      alt={listing.business_name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      width={350}
+                      height={192}
+                    />
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-secondary text-secondary-foreground px-3 py-1 font-semibold shadow-lg">
+                        Featured
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <CardContent className="p-5 space-y-3">
+                    <h3 className="font-bold text-lg leading-tight line-clamp-1">
+                      {listing.business_name}
+                    </h3>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 fill-primary text-primary" />
+                        <span className="font-semibold">4.8</span>
+                        <span className="text-sm text-muted-foreground">(124)</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4 flex-shrink-0" />
+                      <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Clock className="h-4 w-4 flex-shrink-0" />
+                      <span>6 AM - 9 PM</span>
+                    </div>
+                    
+                    <Button 
+                      className="w-full bg-primary hover:shadow-[var(--shadow-glow)] text-white transition-all duration-300" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCardClick(listing);
+                      }}
+                    >
+                      View Details
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </section>

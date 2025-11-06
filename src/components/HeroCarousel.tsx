@@ -43,7 +43,7 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
   ];
 
   return (
-    <section className="relative min-h-[60vh] md:min-h-screen flex items-center overflow-hidden">
+    <section className="relative h-[400px] md:h-[600px] lg:min-h-screen flex items-center overflow-hidden">
       <Carousel
         setApi={setApi}
         className="w-full h-full absolute inset-0"
@@ -52,19 +52,18 @@ const HeroCarousel = ({ children }: HeroCarouselProps) => {
           loop: true,
         }}
       >
-        <CarouselContent className="h-[60vh] md:h-screen">
+        <CarouselContent className="h-[400px] md:h-[600px] lg:h-screen">
           {images.map((image, index) => (
             <CarouselItem key={index} className="relative h-full">
               <img 
                 src={image.src}
                 alt={image.alt}
-                className="w-full h-full object-cover object-center md:object-cover"
-                style={{ objectPosition: 'center 30%' }}
+                className="w-full h-full object-cover"
                 loading={index === 0 ? 'eager' : 'lazy'}
                 decoding="async"
                 fetchPriority={index === 0 ? 'high' : 'low'}
               />
-              <div className="hero-overlay"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
             </CarouselItem>
           ))}
         </CarouselContent>
