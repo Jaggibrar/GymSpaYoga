@@ -9,8 +9,7 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import BookingForm from '@/components/booking/BookingForm';
-import { useChat } from '@/hooks/useChat';
-import { useAuth } from '@/hooks/useAuth';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import { BusinessStructuredData } from '@/components/SEO/BusinessStructuredData';
 import { generateImageAlt, getImageLoadingStrategy, getImageFetchPriority } from '@/utils/imageOptimization';
 
@@ -37,12 +36,9 @@ interface Business {
 const BusinessDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { createChatRoom } = useChat();
   const [business, setBusiness] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>('');
-  const [creatingChat, setCreatingChat] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -92,31 +88,6 @@ const BusinessDetails = () => {
   const handleCall = () => {
     if (business?.phone) {
       window.location.href = `tel:${business.phone}`;
-    }
-  };
-
-  const handleBookNow = () => {
-    // This will be handled by the BookingForm component
-  };
-
-  const handleChatNow = async () => {
-    if (!user) {
-      toast.error('Please login to start a chat');
-      navigate('/login');
-      return;
-    }
-    
-    if (!business?.id) return;
-    
-    setCreatingChat(true);
-    try {
-      await createChatRoom(business.id);
-      navigate('/chat');
-      toast.success('Chat started successfully!');
-    } catch (error) {
-      toast.error('Failed to start chat');
-    } finally {
-      setCreatingChat(false);
     }
   };
 
@@ -321,15 +292,13 @@ const BusinessDetails = () => {
 
               {/* Contact Buttons */}
               <div className="space-y-3">
-                <Button 
-                  onClick={handleChatNow}
-                  disabled={creatingChat}
-                  className="w-full"
+                <WhatsAppButton
+                  phoneNumber={business.phone}
+                  businessName={business.business_name}
+                  variant="default"
                   size="lg"
-                >
-                  <MessageCircle className="h-4 w-4 mr-2" />
-                  {creatingChat ? 'Starting Chat...' : 'Chat Now'}
-                </Button>
+                  className="w-full"
+                />
                 
                 <Button 
                   onClick={handleCall}

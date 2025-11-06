@@ -10,8 +10,7 @@ import BookingPanel from "@/components/listing/BookingPanel";
 import AboutSection from "@/components/listing/AboutSection";
 import AmenitiesGrid from "@/components/listing/AmenitiesGrid";
 import PricingBox from "@/components/listing/PricingBox";
-import { useChat } from "@/hooks/useChat";
-import { useAuth } from "@/hooks/useAuth";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -37,11 +36,8 @@ interface Business {
 const SpaDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { createChatRoom } = useChat();
   const [spa, setSpa] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
-  const [creatingChat, setCreatingChat] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -70,27 +66,6 @@ const SpaDetails = () => {
       toast.error('Failed to load spa details');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleChatNow = async () => {
-    if (!user) {
-      toast.error('Please login to start a chat');
-      navigate('/login');
-      return;
-    }
-    
-    if (!spa?.id) return;
-    
-    setCreatingChat(true);
-    try {
-      await createChatRoom(spa.id);
-      navigate('/chat');
-      toast.success('Chat started successfully!');
-    } catch (error) {
-      toast.error('Failed to start chat');
-    } finally {
-      setCreatingChat(false);
     }
   };
 
@@ -201,18 +176,16 @@ const SpaDetails = () => {
 
         {/* Right Column - Booking Panel */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Chat Button */}
+          {/* WhatsApp Button */}
           <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
             <CardContent className="p-6">
-              <Button 
-                onClick={handleChatNow}
-                disabled={creatingChat}
-                className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white"
+              <WhatsAppButton
+                phoneNumber={spa.phone}
+                businessName={spa.business_name}
+                variant="default"
                 size="lg"
-              >
-                <MessageCircle className="h-5 w-5 mr-2" />
-                {creatingChat ? 'Starting Chat...' : 'Chat with Spa'}
-              </Button>
+                className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700"
+              />
             </CardContent>
           </Card>
 

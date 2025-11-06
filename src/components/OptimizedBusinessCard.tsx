@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star, Clock, Crown, Diamond, IndianRupee } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import ChatNowButton from '@/components/chat/ChatNowButton';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 interface Business {
   id: string;
@@ -19,6 +19,7 @@ interface Business {
   opening_time: string;
   closing_time: string;
   category?: string;
+  phone: string;
 }
 
 interface OptimizedBusinessCardProps {
@@ -159,8 +160,9 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
           </div>
           
           <div className="space-y-4">
-            <ChatNowButton 
-              businessId={business.id} 
+            <WhatsAppButton 
+              phoneNumber={business.phone}
+              businessName={business.business_name}
               variant="outline" 
               className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             />

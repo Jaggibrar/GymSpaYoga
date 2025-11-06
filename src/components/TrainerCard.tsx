@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { MapPin, Star, Phone, Mail, Users, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Trainer } from '@/hooks/useTrainers';
-import ChatNowButton from '@/components/chat/ChatNowButton';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import { useState } from 'react';
 
 interface TrainerCardProps {
@@ -108,8 +108,9 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
             <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
           <div className="flex gap-2">
-            <ChatNowButton 
-              trainerId={trainer.id} 
+            <WhatsAppButton 
+              phoneNumber={trainer.phone}
+              businessName={trainer.name}
               variant="outline" 
               className="flex-1"
             />

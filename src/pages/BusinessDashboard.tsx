@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useHasBusinessProfiles } from "@/hooks/useOwnerBookings";
 import BusinessBookingsDashboard from "@/components/booking/BusinessBookingsDashboard";
 import BusinessListingsManager from "@/components/business/BusinessListingsManager";
-import BusinessChatDashboard from "@/components/chat/BusinessChatDashboard";
+
 import ConnectionHealthMonitor from "@/components/ConnectionHealthMonitor";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import SEOHead from "@/components/SEOHead";
 export default function BusinessDashboard() {
   const { user } = useAuth();
   const { hasProfiles, loading } = useHasBusinessProfiles();
-  const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'bookings' | 'chats'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'listings' | 'bookings'>('overview');
 
   const handleReconnect = () => {
     // Trigger a page refresh for all data
@@ -110,14 +110,6 @@ export default function BusinessDashboard() {
             <Calendar className="h-4 w-4 mr-2" />
             Bookings
           </Button>
-          <Button
-            variant={activeTab === 'chats' ? 'default' : 'ghost'}
-            onClick={() => setActiveTab('chats')}
-            className="flex-1 min-w-max"
-          >
-            <MessageCircle className="h-4 w-4 mr-2" />
-            Customer Chats
-          </Button>
         </div>
 
         {/* Content based on active tab */}
@@ -208,22 +200,6 @@ export default function BusinessDashboard() {
             </CardHeader>
             <CardContent className="p-6">
               <BusinessBookingsDashboard />
-            </CardContent>
-          </Card>
-        )}
-
-        {activeTab === 'chats' && (
-          <Card className="border-0 shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-lg">
-              <CardTitle className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                  <MessageCircle className="h-5 w-5 text-white" />
-                </div>
-                Customer Chat Management
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <BusinessChatDashboard />
             </CardContent>
           </Card>
         )}
