@@ -51,21 +51,27 @@ const Therapists = () => {
       />
 
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
-        <div className="relative overflow-hidden bg-gradient-to-r from-pink-500 to-rose-600 py-20">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="bg-white/20 backdrop-blur-sm p-4 rounded-full">
-                <Heart className="h-12 w-12 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Find Professional Therapists
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
-              Connect with certified wellness therapists for personalized healing and therapy sessions
-            </p>
+        <section className="relative overflow-hidden h-[250px] md:h-[350px]">
+          <div className="absolute inset-0">
+            <img 
+              src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
+              alt="Professional wellness therapist session"
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
           </div>
-        </div>
+          <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-3xl md:text-5xl font-bold text-white mb-3">
+                Find Professional Therapists
+              </h1>
+              <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+                Connect with certified wellness therapists for personalized care
+              </p>
+            </div>
+          </div>
+        </section>
 
         <div className="container mx-auto px-4 py-12">
           {/* Search and Filters Section */}

@@ -79,74 +79,70 @@ const Gyms = () => {
       
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-orange-100">
         {/* Hero Section */}
-          <section className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 text-white py-20 lg:py-32">
+          <section className="relative overflow-hidden h-[250px] md:h-[350px]">
             <div className="absolute inset-0">
               <OptimizedImage 
                 src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
                 alt="Modern gym equipment and fitness facility interior"
-                className="w-full h-full object-cover opacity-25"
+                className="w-full h-full object-cover"
                 priority={true}
                 width={1920}
-                height={600}
+                height={350}
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/85 via-red-500/85 to-orange-600/85"></div>
-              <div className="absolute top-0 left-1/4 w-72 h-72 bg-orange-200/20 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-200/15 rounded-full blur-3xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
             </div>
-          <div className="relative container mx-auto px-4">
-            <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-8">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-                  Premium <span className="text-orange-200">Gyms</span>
-                </h1>
-                <p className="text-xl md:text-2xl text-orange-100 max-w-3xl mx-auto leading-relaxed">
-                  Discover state-of-the-art fitness centers equipped with cutting-edge equipment, expert personal trainers, and comprehensive wellness programs designed to transform your fitness journey.
-                </p>
-              </div>
+          <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
+            <div className="max-w-4xl mx-auto text-center mb-6">
+              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-white">
+                Explore Premium Gyms
+              </h1>
+              <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+                Discover state-of-the-art fitness centers with expert trainers
+              </p>
+            </div>
               
-              {/* Search Bar */}
-              <Card className="bg-white/95 backdrop-blur-sm shadow-2xl">
-                <CardContent className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                      <Input
-                        placeholder="Search gyms..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10 py-3 text-gray-900"
-                      />
-                    </div>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                      <Input
-                        placeholder="Enter location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className="pl-10 pr-12 py-3 text-gray-900"
-                      />
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="ghost"
-                        onClick={handleGetCurrentLocation}
-                        disabled={geoLoading}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
-                      >
-                        <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
-                      </Button>
-                    </div>
-                    <Button 
-                      onClick={handleSearch}
-                      className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 py-3"
+            {/* Search Bar */}
+            <Card className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl max-w-4xl mx-auto">
+              <CardContent className="p-4 md:p-6">
+                <div className="flex flex-col md:flex-row gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Search gyms..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 h-11 text-gray-900"
+                    />
+                  </div>
+                  <div className="relative flex-1">
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Enter location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      className="pl-10 pr-10 h-11 text-gray-900"
+                    />
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={handleGetCurrentLocation}
+                      disabled={geoLoading}
+                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
                     >
-                      <Search className="mr-2 h-5 w-5" />
-                      Search Gyms
+                      <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <Button 
+                    onClick={handleSearch}
+                    className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent h-11 px-6"
+                  >
+                    <Search className="mr-2 h-4 w-4" />
+                    Search
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
