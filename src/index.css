@@ -5,83 +5,87 @@
 
 @layer base {
   :root {
-    /* FIT Friend Design System */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* GymSpaYoga Design System - Light Mode */
     
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Primary Brand Colors */
+    --primary: 185 80% 45%;           /* Turquoise Blue - Main brand color */
+    --primary-foreground: 0 0% 100%;  /* White text on primary */
+    --primary-glow: 185 85% 55%;      /* Lighter turquoise for effects */
     
+    /* Secondary Colors */
+    --secondary: 15 90% 65%;          /* Coral/Orange - Accent color */
+    --secondary-foreground: 0 0% 100%; /* White text on secondary */
+    
+    /* Accent Colors */
+    --accent: 280 65% 60%;            /* Purple - Tertiary accent */
+    --accent-foreground: 0 0% 100%;   /* White text on accent */
+    
+    /* Background & Surfaces */
+    --background: 210 20% 98%;        /* Very light blue-gray background */
+    --foreground: 215 25% 15%;        /* Very dark blue-gray text */
+    --card: 0 0% 100%;                /* Pure white cards */
+    --card-foreground: 215 25% 15%;   /* Dark text on cards */
+    
+    /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
     
-    /* Primary: Vibrant Teal/Cyan */
-    --primary: 189 85% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 189 85% 60%;
+    /* Muted & Subtle Elements */
+    --muted: 210 15% 92%;             /* Light gray backgrounds */
+    --muted-foreground: 215 15% 45%;  /* Medium gray text */
     
-    /* Secondary: Coral Pink */
-    --secondary: 339 82% 65%;
-    --secondary-foreground: 0 0% 100%;
+    /* Borders & Inputs */
+    --border: 210 20% 88%;            /* Light borders */
+    --input: 210 20% 88%;             /* Input borders */
+    --ring: 185 80% 45%;              /* Focus ring (primary color) */
     
-    /* Muted: Light gray backgrounds */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    
-    /* Accent: Purple */
-    --accent: 280 75% 65%;
-    --accent-foreground: 0 0% 100%;
-    
+    /* Destructive */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
     
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 189 85% 45%;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(185 80% 45%), hsl(185 85% 55%));
+    --gradient-secondary: linear-gradient(135deg, hsl(15 90% 65%), hsl(35 95% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(185 80% 45%) 0%, hsl(200 85% 50%) 50%, hsl(280 65% 60%) 100%);
     
-    /* FIT Friend Design System - Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(189, 85%, 45%), hsl(189, 85%, 60%));
-    --gradient-accent: linear-gradient(135deg, hsl(280, 75%, 65%), hsl(339, 82%, 65%));
-    --gradient-hero: linear-gradient(90deg, hsl(189, 85%, 45%), hsl(189, 85%, 60%), hsl(280, 75%, 65%));
-    
-    /* Enhanced shadows */
-    --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.12);
-    --shadow-medium: 0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    --shadow-strong: 0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-    --shadow-elegant: 0 10px 40px -10px hsl(189 85% 45% / 0.3);
+    /* Shadows & Effects */
+    --shadow-soft: 0 4px 20px -2px hsl(185 80% 45% / 0.15);
+    --shadow-glow: 0 0 40px hsl(185 85% 55% / 0.3);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* GymSpaYoga Design System - Dark Mode */
     
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --background: 215 30% 8%;         /* Very dark blue-gray */
+    --foreground: 210 20% 95%;        /* Almost white text */
+    --card: 215 25% 12%;              /* Dark blue-gray cards */
+    --card-foreground: 210 20% 95%;
     
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 215 25% 12%;
+    --popover-foreground: 210 20% 95%;
     
-    --primary: 189 85% 45%;
+    --primary: 185 80% 50%;           /* Slightly brighter turquoise */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 189 85% 60%;
+    --primary-glow: 185 85% 60%;      /* Brighter glow effect */
     
-    --secondary: 339 82% 65%;
+    --secondary: 15 90% 60%;          /* Slightly darker coral */
     --secondary-foreground: 0 0% 100%;
     
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    
-    --accent: 280 75% 65%;
+    --accent: 280 65% 55%;            /* Slightly darker purple */
     --accent-foreground: 0 0% 100%;
     
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --muted: 215 20% 18%;             /* Dark muted backgrounds */
+    --muted-foreground: 215 15% 65%;
     
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 189 85% 45%;
+    --border: 215 20% 20%;            /* Dark borders */
+    --input: 215 20% 20%;
+    --ring: 185 80% 50%;
+    
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 95%;
   }
 }
 

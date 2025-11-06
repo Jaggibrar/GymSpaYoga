@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Menu, X, User, LogOut, Settings, Calendar, Building, Edit } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Calendar, Building, Edit, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import RealTimeNotifications from '@/components/RealTimeNotifications';
 import NotificationSystem from '@/components/NotificationSystem';
@@ -55,14 +55,44 @@ const MainNavigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link 
-              to="/explore" 
-              className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
-                isActive('/explore') ? 'text-blue-500' : ''
-              }`}
-            >
-              Find Services
-            </Link>
+            {/* Find Services Dropdown */}
+            <div className="relative group">
+              <button className="text-gray-700 hover:text-blue-500 font-medium transition-colors flex items-center space-x-1">
+                <span>Find Services</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              
+              {/* Dropdown Menu */}
+              <div className="absolute left-0 top-full mt-2 w-48 bg-card rounded-lg shadow-xl border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <Link 
+                    to="/gyms" 
+                    className="block px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                  >
+                    Gyms
+                  </Link>
+                  <Link 
+                    to="/spas" 
+                    className="block px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                  >
+                    Spas
+                  </Link>
+                  <Link 
+                    to="/yoga" 
+                    className="block px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                  >
+                    Yoga Studios
+                  </Link>
+                  <Link 
+                    to="/therapists" 
+                    className="block px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                  >
+                    Therapists
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
             <Link 
               to="/register-business" 
               className={`text-gray-700 hover:text-blue-500 font-medium transition-colors ${
@@ -170,12 +200,36 @@ const MainNavigation = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <div className="flex flex-col space-y-3">
+              <div className="text-foreground font-semibold px-2 py-1 text-sm">
+                Find Services
+              </div>
               <Link 
-                to="/explore" 
-                className="text-foreground hover:text-primary font-medium px-2 py-1 transition-colors"
+                to="/gyms" 
+                className="text-foreground hover:text-primary font-medium px-4 py-1 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Find Services
+                Gyms
+              </Link>
+              <Link 
+                to="/spas" 
+                className="text-foreground hover:text-primary font-medium px-4 py-1 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Spas
+              </Link>
+              <Link 
+                to="/yoga" 
+                className="text-foreground hover:text-primary font-medium px-4 py-1 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Yoga Studios
+              </Link>
+              <Link 
+                to="/therapists" 
+                className="text-foreground hover:text-primary font-medium px-4 py-1 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Therapists
               </Link>
               <Link 
                 to="/register-business" 
