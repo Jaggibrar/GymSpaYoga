@@ -112,6 +112,7 @@ const BusinessRegistrationForm = () => {
                   <SelectItem value="gym">Gym</SelectItem>
                   <SelectItem value="spa">Spa</SelectItem>
                   <SelectItem value="yoga">Yoga Studio</SelectItem>
+                  <SelectItem value="therapist">Wellness Therapist</SelectItem>
                 </SelectContent>
               </Select>
             </div>

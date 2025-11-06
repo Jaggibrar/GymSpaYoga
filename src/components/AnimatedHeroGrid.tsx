@@ -35,6 +35,15 @@ const AnimatedHeroGrid = () => {
       subtitle: "Find Inner Peace"
     },
     {
+      id: 'therapists',
+      title: "Wellness Therapists",
+      description: "Certified therapists providing personalized healing and therapy sessions",
+      image: "/lovable-uploads/f0f905ef-8ae5-4c34-8db3-7a23bedbc1b5.png",
+      gradient: "from-pink-500/80 to-rose-500/80",
+      route: "/therapists",
+      subtitle: "Heal & Restore"
+    },
+    {
       id: 'trainers',
       title: "Personal Trainers",
       description: "Certified fitness professionals to guide your personalized workout journey",
@@ -50,7 +59,7 @@ const AnimatedHeroGrid = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto mb-8 sm:mb-12 px-4 sm:px-0">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 max-w-7xl mx-auto mb-8 sm:mb-12 px-4 sm:px-0">
         {categories.map((category, index) => (
           <Card 
             key={category.id}

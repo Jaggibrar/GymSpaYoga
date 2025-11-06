@@ -145,7 +145,7 @@ const Index = () => {
                   </svg>
                   <input 
                     type="text" 
-                    placeholder="Search for gyms, spas, yoga..." 
+                    placeholder="Search for gyms, spas, yoga, therapists..." 
                     className="w-full outline-none text-gray-800 placeholder-gray-500"
                   />
                 </div>
