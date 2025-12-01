@@ -187,36 +187,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-20 px-4 bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
-          <div className="container mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-6">Making an Impact</h2>
-              <p className="text-xl opacity-90 max-w-3xl mx-auto">
-                See how we're transforming the wellness landscape across India.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">500+</div>
-                <div className="text-lg opacity-90">Partner Businesses</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">10K+</div>
-                <div className="text-lg opacity-90">Happy Customers</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">50+</div>
-                <div className="text-lg opacity-90">Cities Covered</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">99%</div>
-                <div className="text-lg opacity-90">Satisfaction Rate</div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Contact Section */}
         <section className="py-20 px-4 bg-gray-50">

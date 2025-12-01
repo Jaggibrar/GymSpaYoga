@@ -166,21 +166,7 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-primary-glow">500+</div>
-                <div className="text-xs md:text-sm text-white/80">Businesses</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-secondary">10k+</div>
-                <div className="text-xs md:text-sm text-white/80">Members</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl md:text-3xl font-bold text-accent">50+</div>
-                <div className="text-xs md:text-sm text-white/80">Cities</div>
-              </div>
-            </div>
+            {/* Stats removed to avoid fake metrics */}
           </div>
         </div>
       </HeroCarousel>
@@ -210,27 +196,6 @@ const Index = () => {
           </React.Suspense>
       </div>
 
-      {/* Stats Section */}
-      <section className="py-12 sm:py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 text-center">
-            {[
-              { icon: <Users className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />, number: "50K+", label: "Happy Members" },
-              { icon: <MapPin className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />, number: "1000+", label: "Locations" },
-              { icon: <Star className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />, number: "4.9", label: "Average Rating" },
-              { icon: <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8" />, number: "95%", label: "Success Rate" }
-            ].map((stat, index) => (
-              <div key={index} className="group">
-                <div className="text-emerald-600 mb-2 sm:mb-3 flex justify-center group-hover:scale-110 transition-transform duration-300">
-                  {stat.icon}
-                </div>
-                <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">{stat.number}</div>
-                <div className="text-sm sm:text-base text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Geolocation Recommendations Section */}
       <section className="py-12 sm:py-16 bg-gray-50">
