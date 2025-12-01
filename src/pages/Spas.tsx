@@ -41,11 +41,11 @@ const Spas = () => {
           </div>
         </section>
 
-        {/* Business Listings - First Priority */}
         <CategoryBusinesses
           category="spa"
           title="Luxury Spas & Wellness Centers"
           description="Indulge in ultimate relaxation and rejuvenation at our carefully selected luxury spas and wellness centers."
+          showFilters={false}
         />
 
         {/* Expert Therapists */}
