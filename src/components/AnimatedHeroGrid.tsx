@@ -83,20 +83,20 @@ const AnimatedHeroGrid = () => {
                 />
               </div>
               <div className="p-4 text-center flex flex-col flex-grow">
-                <div className="text-xs font-medium mb-1 text-muted-foreground">
-                  {category.subtitle}
-                </div>
-                <h3 className="text-base font-bold mb-2 text-foreground">
-                  {category.title}
-                </h3>
-                <p className="text-xs text-muted-foreground mb-3 flex-grow line-clamp-3">
-                  {category.description}
-                </p>
-                <div className="mt-auto">
-                  <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-4 py-1.5 text-xs font-semibold rounded-full">
-                    Explore Now
-                  </Badge>
-                </div>
+              <div className="text-xs font-medium mb-1 text-muted-foreground">
+                {category.subtitle}
+              </div>
+              <h3 className="text-base font-bold mb-2 text-foreground">
+                {category.title}
+              </h3>
+              <p className="text-xs text-muted-foreground mb-4 line-clamp-3">
+                {category.description}
+              </p>
+              <div className="mt-auto">
+                <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-4 py-1.5 text-xs font-semibold rounded-full">
+                  Explore Now
+                </Badge>
+              </div>
               </div>
             </Card>
           ))}
@@ -132,7 +132,7 @@ const AnimatedHeroGrid = () => {
               <h3 className="text-lg font-bold mb-2 text-foreground">
                 {category.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4 flex-grow">
+              <p className="text-sm text-muted-foreground mb-6 line-clamp-4">
                 {category.description}
               </p>
               <div className="mt-auto">
