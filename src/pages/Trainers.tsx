@@ -50,8 +50,8 @@ const Trainers = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
           </div>
-          <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
-            <div className="max-w-4xl mx-auto text-center mb-6">
+          <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
+            <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 text-white">
                 Find Expert Personal Trainers
               </h1>
@@ -59,56 +59,58 @@ const Trainers = () => {
                 Connect with certified coaches for personalized fitness guidance
               </p>
             </div>
-            
-            {/* Search Bar */}
-            <Card className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl max-w-4xl mx-auto">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex flex-col md:flex-row gap-3">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Search trainers..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11 text-gray-900"
-                    />
-                  </div>
-                  <div className="relative flex-1">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Enter location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="pl-10 pr-10 h-11 text-gray-900"
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="ghost"
-                      onClick={handleGetCurrentLocation}
-                      disabled={geoLoading}
-                      className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
-                    >
-                      <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
-                    </Button>
-                  </div>
-                  <Button 
-                    onClick={handleSearch}
-                    className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent h-11 px-6"
+          </div>
+        </section>
+
+        {/* Search and Filters Section */}
+        <section className="container mx-auto px-4 py-6">
+          <Card className="border-0 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Search trainers..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 h-11"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Enter location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="pl-10 pr-10 h-11"
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleGetCurrentLocation}
+                    disabled={geoLoading}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
                   >
-                    <Search className="mr-2 h-4 w-4" />
-                    Search
+                    <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Button 
+                  onClick={handleSearch}
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent h-11 px-6"
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  Search
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </section>
 
         {/* Trainers Listings - First Priority */}
         <TrainerListings 
-          searchTerm=""
-          location=""
+          searchTerm={searchTerm}
+          location={location}
           sortBy={sortBy}
           priceFilter={priceFilter}
         />

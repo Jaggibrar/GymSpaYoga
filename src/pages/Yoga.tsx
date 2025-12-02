@@ -45,7 +45,6 @@ const Yoga = () => {
           category="yoga"
           title="Authentic Yoga Studios & Classes"
           description="Embark on a transformative yoga journey with our network of authentic yoga studios and certified instructors."
-          showFilters={false}
         />
 
         {/* Expert Instructors */}
