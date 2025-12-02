@@ -103,6 +103,51 @@ const Gyms = () => {
           </div>
         </section>
 
+        {/* Search Section */}
+        <section className="container mx-auto px-4 py-6">
+          <Card className="bg-white/95 backdrop-blur-sm shadow-xl rounded-2xl">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex flex-col md:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Search gyms..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 h-11 text-gray-900"
+                  />
+                </div>
+                <div className="relative flex-1">
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    placeholder="Enter location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="pl-10 pr-10 h-11 text-gray-900"
+                  />
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    onClick={handleGetCurrentLocation}
+                    disabled={geoLoading}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+                  >
+                    <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
+                  </Button>
+                </div>
+                <Button 
+                  onClick={handleSearch}
+                  className="bg-gradient-to-r from-primary to-accent hover:from-primary-glow hover:to-accent h-11 px-6"
+                >
+                  <Search className="mr-2 h-4 w-4" />
+                  Search
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Filters and View Toggle */}
         <section className="py-6 bg-white shadow-sm">
           <div className="container mx-auto px-4">
