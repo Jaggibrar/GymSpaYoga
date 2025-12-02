@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Dumbbell, Waves, Heart, MapPin, Star, Users, TrendingUp } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Dumbbell, Waves, Heart, MapPin, Star, Users, TrendingUp, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 const AnimatedHeroGrid = React.lazy(() => import("@/components/AnimatedHeroGrid"));
 import { useAuth } from "@/hooks/useAuth";
@@ -234,6 +235,94 @@ const Index = () => {
               </Button>
             </Link>
           )}
+        </div>
+      </section>
+
+      {/* Business Registration Banner */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-blue-50 to-purple-50 py-16 sm:py-20 lg:py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Content */}
+            <div className="order-2 lg:order-1 text-center lg:text-left space-y-6">
+              <div className="inline-block">
+                <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200 px-4 py-1.5 text-sm font-semibold">
+                  For Business Owners
+                </Badge>
+              </div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                Ready to Grow Your
+                <span className="block bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+                  Wellness Business?
+                </span>
+              </h2>
+              <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-xl">
+                Join thousands of successful businesses on GymSpaYoga. Get discovered by motivated customers actively looking for wellness services in your area.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                <Link to="/register-business" className="w-full sm:w-auto">
+                  <Button 
+                    size="lg" 
+                    className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white text-base sm:text-lg px-8 py-6 h-auto shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <Dumbbell className="mr-2 h-5 w-5" />
+                    Register Your Business
+                  </Button>
+                </Link>
+                <Link to="/pricing" className="w-full sm:w-auto">
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="w-full sm:w-auto border-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-base sm:text-lg px-8 py-6 h-auto"
+                  >
+                    View Pricing
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-6 pt-4 justify-center lg:justify-start">
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <Star className="h-5 w-5 text-emerald-600 fill-emerald-600" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900">Featured Listings</div>
+                    <div className="text-sm text-gray-600">Stand out to customers</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div className="text-left">
+                    <div className="font-bold text-gray-900">Direct Bookings</div>
+                    <div className="text-sm text-gray-600">Connect with clients</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Image */}
+            <div className="order-1 lg:order-2 relative">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                <img
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                  alt="Professional wellness business owner welcoming customers"
+                  className="w-full h-[400px] sm:h-[500px] lg:h-[600px] object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/30 via-transparent to-transparent"></div>
+              </div>
+              {/* Floating Stats Cards */}
+              <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4 sm:p-6 animate-fade-in hidden sm:block">
+                <div className="text-3xl font-bold text-emerald-600">500+</div>
+                <div className="text-sm text-gray-600">Active Businesses</div>
+              </div>
+              <div className="absolute -top-6 -right-6 bg-white rounded-2xl shadow-xl p-4 sm:p-6 animate-fade-in hidden sm:block">
+                <div className="text-3xl font-bold text-blue-600">10k+</div>
+                <div className="text-sm text-gray-600">Monthly Visitors</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
