@@ -82,14 +82,14 @@ const AnimatedHeroGrid = () => {
                   height={176}
                 />
               </div>
-              <div className="p-4 text-center flex flex-col flex-grow">
-              <div className="text-xs font-medium mb-1 text-muted-foreground">
+            <div className="p-4 text-center flex flex-col flex-grow">
+              <div className="h-4 text-xs font-medium mb-1 text-muted-foreground overflow-hidden">
                 {category.subtitle}
               </div>
-              <h3 className="text-base font-bold mb-2 text-foreground">
+              <h3 className="h-6 text-base font-bold mb-2 text-foreground overflow-hidden">
                 {category.title}
               </h3>
-              <p className="text-xs text-muted-foreground mb-4 line-clamp-3">
+              <p className="h-[54px] text-xs text-muted-foreground mb-4 line-clamp-3 overflow-hidden">
                 {category.description}
               </p>
               <div className="mt-auto">
@@ -97,7 +97,7 @@ const AnimatedHeroGrid = () => {
                   Explore Now
                 </Badge>
               </div>
-              </div>
+            </div>
             </Card>
           ))}
         </div>
@@ -126,13 +126,13 @@ const AnimatedHeroGrid = () => {
               />
             </div>
             <div className="p-4 text-center flex flex-col flex-grow">
-              <div className="text-xs font-medium mb-1 text-muted-foreground">
+              <div className="h-4 text-xs font-medium mb-1 text-muted-foreground overflow-hidden">
                 {category.subtitle}
               </div>
-              <h3 className="text-base font-bold mb-2 text-foreground">
+              <h3 className="h-6 text-base font-bold mb-2 text-foreground overflow-hidden">
                 {category.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+              <p className="h-[63px] text-sm text-muted-foreground mb-4 line-clamp-3 overflow-hidden">
                 {category.description}
               </p>
               <div className="mt-auto">
