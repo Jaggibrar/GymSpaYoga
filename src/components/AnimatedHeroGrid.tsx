@@ -104,39 +104,39 @@ const AnimatedHeroGrid = () => {
       </div>
 
       {/* Desktop: 5 Column Grid */}
-      <div className="hidden lg:grid lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+      <div className="hidden lg:grid lg:grid-cols-5 gap-4 max-w-7xl mx-auto">
         {categories.map((category, index) => (
           <Card 
             key={category.id}
             shadow="interactive"
-            className="group relative overflow-hidden cursor-pointer flex flex-col h-[500px] transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-2"
+            className="group relative overflow-hidden cursor-pointer flex flex-col h-[420px] transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-2"
             onClick={() => handleCategoryClick(category.route)}
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <div className="relative h-52 overflow-hidden rounded-t-lg flex-shrink-0">
+            <div className="relative h-44 overflow-hidden rounded-t-lg flex-shrink-0">
               <OptimizedImage 
                 src={category.image}
                 alt={category.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
                 decoding="async"
-                sizes="300px"
-                width={300}
-                height={208}
+                sizes="260px"
+                width={260}
+                height={176}
               />
             </div>
-            <div className="p-5 text-center flex flex-col flex-grow">
-              <div className="text-sm font-medium mb-2 text-muted-foreground">
+            <div className="p-4 text-center flex flex-col flex-grow">
+              <div className="text-xs font-medium mb-1 text-muted-foreground">
                 {category.subtitle}
               </div>
-              <h3 className="text-lg font-bold mb-2 text-foreground">
+              <h3 className="text-base font-bold mb-2 text-foreground">
                 {category.title}
               </h3>
-              <p className="text-sm text-muted-foreground mb-6 line-clamp-4">
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                 {category.description}
               </p>
               <div className="mt-auto">
-                <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-6 py-2 text-sm font-semibold rounded-full">
+                <Badge className="bg-primary text-primary-foreground hover:shadow-[var(--shadow-glow)] transition-all duration-300 px-5 py-1.5 text-sm font-semibold rounded-full">
                   Explore Now
                 </Badge>
               </div>
