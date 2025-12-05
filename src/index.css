@@ -5,54 +5,54 @@
 
 @layer base {
   :root {
-    /* GymSpaYoga Premium Design System */
+    /* GymSpaYoga Premium Design System - Teal to Blue */
     
-    /* Primary Brand - Rich Coral/Terracotta (warm, premium) */
-    --primary: 12 76% 61%;            /* Rich Coral */
+    /* Primary Brand - Vibrant Teal */
+    --primary: 168 76% 42%;           /* Vibrant Teal */
     --primary-foreground: 0 0% 100%;  /* White text */
-    --primary-glow: 12 85% 68%;       /* Lighter coral glow */
+    --primary-glow: 168 80% 50%;      /* Lighter teal glow */
     
-    /* Secondary - Deep Navy (sophisticated) */
-    --secondary: 222 47% 25%;         /* Deep Navy */
+    /* Secondary - Deep Royal Blue */
+    --secondary: 230 65% 50%;         /* Royal Blue */
     --secondary-foreground: 0 0% 100%;
     
-    /* Accent - Luxe Gold */
-    --accent: 43 96% 56%;             /* Premium Gold */
-    --accent-foreground: 0 0% 0%;
+    /* Accent - Indigo */
+    --accent: 240 60% 55%;            /* Indigo Blue */
+    --accent-foreground: 0 0% 100%;
     
     /* Background & Surfaces */
-    --background: 40 33% 98%;         /* Warm off-white */
-    --foreground: 222 47% 11%;        /* Deep charcoal - BOLD */
+    --background: 210 20% 98%;        /* Cool off-white */
+    --foreground: 220 30% 10%;        /* Deep charcoal - BOLD */
     --card: 0 0% 100%;                /* Pure white cards */
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 220 30% 10%;
     
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 220 30% 10%;
     
     /* Muted Elements */
-    --muted: 40 20% 96%;
-    --muted-foreground: 222 20% 40%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 220 15% 40%;
     
     /* Borders & Inputs */
-    --border: 40 15% 90%;
-    --input: 40 15% 90%;
-    --ring: 12 76% 61%;
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 168 76% 42%;
     
     /* Destructive */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Premium Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(12 76% 61%), hsl(25 90% 65%));
-    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 25%), hsl(222 47% 35%));
-    --gradient-hero: linear-gradient(135deg, hsl(12 76% 61%) 0%, hsl(43 96% 56%) 50%, hsl(222 47% 25%) 100%);
-    --gradient-luxury: linear-gradient(135deg, hsl(222 47% 15%) 0%, hsl(222 47% 25%) 100%);
+    /* Teal to Blue Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(168 76% 42%), hsl(200 80% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(200 80% 50%), hsl(230 65% 50%));
+    --gradient-hero: linear-gradient(90deg, hsl(168 76% 42%) 0%, hsl(195 85% 45%) 50%, hsl(230 65% 50%) 100%);
+    --gradient-brand: linear-gradient(90deg, hsl(168 76% 42%) 0%, hsl(230 65% 50%) 100%);
     
     /* Premium Shadows */
-    --shadow-soft: 0 4px 20px -4px hsl(222 47% 11% / 0.1);
-    --shadow-glow: 0 8px 40px -8px hsl(12 76% 61% / 0.3);
-    --shadow-luxury: 0 25px 50px -12px hsl(222 47% 11% / 0.25);
+    --shadow-soft: 0 4px 20px -4px hsl(220 30% 10% / 0.1);
+    --shadow-glow: 0 8px 40px -8px hsl(168 76% 42% / 0.3);
+    --shadow-luxury: 0 25px 50px -12px hsl(220 30% 10% / 0.2);
     
     --radius: 0.75rem;
   }
@@ -449,22 +449,22 @@
   }
 }
 
-/* Scrollbar styling - Premium coral */
+/* Scrollbar styling - Teal accent */
 ::-webkit-scrollbar {
   width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(40 20% 96%);
+  background: hsl(210 20% 96%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(12 76% 61%);
+  background: hsl(168 76% 42%);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(12 76% 50%);
+  background: hsl(168 76% 35%);
 }
 
 /* Hide scrollbar for horizontal scroll containers */
@@ -491,14 +491,14 @@
   scroll-snap-type: x mandatory;
 }
 
-/* Premium selection styling */
+/* Teal selection styling */
 ::selection {
-  background-color: hsl(12 76% 61%);
+  background-color: hsl(168 76% 42%);
   color: white;
 }
 
 ::-moz-selection {
-  background-color: hsl(12 76% 61%);
+  background-color: hsl(168 76% 42%);
   color: white;
 }
 
