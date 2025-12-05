@@ -5,58 +5,57 @@
 
 @layer base {
   :root {
-    /* GymSpaYoga Design System - Professional Glossy Theme */
+    /* GymSpaYoga Premium Design System */
     
-    /* Primary Brand Colors - Vibrant Emerald Green */
-    --primary: 160 84% 39%;           /* Rich Emerald Green */
-    --primary-foreground: 0 0% 100%;  /* White text on primary */
-    --primary-glow: 160 90% 45%;      /* Brighter emerald for effects */
+    /* Primary Brand - Rich Coral/Terracotta (warm, premium) */
+    --primary: 12 76% 61%;            /* Rich Coral */
+    --primary-foreground: 0 0% 100%;  /* White text */
+    --primary-glow: 12 85% 68%;       /* Lighter coral glow */
     
-    /* Secondary Colors - Royal Purple */
-    --secondary: 270 70% 55%;         /* Vibrant Purple */
-    --secondary-foreground: 0 0% 100%; /* White text on secondary */
+    /* Secondary - Deep Navy (sophisticated) */
+    --secondary: 222 47% 25%;         /* Deep Navy */
+    --secondary-foreground: 0 0% 100%;
     
-    /* Accent Colors - Golden Amber */
-    --accent: 38 95% 50%;             /* Rich Gold/Amber */
-    --accent-foreground: 0 0% 0%;     /* Black text on accent */
+    /* Accent - Luxe Gold */
+    --accent: 43 96% 56%;             /* Premium Gold */
+    --accent-foreground: 0 0% 0%;
     
     /* Background & Surfaces */
-    --background: 0 0% 98%;           /* Clean off-white */
-    --foreground: 0 0% 5%;            /* Near black text - BOLD */
+    --background: 40 33% 98%;         /* Warm off-white */
+    --foreground: 222 47% 11%;        /* Deep charcoal - BOLD */
     --card: 0 0% 100%;                /* Pure white cards */
-    --card-foreground: 0 0% 5%;       /* Black text on cards */
+    --card-foreground: 222 47% 11%;
     
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover-foreground: 222 47% 11%;
     
-    /* Muted & Subtle Elements */
-    --muted: 220 14% 96%;             /* Light gray backgrounds */
-    --muted-foreground: 220 9% 35%;   /* Dark gray text */
+    /* Muted Elements */
+    --muted: 40 20% 96%;
+    --muted-foreground: 222 20% 40%;
     
     /* Borders & Inputs */
-    --border: 220 13% 91%;            /* Light borders */
-    --input: 220 13% 91%;             /* Input borders */
-    --ring: 160 84% 39%;              /* Focus ring (emerald) */
+    --border: 40 15% 90%;
+    --input: 40 15% 90%;
+    --ring: 12 76% 61%;
     
     /* Destructive */
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Gradients - Glossy Professional */
-    --gradient-primary: linear-gradient(135deg, hsl(160 84% 39%), hsl(160 90% 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(270 70% 55%), hsl(290 80% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(200 90% 45%) 50%, hsl(270 70% 55%) 100%);
+    /* Premium Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(12 76% 61%), hsl(25 90% 65%));
+    --gradient-secondary: linear-gradient(135deg, hsl(222 47% 25%), hsl(222 47% 35%));
+    --gradient-hero: linear-gradient(135deg, hsl(12 76% 61%) 0%, hsl(43 96% 56%) 50%, hsl(222 47% 25%) 100%);
+    --gradient-luxury: linear-gradient(135deg, hsl(222 47% 15%) 0%, hsl(222 47% 25%) 100%);
     
-    /* Shadows & Effects - Deeper shadows for glossy look */
-    --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.08);
-    --shadow-glow: 0 0 40px hsl(160 84% 39% / 0.25);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Premium Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(222 47% 11% / 0.1);
+    --shadow-glow: 0 8px 40px -8px hsl(12 76% 61% / 0.3);
+    --shadow-luxury: 0 25px 50px -12px hsl(222 47% 11% / 0.25);
     
     --radius: 0.75rem;
   }
-
-  /* Dark mode disabled - Light mode only */
 }
 
 @layer base {
@@ -450,22 +449,22 @@
   }
 }
 
-/* Scrollbar styling - Professional emerald */
+/* Scrollbar styling - Premium coral */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(220 14% 96%);
+  background: hsl(40 20% 96%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(160 84% 39%);
-  border-radius: 4px;
+  background: hsl(12 76% 61%);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(160 84% 30%);
+  background: hsl(12 76% 50%);
 }
 
 /* Hide scrollbar for horizontal scroll containers */
@@ -475,8 +474,8 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Smooth scroll snap */
@@ -492,13 +491,34 @@
   scroll-snap-type: x mandatory;
 }
 
-/* Selection styling */
+/* Premium selection styling */
 ::selection {
-  background-color: #10b981;
+  background-color: hsl(12 76% 61%);
   color: white;
 }
 
 ::-moz-selection {
-  background-color: #10b981;
+  background-color: hsl(12 76% 61%);
   color: white;
+}
+
+/* Performance optimizations */
+img {
+  content-visibility: auto;
+}
+
+.lazy-load {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
+}
+
+/* GPU acceleration for animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduce paint areas */
+.contain-paint {
+  contain: paint;
 }
