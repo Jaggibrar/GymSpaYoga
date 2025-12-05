@@ -5,88 +5,58 @@
 
 @layer base {
   :root {
-    /* GymSpaYoga Design System - Light Mode */
+    /* GymSpaYoga Design System - Professional Glossy Theme */
     
-    /* Primary Brand Colors */
-    --primary: 185 80% 45%;           /* Turquoise Blue - Main brand color */
+    /* Primary Brand Colors - Vibrant Emerald Green */
+    --primary: 160 84% 39%;           /* Rich Emerald Green */
     --primary-foreground: 0 0% 100%;  /* White text on primary */
-    --primary-glow: 185 85% 55%;      /* Lighter turquoise for effects */
+    --primary-glow: 160 90% 45%;      /* Brighter emerald for effects */
     
-    /* Secondary Colors */
-    --secondary: 15 90% 65%;          /* Coral/Orange - Accent color */
+    /* Secondary Colors - Royal Purple */
+    --secondary: 270 70% 55%;         /* Vibrant Purple */
     --secondary-foreground: 0 0% 100%; /* White text on secondary */
     
-    /* Accent Colors */
-    --accent: 280 65% 60%;            /* Purple - Tertiary accent */
-    --accent-foreground: 0 0% 100%;   /* White text on accent */
+    /* Accent Colors - Golden Amber */
+    --accent: 38 95% 50%;             /* Rich Gold/Amber */
+    --accent-foreground: 0 0% 0%;     /* Black text on accent */
     
     /* Background & Surfaces */
-    --background: 210 20% 98%;        /* Very light blue-gray background */
-    --foreground: 215 25% 15%;        /* Very dark blue-gray text */
+    --background: 0 0% 98%;           /* Clean off-white */
+    --foreground: 0 0% 5%;            /* Near black text - BOLD */
     --card: 0 0% 100%;                /* Pure white cards */
-    --card-foreground: 215 25% 15%;   /* Dark text on cards */
+    --card-foreground: 0 0% 5%;       /* Black text on cards */
     
     /* Popover */
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 0 0% 5%;
     
     /* Muted & Subtle Elements */
-    --muted: 210 15% 92%;             /* Light gray backgrounds */
-    --muted-foreground: 215 15% 45%;  /* Medium gray text */
+    --muted: 220 14% 96%;             /* Light gray backgrounds */
+    --muted-foreground: 220 9% 35%;   /* Dark gray text */
     
     /* Borders & Inputs */
-    --border: 210 20% 88%;            /* Light borders */
-    --input: 210 20% 88%;             /* Input borders */
-    --ring: 185 80% 45%;              /* Focus ring (primary color) */
+    --border: 220 13% 91%;            /* Light borders */
+    --input: 220 13% 91%;             /* Input borders */
+    --ring: 160 84% 39%;              /* Focus ring (emerald) */
     
     /* Destructive */
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(185 80% 45%), hsl(185 85% 55%));
-    --gradient-secondary: linear-gradient(135deg, hsl(15 90% 65%), hsl(35 95% 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(185 80% 45%) 0%, hsl(200 85% 50%) 50%, hsl(280 65% 60%) 100%);
+    /* Gradients - Glossy Professional */
+    --gradient-primary: linear-gradient(135deg, hsl(160 84% 39%), hsl(160 90% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(270 70% 55%), hsl(290 80% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(160 84% 39%) 0%, hsl(200 90% 45%) 50%, hsl(270 70% 55%) 100%);
     
-    /* Shadows & Effects */
-    --shadow-soft: 0 4px 20px -2px hsl(185 80% 45% / 0.15);
-    --shadow-glow: 0 0 40px hsl(185 85% 55% / 0.3);
+    /* Shadows & Effects - Deeper shadows for glossy look */
+    --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.08);
+    --shadow-glow: 0 0 40px hsl(160 84% 39% / 0.25);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     
     --radius: 0.75rem;
   }
 
-  .dark {
-    /* GymSpaYoga Design System - Dark Mode */
-    
-    --background: 215 30% 8%;         /* Very dark blue-gray */
-    --foreground: 210 20% 95%;        /* Almost white text */
-    --card: 215 25% 12%;              /* Dark blue-gray cards */
-    --card-foreground: 210 20% 95%;
-    
-    --popover: 215 25% 12%;
-    --popover-foreground: 210 20% 95%;
-    
-    --primary: 185 80% 50%;           /* Slightly brighter turquoise */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 185 85% 60%;      /* Brighter glow effect */
-    
-    --secondary: 15 90% 60%;          /* Slightly darker coral */
-    --secondary-foreground: 0 0% 100%;
-    
-    --accent: 280 65% 55%;            /* Slightly darker purple */
-    --accent-foreground: 0 0% 100%;
-    
-    --muted: 215 20% 18%;             /* Dark muted backgrounds */
-    --muted-foreground: 215 15% 65%;
-    
-    --border: 215 20% 20%;            /* Dark borders */
-    --input: 215 20% 20%;
-    --ring: 185 80% 50%;
-    
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 20% 95%;
-  }
+  /* Dark mode disabled - Light mode only */
 }
 
 @layer base {
@@ -480,22 +450,22 @@
   }
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - Professional emerald */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: hsl(220 14% 96%);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #10b981;
-  border-radius: 3px;
+  background: hsl(160 84% 39%);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #059669;
+  background: hsl(160 84% 30%);
 }
 
 /* Hide scrollbar for horizontal scroll containers */
