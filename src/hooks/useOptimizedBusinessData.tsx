@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface Business {
@@ -27,7 +27,7 @@ export interface Business {
 
 // Global cache to prevent duplicate requests
 const dataCache = new Map<string, { data: Business[]; timestamp: number; loading: Promise<Business[]> | null }>();
-const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes for better performance
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export const useOptimizedBusinessData = (
   category?: string,
@@ -204,15 +204,52 @@ export const useOptimizedBusinessData = (
     };
   }, [fetchBusinesses]);
 
-  // Memoize the result for stable reference
-  const result = useMemo(() => ({ 
+  // Set up real-time subscription with debouncing
+  useEffect(() => {
+    let mounted = true;
+    let timeoutId: NodeJS.Timeout;
+    
+    const channel = supabase
+      .channel('optimized-business-changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'business_profiles' },
+        () => {
+          if (!mounted) return;
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            if (mounted) {
+              dataCache.clear();
+              const loadData = async () => {
+                try {
+                  const data = await fetchBusinesses();
+                  if (mounted) {
+                    setBusinesses(data);
+                  }
+                } catch (err) {
+                  // Silent fail for real-time updates
+                }
+              };
+              loadData();
+            }
+          }, 2000);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      mounted = false;
+      clearTimeout(timeoutId);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchBusinesses]);
+
+  return { 
     businesses, 
     loading, 
     error, 
     refetch: fetchBusinesses 
-  }), [businesses, loading, error, fetchBusinesses]);
-
-  return result;
+  };
 };
 
 // Helper function to determine tier

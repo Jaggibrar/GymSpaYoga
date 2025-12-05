@@ -1,12 +1,12 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation, Verified, List, Dumbbell, Loader2 } from 'lucide-react';
+import { Search, MapPin, Filter, Grid3X3, Map, Star, Clock, DollarSign, Navigation, Verified, List, Dumbbell } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { usePaginatedBusinessData } from '@/hooks/usePaginatedBusinessData';
+import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import OptimizedBusinessGrid from '@/components/OptimizedBusinessGrid';
 import GoogleMapView from '@/components/GoogleMapView';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -23,42 +23,32 @@ const Gyms = () => {
   const [sortBy, setSortBy] = useState('created_at');
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
   const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
   
   // Add geolocation hook
   const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
 
-  const { businesses, loading, loadingMore, error, hasMore, loadMore } = usePaginatedBusinessData(
+  const { businesses, loading, error } = useOptimizedBusinessData(
     'gym',
     searchTerm,
     location,
     sortBy
   );
 
-  // Infinite scroll observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
-          loadMore();
-        }
-      },
-      { threshold: 0.1 }
-    );
+  // Group businesses by pricing tier
+  const budgetGyms = businesses.filter(b => {
+    const price = b.monthly_price || b.session_price || 0;
+    return price < 2000;
+  });
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
+  const premiumGyms = businesses.filter(b => {
+    const price = b.monthly_price || b.session_price || 0;
+    return price >= 2000 && price < 4000;
+  });
 
-    return () => observer.disconnect();
-  }, [hasMore, loading, loadingMore, loadMore]);
-
-  // Helper to get tier badge
-  const getTierBadge = (price: number) => {
-    if (price >= 4000) return { label: 'Luxury', color: 'bg-amber-500' };
-    if (price >= 2000) return { label: 'Premium', color: 'bg-primary' };
-    return { label: 'Budget', color: 'bg-secondary' };
-  };
+  const luxuryGyms = businesses.filter(b => {
+    const price = b.monthly_price || b.session_price || 0;
+    return price >= 4000;
+  });
 
   const handleSearch = () => {
     // Track search analytics
@@ -248,87 +238,218 @@ const Gyms = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {businesses.map((business) => {
-                  const price = business.monthly_price || business.session_price || 0;
-                  const tier = getTierBadge(price);
-                  return (
-                    <Card key={business.id} className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30">
-                      <div className="relative h-40 overflow-hidden rounded-t-xl">
-                        <OptimizedImage
-                          src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-                          alt={`${business.business_name} interior`}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          width={400}
-                          height={160}
-                        />
-                        <div className="absolute top-3 right-3">
-                          <Badge className="bg-white/95 text-gray-800 shadow-md px-2 py-1">
-                            <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400 inline" />
-                            {(4.0 + Math.random()).toFixed(1)}
-                          </Badge>
-                        </div>
-                        <div className="absolute top-3 left-3 flex gap-2">
-                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                            <Dumbbell className="w-5 h-5 text-white" />
-                          </div>
-                          <Badge className={`${tier.color} text-white shadow-md px-2 py-1 h-fit`}>
-                            {tier.label}
-                          </Badge>
-                        </div>
-                      </div>
-                      <CardContent className="p-5 space-y-3">
-                        <h3 className="text-lg font-bold line-clamp-1">{business.business_name}</h3>
-                        <div className="flex items-center text-gray-600 text-sm">
-                          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-                          <span>{business.city}</span>
-                        </div>
-                        <div className="flex items-center text-gray-500 text-sm">
-                          <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
-                          <span>{business.opening_time} - {business.closing_time}</span>
-                        </div>
-                        <div className="flex items-center text-primary text-sm font-semibold">
-                          <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
-                          <span>
-                            {business.monthly_price ? `₹${business.monthly_price}/month` : 
-                             business.session_price ? `₹${business.session_price}/session` : 'Pricing available'}
-                          </span>
-                        </div>
-                        {business.amenities && business.amenities.length > 0 && (
-                          <div className="flex flex-wrap gap-2 pt-2">
-                            {business.amenities.slice(0, 3).map((amenity) => (
-                              <Badge key={amenity} variant="outline" className="text-xs px-2 py-0.5">
-                                {amenity}
+              <>
+                {/* Budget Tier */}
+                {budgetGyms.length > 0 && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-3xl font-bold">Budget Tier</h2>
+                      <Badge className="bg-secondary text-white">{budgetGyms.length} Gyms</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {budgetGyms.map((business) => (
+                        <Card key={business.id} className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30">
+                          <div className="relative h-40 overflow-hidden rounded-t-xl">
+                            <OptimizedImage
+                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
+                              alt={`${business.business_name} interior`}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              width={400}
+                              height={160}
+                            />
+                            <div className="absolute top-3 right-3">
+                              <Badge className="bg-white/95 text-gray-800 shadow-md px-2 py-1">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400 inline" />
+                                {(4.0 + Math.random()).toFixed(1)}
                               </Badge>
-                            ))}
+                            </div>
+                            <div className="absolute top-3 left-3">
+                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                                <Dumbbell className="w-5 h-5 text-white" />
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        <Button 
-                          onClick={() => handleViewDetails(business.id)}
-                          variant="hero"
-                          className="w-full mt-4"
-                        >
-                          View Details
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            )}
+                          <CardContent className="p-5 space-y-3">
+                            <h3 className="text-lg font-bold line-clamp-1">{business.business_name}</h3>
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.city}</span>
+                            </div>
+                            <div className="flex items-center text-gray-500 text-sm">
+                              <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.opening_time} - {business.closing_time}</span>
+                            </div>
+                            <div className="flex items-center text-primary text-sm font-semibold">
+                              <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>
+                                {business.monthly_price ? `₹${business.monthly_price}/month` : 
+                                 business.session_price ? `₹${business.session_price}/session` : 'Pricing available'}
+                              </span>
+                            </div>
+                            {business.amenities && business.amenities.length > 0 && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {business.amenities.slice(0, 3).map((amenity) => (
+                                  <Badge key={amenity} variant="outline" className="text-xs px-2 py-0.5">
+                                    {amenity}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                            <Button 
+                              onClick={() => handleViewDetails(business.id)}
+                              variant="hero"
+                              className="w-full mt-4"
+                            >
+                              View Details
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
-            {/* Load More Indicator */}
-            <div ref={loadMoreRef} className="flex justify-center py-8">
-              {loadingMore && (
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  <span>Loading more gyms...</span>
-                </div>
-              )}
-              {!hasMore && businesses.length > 0 && (
-                <p className="text-muted-foreground text-sm">You've seen all gyms</p>
-              )}
-            </div>
+                {/* Premium Tier */}
+                {premiumGyms.length > 0 && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-3xl font-bold">Premium Tier</h2>
+                      <Badge className="bg-primary text-white">{premiumGyms.length} Gyms</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {premiumGyms.map((business) => (
+                        <Card key={business.id} className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30">
+                          <div className="relative h-40 overflow-hidden rounded-t-xl">
+                            <OptimizedImage
+                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
+                              alt={`${business.business_name} interior`}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              width={400}
+                              height={160}
+                            />
+                            <div className="absolute top-3 right-3">
+                              <Badge className="bg-white/95 text-gray-800 shadow-md px-2 py-1">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400 inline" />
+                                {(4.2 + Math.random() * 0.6).toFixed(1)}
+                              </Badge>
+                            </div>
+                            <div className="absolute top-3 left-3">
+                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                                <Dumbbell className="w-5 h-5 text-white" />
+                              </div>
+                            </div>
+                          </div>
+                          <CardContent className="p-5 space-y-3">
+                            <h3 className="text-lg font-bold line-clamp-1">{business.business_name}</h3>
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.city}</span>
+                            </div>
+                            <div className="flex items-center text-gray-500 text-sm">
+                              <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.opening_time} - {business.closing_time}</span>
+                            </div>
+                            <div className="flex items-center text-primary text-sm font-semibold">
+                              <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>
+                                {business.monthly_price ? `₹${business.monthly_price}/month` : 
+                                 business.session_price ? `₹${business.session_price}/session` : 'Pricing available'}
+                              </span>
+                            </div>
+                            {business.amenities && business.amenities.length > 0 && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {business.amenities.slice(0, 3).map((amenity) => (
+                                  <Badge key={amenity} variant="outline" className="text-xs px-2 py-0.5">
+                                    {amenity}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                            <Button 
+                              onClick={() => handleViewDetails(business.id)}
+                              variant="hero"
+                              className="w-full mt-4"
+                            >
+                              View Details
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Luxury Tier */}
+                {luxuryGyms.length > 0 && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-3xl font-bold">Luxury Tier</h2>
+                      <Badge className="bg-accent text-white">{luxuryGyms.length} Gyms</Badge>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {luxuryGyms.map((business) => (
+                        <Card key={business.id} className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30">
+                          <div className="relative h-40 overflow-hidden rounded-t-xl">
+                            <OptimizedImage
+                              src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
+                              alt={`${business.business_name} interior`}
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                              width={400}
+                              height={160}
+                            />
+                            <div className="absolute top-3 right-3">
+                              <Badge className="bg-white/95 text-gray-800 shadow-md px-2 py-1">
+                                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400 inline" />
+                                {(4.5 + Math.random() * 0.5).toFixed(1)}
+                              </Badge>
+                            </div>
+                            <div className="absolute top-3 left-3">
+                              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                                <Dumbbell className="w-5 h-5 text-white" />
+                              </div>
+                            </div>
+                          </div>
+                          <CardContent className="p-5 space-y-3">
+                            <h3 className="text-lg font-bold line-clamp-1">{business.business_name}</h3>
+                            <div className="flex items-center text-gray-600 text-sm">
+                              <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.city}</span>
+                            </div>
+                            <div className="flex items-center text-gray-500 text-sm">
+                              <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>{business.opening_time} - {business.closing_time}</span>
+                            </div>
+                            <div className="flex items-center text-primary text-sm font-semibold">
+                              <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
+                              <span>
+                                {business.monthly_price ? `₹${business.monthly_price}/month` : 
+                                 business.session_price ? `₹${business.session_price}/session` : 'Pricing available'}
+                              </span>
+                            </div>
+                            {business.amenities && business.amenities.length > 0 && (
+                              <div className="flex flex-wrap gap-2 pt-2">
+                                {business.amenities.slice(0, 3).map((amenity) => (
+                                  <Badge key={amenity} variant="outline" className="text-xs px-2 py-0.5">
+                                    {amenity}
+                                  </Badge>
+                                ))}
+                              </div>
+                            )}
+                            <Button 
+                              onClick={() => handleViewDetails(business.id)}
+                              variant="hero"
+                              className="w-full mt-4"
+                            >
+                              View Details
+                            </Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </section>
       </div>
