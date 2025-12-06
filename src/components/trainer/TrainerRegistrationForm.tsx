@@ -10,7 +10,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Plus, Upload } from 'lucide-react';
 import { useTrainerRegistration } from '@/hooks/useTrainerRegistration';
 import { useTrainerValidation } from '@/hooks/useTrainerValidation';
-import { toast } from 'sonner';
 
 interface TrainerRegistrationFormProps {
   onSuccess?: () => void;
@@ -61,7 +60,6 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear validation error when user starts typing
     clearValidationError(field);
   };
 
@@ -85,6 +83,9 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        return;
+      }
       setFormData(prev => ({ ...prev, profile_image: file }));
       
       const reader = new FileReader();
@@ -98,51 +99,49 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form before submission
     if (!validateForm(formData)) {
       return;
     }
 
     const success = await registerTrainer(formData);
     if (success && onSuccess) {
-      toast.success('Registration successful! Welcome to GymSpaYoga!');
       onSuccess();
     }
   };
 
   return (
-    <Card className="max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+    <Card className="max-w-4xl mx-auto bg-white border border-border shadow-medium">
+      <CardHeader className="border-b border-border">
+        <CardTitle className="text-2xl font-bold text-foreground">
           Register as a Trainer
         </CardTitle>
-        <p className="text-gray-600">
-          Join our platform and connect with fitness enthusiasts looking for expert guidance
+        <p className="text-muted-foreground">
+          Join our platform and connect with fitness enthusiasts
         </p>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Left Column */}
             <div className="space-y-4">
-               <div>
-                <Label htmlFor="name" className="text-base font-medium">Full Name *</Label>
+              <div>
+                <Label htmlFor="name" className="text-sm font-semibold text-foreground">Full Name *</Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Enter your full name"
                   required
-                  className={`mt-1 ${getFieldError('name') ? 'border-red-500' : ''}`}
+                  className={`mt-1 ${getFieldError('name') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('name') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('name')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('name')}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="email" className="text-base font-medium">Email *</Label>
+                <Label htmlFor="email" className="text-sm font-semibold text-foreground">Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -150,45 +149,45 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your@email.com"
                   required
-                  className={`mt-1 ${getFieldError('email') ? 'border-red-500' : ''}`}
+                  className={`mt-1 ${getFieldError('email') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('email') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('email')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('email')}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="phone" className="text-base font-medium">Phone Number *</Label>
+                <Label htmlFor="phone" className="text-sm font-semibold text-foreground">Phone Number *</Label>
                 <Input
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="+91 9876543210"
                   required
-                  className={`mt-1 ${getFieldError('phone') ? 'border-red-500' : ''}`}
+                  className={`mt-1 ${getFieldError('phone') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('phone') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('phone')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('phone')}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="location" className="text-base font-medium">Location *</Label>
+                <Label htmlFor="location" className="text-sm font-semibold text-foreground">Location *</Label>
                 <Input
                   id="location"
                   value={formData.location}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   placeholder="City, State"
                   required
-                  className={`mt-1 ${getFieldError('location') ? 'border-red-500' : ''}`}
+                  className={`mt-1 ${getFieldError('location') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('location') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('location')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('location')}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="category" className="text-base font-medium">Category *</Label>
+                <Label htmlFor="category" className="text-sm font-semibold text-foreground">Category *</Label>
                 <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Select your specialization" />
@@ -204,7 +203,7 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="trainer_tier" className="text-base font-medium">Trainer Tier</Label>
+                <Label htmlFor="trainer_tier" className="text-sm font-semibold text-foreground">Trainer Tier</Label>
                 <Select value={formData.trainer_tier} onValueChange={(value) => handleInputChange('trainer_tier', value)}>
                   <SelectTrigger className="mt-1">
                     <SelectValue placeholder="Select your tier" />
@@ -223,39 +222,39 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
             {/* Right Column */}
             <div className="space-y-4">
               <div>
-                <Label htmlFor="experience" className="text-base font-medium">Experience (Years) *</Label>
+                <Label htmlFor="experience" className="text-sm font-semibold text-foreground">Experience (Years) *</Label>
                 <Input
                   id="experience"
                   type="number"
                   min="1"
                   max="50"
                   value={formData.experience}
-                  onChange={(e) => handleInputChange('experience', parseInt(e.target.value) || 0)}
-                  className={`mt-1 ${getFieldError('experience') ? 'border-red-500' : ''}`}
+                  onChange={(e) => handleInputChange('experience', parseInt(e.target.value) || 1)}
+                  className={`mt-1 ${getFieldError('experience') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('experience') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('experience')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('experience')}</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="hourly_rate" className="text-base font-medium">Hourly Rate (₹) *</Label>
+                <Label htmlFor="hourly_rate" className="text-sm font-semibold text-foreground">Hourly Rate (₹) *</Label>
                 <Input
                   id="hourly_rate"
                   type="number"
                   min="100"
                   max="10000"
                   value={formData.hourly_rate}
-                  onChange={(e) => handleInputChange('hourly_rate', parseInt(e.target.value) || 0)}
-                  className={`mt-1 ${getFieldError('hourly_rate') ? 'border-red-500' : ''}`}
+                  onChange={(e) => handleInputChange('hourly_rate', parseInt(e.target.value) || 100)}
+                  className={`mt-1 ${getFieldError('hourly_rate') ? 'border-destructive' : 'border-input'}`}
                 />
                 {getFieldError('hourly_rate') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('hourly_rate')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('hourly_rate')}</p>
                 )}
               </div>
 
               <div>
-                <Label className="text-base font-medium">Specializations *</Label>
+                <Label className="text-sm font-semibold text-foreground">Specializations *</Label>
                 <div className="flex gap-2 mt-1">
                   <Input
                     value={currentSpecialization}
@@ -268,18 +267,18 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                       }
                     }}
                   />
-                  <Button type="button" onClick={handleAddSpecialization} size="sm">
+                  <Button type="button" onClick={handleAddSpecialization} size="sm" className="bg-primary hover:bg-primary/90">
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {formData.specializations.map(spec => (
-                    <Badge key={spec} variant="secondary" className="flex items-center gap-1">
+                    <Badge key={spec} variant="secondary" className="flex items-center gap-1 bg-muted text-foreground">
                       {spec}
                       <button
                         type="button"
                         onClick={() => handleRemoveSpecialization(spec)}
-                        className="ml-1 hover:bg-red-100 rounded-full p-1"
+                        className="ml-1 hover:bg-destructive/20 rounded-full p-0.5"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -287,15 +286,15 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                   ))}
                 </div>
                 {getFieldError('specializations') && (
-                  <p className="text-red-500 text-sm mt-1">{getFieldError('specializations')}</p>
+                  <p className="text-destructive text-sm mt-1">{getFieldError('specializations')}</p>
                 )}
                 {formData.specializations.length === 0 && (
-                  <p className="text-gray-500 text-sm mt-1">Add at least one specialization</p>
+                  <p className="text-muted-foreground text-sm mt-1">Add at least one specialization</p>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="profile_image" className="text-base font-medium">Profile Image</Label>
+                <Label htmlFor="profile_image" className="text-sm font-semibold text-foreground">Profile Image</Label>
                 <div className="mt-1">
                   <input
                     id="profile_image"
@@ -308,17 +307,18 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
                     type="button"
                     variant="outline"
                     onClick={() => document.getElementById('profile_image')?.click()}
-                    className="w-full"
+                    className="w-full border-input hover:bg-muted"
                   >
                     <Upload className="h-4 w-4 mr-2" />
                     Upload Profile Image
                   </Button>
                   {imagePreview && (
-                    <div className="mt-2">
+                    <div className="mt-3 flex justify-center">
                       <img
                         src={imagePreview}
                         alt="Profile preview"
-                        className="w-24 h-24 object-cover rounded-full mx-auto"
+                        className="w-24 h-24 object-cover rounded-full border-2 border-border"
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -330,43 +330,43 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
           {/* Full width fields */}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="bio" className="text-base font-medium">Bio *</Label>
+              <Label htmlFor="bio" className="text-sm font-semibold text-foreground">Bio *</Label>
               <Textarea
                 id="bio"
                 value={formData.bio}
                 onChange={(e) => handleInputChange('bio', e.target.value)}
                 placeholder="Tell us about yourself, your training philosophy, and what makes you unique... (minimum 50 characters)"
                 required
-                className={`mt-1 min-h-[120px] ${getFieldError('bio') ? 'border-red-500' : ''}`}
+                className={`mt-1 min-h-[120px] ${getFieldError('bio') ? 'border-destructive' : 'border-input'}`}
               />
               {getFieldError('bio') && (
-                <p className="text-red-500 text-sm mt-1">{getFieldError('bio')}</p>
+                <p className="text-destructive text-sm mt-1">{getFieldError('bio')}</p>
               )}
-              <p className="text-gray-500 text-sm mt-1">{formData.bio.length}/1000 characters</p>
+              <p className="text-muted-foreground text-sm mt-1">{formData.bio.length}/1000 characters</p>
             </div>
 
             <div>
-              <Label htmlFor="certifications" className="text-base font-medium">Certifications</Label>
+              <Label htmlFor="certifications" className="text-sm font-semibold text-foreground">Certifications</Label>
               <Textarea
                 id="certifications"
                 value={formData.certifications}
                 onChange={(e) => handleInputChange('certifications', e.target.value)}
                 placeholder="List your certifications, degrees, and qualifications..."
-                className="mt-1 min-h-[80px]"
+                className="mt-1 min-h-[80px] border-input"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-6 border-t">
+          <div className="flex justify-end gap-3 pt-6 border-t border-border">
             {onCancel && (
-              <Button type="button" variant="outline" onClick={onCancel}>
+              <Button type="button" variant="outline" onClick={onCancel} className="border-input hover:bg-muted">
                 Cancel
               </Button>
             )}
             <Button
               type="submit"
-              disabled={loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.bio.trim()}
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+              disabled={loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.bio.trim() || formData.specializations.length === 0}
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
             >
               {loading ? (
                 <>
