@@ -1,4 +1,3 @@
-
 import React from 'react';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
 import CategoryTrainers from '@/components/CategoryTrainers';
@@ -6,7 +5,6 @@ import SEOHead from '@/components/SEOHead';
 import OptimizedImage from '@/components/performance/ImageOptimizer';
 
 const Spas = () => {
-
   return (
     <>
       <SEOHead
@@ -15,7 +13,7 @@ const Spas = () => {
         keywords="spa near me, massage therapy, wellness center, relaxation, aromatherapy, luxury spa, spa treatments"
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
@@ -27,7 +25,7 @@ const Spas = () => {
               width={1920}
               height={350}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+            <div className="absolute inset-0 bg-black/50"></div>
           </div>
           <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
             <div className="max-w-4xl mx-auto text-center">

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
 import CategoryTrainers from '@/components/CategoryTrainers';
@@ -6,16 +5,15 @@ import SEOHead from '@/components/SEOHead';
 import OptimizedImage from '@/components/performance/ImageOptimizer';
 
 const Yoga = () => {
-
   return (
     <>
       <SEOHead
         title="Yoga Studios & Classes Near You - GymSpaYoga | Find Inner Peace"
-        description="Discover authentic yoga studios and certified instructors across India. From Hatha to Vinyasa, book your perfect yoga practice for mind, body, and soul with verified reviews and real photos."
-        keywords="yoga classes near me, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness, spiritual wellness, best yoga classes India"
+        description="Discover authentic yoga studios and certified instructors across India. From Hatha to Vinyasa, book your perfect yoga practice for mind, body, and soul."
+        keywords="yoga classes near me, yoga studio, meditation, hatha yoga, vinyasa, yoga instructor, mindfulness"
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-white">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
@@ -27,7 +25,7 @@ const Yoga = () => {
               width={1920}
               height={350}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
+            <div className="absolute inset-0 bg-black/50"></div>
           </div>
           <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
             <div className="max-w-4xl mx-auto text-center">

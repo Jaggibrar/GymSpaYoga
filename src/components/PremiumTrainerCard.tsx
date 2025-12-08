@@ -39,23 +39,20 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
   const getTierInfo = (tier: string) => {
     const tiers = {
       certified: {
-        color: 'from-blue-500 to-blue-600',
-        bgColor: 'bg-blue-50',
-        textColor: 'text-blue-700',
+        bgColor: 'bg-[#0A45FF]/10',
+        textColor: 'text-[#0A45FF]',
         icon: CheckCircle,
         label: 'Certified'
       },
       expert: {
-        color: 'from-purple-500 to-purple-600',
         bgColor: 'bg-purple-50',
         textColor: 'text-purple-700',
         icon: Award,
         label: 'Expert'
       },
       elite: {
-        color: 'from-amber-500 to-amber-600',
-        bgColor: 'bg-amber-50',
-        textColor: 'text-amber-700',
+        bgColor: 'bg-yellow-50',
+        textColor: 'text-yellow-700',
         icon: Zap,
         label: 'Elite'
       }
@@ -68,17 +65,17 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
 
   return (
     <Card 
-      className={`group relative overflow-hidden transition-all duration-700 cursor-pointer border-0 ${
+      className={`group relative overflow-hidden transition-all duration-300 cursor-pointer border-2 ${
         featured 
-          ? 'ring-2 ring-primary shadow-2xl hover:shadow-3xl hover:-translate-y-4' 
-          : 'shadow-lg hover:shadow-2xl hover:-translate-y-2'
-      } bg-white rounded-3xl`}
+          ? 'border-[#0A45FF] shadow-xl hover:shadow-2xl' 
+          : 'border-gray-100 hover:border-[#0A45FF] shadow-md hover:shadow-xl'
+      } bg-white rounded-2xl`}
       onClick={handleViewProfile}
     >
       {/* Featured Badge */}
       {featured && (
         <div className="absolute top-4 left-4 z-10">
-          <Badge className="bg-gradient-to-r from-primary to-accent text-white border-0 px-3 py-1 text-xs font-semibold">
+          <Badge className="bg-[#0A45FF] text-white border-0 px-3 py-1 text-xs font-semibold">
             ⭐ Featured
           </Badge>
         </div>
@@ -89,21 +86,18 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
         <img 
           src={trainer.profile_image_url || "/placeholder.svg"} 
           alt={trainer.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           onError={(e) => {
             e.currentTarget.src = "/placeholder.svg";
           }}
         />
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        
         {/* Rating Badge */}
         <div className="absolute top-4 right-4">
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl px-4 py-2 shadow-lg">
+          <div className="bg-white rounded-xl px-4 py-2 shadow-lg">
             <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-              <span className="font-bold text-gray-900">{trainer.rating || 4.8}</span>
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+              <span className="font-bold text-black">{trainer.rating || 4.8}</span>
               <span className="text-sm text-gray-600">({trainer.reviews_count || 12})</span>
             </div>
           </div>
@@ -111,7 +105,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
 
         {/* Tier Badge */}
         <div className="absolute bottom-4 left-4">
-          <div className={`${tierInfo.bgColor} backdrop-blur-sm rounded-2xl px-4 py-2 flex items-center gap-2 shadow-lg`}>
+          <div className={`${tierInfo.bgColor} rounded-xl px-4 py-2 flex items-center gap-2 shadow-lg`}>
             <TierIcon className={`h-4 w-4 ${tierInfo.textColor}`} />
             <span className={`font-semibold text-sm ${tierInfo.textColor} capitalize`}>
               {tierInfo.label}
@@ -120,10 +114,10 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
         </div>
 
         {/* Quick Action Button */}
-        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-500">
+        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
           <Button
             size="sm"
-            className="bg-white/90 backdrop-blur-sm text-primary hover:bg-white shadow-lg border-0 rounded-xl"
+            className="bg-white text-[#0A45FF] hover:bg-gray-50 shadow-lg border-0 rounded-xl"
             onClick={handleBookSession}
           >
             <Heart className="h-4 w-4" />
@@ -136,18 +130,18 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
         {/* Header */}
         <div className="space-y-2">
           <div className="flex items-start justify-between">
-            <h3 className="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-300">
+            <h3 className="text-xl font-bold text-black group-hover:text-[#0A45FF] transition-colors duration-300">
               {trainer.name}
             </h3>
             <div className="text-right">
-              <p className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              <p className="text-2xl font-bold text-[#0A45FF]">
                 ₹{trainer.hourly_rate}
               </p>
-              <p className="text-sm text-muted-foreground">per session</p>
+              <p className="text-sm text-gray-600">per session</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
               <Clock className="h-4 w-4" />
               <span>{trainer.experience} years</span>
@@ -160,7 +154,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
         </div>
 
         {/* Bio */}
-        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
+        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
           {trainer.bio}
         </p>
 
@@ -178,7 +172,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
           {trainer.specializations.length > 2 && (
             <Badge 
               variant="secondary" 
-              className="text-xs bg-gradient-to-r from-primary/10 to-accent/10 text-primary border border-primary/20"
+              className="text-xs bg-[#0A45FF]/10 text-[#0A45FF] border border-[#0A45FF]/20"
             >
               +{trainer.specializations.length - 2} more
             </Badge>
@@ -189,7 +183,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
         <div className="flex gap-3 pt-2">
           <Button 
             variant="outline" 
-            className="flex-1 rounded-xl border-2 hover:border-primary hover:text-primary transition-all duration-300"
+            className="flex-1 rounded-xl border-2 border-gray-200 hover:border-[#0A45FF] hover:text-[#0A45FF] transition-all duration-300"
             onClick={(e) => {
               e.stopPropagation();
               handleViewProfile();
@@ -199,7 +193,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
             View Profile
           </Button>
           <Button 
-            className="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary-dark hover:to-accent text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="flex-1 bg-[#0A45FF] hover:bg-[#083ACC] text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
             onClick={handleBookSession}
           >
             Book Session
@@ -209,7 +203,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
 
         {/* Stats Row */}
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-gray-600">
             <div className="flex items-center gap-1">
               <Users className="h-3 w-3" />
               <span>{Math.floor(Math.random() * 50) + 20}+ clients</span>
@@ -220,7 +214,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
             </div>
           </div>
           
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-gray-600">
             Available today
           </div>
         </div>

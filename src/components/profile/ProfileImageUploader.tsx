@@ -56,7 +56,7 @@ export const ProfileImageUploader = ({
       <div className="relative">
         <Avatar className="h-24 w-24">
           <AvatarImage src={previewUrl || currentImageUrl} />
-          <AvatarFallback className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white text-xl">
+          <AvatarFallback className="bg-[#0A45FF] text-white text-xl">
             {getUserInitials()}
           </AvatarFallback>
         </Avatar>
@@ -69,7 +69,7 @@ export const ProfileImageUploader = ({
           disabled={uploading}
         >
           {uploading ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-500" />
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#0A45FF]" />
           ) : (
             <Camera className="h-3 w-3" />
           )}
