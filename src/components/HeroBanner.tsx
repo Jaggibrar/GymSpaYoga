@@ -40,49 +40,35 @@ const HeroBanner = () => {
     }
   };
 
-  // Hero images for the collage
-  const heroImages = [
-    '/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png', // gym
-    '/lovable-uploads/dff015a7-a5ee-4388-a12c-c0256e98eac2.png', // spa
-    '/lovable-uploads/f6b8bda4-a19a-4114-b2d6-550e44d1a2ce.png', // yoga
-    '/lovable-uploads/0fa638c6-9881-4e0e-aa9e-fc87ff97b06e.png', // trainers
-  ];
-
   return (
-    <section className="relative min-h-[500px] md:min-h-[600px]">
-      {/* Image Collage Background */}
-      <div className="absolute inset-0 grid grid-cols-2 md:grid-cols-4 gap-1">
-        {heroImages.map((img, index) => (
-          <div 
-            key={index} 
-            className="relative overflow-hidden"
-          >
-            <img
-              src={img}
-              alt=""
-              className="w-full h-full object-cover"
-              loading="eager"
-            />
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
-        ))}
+    <section className="relative">
+      {/* Hero Banner Image */}
+      <div className="relative w-full h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden">
+        <img
+          src="/images/hero-banner.png"
+          alt="Wellness Experience - Gym, Spa, and Yoga"
+          className="w-full h-full object-cover object-center"
+          loading="eager"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/30" />
+        
+        {/* Text Overlay */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-4 drop-shadow-lg">
+            Find Your Perfect Wellness
+            <br />
+            Experience
+          </h1>
+          <p className="text-lg md:text-xl text-white/90 mb-6 text-center max-w-2xl drop-shadow-md">
+            Discover gyms, spas, yoga studios, and personal trainers near you
+          </p>
+        </div>
       </div>
 
-      {/* Content Overlay */}
-      <div className="relative z-10 container mx-auto px-4 py-16 md:py-24 flex flex-col items-center justify-center min-h-[500px] md:min-h-[600px]">
-        {/* Heading */}
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-4 drop-shadow-lg">
-          Find Your Perfect Wellness
-          <br />
-          Experience
-        </h1>
-        <p className="text-lg md:text-xl text-white/90 mb-8 text-center max-w-2xl drop-shadow-md">
-          Discover gyms, spas, yoga studios, and personal trainers near you
-        </p>
-
-        {/* Search Bar */}
-        <div className="bg-white rounded-xl p-3 md:p-4 shadow-2xl w-full max-w-4xl">
+      {/* Search Bar - Positioned below the image */}
+      <div className="container mx-auto px-4 -mt-8 relative z-10">
+        <div className="bg-white rounded-xl p-3 md:p-4 shadow-2xl w-full max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row gap-3 items-stretch">
             {/* Search Input */}
             <div className="relative flex-1">
@@ -134,7 +120,7 @@ const HeroBanner = () => {
         </div>
 
         {/* Category Quick Links */}
-        <div className="flex flex-wrap justify-center gap-3 mt-8">
+        <div className="flex flex-wrap justify-center gap-3 mt-6">
           <Button 
             onClick={() => navigate('/gyms')}
             className="bg-[#0A45FF] hover:bg-[#083ACC] text-white font-medium px-6"
