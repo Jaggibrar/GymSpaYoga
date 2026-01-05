@@ -220,23 +220,26 @@ const Index = () => {
         </section>
 
         {/* Business Registration CTA */}
-        <section className="py-10 md:py-12 bg-[#0A45FF]">
+        <section className="py-10 md:py-12 bg-[#005EB8]">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Own a Wellness Business?
             </h2>
-            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-white/90 mb-3 max-w-2xl mx-auto">
               Join our platform and reach thousands of potential customers looking for wellness services.
+            </p>
+            <p className="text-base text-white/80 mb-8 max-w-xl mx-auto">
+              <span className="font-semibold">Free to use</span> • <span className="font-semibold">Easy to explore</span> • No hidden charges
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-business">
-                <Button size="lg" className="bg-white text-[#0A45FF] hover:bg-gray-100 px-8">
+                <Button size="lg" className="bg-[#00C9A7] hover:bg-[#00B396] text-white font-semibold px-8 min-h-[48px]">
                   <Dumbbell className="mr-2 h-5 w-5" />
                   Register Your Business
                 </Button>
               </Link>
               <Link to="/pricing">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#0A45FF] px-8">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#005EB8] px-8 min-h-[48px]">
                   View Pricing
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
