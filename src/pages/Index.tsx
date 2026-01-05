@@ -96,9 +96,9 @@ const Index = () => {
         <HeroBanner />
 
         {/* Categories Section */}
-        <section className="py-16 bg-white">
+        <section className="py-10 md:py-12 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
                 Explore Wellness Categories
               </h2>
@@ -127,10 +127,10 @@ const Index = () => {
         </section>
 
         {/* Recent Listings */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-10 md:py-12 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-black mb-2">
                 Featured Listings
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -144,7 +144,7 @@ const Index = () => {
         </section>
 
         {/* Geolocation Recommendations */}
-        <section className="py-16 bg-white">
+        <section className="py-10 md:py-12 bg-white">
           <div className="container mx-auto px-4">
             <Suspense fallback={<LoadingFallback />}>
               <GeolocationRecommendations />
@@ -153,10 +153,10 @@ const Index = () => {
         </section>
 
         {/* Features Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-10 md:py-12 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-black mb-2">
                 Why Choose GymSpaYoga?
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -181,7 +181,7 @@ const Index = () => {
         </section>
 
         {/* CTA Section - Solid White Background */}
-        <section className="py-20 bg-white">
+        <section className="py-12 md:py-14 bg-white">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <Sparkles className="h-12 w-12 text-[#0A45FF] mx-auto mb-6" />
@@ -220,7 +220,7 @@ const Index = () => {
         </section>
 
         {/* Business Registration CTA */}
-        <section className="py-16 bg-[#0A45FF]">
+        <section className="py-10 md:py-12 bg-[#0A45FF]">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
               Own a Wellness Business?

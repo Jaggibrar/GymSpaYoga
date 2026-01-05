@@ -137,7 +137,7 @@ const HeroBanner = () => {
         </div>
 
         {/* Category Quick Links - Horizontal scroll on mobile */}
-        <nav className="mt-6 overflow-x-auto scrollbar-hide" aria-label="Quick category links">
+        <nav className="mt-4 overflow-x-auto scrollbar-hide" aria-label="Quick category links">
           <div className="flex justify-center gap-2 sm:gap-3 min-w-max px-4 sm:px-0">
             <Button 
               onClick={() => navigate('/gyms')}
