@@ -75,6 +75,12 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
     }
   };
 
+  // Generate proper alt text for SEO
+  const getImageAltText = () => {
+    const type = business.business_type.charAt(0).toUpperCase() + business.business_type.slice(1);
+    return `${business.business_name} - ${type} in ${business.city}, ${business.state}`;
+  };
+
   const formatPrice = () => {
     if (business.monthly_price) {
       return `₹${business.monthly_price.toLocaleString()}`;
@@ -92,12 +98,14 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
 
   return (
     <Card className="group hover:shadow-lg transition-shadow duration-200 border border-border rounded-lg overflow-hidden bg-white">
-      <div className="relative overflow-hidden h-48">
+      {/* Image container with proper aspect ratio */}
+      <div className="relative overflow-hidden aspect-[4/3]">
         <img 
           src={imageUrl}
-          alt={business.business_name}
+          alt={getImageAltText()}
           className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80";
@@ -110,35 +118,35 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
         </Badge>
         <div className="absolute bottom-3 left-3">
           <div className="flex items-center gap-1.5 text-white bg-black/50 rounded px-2 py-1">
-            <Star className="h-3.5 w-3.5 fill-current text-yellow-400" />
+            <Star className="h-3.5 w-3.5 fill-current text-yellow-400" aria-hidden="true" />
             <span className="font-medium text-sm">4.7</span>
           </div>
         </div>
       </div>
       
-      <CardContent className="p-5">
-        <div className="mb-4">
+      <CardContent className="p-4 md:p-5">
+        <div className="mb-3">
           <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors mb-2 line-clamp-1">
             {business.business_name}
           </h3>
           <div className="flex items-center gap-1.5 text-muted-foreground">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <MapPin className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
             <span className="text-sm truncate">{business.city}, {business.state}</span>
           </div>
         </div>
         
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">
+        <p className="text-muted-foreground text-sm mb-3 line-clamp-2 leading-relaxed">
           {business.description || "Modern fitness center with state-of-the-art equipment."}
         </p>
         
         <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
-          <Clock className="h-4 w-4" />
+          <Clock className="h-4 w-4" aria-hidden="true" />
           <span>{business.opening_time} - {business.closing_time}</span>
         </div>
         
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex-shrink-0">
               <p className="text-xl font-bold text-primary">
                 {formatPrice()}
               </p>
@@ -146,18 +154,23 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
                 {getPriceSubtext()}
               </p>
             </div>
-            <Link to={getDetailLink()}>
-              <Button className="bg-primary hover:bg-primary/90 text-white font-semibold px-4 py-2">
+            {/* Increased tap target to 48px minimum for mobile */}
+            <Link to={getDetailLink()} className="flex-shrink-0">
+              <Button 
+                className="bg-primary hover:bg-primary/90 text-white font-semibold min-h-[48px] min-w-[120px] px-5 py-3 text-base"
+                aria-label={`View details for ${business.business_name}`}
+              >
                 View Details
               </Button>
             </Link>
           </div>
           
+          {/* WhatsApp button with proper tap target */}
           <WhatsAppButton 
             phoneNumber={business.phone}
             businessName={business.business_name}
             variant="outline" 
-            className="w-full border-primary text-primary hover:bg-primary hover:text-white"
+            className="w-full border-primary text-primary hover:bg-primary hover:text-white min-h-[48px]"
           />
         </div>
       </CardContent>

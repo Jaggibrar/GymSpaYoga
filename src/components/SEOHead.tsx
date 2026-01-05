@@ -82,8 +82,8 @@ const SEOHead = ({
       <meta name="twitter:creator" content="@GymSpaYoga" />
       
       {/* Additional SEO Tags */}
-      <meta name="theme-color" content="#10B981" />
-      <meta name="msapplication-TileColor" content="#10B981" />
+      <meta name="theme-color" content="#0A45FF" />
+      <meta name="msapplication-TileColor" content="#0A45FF" />
       <meta name="application-name" content="GymSpaYoga" />
       <meta name="apple-mobile-web-app-title" content="GymSpaYoga" />
       <meta name="apple-mobile-web-app-capable" content="yes" />

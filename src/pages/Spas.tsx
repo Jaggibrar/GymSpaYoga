@@ -8,9 +8,9 @@ const Spas = () => {
   return (
     <>
       <SEOHead
-        title="Luxury Spas & Wellness Centers - GymSpaYoga | Relaxation & Rejuvenation"
-        description="Book premium spa treatments and wellness services. Professional massage therapy, aromatherapy, and rejuvenating treatments for ultimate relaxation."
-        keywords="spa near me, massage therapy, wellness center, relaxation, aromatherapy, luxury spa, spa treatments"
+        title="Best Spas in India - Luxury Wellness Centers in Mumbai, Delhi, Bangalore | GymSpaYoga"
+        description="Book premium spa treatments in Mumbai, Delhi, Bangalore & across India. Professional massage therapy, aromatherapy, and rejuvenating treatments. Book now!"
+        keywords="spa near me, best spa Mumbai, luxury spa Delhi, wellness center Bangalore, massage therapy India, aromatherapy"
       />
       
       <div className="min-h-screen bg-white">

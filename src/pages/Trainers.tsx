@@ -30,9 +30,9 @@ const Trainers = () => {
   return (
     <>
       <SEOHead
-        title="Expert Personal Trainers - Find the Best Fitness Coaches"
-        description="Connect with certified personal trainers and fitness coaches. Achieve your fitness goals with expert guidance and personalized training programs."
-        keywords="personal trainer, fitness coach, strength training, weight loss, fitness guidance"
+        title="Best Personal Trainers in India - Certified Fitness Coaches Mumbai, Delhi, Bangalore | GymSpaYoga"
+        description="Connect with certified personal trainers in Mumbai, Delhi, Bangalore & across India. Achieve your fitness goals with expert guidance and personalized programs. Book now!"
+        keywords="personal trainer near me, best fitness coach Mumbai, certified trainer Delhi, personal training Bangalore, weight loss trainer India"
       />
       
       <div className="min-h-screen bg-white">
