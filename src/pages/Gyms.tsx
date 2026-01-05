@@ -66,10 +66,10 @@ const Gyms = () => {
 
   const renderGymCard = (business: any, tierColor: string) => (
     <Card key={business.id} className="group border-2 border-gray-100 hover:border-[#0A45FF] transition-all duration-300 hover:shadow-lg">
-      <div className="relative h-40 overflow-hidden rounded-t-xl">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-t-xl">
         <OptimizedImage
           src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-          alt={`${business.business_name} interior`}
+          alt={`${business.business_name} - Premium Gym in ${business.city}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           width={400}
           height={160}
@@ -114,7 +114,8 @@ const Gyms = () => {
         )}
         <Button 
           onClick={() => handleViewDetails(business.id)}
-          className="w-full mt-4 bg-[#0A45FF] hover:bg-[#083ACC] text-white"
+          className="w-full mt-4 bg-[#0A45FF] hover:bg-[#083ACC] text-white min-h-[48px] text-base font-semibold"
+          aria-label={`View details for ${business.business_name}`}
         >
           View Details
         </Button>
@@ -125,9 +126,9 @@ const Gyms = () => {
   return (
     <>
       <SEOHead
-        title="Premium Gyms Near You - GymSpaYoga | Find & Book Top Fitness Centers"
-        description="Discover and book the best gyms in India with state-of-the-art equipment, expert trainers, and flexible membership options."
-        keywords="gyms near me, fitness center, premium gym, gym membership, workout facilities"
+        title="Best Gyms in India - Find Premium Fitness Centers Near You | GymSpaYoga"
+        description="Discover and book the best gyms in Mumbai, Delhi, Bangalore & across India. State-of-the-art equipment, expert trainers, and flexible membership options. Book now!"
+        keywords="gyms near me, best gym Mumbai, premium gym Delhi, fitness center Bangalore, gym membership India, workout facilities"
       />
       
       <div className="min-h-screen bg-white">
