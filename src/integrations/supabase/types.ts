@@ -1738,8 +1738,8 @@ export type Database = {
         Returns: boolean
       }
       is_admin:
-        | { Args: { user_uuid?: string }; Returns: boolean }
         | { Args: never; Returns: boolean }
+        | { Args: { user_uuid?: string }; Returns: boolean }
       is_super_admin: { Args: { user_uuid?: string }; Returns: boolean }
       log_admin_action: {
         Args: { p_event_data?: Json; p_event_type: string }

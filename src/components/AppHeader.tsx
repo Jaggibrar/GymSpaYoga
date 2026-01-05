@@ -1,9 +1,14 @@
-
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, X } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Heart, Menu, X, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const AppHeader = () => {
   const { user } = useAuth();
@@ -13,46 +18,57 @@ const AppHeader = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const navItems = [
-    { name: "Find Services", href: "/explore" },
-    { name: "Categories", href: "/gyms" },
-    { name: "For Business", href: "/register-business" },
-  ];
-
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 overflow-x-hidden w-full">
       <div className="container mx-auto px-4 py-3 max-w-full">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="h-10 w-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
+            <div className="h-10 w-10 bg-[#0A45FF] rounded-lg flex items-center justify-center">
               <Heart className="h-6 w-6 text-white fill-white" />
             </div>
-            <span className="text-xl font-semibold text-blue-500">FIT Friend</span>
+            <span className="text-xl font-semibold text-black">GymSpaYoga</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8 flex-1 justify-center">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-700 hover:text-blue-500 font-medium transition-colors duration-200 whitespace-nowrap"
-              >
-                {item.name}
-              </Link>
-            ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-1 text-gray-700 hover:text-[#0A45FF] font-medium transition-colors duration-200">
+                Find Services
+                <ChevronDown className="h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white border border-gray-200 shadow-lg">
+                <DropdownMenuItem asChild>
+                  <Link to="/gyms" className="cursor-pointer">Gyms</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/spas" className="cursor-pointer">Spas</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/yoga" className="cursor-pointer">Yoga Studios</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/trainers" className="cursor-pointer">Trainers</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Link
+              to="/register-business"
+              className="text-gray-700 hover:text-[#0A45FF] font-medium transition-colors duration-200 whitespace-nowrap"
+            >
+              For Business
+            </Link>
           </nav>
           
           {/* Desktop Right Side */}
           <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
             {!user ? (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-blue-500 font-medium whitespace-nowrap">
+                <Link to="/login" className="text-gray-700 hover:text-[#0A45FF] font-medium whitespace-nowrap">
                   Sign In
                 </Link>
                 <Link to="/register-business">
-                  <Button className="bg-gradient-to-r from-cyan-400 to-purple-500 hover:from-cyan-500 hover:to-purple-600 text-white font-medium px-6">
+                  <Button className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-6">
                     List Your Business
                   </Button>
                 </Link>
@@ -86,16 +102,41 @@ const AppHeader = () => {
             <div className="flex flex-col space-y-3 pt-4 w-full">
               {/* Mobile Navigation Items */}
               <div className="flex flex-col space-y-2 w-full">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className="text-gray-700 hover:text-blue-500 font-medium px-2 py-2 w-full transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+                <Link
+                  to="/gyms"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Gyms
+                </Link>
+                <Link
+                  to="/spas"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Spas
+                </Link>
+                <Link
+                  to="/yoga"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Yoga Studios
+                </Link>
+                <Link
+                  to="/trainers"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Trainers
+                </Link>
+                <Link
+                  to="/register-business"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  For Business
+                </Link>
               </div>
               
               {!user ? (
@@ -106,7 +147,7 @@ const AppHeader = () => {
                     </Button>
                   </Link>
                   <Link to="/register-business" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button className="w-full text-sm bg-gradient-to-r from-cyan-400 to-purple-500 hover:from-cyan-500 hover:to-purple-600">
+                    <Button className="w-full text-sm bg-[#22C55E] hover:bg-[#16A34A]">
                       List Your Business
                     </Button>
                   </Link>
