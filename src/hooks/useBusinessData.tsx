@@ -7,6 +7,7 @@ import { useLoadingTimeout } from '@/hooks/useLoadingTimeout';
 
 export interface Business {
   id: string;
+  slug?: string;
   business_name: string;
   business_type: string;
   category: string;

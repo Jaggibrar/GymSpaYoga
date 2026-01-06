@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 
 interface Gym {
   id: string;
+  slug?: string;
   business_name: string;
   description?: string;
   address: string;
@@ -36,26 +37,37 @@ interface Gym {
 
 const GymDetails = () => {
   useScrollToTop();
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [gym, setGym] = useState<Gym | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  
   useEffect(() => {
-    if (id) {
-      fetchGymDetails(id);
+    if (slug) {
+      fetchGymDetails(slug);
     }
-  }, [id]);
+  }, [slug]);
 
-  const fetchGymDetails = async (gymId: string) => {
+  const fetchGymDetails = async (slugOrId: string) => {
     try {
-      const { data, error } = await supabase
+      // Try to fetch by slug first, fallback to ID for backward compatibility
+      let query = supabase
         .from('business_profiles')
         .select('*')
-        .eq('id', gymId)
         .eq('business_type', 'gym')
-        .eq('status', 'approved')
-        .maybeSingle();
+        .eq('status', 'approved');
+
+      // Check if it's a UUID (ID) or a slug
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slugOrId);
+      
+      if (isUUID) {
+        query = query.eq('id', slugOrId);
+      } else {
+        query = query.eq('slug', slugOrId);
+      }
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       if (!data) {

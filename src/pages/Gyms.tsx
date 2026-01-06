@@ -60,8 +60,9 @@ const Gyms = () => {
     }
   };
 
-  const handleViewDetails = (businessId: string) => {
-    navigate(`/gyms/${businessId}`);
+  const handleViewDetails = (business: any) => {
+    // Use slug if available, fallback to ID
+    navigate(`/gyms/${business.slug || business.id}`);
   };
 
   const renderGymCard = (business: any, tierColor: string) => (
@@ -113,7 +114,7 @@ const Gyms = () => {
           </div>
         )}
         <Button 
-          onClick={() => handleViewDetails(business.id)}
+          onClick={() => handleViewDetails(business)}
           className="w-full mt-4 bg-[#0A45FF] hover:bg-[#083ACC] text-white min-h-[48px] text-base font-semibold"
           aria-label={`View details for ${business.business_name}`}
         >

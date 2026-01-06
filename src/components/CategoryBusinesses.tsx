@@ -38,18 +38,19 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
     sortBy
   );
 
-  const handleViewDetails = (businessId: string, businessType: string) => {
-    const type = businessType.toLowerCase();
+  const handleViewDetails = (business: any) => {
+    const type = business.business_type?.toLowerCase();
+    const identifier = business.slug || business.id;
     switch (type) {
       case 'spa':
-        navigate(`/spas/${businessId}`);
+        navigate(`/spas/${identifier}`);
         break;
       case 'yoga':
-        navigate(`/yoga/${businessId}`);
+        navigate(`/yoga/${identifier}`);
         break;
       case 'gym':
       default:
-        navigate(`/gyms/${businessId}`);
+        navigate(`/gyms/${identifier}`);
         break;
     }
   };
@@ -232,7 +233,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                         variant="outline" 
                         size="sm" 
                         className="flex-1 font-semibold"
-                        onClick={() => handleViewDetails(business.id, business.business_type)}
+                        onClick={() => handleViewDetails(business)}
                       >
                         <Eye className="h-4 w-4 mr-1" />
                         View Details
