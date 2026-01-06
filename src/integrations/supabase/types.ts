@@ -511,6 +511,7 @@ export type Database = {
           phone: string
           pin_code: string
           session_price: number | null
+          slug: string | null
           state: string
           status: string | null
           updated_at: string | null
@@ -534,6 +535,7 @@ export type Database = {
           phone: string
           pin_code: string
           session_price?: number | null
+          slug?: string | null
           state: string
           status?: string | null
           updated_at?: string | null
@@ -557,6 +559,7 @@ export type Database = {
           phone?: string
           pin_code?: string
           session_price?: number | null
+          slug?: string | null
           state?: string
           status?: string | null
           updated_at?: string | null
