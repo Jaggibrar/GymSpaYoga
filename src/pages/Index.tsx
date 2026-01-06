@@ -6,6 +6,7 @@ import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, H
 import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
 import HeroBanner from '@/components/HeroBanner';
+import CommunityBanner from '@/components/CommunityBanner';
 import { useAuth } from '@/hooks/useAuth';
 
 // Lazy load heavy components
@@ -247,6 +248,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Community Banner */}
+        <CommunityBanner />
       </div>
     </>
   );
