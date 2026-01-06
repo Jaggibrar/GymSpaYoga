@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 
 interface Business {
   id: string;
+  slug?: string;
   business_name: string;
   business_type: string;
   description?: string;
@@ -34,26 +35,36 @@ interface Business {
 }
 
 const YogaDetails = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [studio, setStudio] = useState<Business | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (id) {
-      fetchStudioDetails(id);
+    if (slug) {
+      fetchStudioDetails(slug);
     }
-  }, [id]);
+  }, [slug]);
 
-  const fetchStudioDetails = async (studioId: string) => {
+  const fetchStudioDetails = async (slugOrId: string) => {
     try {
-      const { data, error } = await supabase
+      // Try to fetch by slug first, fallback to ID for backward compatibility
+      let query = supabase
         .from('business_profiles')
         .select('*')
-        .eq('id', studioId)
         .eq('business_type', 'yoga')
-        .eq('status', 'approved')
-        .maybeSingle();
+        .eq('status', 'approved');
+
+      // Check if it's a UUID (ID) or a slug
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slugOrId);
+      
+      if (isUUID) {
+        query = query.eq('id', slugOrId);
+      } else {
+        query = query.eq('slug', slugOrId);
+      }
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       if (!data) {

@@ -94,9 +94,9 @@ const AppContent = () => {
           <Route path="/therapists" element={<Therapists />} />
           <Route path="/therapists/:id" element={<TherapistDetails />} />
           <Route path="/business/:id" element={<BusinessDetails />} />
-          <Route path="/gyms/:id" element={<GymDetails />} />
-          <Route path="/spas/:id" element={<SpaDetails />} />
-          <Route path="/yoga/:id" element={<YogaDetails />} />
+          <Route path="/gyms/:slug" element={<GymDetails />} />
+          <Route path="/spas/:slug" element={<SpaDetails />} />
+          <Route path="/yoga/:slug" element={<YogaDetails />} />
           <Route path="/register-business" element={<RegisterBusiness />} />
           <Route path="/register-trainer" element={<RegisterTrainer />} />
           <Route path="/login" element={<Login />} />
