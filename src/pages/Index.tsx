@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck } from 'lucide-react';
+import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, MessageCircle } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
 import HeroBanner from '@/components/HeroBanner';
@@ -11,21 +11,26 @@ import { useAuth } from '@/hooks/useAuth';
 
 // Lazy load heavy components
 const RecentListings = lazy(() => import('@/components/RecentListings'));
-const GeolocationRecommendations = lazy(() => import('@/components/GeolocationRecommendations').then(m => ({ default: m.GeolocationRecommendations })));
 
 const LoadingFallback = () => (
   <div className="flex justify-center py-12">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A45FF]"></div>
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
   </div>
 );
 
 const Index = () => {
   const { user, loading: authLoading } = useAuth();
 
+  const handleWhatsAppContact = () => {
+    const message = "Hi! I'd like to know more about GymSpaYoga services.";
+    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0A45FF]"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -111,14 +116,14 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {categories.map((category) => (
                 <Link key={category.title} to={category.href}>
-                  <Card className="group h-full border-2 border-gray-100 hover:border-[#0A45FF] transition-all duration-300 hover:shadow-lg">
+                  <Card className="group h-full border-2 border-gray-100 hover:border-primary transition-all duration-300 hover:shadow-lg">
                     <CardContent className="p-6 text-center">
-                      <div className="w-16 h-16 bg-[#0A45FF]/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-[#0A45FF] transition-colors">
-                        <category.icon className="h-8 w-8 text-[#0A45FF] group-hover:text-white transition-colors" />
+                      <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary transition-colors">
+                        <category.icon className="h-8 w-8 text-primary group-hover:text-white transition-colors" />
                       </div>
                       <h3 className="text-xl font-bold text-black mb-2">{category.title}</h3>
                       <p className="text-gray-600 text-sm mb-2">{category.description}</p>
-                      <span className="text-[#0A45FF] font-semibold">{category.count} listings</span>
+                      <span className="text-primary font-semibold">{category.count} listings</span>
                     </CardContent>
                   </Card>
                 </Link>
@@ -144,12 +149,36 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Geolocation Recommendations */}
-        <section className="py-10 md:py-12 bg-white">
+        {/* GymSpaYoga Branding Banner */}
+        <section className="py-12 md:py-16 bg-[#005EB8]">
           <div className="container mx-auto px-4">
-            <Suspense fallback={<LoadingFallback />}>
-              <GeolocationRecommendations />
-            </Suspense>
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
+                GymSpaYoga.com
+              </h2>
+              <p className="text-xl md:text-2xl text-white/90 mb-3">
+                Your Complete Wellness Destination
+              </p>
+              <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+                Discover gyms, spas, yoga studios, and certified trainers all in one place. Start your wellness journey today!
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/explore">
+                  <Button size="lg" className="bg-white text-[#005EB8] hover:bg-gray-100 font-semibold px-8 min-h-[48px]">
+                    Explore More
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button 
+                  size="lg" 
+                  onClick={handleWhatsAppContact}
+                  className="bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-8 min-h-[48px]"
+                >
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Contact on WhatsApp
+                </Button>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -169,7 +198,7 @@ const Index = () => {
               {features.map((feature, index) => (
                 <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-shadow bg-white">
                   <CardContent className="p-6 text-center">
-                    <div className="w-14 h-14 bg-[#0A45FF] rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-14 h-14 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
                       <feature.icon className="h-7 w-7 text-white" />
                     </div>
                     <h3 className="text-lg font-bold text-black mb-2">{feature.title}</h3>
@@ -185,7 +214,7 @@ const Index = () => {
         <section className="py-12 md:py-14 bg-white">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
-              <Sparkles className="h-12 w-12 text-[#0A45FF] mx-auto mb-6" />
+              <Sparkles className="h-12 w-12 text-primary mx-auto mb-6" />
               <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
                 Ready to Transform Your Life?
               </h2>
@@ -196,20 +225,20 @@ const Index = () => {
                 {!user ? (
                   <>
                     <Link to="/signup">
-                      <Button size="lg" className="bg-[#0A45FF] hover:bg-[#083ACC] text-white px-8">
+                      <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8">
                         Get Started Free
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
                     </Link>
                     <Link to="/login">
-                      <Button size="lg" variant="outline" className="border-[#0A45FF] text-[#0A45FF] hover:bg-[#0A45FF] hover:text-white px-8">
+                      <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white px-8">
                         Sign In
                       </Button>
                     </Link>
                   </>
                 ) : (
                   <Link to="/explore">
-                    <Button size="lg" className="bg-[#0A45FF] hover:bg-[#083ACC] text-white px-8">
+                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-white px-8">
                       <MapPin className="mr-2 h-5 w-5" />
                       Explore Near You
                     </Button>

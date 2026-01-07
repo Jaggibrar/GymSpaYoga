@@ -47,7 +47,7 @@ const CommunityBanner = () => {
 
           {/* Right: CTA */}
           <Link to="/signup">
-            <Button size="lg" className="bg-[#0A45FF] hover:bg-[#083ACC] text-white px-6">
+            <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] text-white px-6">
               Join Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
