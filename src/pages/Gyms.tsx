@@ -66,56 +66,69 @@ const Gyms = () => {
   };
 
   const renderGymCard = (business: any, tierColor: string) => (
-    <Card key={business.id} className="group border-2 border-gray-100 hover:border-[#0A45FF] transition-all duration-300 hover:shadow-lg">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-t-xl">
+    <Card key={business.id} className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden">
+      <div className="relative h-56 overflow-hidden">
         <OptimizedImage
           src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
           alt={`${business.business_name} - Premium Gym in ${business.city}`}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           width={400}
-          height={160}
+          height={224}
         />
-        <div className="absolute top-3 right-3">
-          <Badge className="bg-white text-gray-800 shadow-md px-2 py-1">
-            <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400 inline" />
-            {(4.0 + Math.random()).toFixed(1)}
-          </Badge>
-        </div>
-        <div className="absolute top-3 left-3">
-          <div className={`w-10 h-10 rounded-lg ${tierColor} flex items-center justify-center`}>
+        <Badge className={`absolute top-4 right-4 ${tierColor} text-white border-0 capitalize px-3 py-1 shadow-lg`}>
+          <Star className="h-3 w-3 mr-1 fill-white inline" />
+          {(4.0 + Math.random()).toFixed(1)}
+        </Badge>
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+          <div className={`w-10 h-10 rounded-lg ${tierColor} flex items-center justify-center shadow-lg`}>
             <Dumbbell className="w-5 h-5 text-white" />
           </div>
         </div>
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
       </div>
-      <CardContent className="p-5 space-y-3">
-        <h3 className="text-lg font-bold text-black line-clamp-1">{business.business_name}</h3>
-        <div className="flex items-center text-gray-600 text-sm">
-          <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-          <span>{business.city}</span>
-        </div>
-        <div className="flex items-center text-gray-500 text-sm">
-          <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
-          <span>{business.opening_time} - {business.closing_time}</span>
-        </div>
-        <div className="flex items-center text-[#0A45FF] text-sm font-semibold">
-          <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
-          <span>
-            {business.monthly_price ? `₹${business.monthly_price}/month` : 
-             business.session_price ? `₹${business.session_price}/session` : 'Pricing available'}
-          </span>
-        </div>
-        {business.amenities && business.amenities.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2">
-            {business.amenities.slice(0, 3).map((amenity: string) => (
-              <Badge key={amenity} variant="outline" className="text-xs px-2 py-0.5 border-gray-200">
-                {amenity}
-              </Badge>
-            ))}
+      <CardContent className="p-6 space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-start justify-between">
+            <h3 className="text-xl font-bold group-hover:text-[#0A45FF] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
+              {business.business_name}
+            </h3>
           </div>
-        )}
+          <div className="flex items-center gap-2 text-gray-600">
+            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{business.city}</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-wrap gap-2">
+          {business.amenities?.slice(0, 2).map((amenity: string, index: number) => (
+            <Badge key={index} variant="outline" className="text-xs px-2 py-1">
+              {amenity}
+            </Badge>
+          ))}
+          {business.amenities && business.amenities.length > 2 && (
+            <Badge variant="outline" className="text-xs px-2 py-1">
+              +{business.amenities.length - 2} more
+            </Badge>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 gap-2 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="h-4 w-4 flex-shrink-0" />
+            <span>{business.opening_time} - {business.closing_time}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-4 w-4 flex-shrink-0 text-[#0A45FF]" />
+            <p className="text-lg font-bold text-[#0A45FF]">
+              {business.monthly_price ? `₹${business.monthly_price}/month` : 
+               business.session_price ? `₹${business.session_price}/session` : 'Contact for pricing'}
+            </p>
+          </div>
+        </div>
+
         <Button 
           onClick={() => handleViewDetails(business)}
-          className="w-full mt-4 bg-[#0A45FF] hover:bg-[#083ACC] text-white min-h-[48px] text-base font-semibold"
+          className="w-full bg-[#0A45FF] hover:bg-[#083ACC] text-white min-h-[48px] text-base font-semibold"
           aria-label={`View details for ${business.business_name}`}
         >
           View Details
@@ -304,7 +317,7 @@ const Gyms = () => {
                       <h2 className="text-3xl font-bold text-black">Budget Tier</h2>
                       <Badge className="bg-green-600 text-white">{budgetGyms.length} Gyms</Badge>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
                       {budgetGyms.map((business) => renderGymCard(business, 'bg-green-600'))}
                     </div>
                   </div>
@@ -317,7 +330,7 @@ const Gyms = () => {
                       <h2 className="text-3xl font-bold text-black">Premium Tier</h2>
                       <Badge className="bg-[#0A45FF] text-white">{premiumGyms.length} Gyms</Badge>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
                       {premiumGyms.map((business) => renderGymCard(business, 'bg-[#0A45FF]'))}
                     </div>
                   </div>
@@ -330,7 +343,7 @@ const Gyms = () => {
                       <h2 className="text-3xl font-bold text-black">Luxury Tier</h2>
                       <Badge className="bg-yellow-500 text-white">{luxuryGyms.length} Gyms</Badge>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
                       {luxuryGyms.map((business) => renderGymCard(business, 'bg-yellow-500'))}
                     </div>
                   </div>
