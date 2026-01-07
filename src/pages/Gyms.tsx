@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Grid3X3, Map, Star, Clock, DollarSign, Navigation, List, Dumbbell } from 'lucide-react';
+import { Search, MapPin, Grid3X3, Map, Star, Clock, DollarSign, Navigation, List, Dumbbell, MessageCircle, Eye } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import GoogleMapView from '@/components/GoogleMapView';
@@ -63,6 +63,14 @@ const Gyms = () => {
   const handleViewDetails = (business: any) => {
     // Use slug if available, fallback to ID
     navigate(`/gyms/${business.slug || business.id}`);
+  };
+
+  const handleBookNow = (phone: string, businessName: string) => {
+    if (phone) {
+      const message = `Hi, I'm interested in joining ${businessName}. Could you please provide more details about membership options?`;
+      const whatsappUrl = `https://wa.me/${phone.replace(/[^\d]/g, '')}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+    }
   };
 
   const renderGymCard = (business: any, tierColor: string) => (
@@ -126,13 +134,25 @@ const Gyms = () => {
           </div>
         </div>
 
-        <Button 
-          onClick={() => handleViewDetails(business)}
-          className="w-full bg-[#0A45FF] hover:bg-[#083ACC] text-white min-h-[48px] text-base font-semibold"
-          aria-label={`View details for ${business.business_name}`}
-        >
-          View Details
-        </Button>
+        <div className="flex gap-2 pt-2">
+          <Button 
+            variant="outline"
+            onClick={() => handleViewDetails(business)}
+            className="flex-1 min-h-[48px] font-semibold"
+            aria-label={`View details for ${business.business_name}`}
+          >
+            <Eye className="h-4 w-4 mr-1" />
+            View Details
+          </Button>
+          <Button 
+            onClick={() => handleBookNow(business.phone, business.business_name)}
+            className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 min-h-[48px] font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            aria-label={`Book now at ${business.business_name}`}
+          >
+            <MessageCircle className="h-4 w-4 mr-1" />
+            Book Now
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
