@@ -97,7 +97,7 @@ const Gyms = () => {
       <CardContent className="p-6 space-y-4">
         <div className="space-y-2">
           <div className="flex items-start justify-between">
-            <h3 className="text-xl font-bold group-hover:text-[#0A45FF] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
+            <h3 className="text-xl font-bold group-hover:text-[#005EB8] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
               {business.business_name}
             </h3>
           </div>
@@ -126,8 +126,8 @@ const Gyms = () => {
             <span>{business.opening_time} - {business.closing_time}</span>
           </div>
           <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 flex-shrink-0 text-[#0A45FF]" />
-            <p className="text-lg font-bold text-[#0A45FF]">
+            <DollarSign className="h-4 w-4 flex-shrink-0 text-[#005EB8]" />
+            <p className="text-lg font-bold text-[#005EB8]">
               {business.monthly_price ? `₹${business.monthly_price}/month` : 
                business.session_price ? `₹${business.session_price}/session` : 'Contact for pricing'}
             </p>
@@ -146,7 +146,7 @@ const Gyms = () => {
           </Button>
           <Button 
             onClick={() => handleBookNow(business.phone, business.business_name)}
-            className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 min-h-[48px] font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="flex-1 bg-[#25D366] hover:bg-[#20BD5A] min-h-[48px] font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             aria-label={`Book now at ${business.business_name}`}
           >
             <MessageCircle className="h-4 w-4 mr-1" />
@@ -226,7 +226,7 @@ const Gyms = () => {
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="bg-[#0A45FF] hover:bg-[#083ACC] text-white h-11 px-6"
+                  className="bg-[#005EB8] hover:bg-[#004d96] text-white h-11 px-6"
                 >
                   <Search className="mr-2 h-4 w-4" />
                   Search
@@ -241,7 +241,7 @@ const Gyms = () => {
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap gap-4 items-center justify-between">
               <div className="flex items-center gap-4">
-                <Badge className="bg-[#0A45FF] text-white px-3 py-1">
+                <Badge className="bg-[#005EB8] text-white px-3 py-1">
                   {businesses.length} Gyms Found
                 </Badge>
                 <select 
@@ -260,7 +260,7 @@ const Gyms = () => {
                   variant={viewMode === 'grid' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'bg-[#0A45FF]' : 'border-gray-200'}
+                  className={viewMode === 'grid' ? 'bg-[#005EB8]' : 'border-gray-200'}
                 >
                   <Grid3X3 className="h-4 w-4 mr-1" />
                   Grid
@@ -269,7 +269,7 @@ const Gyms = () => {
                   variant={viewMode === 'list' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'bg-[#0A45FF]' : 'border-gray-200'}
+                  className={viewMode === 'list' ? 'bg-[#005EB8]' : 'border-gray-200'}
                 >
                   <List className="h-4 w-4 mr-1" />
                   List
@@ -278,7 +278,7 @@ const Gyms = () => {
                   variant={viewMode === 'map' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setViewMode('map')}
-                  className={viewMode === 'map' ? 'bg-[#0A45FF]' : 'border-gray-200'}
+                  className={viewMode === 'map' ? 'bg-[#005EB8]' : 'border-gray-200'}
                 >
                   <Map className="h-4 w-4 mr-1" />
                   Map
@@ -348,10 +348,10 @@ const Gyms = () => {
                   <div className="space-y-6">
                     <div className="flex items-center gap-3">
                       <h2 className="text-3xl font-bold text-black">Premium Tier</h2>
-                      <Badge className="bg-[#0A45FF] text-white">{premiumGyms.length} Gyms</Badge>
+                      <Badge className="bg-[#005EB8] text-white">{premiumGyms.length} Gyms</Badge>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                      {premiumGyms.map((business) => renderGymCard(business, 'bg-[#0A45FF]'))}
+                      {premiumGyms.map((business) => renderGymCard(business, 'bg-[#005EB8]'))}
                     </div>
                   </div>
                 )}

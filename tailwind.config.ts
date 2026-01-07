@@ -25,18 +25,18 @@ export default {
         poppins: ['Poppins', 'sans-serif'],
       },
       colors: {
-        // Solid Blue color palette
+        // Ocean Blue color palette
         brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#0A45FF',  /* Primary Blue */
-          600: '#083ACC',
-          700: '#0630A8',
-          800: '#052584',
-          900: '#041B60',
+          50: '#e6f3fa',
+          100: '#cce7f5',
+          200: '#99cfeb',
+          300: '#66b7e0',
+          400: '#339fd6',
+          500: '#005EB8',  /* Primary Ocean Blue */
+          600: '#004d96',
+          700: '#003d78',
+          800: '#002c5a',
+          900: '#001c3c',
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
