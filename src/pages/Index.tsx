@@ -263,13 +263,13 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/register-business">
-                <Button size="lg" className="bg-[#00C9A7] hover:bg-[#00B396] text-white font-semibold px-8 min-h-[48px]">
+                <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100 px-8 min-h-[48px]">
                   <Dumbbell className="mr-2 h-5 w-5" />
                   Register Your Business
                 </Button>
               </Link>
               <Link to="/pricing">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#005EB8] px-8 min-h-[48px]">
+                <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100 px-8 min-h-[48px]">
                   View Pricing
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
