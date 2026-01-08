@@ -62,13 +62,13 @@ const Yoga = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/explore">
-                <Button size="lg" className="bg-white text-[#005EB8] hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
                   Explore more
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
               <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#005EB8]">
+                <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
                   <MessageCircle className="mr-2 h-5 w-5" />
                   Contact on WhatsApp
                 </Button>
