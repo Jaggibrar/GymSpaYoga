@@ -15,7 +15,7 @@ const About = () => {
       
       <div className="min-h-screen bg-white">
         {/* Hero Section - Solid Blue */}
-        <section className="relative py-20 bg-[#0A45FF] text-white overflow-hidden">
+        <section className="relative py-20 bg-[#005EB8] text-white overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-5xl font-bold mb-6">About GymSpaYoga</h1>
@@ -40,19 +40,19 @@ const About = () => {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-6 w-6 text-[#0A45FF]" />
+                    <CheckCircle className="h-6 w-6 text-[#005EB8]" />
                     <span className="text-gray-700">Quality Verified Partners</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-6 w-6 text-[#0A45FF]" />
+                    <CheckCircle className="h-6 w-6 text-[#005EB8]" />
                     <span className="text-gray-700">Easy Online Booking</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-6 w-6 text-[#0A45FF]" />
+                    <CheckCircle className="h-6 w-6 text-[#005EB8]" />
                     <span className="text-gray-700">Personalized Recommendations</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <CheckCircle className="h-6 w-6 text-[#0A45FF]" />
+                    <CheckCircle className="h-6 w-6 text-[#005EB8]" />
                     <span className="text-gray-700">Community Support</span>
                   </div>
                 </div>
@@ -82,7 +82,7 @@ const About = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                 <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-[#0A45FF] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-[#005EB8] rounded-full flex items-center justify-center mx-auto mb-6">
                     <Heart className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-4">Wellness First</h3>
@@ -95,7 +95,7 @@ const About = () => {
 
               <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                 <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-[#0A45FF] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-[#005EB8] rounded-full flex items-center justify-center mx-auto mb-6">
                     <Users className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-4">Community</h3>
@@ -108,7 +108,7 @@ const About = () => {
 
               <Card className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                 <CardContent className="p-8">
-                  <div className="w-16 h-16 bg-[#0A45FF] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-16 h-16 bg-[#005EB8] rounded-full flex items-center justify-center mx-auto mb-6">
                     <Target className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-black mb-4">Excellence</h3>
@@ -133,17 +133,17 @@ const About = () => {
             </div>
             
             <div className="max-w-lg mx-auto">
-              <Card className="group relative overflow-hidden border-2 border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500 hover:border-[#0A45FF] bg-white">
+              <Card className="group relative overflow-hidden border-2 border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500 hover:border-[#005EB8] bg-white">
                 <CardContent className="relative p-8 text-center">
                   {/* Profile Avatar */}
                   <div className="relative mb-8">
                     <div className="relative mx-auto">
-                      <div className="w-28 h-28 bg-[#0A45FF] rounded-full flex items-center justify-center mx-auto shadow-lg">
+                      <div className="w-28 h-28 bg-[#005EB8] rounded-full flex items-center justify-center mx-auto shadow-lg">
                         <span className="text-3xl font-bold text-white">JS</span>
                       </div>
                       {/* Floating Badge */}
                       <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className="bg-[#0A45FF] text-white px-4 py-2 shadow-lg font-medium">
+                        <Badge className="bg-[#005EB8] text-white px-4 py-2 shadow-lg font-medium">
                           Founder & CEO
                         </Badge>
                       </div>
@@ -153,17 +153,17 @@ const About = () => {
                   {/* Name and Title */}
                   <div className="mb-6">
                     <h3 className="text-2xl font-bold text-black mb-2">Jagdeep Singh</h3>
-                    <p className="text-[#0A45FF] font-semibold">Founder & CEO</p>
+                    <p className="text-[#005EB8] font-semibold">Founder & CEO</p>
                   </div>
                   
                   {/* Vision Quote */}
                   <div className="mb-6">
                     <blockquote className="text-gray-600 leading-relaxed italic text-center relative">
-                      <span className="text-4xl text-[#0A45FF]/30 absolute -top-2 -left-2">"</span>
+                      <span className="text-4xl text-[#005EB8]/30 absolute -top-2 -left-2">"</span>
                       Our vision is to create a world where wellness is not a luxury, but an accessible 
                       part of everyone's daily life. Through GymSpaYoga, we're democratizing access to 
                       health and happiness, one booking at a time.
-                      <span className="text-4xl text-[#0A45FF]/30 absolute -bottom-6 -right-2">"</span>
+                      <span className="text-4xl text-[#005EB8]/30 absolute -bottom-6 -right-2">"</span>
                     </blockquote>
                   </div>
                   
@@ -192,7 +192,7 @@ const About = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                   <CardContent className="p-6 text-center">
-                    <MapPin className="h-12 w-12 text-[#0A45FF] mx-auto mb-4" />
+                    <MapPin className="h-12 w-12 text-[#005EB8] mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-black mb-2">Visit Us</h3>
                     <p className="text-gray-600">
                       Kolkata, India
@@ -202,7 +202,7 @@ const About = () => {
 
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                   <CardContent className="p-6 text-center">
-                    <Phone className="h-12 w-12 text-[#0A45FF] mx-auto mb-4" />
+                    <Phone className="h-12 w-12 text-[#005EB8] mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-black mb-2">Call Us</h3>
                     <p className="text-gray-600">
                       +91 7596958097<br />
@@ -213,7 +213,7 @@ const About = () => {
 
                 <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
                   <CardContent className="p-6 text-center">
-                    <Mail className="h-12 w-12 text-[#0A45FF] mx-auto mb-4" />
+                    <Mail className="h-12 w-12 text-[#005EB8] mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-black mb-2">Email Us</h3>
                     <p className="text-gray-600">
                       GymSpaYoga@Gmail.com
