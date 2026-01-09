@@ -374,6 +374,40 @@ const Gyms = () => {
           </div>
         </section>
 
+        {/* Hire Personal Trainer Banner */}
+        <section className="py-12 md:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: Trainer Image */}
+              <div className="flex-1 flex justify-center lg:justify-start">
+                <img 
+                  src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=500&q=80"
+                  alt="Personal trainer helping client"
+                  className="rounded-2xl max-w-sm w-full object-cover"
+                />
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                  HIRE A PERSONAL TRAINER
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">
+                  Getting back in shape has never been so easy!
+                </p>
+                <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                  Get a best-in-class Personal Trainer from GymSpaYoga and kick-start your fitness journey at the comfort of your home! You would love the results you see!
+                </p>
+                <Link to="/trainers">
+                  <Button size="lg" className="bg-[#E85D04] hover:bg-[#D4540A] text-white font-semibold px-8 py-6 text-lg">
+                    ENQUIRE NOW
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* GymSpaYoga Branding Banner with Real People */}
         <section className="bg-[#005EB8] py-16">
           <div className="container mx-auto px-4">
