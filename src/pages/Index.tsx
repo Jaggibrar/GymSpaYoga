@@ -149,34 +149,90 @@ const Index = () => {
           </div>
         </section>
 
-        {/* GymSpaYoga Branding Banner */}
-        <section className="py-12 md:py-16 bg-[#005EB8]">
+        {/* GymSpaYoga Platform Banner - Inspired by reference */}
+        <section className="py-12 md:py-16 bg-gray-100">
           <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-                GymSpaYoga.com
-              </h2>
-              <p className="text-xl md:text-2xl text-white/90 mb-3">
-                Your Complete Wellness Destination
-              </p>
-              <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-                Discover gyms, spas, yoga studios, and certified trainers all in one place. Start your wellness journey today!
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: Device Mockups Image */}
+              <div className="flex-1 flex justify-center">
+                <div className="relative">
+                  <img 
+                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=600&q=80"
+                    alt="GymSpaYoga platform preview"
+                    className="rounded-2xl shadow-2xl w-full max-w-md object-cover"
+                  />
+                  {/* Overlay with wellness images */}
+                  <div className="absolute -bottom-4 -right-4 bg-white p-2 rounded-xl shadow-lg">
+                    <img 
+                      src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=120&q=80"
+                      alt="Yoga"
+                      className="w-24 h-24 rounded-lg object-cover"
+                    />
+                  </div>
+                  <div className="absolute -top-4 -left-4 bg-white p-2 rounded-xl shadow-lg">
+                    <img 
+                      src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=120&q=80"
+                      alt="Spa"
+                      className="w-24 h-24 rounded-lg object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-4xl md:text-5xl font-bold mb-3">
+                  <span className="text-[#005EB8]">Gym</span>
+                  <span className="text-[#E85D04]">Spa</span>
+                  <span className="text-[#2E7D32]">Yoga</span>
+                </h2>
+                <p className="text-xl text-gray-600 mb-4">
+                  Train. Relax. Rejuvenate.
+                </p>
+                <h3 className="text-2xl md:text-3xl font-bold text-black mb-6">
+                  India's Ultimate Hub For<br />
+                  Wellness Services
+                </h3>
                 <Link to="/explore">
-                  <Button size="lg" className="bg-white text-[#005EB8] hover:bg-gray-100 font-semibold px-8 min-h-[48px]">
-                    Explore More
-                    <ArrowRight className="ml-2 h-5 w-5" />
+                  <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold px-8 py-6 text-lg">
+                    EXPLORE NOW
                   </Button>
                 </Link>
-                <Button 
-                  size="lg" 
-                  onClick={handleWhatsAppContact}
-                  className="bg-[#25D366] hover:bg-[#20BD5A] text-white font-semibold px-8 min-h-[48px]"
-                >
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Contact on WhatsApp
-                </Button>
+                <p className="text-lg text-gray-500 mt-4">GymSpaYoga.com</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Hire Personal Trainer Banner - Inspired by reference */}
+        <section className="py-12 md:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: Trainer Image */}
+              <div className="flex-1 flex justify-center lg:justify-start">
+                <img 
+                  src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=500&q=80"
+                  alt="Personal trainer helping client"
+                  className="rounded-2xl max-w-sm w-full object-cover"
+                />
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                  HIRE A PERSONAL TRAINER
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">
+                  Getting back in shape has never been so easy!
+                </p>
+                <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                  Get a best-in-class Personal Trainer from GymSpaYoga and kick-start your fitness journey at the comfort of your home! You would love the results you see!
+                </p>
+                <Link to="/trainers">
+                  <Button size="lg" className="bg-[#E85D04] hover:bg-[#D4540A] text-white font-semibold px-8 py-6 text-lg">
+                    ENQUIRE NOW
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
