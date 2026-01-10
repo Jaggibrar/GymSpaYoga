@@ -29,12 +29,12 @@ export const EnhancedProfile = () => {
       {/* Modern Hero Header */}
       <div className="relative">
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 rounded-3xl opacity-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-transparent rounded-3xl"></div>
+        <div className="absolute inset-0 bg-[#005EB8]/5 rounded-3xl"></div>
+        <div className="absolute inset-0 bg-white/80 rounded-3xl"></div>
         
         <Card className="relative border-0 shadow-xl bg-white/95 backdrop-blur-sm rounded-3xl overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-emerald-100/50 to-transparent rounded-full -translate-y-48 translate-x-48"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-100/50 to-transparent rounded-full translate-y-32 -translate-x-32"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#005EB8]/5 rounded-full -translate-y-48 translate-x-48"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#005EB8]/5 rounded-full translate-y-32 -translate-x-32"></div>
           
           <CardContent className="relative p-8 md:p-12">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-8">
@@ -49,7 +49,7 @@ export const EnhancedProfile = () => {
                     <Camera className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                <Badge className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white px-4 py-2 rounded-full text-sm font-medium">
+                <Badge className="bg-[#005EB8] text-white px-4 py-2 rounded-full text-sm font-medium">
                   <Crown className="h-4 w-4 mr-2" />
                   Premium Member
                 </Badge>
@@ -58,12 +58,12 @@ export const EnhancedProfile = () => {
               {/* User Info Section */}
               <div className="flex-1 space-y-6">
                 <div>
-                  <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
+                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
                     {getUserName()}
                   </h1>
                   <div className="flex items-center gap-4 text-gray-600 mb-4">
                     <div className="flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-emerald-500" />
+                      <Mail className="h-5 w-5 text-[#005EB8]" />
                       <span className="text-lg">{user?.email}</span>
                     </div>
                     <div className="hidden md:block w-1 h-1 bg-gray-300 rounded-full"></div>
@@ -82,9 +82,9 @@ export const EnhancedProfile = () => {
 
                 {/* Stats Cards */}
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl">
-                    <div className="text-2xl font-bold text-emerald-600">12</div>
-                    <div className="text-sm text-emerald-600/80">Bookings</div>
+                  <div className="text-center p-4 bg-[#005EB8]/10 rounded-2xl">
+                    <div className="text-2xl font-bold text-[#005EB8]">12</div>
+                    <div className="text-sm text-[#005EB8]/80">Bookings</div>
                   </div>
                   <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl">
                     <div className="text-2xl font-bold text-blue-600">4.9</div>
@@ -149,14 +149,14 @@ export const EnhancedProfile = () => {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-[#005EB8] rounded-xl flex items-center justify-center">
                   <User className="h-5 w-5 text-white" />
                 </div>
                 Personal Information
               </CardTitle>
               <p className="text-gray-600 mt-2">Manage your profile details and preferences</p>
             </div>
-            <Button variant="outline" className="rounded-xl border-2 hover:border-emerald-500 hover:text-emerald-600 transition-colors">
+            <Button variant="outline" className="rounded-xl border-2 hover:border-[#005EB8] hover:text-[#005EB8] transition-colors">
               <Edit3 className="h-4 w-4 mr-2" />
               Quick Edit
             </Button>

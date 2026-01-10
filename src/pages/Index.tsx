@@ -238,6 +238,40 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Yoga Banner */}
+        <section className="py-12 md:py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-12">
+              {/* Right: Yoga Image */}
+              <div className="flex-1 flex justify-center lg:justify-end">
+                <img 
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80"
+                  alt="Woman practicing yoga"
+                  className="rounded-2xl max-w-sm w-full object-cover"
+                />
+              </div>
+
+              {/* Left: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                  DISCOVER YOGA STUDIOS
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">
+                  Find peace. Build strength. Transform your life.
+                </p>
+                <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                  Explore the best yoga studios near you. From beginner-friendly classes to advanced sessions, find the perfect practice for your wellness journey.
+                </p>
+                <Link to="/yoga">
+                  <Button size="lg" className="bg-[#2E7D32] hover:bg-[#256b29] text-white font-semibold px-8 py-6 text-lg">
+                    EXPLORE YOGA
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-10 md:py-12 bg-gray-50">
           <div className="container mx-auto px-4">

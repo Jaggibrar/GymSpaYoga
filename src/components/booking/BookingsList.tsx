@@ -100,7 +100,7 @@ export const BookingsList = ({
             }
           </p>
           {!businessOwnersView && (
-            <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+            <Button className="bg-[#005EB8] hover:bg-[#004d96]">
               Browse Services
             </Button>
           )}
