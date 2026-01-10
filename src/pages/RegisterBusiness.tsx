@@ -42,7 +42,7 @@ const RegisterBusiness = () => {
           description="List your gym, spa, or yoga studio on GymSpaYoga. Reach more customers, manage bookings easily, and grow your wellness business with our platform."
           keywords="register business, list gym, spa registration, yoga studio, business partner"
         />
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-8">
+        <div className="min-h-screen bg-gray-50 py-8">
           <div className="container mx-auto px-4">
             <div className="mb-6">
               <Button
@@ -68,20 +68,20 @@ const RegisterBusiness = () => {
         keywords="register business, list gym, spa registration, yoga studio, business partner"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-teal-500 to-blue-600 text-white py-20 lg:py-32">
+        <section className="relative overflow-hidden bg-[#005EB8] text-white py-20 lg:py-32">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
           </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
               <div className="mb-8">
                 <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-                  Partner With <span className="text-emerald-200">GymSpaYoga</span>
+                  Partner With <span className="text-white/80">GymSpaYoga</span>
                 </h1>
-                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
                   Join India's fastest-growing wellness marketplace and take your business to the next level. 
                   Connect with thousands of health-conscious customers and grow your revenue effortlessly.
                 </p>
@@ -89,7 +89,7 @@ const RegisterBusiness = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button 
                   size="lg" 
-                  className="bg-white text-emerald-600 hover:bg-gray-100"
+                  className="bg-white text-[#005EB8] hover:bg-gray-100"
                   onClick={() => setShowForm(true)}
                 >
                   <Building2 className="mr-2 h-5 w-5" />
@@ -97,7 +97,7 @@ const RegisterBusiness = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Link to="/pricing">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#005EB8]">
                     View Pricing Plans
                   </Button>
                 </Link>
@@ -116,8 +116,8 @@ const RegisterBusiness = () => {
               {benefits.map((benefit, index) => (
                 <Card key={index} className="text-center hover:shadow-xl transition-shadow duration-300">
                   <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <div className="text-emerald-600">{benefit.icon}</div>
+                    <div className="w-16 h-16 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <div className="text-[#005EB8]">{benefit.icon}</div>
                     </div>
                     <CardTitle className="text-xl">{benefit.title}</CardTitle>
                   </CardHeader>
@@ -131,7 +131,7 @@ const RegisterBusiness = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
+        <section className="py-16 bg-[#005EB8] text-white">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl font-bold mb-6">Ready to Get Started?</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
@@ -141,7 +141,7 @@ const RegisterBusiness = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="bg-white text-emerald-600 hover:bg-gray-100"
+                className="bg-white text-[#005EB8] hover:bg-gray-100"
                 onClick={() => setShowForm(true)}
               >
                 <Building2 className="mr-2 h-5 w-5" />
@@ -149,7 +149,7 @@ const RegisterBusiness = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Link to="/support">
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-emerald-600">
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#005EB8]">
                   Contact Sales Team
                 </Button>
               </Link>

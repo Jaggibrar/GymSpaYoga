@@ -24,7 +24,7 @@ export default function BusinessDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gray-50">
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin mr-2" />
           <span>Loading business dashboard...</span>
@@ -35,7 +35,7 @@ export default function BusinessDashboard() {
 
   if (!hasProfiles) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           <Card className="max-w-2xl mx-auto border-0 shadow-xl">
             <CardContent className="py-12 text-center">
@@ -43,7 +43,7 @@ export default function BusinessDashboard() {
               <h1 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Your Business Dashboard</h1>
               <p className="text-gray-600 mb-8 text-lg">Get started by creating your business profile to begin receiving bookings and managing your services.</p>
               <Link to="/register-business">
-                <Button size="lg" className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 px-8 py-3">
+                <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] px-8 py-3">
                   <Building2 className="h-5 w-5 mr-2" />
                   Create Business Profile
                 </Button>
@@ -63,7 +63,7 @@ export default function BusinessDashboard() {
         keywords="business dashboard, gym management, spa management, yoga studio management"
         noindex={true}
       />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         {/* Connection Health Monitor */}
         <ConnectionHealthMonitor onReconnect={handleReconnect} />
@@ -76,7 +76,7 @@ export default function BusinessDashboard() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-4 lg:mt-0">
             <Link to="/register-business">
-              <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+              <Button className="bg-[#005EB8] hover:bg-[#004d96]">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Listing
               </Button>
@@ -125,7 +125,7 @@ export default function BusinessDashboard() {
                       <p className="text-2xl font-bold text-gray-800">--</p>
                       <p className="text-xs text-green-600">Live data coming soon</p>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#005EB8] rounded-xl flex items-center justify-center">
                       <Calendar className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function BusinessDashboard() {
                       <p className="text-2xl font-bold text-yellow-600">--</p>
                       <p className="text-xs text-green-600">Real-time updates</p>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#E85D04] rounded-xl flex items-center justify-center">
                       <Users className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -155,7 +155,7 @@ export default function BusinessDashboard() {
                       <p className="text-2xl font-bold text-green-600">--</p>
                       <p className="text-xs text-green-600">Monthly revenue</p>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#2E7D32] rounded-xl flex items-center justify-center">
                       <TrendingUp className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -170,7 +170,7 @@ export default function BusinessDashboard() {
                       <p className="text-2xl font-bold text-purple-600">--</p>
                       <p className="text-xs text-green-600">Weekly analytics</p>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#7B1FA2] rounded-xl flex items-center justify-center">
                       <Building2 className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -190,9 +190,9 @@ export default function BusinessDashboard() {
 
         {activeTab === 'bookings' && (
           <Card className="border-0 shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-emerald-50 to-blue-50 rounded-t-lg">
+            <CardHeader className="bg-gray-100 rounded-t-lg">
               <CardTitle className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-[#005EB8] rounded-lg flex items-center justify-center">
                   <Calendar className="h-5 w-5 text-white" />
                 </div>
                 Booking Management

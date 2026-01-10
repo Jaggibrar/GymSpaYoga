@@ -52,7 +52,7 @@ const RegisterTrainer = () => {
           keywords="trainer registration, fitness trainer, personal trainer, yoga instructor"
         />
         
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 py-12">
+        <div className="min-h-screen bg-gray-50 py-12">
           <div className="container mx-auto px-4">
             <TrainerRegistrationForm
               onSuccess={() => {
@@ -74,12 +74,12 @@ const RegisterTrainer = () => {
         keywords="become trainer, fitness trainer jobs, personal trainer platform, yoga instructor"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-blue-500 to-teal-600 text-white py-20 lg:py-32">
+        <section className="relative overflow-hidden bg-[#005EB8] text-white py-20 lg:py-32">
           <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
           </div>
           <div className="relative container mx-auto px-4">
             <div className="max-w-5xl mx-auto text-center">
@@ -90,9 +90,9 @@ const RegisterTrainer = () => {
                   </div>
                 </div>
                 <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-                  Become a <span className="text-emerald-200">Trainer</span>
+                  Become a <span className="text-white/80">Trainer</span>
                 </h1>
-                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
                   Join thousands of certified trainers who are building successful careers through our platform. 
                   Connect with motivated clients and grow your fitness business with purpose and passion.
                 </p>
@@ -101,7 +101,7 @@ const RegisterTrainer = () => {
                 <Button 
                   onClick={() => setShowForm(true)}
                   size="lg"
-                  className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
+                  className="bg-white text-[#005EB8] hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
                 >
                   Get Started Now
                 </Button>
@@ -135,7 +135,7 @@ const RegisterTrainer = () => {
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
                   <CardHeader>
                     <div className="flex justify-center mb-4">
-                      <div className="bg-gradient-to-r from-emerald-500 to-blue-500 text-white p-3 rounded-full">
+                      <div className="bg-[#005EB8] text-white p-3 rounded-full">
                         {benefit.icon}
                       </div>
                     </div>
@@ -169,7 +169,7 @@ const RegisterTrainer = () => {
                   <div className="space-y-4">
                     {features.map((feature, index) => (
                       <div key={index} className="flex items-center">
-                        <CheckCircle className="h-6 w-6 text-emerald-500 mr-3 flex-shrink-0" />
+                        <CheckCircle className="h-6 w-6 text-[#005EB8] mr-3 flex-shrink-0" />
                         <span className="text-gray-700 font-medium">{feature}</span>
                       </div>
                     ))}
@@ -178,7 +178,7 @@ const RegisterTrainer = () => {
                   <Button 
                     onClick={() => setShowForm(true)}
                     size="lg"
-                    className="mt-8 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                    className="mt-8 bg-[#005EB8] hover:bg-[#004d96]"
                   >
                     Start Your Journey
                   </Button>
@@ -206,7 +206,7 @@ const RegisterTrainer = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-emerald-500 to-blue-600">
+        <section className="py-20 bg-[#005EB8]">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-3xl mx-auto text-white">
               <h2 className="text-4xl font-bold mb-6">
@@ -218,7 +218,7 @@ const RegisterTrainer = () => {
               <Button 
                 onClick={() => setShowForm(true)}
                 size="lg"
-                className="bg-white text-emerald-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
+                className="bg-white text-[#005EB8] hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
               >
                 Register Now - It's Free!
               </Button>

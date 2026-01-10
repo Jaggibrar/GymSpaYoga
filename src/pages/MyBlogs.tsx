@@ -85,7 +85,7 @@ const MyBlogs = () => {
         description="Manage your blog posts and articles"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50/80 via-blue-50/60 to-teal-50/80">
+      <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
@@ -95,7 +95,7 @@ const MyBlogs = () => {
             </div>
             <Button 
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-white shadow-lg"
+              className="bg-[#005EB8] hover:bg-[#004d96] text-white shadow-lg"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create New Blog

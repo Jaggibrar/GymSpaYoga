@@ -40,11 +40,11 @@ const FunctionalSearch = ({ onSearch, className = "" }: FunctionalSearchProps) =
         value={searchLocation}
         onChange={(e) => setSearchLocation(e.target.value)}
         onKeyPress={handleKeyPress}
-        className="pl-12 pr-4 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-emerald-500 shadow-lg"
+        className="pl-12 pr-4 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-[#005EB8] shadow-lg"
       />
       <Button 
         onClick={handleSearch}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full bg-[#005EB8] hover:bg-[#004d96]"
       >
         <Search className="h-5 w-5" />
       </Button>

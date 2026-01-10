@@ -142,7 +142,7 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
             
             <div className="flex gap-2 pt-3">
               <Link to={`/business/${business.slug || business.id}`} className="flex-1">
-                <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm py-2.5">
+                <Button className="w-full bg-[#005EB8] hover:bg-[#004d96] text-sm py-2.5">
                   View Details
                 </Button>
               </Link>

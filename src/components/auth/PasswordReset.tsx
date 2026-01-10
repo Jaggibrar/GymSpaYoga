@@ -37,11 +37,11 @@ const PasswordReset = () => {
 
   if (sent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="h-12 w-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-6 w-6 text-emerald-600" />
+            <div className="h-12 w-12 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-6 w-6 text-[#005EB8]" />
             </div>
             <CardTitle>Check Your Email</CardTitle>
           </CardHeader>
@@ -65,7 +65,7 @@ const PasswordReset = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">Reset Password</CardTitle>
@@ -92,7 +92,7 @@ const PasswordReset = () => {
             </Button>
 
             <div className="text-center">
-              <Link to="/login" className="text-sm text-emerald-600 hover:underline">
+              <Link to="/login" className="text-sm text-[#005EB8] hover:underline">
                 Remember your password? Sign in
               </Link>
             </div>
