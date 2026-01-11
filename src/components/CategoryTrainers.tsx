@@ -76,7 +76,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
               We're currently working on adding more trainers in this category.
             </p>
             <Link to="/trainers">
-              <Button className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+              <Button className="bg-[#005EB8] hover:bg-[#004d96]">
                 View All Trainers
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -122,13 +122,13 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                    <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors duration-300">
                       {trainer.name}
                     </CardTitle>
                     <p className="text-gray-600">{trainer.experience} years experience</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-emerald-600">₹{trainer.hourly_rate}</p>
+                    <p className="text-2xl font-bold text-[#005EB8]">₹{trainer.hourly_rate}</p>
                     <p className="text-sm text-gray-500">per hour</p>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                   </div>
                   
                   <Link to={`/trainers/${trainer.id}`} className="block">
-                    <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300">
+                    <Button className="w-full bg-[#005EB8] hover:bg-[#004d96] transform hover:scale-105 transition-all duration-300">
                       View Profile
                     </Button>
                   </Link>
@@ -169,7 +169,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
 
         <div className="text-center">
           <Link to="/trainers">
-            <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
+            <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] text-lg px-8 py-4 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300">
               View All {getCategoryTitle()}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>

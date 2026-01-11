@@ -149,7 +149,7 @@ const ReviewSystem = ({ businessId, businessType, businessName }: ReviewSystemPr
           {user && !userHasReviewed && (
             <Button
               onClick={() => setShowReviewForm(true)}
-              className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+              className="bg-[#005EB8] hover:bg-[#004d96]"
             >
               Write a Review
             </Button>
@@ -183,7 +183,7 @@ const ReviewSystem = ({ businessId, businessType, businessName }: ReviewSystemPr
               <Button
                 onClick={submitReview}
                 disabled={submitting || rating === 0}
-                className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600"
+                className="bg-[#005EB8] hover:bg-[#004d96]"
               >
                 {submitting ? 'Submitting...' : 'Submit Review'}
               </Button>
@@ -209,7 +209,7 @@ const ReviewSystem = ({ businessId, businessType, businessName }: ReviewSystemPr
             <Card key={review.id}>
               <CardContent className="p-4">
                 <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-blue-500 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#005EB8] rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1">

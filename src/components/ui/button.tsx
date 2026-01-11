@@ -10,18 +10,18 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 font-bold border-0",
+        default: "bg-[#005EB8] text-white hover:bg-[#004d96] font-bold border-0",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border-2 border-emerald-500 bg-transparent text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-600",
+          "border-2 border-[#005EB8] bg-transparent text-[#005EB8] hover:bg-[#005EB8]/10 hover:text-[#004d96] hover:border-[#004d96]",
         secondary:
           "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300",
         ghost: "text-gray-900 hover:bg-gray-100 hover:text-gray-900 shadow-none hover:shadow-md hover:scale-102",
-        link: "text-emerald-600 underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
-        gradient: "bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 font-black border-0",
-        urgent: "bg-gradient-to-r from-red-500 to-orange-500 text-white hover:from-red-600 hover:to-orange-600 font-black animate-pulse border-0",
-        hero: "bg-gradient-to-r from-primary to-primary-glow text-white shadow-[var(--shadow-elegant)] hover:shadow-lg hover:scale-105 transition-all duration-300",
+        link: "text-[#005EB8] underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
+        gradient: "bg-[#005EB8] text-white hover:bg-[#004d96] font-black border-0",
+        urgent: "bg-red-500 text-white hover:bg-red-600 font-black animate-pulse border-0",
+        hero: "bg-[#005EB8] text-white shadow-lg hover:bg-[#004d96] hover:shadow-xl hover:scale-105 transition-all duration-300",
       },
       size: {
         default: "h-10 px-4 py-2 min-h-[40px] text-sm",

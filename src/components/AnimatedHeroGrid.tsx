@@ -30,7 +30,7 @@ const AnimatedHeroGrid = () => {
       title: "Yoga Studios",
       description: "Peaceful studios with experienced instructors for your mindfulness journey",
       image: "/lovable-uploads/1b4c27c8-74f8-4552-9ef9-658431a0e65b.png",
-      gradient: "from-green-500/80 to-emerald-500/80",
+      gradient: "from-[#005EB8]/80 to-[#005EB8]/80",
       route: "/yoga",
       subtitle: "Find Inner Peace"
     },

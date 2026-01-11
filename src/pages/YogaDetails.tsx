@@ -136,7 +136,7 @@ const YogaDetails = () => {
       backLink="/yoga"
       backText="Back to Yoga"
       brandIcon={<Heart className="h-7 w-7 text-white" />}
-      brandGradient="from-green-500 to-emerald-500"
+      brandGradient="from-[#005EB8] to-[#005EB8]"
     >
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -153,7 +153,7 @@ const YogaDetails = () => {
             description={studio.description}
             defaultDescription="Experience authentic yoga practice in a peaceful environment. Our studio offers traditional and modern yoga styles taught by certified instructors, focusing on mind-body harmony and spiritual well-being."
             icon={<Flower2 className="h-5 w-5 text-white" />}
-            gradient="from-green-500 to-emerald-500"
+            gradient="from-[#005EB8] to-[#005EB8]"
           />
 
           {studio.amenities && studio.amenities.length > 0 && (
@@ -161,7 +161,7 @@ const YogaDetails = () => {
               amenities={studio.amenities}
               title="Studio Features"
               icon={<Users className="h-5 w-5 text-white" />}
-              gradient="from-green-500 to-emerald-500"
+              gradient="from-[#005EB8] to-[#005EB8]"
               defaultAmenities={[
                 'Certified Instructors',
                 'Natural Lighting',
@@ -180,7 +180,7 @@ const YogaDetails = () => {
               options={pricingOptions}
               title="Membership Options"
               icon={<Heart className="h-5 w-5 text-white" />}
-              gradient="from-green-500 to-emerald-500"
+              gradient="from-[#005EB8] to-[#005EB8]"
             />
           )}
         </div>
@@ -195,7 +195,7 @@ const YogaDetails = () => {
                 businessName={studio.business_name}
                 variant="default"
                 size="lg"
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                className="w-full bg-[#005EB8] hover:bg-[#004d96]"
               />
             </CardContent>
           </Card>

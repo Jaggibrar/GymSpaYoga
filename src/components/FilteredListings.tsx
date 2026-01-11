@@ -168,17 +168,17 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
   return (
     <div className="px-4">
       <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
           {getFilterTitle()} - {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s
         </h2>
-        <Badge className="mb-4 bg-emerald-500/20 text-emerald-300 border-emerald-500/30 backdrop-blur-sm text-lg px-4 py-2">
+        <Badge className="mb-4 bg-[#005EB8]/20 text-white border-[#005EB8]/30 backdrop-blur-sm text-lg px-4 py-2">
           Showing {filteredListings.length} premium results
         </Badge>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredListings.map((listing) => (
-          <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 border-0 bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-xl">
+          <Card key={listing.id} className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 border-0 bg-white backdrop-blur-xl">
             <div className="relative overflow-hidden">
               <img 
                 src={listing.image} 
@@ -186,17 +186,17 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              <Badge className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-sm hover:bg-emerald-600">
+              <Badge className="absolute top-4 right-4 bg-[#005EB8] backdrop-blur-sm hover:bg-[#004d96]">
                 {listing.category}
               </Badge>
             </div>
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                  <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors duration-300">
                     {listing.name}
                   </CardTitle>
-                  <p className="text-emerald-600 font-semibold text-sm md:text-base">{listing.type}</p>
+                  <p className="text-[#005EB8] font-semibold text-sm md:text-base">{listing.type}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="h-4 md:h-5 w-4 md:w-5 fill-yellow-400 text-yellow-400" />
@@ -207,10 +207,10 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
             <CardContent className="pt-0">
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-gray-600">
-                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-3 text-emerald-600" />
+                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-3 text-[#005EB8]" />
                   <span className="text-sm md:text-base">{listing.location}</span>
                 </div>
-                <div className="flex items-center text-emerald-600 font-bold text-base md:text-lg">
+                <div className="flex items-center text-[#005EB8] font-bold text-base md:text-lg">
                   <span>{listing.price}</span>
                 </div>
               </div>
@@ -230,7 +230,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                 <BusinessDetailsModal
                   business={convertToBusinessFormat(listing)}
                   trigger={
-                    <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm px-4 py-2 min-h-[40px]">
+                    <Button className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-sm px-4 py-2 min-h-[40px]">
                       <span className="block">View Details</span>
                       <ArrowRight className="ml-2 h-4 w-4 flex-shrink-0" />
                     </Button>
@@ -265,7 +265,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
               No {pageType}s found for the selected filters or search criteria.
             </p>
             <Button 
-              className="mt-4 bg-emerald-500 hover:bg-emerald-600"
+              className="mt-4 bg-[#005EB8] hover:bg-[#004d96]"
               onClick={() => {
                 setActiveFilter('all');
                 setActiveSort('popular');

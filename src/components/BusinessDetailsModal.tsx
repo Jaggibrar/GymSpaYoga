@@ -134,7 +134,7 @@ const BusinessDetailsModal = ({ business, trigger }: BusinessDetailsModalProps) 
                     {business.monthly_price && (
                       <div className="flex justify-between">
                         <span>Monthly Membership</span>
-                        <span className="font-semibold text-emerald-600">
+                        <span className="font-semibold text-[#005EB8]">
                           ₹{business.monthly_price}
                         </span>
                       </div>
@@ -142,7 +142,7 @@ const BusinessDetailsModal = ({ business, trigger }: BusinessDetailsModalProps) 
                     {business.session_price && (
                       <div className="flex justify-between">
                         <span>Per Session</span>
-                        <span className="font-semibold text-emerald-600">
+                        <span className="font-semibold text-[#005EB8]">
                           ₹{business.session_price}
                         </span>
                       </div>
@@ -184,7 +184,7 @@ const BusinessDetailsModal = ({ business, trigger }: BusinessDetailsModalProps) 
               businessId={business.id}
               price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
               trigger={
-                <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600">
+                <Button className="flex-1 bg-[#005EB8] hover:bg-[#004d96]">
                   <Calendar className="h-4 w-4 mr-2" />
                   Book Now
                 </Button>
