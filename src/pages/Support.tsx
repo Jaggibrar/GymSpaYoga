@@ -89,7 +89,7 @@ const Support = () => {
       />
 
       {/* Header */}
-      <header className="relative bg-gradient-to-br from-emerald-600 to-blue-700 text-white">
+      <header className="relative bg-[#005EB8] text-white">
         <div className="container mx-auto px-4 py-16">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight">Support Center</h1>
           <p className="mt-3 text-white/90 max-w-2xl">

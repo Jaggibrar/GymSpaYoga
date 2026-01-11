@@ -239,7 +239,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                         View Details
                       </Button>
                       <Button 
-                        className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                        className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                         onClick={() => handleBookNow(business.phone, business.business_name)}
                       >
                         <MessageCircle className="h-4 w-4 mr-1" />

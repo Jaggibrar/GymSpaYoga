@@ -56,10 +56,10 @@ const TrainersSection = () => {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "gym": return "from-red-500 to-orange-500";
-      case "spa": return "from-blue-500 to-cyan-500";
-      case "yoga": return "from-green-500 to-emerald-500";
-      default: return "from-gray-500 to-gray-600";
+      case "gym": return "from-[#005EB8] to-[#005EB8]";
+      case "spa": return "from-[#005EB8] to-[#005EB8]";
+      case "yoga": return "from-[#005EB8] to-[#005EB8]";
+      default: return "from-[#005EB8] to-[#005EB8]";
     }
   };
 
@@ -75,15 +75,15 @@ const TrainersSection = () => {
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 max-w-2xl mx-auto">
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-emerald-600">500+</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#005EB8]">500+</div>
               <div className="text-gray-600 text-sm sm:text-base">Certified Trainers</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600">98%</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#005EB8]">98%</div>
               <div className="text-gray-600 text-sm sm:text-base">Client Satisfaction</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-purple-600">24/7</div>
+              <div className="text-2xl sm:text-3xl font-bold text-[#005EB8]">24/7</div>
               <div className="text-gray-600 text-sm sm:text-base">Available Support</div>
             </div>
           </div>
@@ -99,7 +99,7 @@ const TrainersSection = () => {
                   className="w-full h-40 sm:h-48 object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute top-4 left-4">
-                  <Badge className={`bg-gradient-to-r ${getCategoryColor(trainer.category)} text-white shadow-lg`}>
+                  <Badge className={`bg-[#005EB8] text-white shadow-lg`}>
                     <div className="flex items-center space-x-1">
                       {getCategoryIcon(trainer.category)}
                       <span className="capitalize text-xs sm:text-sm">{trainer.category}</span>
@@ -117,12 +117,12 @@ const TrainersSection = () => {
               </div>
               
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-bold text-gray-800 group-hover:text-emerald-600 transition-colors duration-300">
+                <CardTitle className="text-lg font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors duration-300">
                   {trainer.name}
                 </CardTitle>
                 <div className="flex justify-between items-center">
                   <p className="text-sm text-gray-600">{trainer.experience} years exp.</p>
-                  <p className="text-base sm:text-lg font-bold text-emerald-600">₹{trainer.hourlyRate}/hr</p>
+                  <p className="text-base sm:text-lg font-bold text-[#005EB8]">₹{trainer.hourlyRate}/hr</p>
                 </div>
               </CardHeader>
               
@@ -141,7 +141,7 @@ const TrainersSection = () => {
                     ))}
                   </div>
                   
-                  <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 text-sm">
+                  <Button className="w-full bg-[#005EB8] hover:bg-[#004d96] transform hover:scale-105 transition-all duration-300 text-sm">
                     Book Session
                   </Button>
                 </div>
@@ -152,14 +152,14 @@ const TrainersSection = () => {
 
         <div className="text-center">
           <Link to="/trainers">
-            <Button size="lg" className="bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto mb-4 sm:mb-6">
+            <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] text-lg sm:text-xl px-8 sm:px-12 py-4 sm:py-6 shadow-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 w-full sm:w-auto mb-4 sm:mb-6">
               View All Trainers
               <ArrowRight className="ml-3 h-6 w-6" />
             </Button>
           </Link>
           <div className="mt-4 sm:mt-6">
             <Link to="/register-trainer">
-              <Button variant="outline" className="border-emerald-500 text-emerald-600 hover:bg-emerald-50 text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 w-full sm:w-auto">
+              <Button variant="outline" className="border-[#005EB8] text-[#005EB8] hover:bg-[#005EB8]/10 text-base sm:text-lg px-6 sm:px-8 py-2 sm:py-3 w-full sm:w-auto">
                 Become a Trainer
               </Button>
             </Link>

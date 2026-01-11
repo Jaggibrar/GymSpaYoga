@@ -119,7 +119,7 @@ const BlogPost = () => {
       
       <div className="min-h-screen bg-white">
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-50 to-blue-50 py-8">
+        <div className="bg-gray-50 py-8">
           <div className="container mx-auto px-4">
             <Link to="/blogs">
               <Button variant="outline" className="mb-6">
