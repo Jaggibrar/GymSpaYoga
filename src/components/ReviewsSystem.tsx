@@ -8,11 +8,11 @@ const ReviewsSystem = () => {
   return (
     <div className="space-y-6">
       {/* Beta Launch Message */}
-      <Card className="bg-gradient-to-r from-emerald-50 to-blue-50 border-emerald-200">
+      <Card className="bg-[#005EB8]/5 border-[#005EB8]/20">
         <CardHeader>
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Target className="h-8 w-8 text-emerald-600" />
+              <Target className="h-8 w-8 text-[#005EB8]" />
               <h3 className="text-2xl font-bold text-gray-800">Be Our First Success Story</h3>
             </div>
             <p className="text-gray-600 font-medium mb-4">
@@ -47,7 +47,7 @@ const ReviewsSystem = () => {
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="bg-emerald-500 rounded-full p-2">
+              <div className="bg-[#005EB8] rounded-full p-2">
                 <User className="h-4 w-4 text-white" />
               </div>
               <div>
@@ -80,11 +80,11 @@ const ReviewsSystem = () => {
       </Card>
 
       {/* Call to Action */}
-      <div className="text-center bg-gradient-to-r from-emerald-500 to-blue-500 rounded-xl p-8 text-white">
+      <div className="text-center bg-[#005EB8] rounded-xl p-8 text-white">
         <h3 className="text-2xl font-bold mb-4">Ready to be a Founding Partner?</h3>
         <p className="mb-6 opacity-90">Join us in revolutionizing how people discover fitness and wellness services</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="bg-white text-emerald-600 hover:bg-gray-100 font-bold px-8 py-3">
+          <Button className="bg-white text-[#005EB8] hover:bg-gray-100 font-bold px-8 py-3">
             Register Your Business
           </Button>
           <Button variant="outline" className="border-white text-white hover:bg-white/20 font-bold px-8 py-3">

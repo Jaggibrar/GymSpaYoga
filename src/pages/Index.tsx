@@ -272,6 +272,40 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Spa Banner */}
+        <section className="py-12 md:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+              {/* Left: Spa Image */}
+              <div className="flex-1 flex justify-center lg:justify-start">
+                <img 
+                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80"
+                  alt="Relaxing spa experience"
+                  className="rounded-2xl max-w-sm w-full object-cover"
+                />
+              </div>
+
+              {/* Right: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                  LUXURY SPA EXPERIENCES
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">
+                  Unwind. Rejuvenate. Restore your inner peace.
+                </p>
+                <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                  Discover premium spa services that pamper your body and soul. From therapeutic massages to rejuvenating facials, find your perfect retreat.
+                </p>
+                <Link to="/spas">
+                  <Button size="lg" className="bg-[#9C27B0] hover:bg-[#7B1FA2] text-white font-semibold px-8 py-6 text-lg">
+                    EXPLORE SPAS
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-10 md:py-12 bg-gray-50">
           <div className="container mx-auto px-4">
