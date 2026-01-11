@@ -247,7 +247,7 @@ const AdvancedSearchModal = ({ businessType, onApplyFilters, availableAmenities 
                   <Badge
                     key={amenity}
                     variant={filters.selectedAmenities.includes(amenity) ? "default" : "outline"}
-                    className="cursor-pointer hover:bg-emerald-500 hover:text-white transition-colors justify-center"
+                    className="cursor-pointer hover:bg-[#005EB8] hover:text-white transition-colors justify-center"
                     onClick={() => handleAmenityToggle(amenity)}
                   >
                     {amenity}
@@ -287,7 +287,7 @@ const AdvancedSearchModal = ({ businessType, onApplyFilters, availableAmenities 
             </Button>
           )}
           
-          <Button onClick={handleApplyFilters} className="bg-gradient-to-r from-emerald-500 to-blue-500">
+          <Button onClick={handleApplyFilters} className="bg-[#005EB8] hover:bg-[#004d96]">
             Apply Filters
           </Button>
         </div>

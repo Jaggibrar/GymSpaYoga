@@ -80,7 +80,7 @@ const EnhancedBusinessCard = ({
   };
 
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#0FFCBE] bg-white relative overflow-hidden rounded-xl">
+    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#005EB8] bg-white relative overflow-hidden rounded-xl">
       <div className="relative overflow-hidden h-48 md:h-56 w-full rounded-t-xl">
         <OptimizedImage 
           src={image} 
@@ -91,7 +91,7 @@ const EnhancedBusinessCard = ({
         
         {/* Enhanced Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs">
+          <Badge className="bg-[#005EB8] hover:bg-[#004d96] text-white font-bold text-xs">
             {category}
           </Badge>
           {verified && (
@@ -135,7 +135,7 @@ const EnhancedBusinessCard = ({
       </div>
       
       <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6 md:p-8">
-        <CardTitle className="text-lg sm:text-xl md:text-2xl group-hover:text-emerald-600 transition-colors line-clamp-1 font-black">
+        <CardTitle className="text-lg sm:text-xl md:text-2xl group-hover:text-[#005EB8] transition-colors line-clamp-1 font-black">
           {name}
         </CardTitle>
         <div className="flex items-center gap-2 text-gray-600">
@@ -165,13 +165,13 @@ const EnhancedBusinessCard = ({
           <div className="flex items-center justify-between">
             <span className="text-base font-bold text-gray-800">Starting at</span>
             <div className="text-right">
-              <span className="text-2xl font-black text-emerald-600">{price}</span>
+              <span className="text-2xl font-black text-[#005EB8]">{price}</span>
             </div>
           </div>
           
           <Button 
             onClick={handleViewDetails}
-            className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
+            className="w-full bg-[#005EB8] hover:bg-[#004d96] font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
           >
             View Details
           </Button>

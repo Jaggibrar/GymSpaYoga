@@ -64,7 +64,7 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
+            <CardTitle className="text-xl font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors duration-300">
               {trainer.name}
             </CardTitle>
             <p className="text-gray-600 mb-2">{trainer.experience} years experience</p>
@@ -74,7 +74,7 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-purple-600">₹{trainer.hourly_rate}</p>
+            <p className="text-2xl font-bold text-[#005EB8]">₹{trainer.hourly_rate}</p>
             <p className="text-sm text-gray-500">per session</p>
           </div>
         </div>
@@ -115,7 +115,7 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
               className="flex-1"
             />
             <Button 
-              className="flex-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white"
+              className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-white"
               onClick={handleBookNow}
             >
               Book Now

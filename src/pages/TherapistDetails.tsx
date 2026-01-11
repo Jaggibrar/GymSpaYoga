@@ -163,7 +163,7 @@ const TherapistDetails = () => {
                 businessName={therapist.business_name}
                 variant="default"
                 size="lg"
-                className="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
+                className="w-full bg-[#005EB8] hover:bg-[#004d96]"
               />
             </CardContent>
           </Card>

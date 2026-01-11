@@ -221,7 +221,7 @@ const TrainerDetails = () => {
                   businessName={trainer.name}
                   variant="default"
                   size="lg"
-                  className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                  className="w-full bg-[#25D366] hover:bg-[#20BD5A]"
                 />
               </CardContent>
             </Card>
