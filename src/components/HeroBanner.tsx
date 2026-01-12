@@ -82,7 +82,7 @@ const HeroBanner = () => {
                   placeholder="Search by name or location..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 text-base border-gray-200 focus:border-[#0A45FF] focus:ring-[#0A45FF] bg-white"
+                  className="pl-10 h-12 text-base border-gray-200 focus:border-[#005EB8] focus:ring-[#005EB8] bg-white"
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   aria-label="Search for gyms, spas, or yoga studios"
                 />
@@ -126,7 +126,7 @@ const HeroBanner = () => {
               {/* Search Button - 48px min height for mobile tap target */}
               <Button 
                 onClick={handleSearch}
-                className="h-12 min-h-[48px] px-6 bg-[#0A45FF] hover:bg-[#083ACC] text-white font-semibold"
+                className="h-12 min-h-[48px] px-6 bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold"
                 aria-label="Search"
               >
                 <Search className="mr-2 h-5 w-5" aria-hidden="true" />
@@ -141,25 +141,25 @@ const HeroBanner = () => {
           <div className="flex justify-center gap-2 sm:gap-3 min-w-max px-4 sm:px-0">
             <Button 
               onClick={() => navigate('/gyms')}
-              className="bg-[#0A45FF] hover:bg-[#083ACC] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+              className="bg-[#005EB8] hover:bg-[#004d96] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
             >
               Browse Gyms
             </Button>
             <Button 
               onClick={() => navigate('/spas')}
-              className="bg-[#06B6D4] hover:bg-[#0891B2] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+              className="bg-[#9C27B0] hover:bg-[#7B1FA2] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
             >
               Browse Spas
             </Button>
             <Button 
               onClick={() => navigate('/yoga')}
-              className="bg-[#22C55E] hover:bg-[#16A34A] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+              className="bg-[#2E7D32] hover:bg-[#256b29] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
             >
               Browse Yoga
             </Button>
             <Button 
               onClick={() => navigate('/trainers')}
-              className="bg-[#0A45FF] hover:bg-[#083ACC] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+              className="bg-[#E85D04] hover:bg-[#D4540A] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
             >
               Find Trainers
             </Button>
