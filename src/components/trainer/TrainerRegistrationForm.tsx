@@ -83,7 +83,9 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
+      // Storage bucket limit is 2MB
+      if (file.size > 2 * 1024 * 1024) {
+        alert('Image file size must be less than 2MB');
         return;
       }
       setFormData(prev => ({ ...prev, profile_image: file }));

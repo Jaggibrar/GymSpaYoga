@@ -38,8 +38,9 @@ export const useSingleTrainer = (trainerId: string | undefined) => {
       setLoading(true);
       setError(null);
 
+      // Use public_trainer_listings view for public access
       const { data, error: supabaseError } = await supabase
-        .from('trainer_profiles')
+        .from('public_trainer_listings')
         .select('*')
         .eq('id', trainerId)
         .eq('status', 'approved')
