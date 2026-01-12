@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Heart, Users, Target, Award, CheckCircle, MapPin, Phone, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Heart, Users, Target, Award, CheckCircle, MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 
 const About = () => {
@@ -23,6 +24,60 @@ const About = () => {
                 Transforming the wellness industry by connecting people with the best fitness centers, 
                 spas, yoga studios, and personal trainers in their area.
               </p>
+            </div>
+          </div>
+          
+          {/* Real People Banner */}
+          <div className="container mx-auto px-4 mt-12">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+              <div className="flex -space-x-4">
+                {[
+                  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop&crop=face',
+                  'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&crop=face',
+                  'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop&crop=face',
+                  'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=200&h=200&fit=crop&crop=face',
+                  'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=face',
+                  'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=200&fit=crop&crop=face',
+                ].map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Community member ${index + 1}`}
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full border-3 border-white object-cover shadow-md"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
+              <div className="text-center md:text-left">
+                <p className="text-2xl md:text-3xl font-bold text-white">10,000+</p>
+                <p className="text-white/80 text-sm md:text-base">Active Members</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Partner With GymSpaYoga Banner */}
+        <section className="py-16 bg-[#005EB8] text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Partner With <span className="text-white">GymSpaYoga</span>
+            </h2>
+            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Join India's fastest-growing wellness marketplace and take your business to the next level. 
+              Connect with thousands of health-conscious customers and grow your revenue effortlessly.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a href="/register-business">
+                <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100 px-8 min-h-[48px]">
+                  Start Registration
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </a>
+              <a href="/pricing">
+                <Button size="lg" className="bg-[#005EB8] border-2 border-white text-white font-bold hover:bg-[#004d96] px-8 min-h-[48px]">
+                  View Pricing Plans
+                </Button>
+              </a>
             </div>
           </div>
         </section>
