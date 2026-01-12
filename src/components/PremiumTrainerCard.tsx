@@ -7,11 +7,11 @@ import {
   Star, 
   Clock, 
   Award, 
-  Users, 
-  ArrowRight, 
+  Eye, 
+  MessageCircle, 
   CheckCircle, 
   Zap,
-  Heart
+  Verified
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Trainer } from '@/hooks/useTrainers';
@@ -33,27 +33,23 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
 
   const handleBookSession = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/book-trainer/${trainer.id}`);
-  }, [navigate, trainer.id]);
+    const message = `Hi, I'm interested in booking a training session with ${trainer.name}. Could you please provide more details?`;
+    const whatsappUrl = `https://wa.me/${trainer.phone?.replace(/[^\d]/g, '') || '919876543210'}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  }, [trainer.name, trainer.phone]);
 
   const getTierInfo = (tier: string) => {
     const tiers = {
       certified: {
-        bgColor: 'bg-[#0A45FF]/10',
-        textColor: 'text-[#0A45FF]',
-        icon: CheckCircle,
+        gradient: 'from-blue-500 to-blue-600',
         label: 'Certified'
       },
       expert: {
-        bgColor: 'bg-purple-50',
-        textColor: 'text-purple-700',
-        icon: Award,
+        gradient: 'from-purple-500 to-purple-600',
         label: 'Expert'
       },
       elite: {
-        bgColor: 'bg-yellow-50',
-        textColor: 'text-yellow-700',
-        icon: Zap,
+        gradient: 'from-yellow-500 to-yellow-600',
         label: 'Elite'
       }
     };
@@ -61,161 +57,122 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
   };
 
   const tierInfo = React.useMemo(() => getTierInfo(trainer.trainer_tier), [trainer.trainer_tier]);
-  const TierIcon = tierInfo.icon;
 
   return (
     <Card 
-      className={`group relative overflow-hidden transition-all duration-300 cursor-pointer border-2 ${
-        featured 
-          ? 'border-[#0A45FF] shadow-xl hover:shadow-2xl' 
-          : 'border-gray-100 hover:border-[#0A45FF] shadow-md hover:shadow-xl'
-      } bg-white rounded-2xl`}
-      onClick={handleViewProfile}
+      className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden bg-white"
     >
-      {/* Featured Badge */}
-      {featured && (
-        <div className="absolute top-4 left-4 z-10">
-          <Badge className="bg-[#0A45FF] text-white border-0 px-3 py-1 text-xs font-semibold">
-            ⭐ Featured
-          </Badge>
-        </div>
-      )}
-
-      {/* Image Section */}
-      <div className="relative h-64 overflow-hidden">
+      {/* Image Section - matching CategoryBusinesses h-56 */}
+      <div className="relative h-56 overflow-hidden">
         <img 
-          src={trainer.profile_image_url || "/placeholder.svg"} 
+          src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b"} 
           alt={trainer.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           onError={(e) => {
-            e.currentTarget.src = "/placeholder.svg";
+            e.currentTarget.src = "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b";
           }}
         />
         
-        {/* Rating Badge */}
-        <div className="absolute top-4 right-4">
-          <div className="bg-white rounded-xl px-4 py-2 shadow-lg">
-            <div className="flex items-center gap-2">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-bold text-black">{trainer.rating || 4.8}</span>
-              <span className="text-sm text-gray-600">({trainer.reviews_count || 12})</span>
-            </div>
-          </div>
+        {/* Tier Badge - Top Right */}
+        <Badge className={`absolute top-4 right-4 bg-gradient-to-r ${tierInfo.gradient} text-white border-0 capitalize px-3 py-1 shadow-lg`}>
+          {tierInfo.label}
+        </Badge>
+        
+        {/* Category & Verified Badges - Top Left */}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+          <Badge className="bg-black/70 text-white border-0 capitalize font-semibold px-3 py-1 shadow-lg text-sm">
+            {trainer.category?.toUpperCase() || 'TRAINER'}
+          </Badge>
+          <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1 shadow-md">
+            <Verified className="h-3 w-3" />
+            Verified
+          </Badge>
         </div>
-
-        {/* Tier Badge */}
-        <div className="absolute bottom-4 left-4">
-          <div className={`${tierInfo.bgColor} rounded-xl px-4 py-2 flex items-center gap-2 shadow-lg`}>
-            <TierIcon className={`h-4 w-4 ${tierInfo.textColor}`} />
-            <span className={`font-semibold text-sm ${tierInfo.textColor} capitalize`}>
-              {tierInfo.label}
-            </span>
-          </div>
-        </div>
-
-        {/* Quick Action Button */}
-        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-          <Button
-            size="sm"
-            className="bg-white text-[#0A45FF] hover:bg-gray-50 shadow-lg border-0 rounded-xl"
-            onClick={handleBookSession}
-          >
-            <Heart className="h-4 w-4" />
-          </Button>
-        </div>
+        
+        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
       </div>
 
-      {/* Content Section */}
+      {/* Content Section - matching CategoryBusinesses p-6 */}
       <CardContent className="p-6 space-y-4">
-        {/* Header */}
         <div className="space-y-2">
           <div className="flex items-start justify-between">
-            <h3 className="text-xl font-bold text-black group-hover:text-[#0A45FF] transition-colors duration-300">
+            <h3 className="text-xl font-bold group-hover:text-[#005EB8] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
               {trainer.name}
             </h3>
-            <div className="text-right">
-              <p className="text-2xl font-bold text-[#0A45FF]">
-                ₹{trainer.hourly_rate}
-              </p>
-              <p className="text-sm text-gray-600">per session</p>
+            <div className="flex items-center gap-1 text-sm text-yellow-600 flex-shrink-0">
+              <Star className="h-4 w-4 fill-current" />
+              <span className="font-medium">{trainer.rating || 4.8}</span>
             </div>
           </div>
           
-          <div className="flex items-center gap-4 text-sm text-gray-600">
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              <span>{trainer.experience} years</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
-              <span className="truncate max-w-32">{trainer.location}</span>
-            </div>
+          <div className="flex items-center gap-2 text-gray-600">
+            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <span className="text-sm font-medium truncate">{trainer.location}</span>
           </div>
         </div>
-
-        {/* Bio */}
-        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">
-          {trainer.bio}
+        
+        <p className="text-gray-600 text-sm line-clamp-3 leading-relaxed">
+          {trainer.bio || "Professional fitness trainer with expertise in personalized training programs"}
         </p>
-
-        {/* Specializations */}
+        
+        {/* Specializations - matching amenities style */}
         <div className="flex flex-wrap gap-2">
-          {trainer.specializations.slice(0, 2).map((spec, index) => (
-            <Badge 
-              key={index} 
-              variant="secondary" 
-              className="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 border-0"
-            >
+          {trainer.specializations?.slice(0, 2).map((spec, index) => (
+            <Badge key={index} variant="outline" className="text-xs px-2 py-1">
               {spec}
             </Badge>
           ))}
-          {trainer.specializations.length > 2 && (
-            <Badge 
-              variant="secondary" 
-              className="text-xs bg-[#0A45FF]/10 text-[#0A45FF] border border-[#0A45FF]/20"
-            >
+          {trainer.specializations && trainer.specializations.length > 2 && (
+            <Badge variant="outline" className="text-xs px-2 py-1">
               +{trainer.specializations.length - 2} more
             </Badge>
           )}
         </div>
+        
+        {/* Experience & Price Row */}
+        <div className="grid grid-cols-1 gap-2 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <Clock className="h-4 w-4 flex-shrink-0" />
+            <span>{trainer.experience} years experience</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <p className="text-lg font-bold text-[#005EB8]">₹{trainer.hourly_rate}/session</p>
+          </div>
+        </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 pt-2">
+        {/* Action Buttons - matching CategoryBusinesses style */}
+        <div className="flex gap-2 pt-2">
           <Button 
             variant="outline" 
-            className="flex-1 rounded-xl border-2 border-gray-200 hover:border-[#0A45FF] hover:text-[#0A45FF] transition-all duration-300"
+            size="sm" 
+            className="flex-1 font-semibold"
             onClick={(e) => {
               e.stopPropagation();
               handleViewProfile();
             }}
           >
-            <Users className="h-4 w-4 mr-2" />
-            View Profile
+            <Eye className="h-4 w-4 mr-1" />
+            View Details
           </Button>
           <Button 
-            className="flex-1 bg-[#0A45FF] hover:bg-[#083ACC] text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+            className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={handleBookSession}
           >
-            Book Session
-            <ArrowRight className="h-4 w-4 ml-2" />
+            <MessageCircle className="h-4 w-4 mr-1" />
+            Book Now
           </Button>
         </div>
-
-        {/* Stats Row */}
-        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-          <div className="flex items-center gap-4 text-xs text-gray-600">
-            <div className="flex items-center gap-1">
-              <Users className="h-3 w-3" />
-              <span>{Math.floor(Math.random() * 50) + 20}+ clients</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <CheckCircle className="h-3 w-3 text-green-500" />
-              <span>Verified</span>
-            </div>
+        
+        {/* Stats Row - matching CategoryBusinesses footer style */}
+        <div className="flex items-center gap-4 pt-4 border-t text-sm text-gray-500">
+          <div className="flex items-center gap-1 flex-1">
+            <Award className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{trainer.certifications || 'Certified Trainer'}</span>
           </div>
-          
-          <div className="text-xs text-gray-600">
-            Available today
+          <div className="flex items-center gap-1">
+            <CheckCircle className="h-3 w-3 text-green-500 flex-shrink-0" />
+            <span className="text-xs">Available</span>
           </div>
         </div>
       </CardContent>
