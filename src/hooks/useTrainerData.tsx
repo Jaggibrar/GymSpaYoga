@@ -37,8 +37,9 @@ export const useTrainerData = (
         setLoading(true);
         setError(null);
 
+        // Use public_trainer_listings view for public access (bypasses RLS)
         let query = supabase
-          .from('trainer_profiles')
+          .from('public_trainer_listings')
           .select('*')
           .eq('status', 'approved'); // Only show approved trainers
 
@@ -48,7 +49,7 @@ export const useTrainerData = (
         }
 
         if (searchTerm) {
-          query = query.or(`name.ilike.%${searchTerm}%,bio.ilike.%${searchTerm}%,specializations.cs.{${searchTerm}}`);
+          query = query.or(`name.ilike.%${searchTerm}%,bio.ilike.%${searchTerm}%`);
         }
 
         if (location) {

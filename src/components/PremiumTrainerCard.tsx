@@ -34,9 +34,10 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
   const handleBookSession = React.useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     const message = `Hi, I'm interested in booking a training session with ${trainer.name}. Could you please provide more details?`;
-    const whatsappUrl = `https://wa.me/${trainer.phone?.replace(/[^\d]/g, '') || '919876543210'}?text=${encodeURIComponent(message)}`;
+    // Use default number since public_trainer_listings view hides phone for privacy
+    const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
-  }, [trainer.name, trainer.phone]);
+  }, [trainer.name]);
 
   const getTierInfo = (tier: string) => {
     const tiers = {

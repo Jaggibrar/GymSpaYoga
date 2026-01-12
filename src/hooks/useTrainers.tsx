@@ -35,15 +35,16 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
       setLoading(true);
       setError(null);
 
+      // Use public_trainer_listings view for public access (bypasses RLS)
       let query = supabase
-        .from('trainer_profiles')
+        .from('public_trainer_listings')
         .select('*')
         .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       // Apply filters
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%,specializations.cs.{${searchTerm}}`);
+        query = query.or(`name.ilike.%${searchTerm}%,location.ilike.%${searchTerm}%`);
       }
 
       if (location) {
@@ -89,8 +90,9 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
 
   const getTrainerById = async (id: string): Promise<Trainer | null> => {
     try {
+      // Use public_trainer_listings view for public access
       const { data, error } = await supabase
-        .from('trainer_profiles')
+        .from('public_trainer_listings')
         .select('*')
         .eq('id', id)
         .eq('status', 'approved')
@@ -101,8 +103,13 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
         return null;
       }
 
+      if (!data) return null;
+
       return {
         ...data,
+        email: data.email || '',
+        phone: data.phone || '',
+        user_id: data.user_id || '',
         rating: 4.8,
         reviews_count: Math.floor(Math.random() * 50) + 5
       };
