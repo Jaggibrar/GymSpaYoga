@@ -61,6 +61,7 @@ const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Profile = React.lazy(() => import("./pages/Profile"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const TrainerDashboard = React.lazy(() => import("./pages/TrainerDashboard"));
+const MyTrainerProfile = React.lazy(() => import("./pages/MyTrainerProfile"));
 const UserBookings = React.lazy(() => import("./pages/UserBookings"));
 const Favorites = React.lazy(() => import("./pages/Favorites"));
 
@@ -143,6 +144,13 @@ const AppContent = () => {
             <ProtectedRoute>
               <TrainerRoute>
                 <TrainerDashboard />
+              </TrainerRoute>
+            </ProtectedRoute>
+          } />
+          <Route path="/my-trainer-profile" element={
+            <ProtectedRoute>
+              <TrainerRoute>
+                <MyTrainerProfile />
               </TrainerRoute>
             </ProtectedRoute>
           } />

@@ -1,5 +1,6 @@
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,11 +9,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { X, Plus, Upload } from 'lucide-react';
-import { useTrainerRegistration } from '@/hooks/useTrainerRegistration';
+import { useTrainerRegistration, type TrainerRegistrationResult } from '@/hooks/useTrainerRegistration';
 import { useTrainerValidation } from '@/hooks/useTrainerValidation';
+import { useAuth } from '@/hooks/useAuth';
 
 interface TrainerRegistrationFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (result: TrainerRegistrationResult) => void;
   onCancel?: () => void;
 }
 
@@ -22,7 +24,9 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
 }) => {
   const { registerTrainer, loading } = useTrainerRegistration();
   const { validateForm, getFieldError, clearValidationError } = useTrainerValidation();
-  
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -98,15 +102,25 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    if (!user) {
+      toast.error('Please login to register as a trainer');
+      navigate('/login?redirect=/register-trainer');
+      return;
+    }
+
     if (!validateForm(formData)) {
       return;
     }
 
-    const success = await registerTrainer(formData);
-    if (success && onSuccess) {
-      onSuccess();
+    setSubmitError(null);
+    const result = await registerTrainer(formData);
+    if (result.success) {
+      onSuccess?.(result);
+      return;
     }
+
+    setSubmitError(result.error || 'Registration failed. Please try again.');
   };
 
   return (
@@ -357,6 +371,12 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
             </div>
           </div>
 
+          {submitError && (
+            <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3 text-sm text-destructive">
+              {submitError}
+            </div>
+          )}
+
           <div className="flex justify-end gap-3 pt-6 border-t border-border">
             {onCancel && (
               <Button type="button" variant="outline" onClick={onCancel} className="border-input hover:bg-muted">
@@ -365,10 +385,12 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
             )}
             <Button
               type="submit"
-              disabled={loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.bio.trim() || formData.specializations.length === 0}
+              disabled={!user || loading || !formData.name.trim() || !formData.email.trim() || !formData.phone.trim() || !formData.location.trim() || !formData.bio.trim() || formData.specializations.length === 0}
               className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6"
             >
-              {loading ? (
+              {!user ? (
+                'Login to Continue'
+              ) : loading ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   Registering...

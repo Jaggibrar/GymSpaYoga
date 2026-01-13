@@ -1,15 +1,17 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, TrendingUp, Star, CheckCircle, Dumbbell, Heart, Clock } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import TrainerRegistrationForm from '@/components/trainer/TrainerRegistrationForm';
+import TrainerRegistrationSuccess from '@/components/trainer/TrainerRegistrationSuccess';
 import SEOHead from '@/components/SEOHead';
+import { useAuth } from '@/hooks/useAuth';
 
 const RegisterTrainer = () => {
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const [showForm, setShowForm] = useState(false);
+  const [registrationResult, setRegistrationResult] = useState<{ trainerId: string; status: string } | null>(null);
 
   const benefits = [
     {
@@ -51,15 +53,40 @@ const RegisterTrainer = () => {
           description="Register as a fitness trainer on GymSpaYoga. Connect with clients, manage bookings, and grow your training business with our comprehensive platform."
           keywords="trainer registration, fitness trainer, personal trainer, yoga instructor"
         />
-        
+
         <div className="min-h-screen bg-gray-50 py-12">
           <div className="container mx-auto px-4">
-            <TrainerRegistrationForm
-              onSuccess={() => {
-                navigate('/trainers');
-              }}
-              onCancel={() => setShowForm(false)}
-            />
+            {registrationResult ? (
+              <TrainerRegistrationSuccess
+                trainerId={registrationResult.trainerId}
+                status={registrationResult.status}
+                onBack={() => {
+                  setRegistrationResult(null);
+                  setShowForm(false);
+                }}
+              />
+            ) : (
+              <TrainerRegistrationForm
+                onSuccess={(result) => {
+                  if (result.trainerId) {
+                    setRegistrationResult({
+                      trainerId: result.trainerId,
+                      status: result.status || 'pending'
+                    });
+                  }
+                }}
+                onCancel={() => {
+                  setRegistrationResult(null);
+                  setShowForm(false);
+                }}
+              />
+            )}
+
+            {!user && (
+              <p className="text-center text-sm text-gray-600 mt-4">
+                You must be logged in to submit your trainer application.
+              </p>
+            )}
           </div>
         </div>
       </>
