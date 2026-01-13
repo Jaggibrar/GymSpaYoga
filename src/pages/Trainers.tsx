@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { MapPin, ArrowRight, Users, Award, Target, Zap, Search, Navigation, MessageCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import TrainerListings from '@/components/TrainerListings';
 import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
@@ -10,6 +10,9 @@ import OptimizedImage from '@/components/performance/ImageOptimizer';
 import { useGeolocation } from '@/hooks/useGeolocation';
 
 const Trainers = () => {
+  const [searchParams] = useSearchParams();
+  const refreshKey = searchParams.get('refresh') || '0';
+
   const [sortBy, setSortBy] = useState('created_at');
   const [priceFilter, setPriceFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -108,6 +111,7 @@ const Trainers = () => {
 
         {/* Trainers Listings */}
         <TrainerListings 
+          key={refreshKey}
           searchTerm={searchTerm}
           location={location}
           sortBy={sortBy}
