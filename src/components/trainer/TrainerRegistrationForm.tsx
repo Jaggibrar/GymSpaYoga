@@ -28,8 +28,10 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
     email: '',
     phone: '',
     location: '',
-    category: 'fitness',
-    trainer_tier: 'standard',
+    // DB constraint allows only: gym | spa | yoga
+    category: 'gym',
+    // DB constraint allows only: basic | intermediate | pro | elite
+    trainer_tier: 'basic',
     bio: '',
     experience: 1,
     hourly_rate: 500,
@@ -42,20 +44,16 @@ const TrainerRegistrationForm: React.FC<TrainerRegistrationFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const categories = [
-    { value: 'fitness', label: 'Fitness Training' },
-    { value: 'yoga', label: 'Yoga Instruction' },
-    { value: 'pilates', label: 'Pilates' },
-    { value: 'crossfit', label: 'CrossFit' },
-    { value: 'martial_arts', label: 'Martial Arts' },
-    { value: 'dance', label: 'Dance' },
-    { value: 'swimming', label: 'Swimming' },
-    { value: 'nutrition', label: 'Nutrition Coaching' }
+    { value: 'gym', label: 'Gym / Fitness' },
+    { value: 'yoga', label: 'Yoga' },
+    { value: 'spa', label: 'Spa / Therapy' }
   ];
 
   const tiers = [
-    { value: 'standard', label: 'Standard Trainer' },
-    { value: 'premium', label: 'Premium Trainer' },
-    { value: 'elite', label: 'Elite Trainer' }
+    { value: 'basic', label: 'Basic' },
+    { value: 'intermediate', label: 'Intermediate' },
+    { value: 'pro', label: 'Pro' },
+    { value: 'elite', label: 'Elite' }
   ];
 
   const handleInputChange = (field: string, value: any) => {
