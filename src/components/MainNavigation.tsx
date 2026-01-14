@@ -2,14 +2,17 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart, UserCheck } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useHasTrainerProfile } from '@/hooks/useHasTrainerProfile';
 import NotificationSystem from '@/components/NotificationSystem';
 import { useScrollDirection } from '@/hooks/useScrollDirection';
+import { Badge } from '@/components/ui/badge';
 
 const MainNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut, isAdmin } = useAuth();
+  const { hasProfile: hasTrainerProfile, status: trainerStatus } = useHasTrainerProfile();
   const location = useLocation();
   const navigate = useNavigate();
   const { scrollDirection, scrollY } = useScrollDirection();
@@ -153,6 +156,22 @@ const MainNavigation = () => {
                         <Edit className="h-4 w-4" />
                         <span>My Blogs</span>
                       </Link>
+                      {hasTrainerProfile && (
+                        <Link 
+                          to="/my-trainer-profile" 
+                          className="flex items-center justify-between px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <UserCheck className="h-4 w-4" />
+                            <span>My Trainer Profile</span>
+                          </div>
+                          {trainerStatus === 'pending' && (
+                            <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">
+                              Pending
+                            </Badge>
+                          )}
+                        </Link>
+                      )}
                       <Link 
                         to="/business-dashboard" 
                         className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
@@ -266,6 +285,20 @@ const MainNavigation = () => {
                   >
                     My Blogs
                   </Link>
+                  {hasTrainerProfile && (
+                    <Link 
+                      to="/my-trainer-profile" 
+                      className="flex items-center justify-between text-foreground hover:text-primary font-medium px-2 py-2 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span>My Trainer Profile</span>
+                      {trainerStatus === 'pending' && (
+                        <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">
+                          Pending
+                        </Badge>
+                      )}
+                    </Link>
+                  )}
                   <Link 
                     to="/business-dashboard" 
                     className="text-foreground hover:text-primary font-medium px-2 py-2 transition-colors"
