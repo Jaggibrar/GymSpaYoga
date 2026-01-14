@@ -7,6 +7,7 @@ import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
 import HeroBanner from '@/components/HeroBanner';
 import CommunityBanner from '@/components/CommunityBanner';
+import AuthBanner from '@/components/AuthBanner';
 import { useAuth } from '@/hooks/useAuth';
 
 // Lazy load heavy components
@@ -98,6 +99,9 @@ const Index = () => {
       />
 
       <div className="min-h-screen bg-white">
+        {/* Auth Banner for non-logged in users */}
+        <AuthBanner />
+
         {/* Hero Banner with Search */}
         <HeroBanner />
 
