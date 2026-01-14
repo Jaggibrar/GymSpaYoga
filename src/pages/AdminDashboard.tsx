@@ -37,6 +37,7 @@ import { AdminUsersList } from '@/components/admin/AdminUsersList';
 import { AdminPayments } from '@/components/admin/AdminPayments';
 import { AdminContent } from '@/components/admin/AdminContent';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
+import { PendingApprovalsQueue } from '@/components/admin/PendingApprovalsQueue';
 
 interface AdminStats {
   totalUsers: number;
@@ -45,6 +46,8 @@ interface AdminStats {
   activeListings: number;
   monthlyRevenue: number;
   pendingApprovals: number;
+  pendingTrainers: number;
+  pendingBusinesses: number;
 }
 
 const AdminDashboard = () => {
@@ -57,7 +60,9 @@ const AdminDashboard = () => {
     businessOwners: 0,
     activeListings: 0,
     monthlyRevenue: 0,
-    pendingApprovals: 0
+    pendingApprovals: 0,
+    pendingTrainers: 0,
+    pendingBusinesses: 0
   });
   const [activeTab, setActiveTab] = useState('dashboard');
 
@@ -100,14 +105,18 @@ const AdminDashboard = () => {
         return bookingMonth === currentMonth ? sum + (booking.total_amount || 0) : sum;
       }, 0) || 0;
 
+      const pendingTrainers = trainerProfiles.data?.filter(t => t.status === 'pending').length || 0;
+      const pendingBusinesses = businessProfiles.data?.filter(b => b.status === 'pending').length || 0;
+
       setStats({
         totalUsers: userProfiles.data?.length || 0,
         verifiedTrainers: trainerProfiles.data?.filter(t => t.status === 'approved').length || 0,
         businessOwners: businessProfiles.data?.filter(b => b.status === 'approved').length || 0,
         activeListings: (businessProfiles.data?.length || 0) + (trainerProfiles.data?.length || 0),
         monthlyRevenue,
-        pendingApprovals: (trainerProfiles.data?.filter(t => t.status === 'pending').length || 0) + 
-                         (businessProfiles.data?.filter(b => b.status === 'pending').length || 0)
+        pendingApprovals: pendingTrainers + pendingBusinesses,
+        pendingTrainers,
+        pendingBusinesses
       });
     } catch (error) {
       console.error('Error fetching admin stats:', error);
@@ -172,8 +181,16 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="pending" className="relative">
+              Pending
+              {stats.pendingApprovals > 0 && (
+                <Badge className="ml-1 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-white text-xs">
+                  {stats.pendingApprovals}
+                </Badge>
+              )}
+            </TabsTrigger>
             <TabsTrigger value="listings">Listings</TabsTrigger>
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
@@ -241,14 +258,32 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card 
+                className="cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => setActiveTab('pending')}
+              >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Pending Approvals</CardTitle>
                   <Bell className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.pendingApprovals}</div>
-                  <p className="text-xs text-muted-foreground">Awaiting review</p>
+                  <div className="text-2xl font-bold text-orange-600">{stats.pendingApprovals}</div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>{stats.pendingTrainers} trainers</span>
+                    <span>•</span>
+                    <span>{stats.pendingBusinesses} businesses</span>
+                  </div>
+                  <Button 
+                    variant="link" 
+                    size="sm" 
+                    className="p-0 h-auto mt-1 text-primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveTab('pending');
+                    }}
+                  >
+                    Review now →
+                  </Button>
                 </CardContent>
               </Card>
             </div>
@@ -347,6 +382,10 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="pending">
+            <PendingApprovalsQueue />
           </TabsContent>
 
           <TabsContent value="listings">
