@@ -105,17 +105,22 @@ export const useTrainerRegistration = () => {
         return { success: false, error: error.message };
       }
 
-      // Legacy profile upsert (non-blocking)
-      const { error: roleError } = await supabase
-        .from('user_profiles')
-        .upsert({
-          user_id: user.id,
-          role: 'business_owner',
-          full_name: formData.name
-        });
+      // Legacy profile upsert (non-blocking) - update is_trainer flag
+      try {
+        const { error: roleError } = await supabase
+          .from('user_profiles')
+          .upsert({
+            user_id: user.id,
+            role: 'business_owner',
+            full_name: formData.name,
+            is_trainer: true
+          }, { onConflict: 'user_id' });
 
-      if (roleError) {
-        console.error('Role update error:', roleError);
+        if (roleError) {
+          console.warn('Role update warning (non-critical):', roleError);
+        }
+      } catch (profileError) {
+        console.warn('Profile update failed (non-critical):', profileError);
       }
 
       toast.success('🎉 Application submitted! Your profile is pending approval.');
