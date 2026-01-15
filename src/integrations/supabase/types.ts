@@ -1344,6 +1344,51 @@ export type Database = {
         }
         Relationships: []
       }
+      trainer_approvals: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip: unknown
+          performed_by: string | null
+          trainer_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip?: unknown
+          performed_by?: string | null
+          trainer_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip?: unknown
+          performed_by?: string | null
+          trainer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trainer_approvals_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "public_trainer_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trainer_approvals_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "trainer_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trainer_profiles: {
         Row: {
           bio: string
@@ -1686,6 +1731,7 @@ export type Database = {
       }
     }
     Functions: {
+      approve_trainer: { Args: { p_id: string }; Returns: undefined }
       cleanup_old_notifications: { Args: never; Returns: number }
       create_chat_booking: {
         Args: {
@@ -1699,6 +1745,7 @@ export type Database = {
         }
         Returns: string
       }
+      get_auth_uid: { Args: never; Returns: string }
       get_business_contact_info: {
         Args: { business_id_param: string }
         Returns: {
@@ -1740,6 +1787,12 @@ export type Database = {
         Args: { permission_name: string; user_uuid?: string }
         Returns: boolean
       }
+      insert_trainer_profile: {
+        Args: { payload: Json }
+        Returns: {
+          id: string
+        }[]
+      }
       is_admin:
         | { Args: never; Returns: boolean }
         | { Args: { user_uuid?: string }; Returns: boolean }
@@ -1749,6 +1802,34 @@ export type Database = {
         Returns: undefined
       }
       mark_old_notifications_read: { Args: never; Returns: number }
+      save_trainer_profile: {
+        Args: { payload: Json }
+        Returns: {
+          bio: string
+          category: string
+          certifications: string | null
+          created_at: string | null
+          email: string
+          experience: number
+          hourly_rate: number
+          id: string
+          location: string
+          name: string
+          phone: string
+          profile_image_url: string | null
+          specializations: string[] | null
+          status: string | null
+          trainer_tier: string
+          updated_at: string | null
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trainer_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       update_booking_status: {
         Args: {
           booking_id_param: number
@@ -1765,6 +1846,34 @@ export type Database = {
       update_owner_status: {
         Args: { p_is_online?: boolean; p_user_id: string }
         Returns: undefined
+      }
+      update_trainer_profile: {
+        Args: { payload: Json }
+        Returns: {
+          bio: string
+          category: string
+          certifications: string | null
+          created_at: string | null
+          email: string
+          experience: number
+          hourly_rate: number
+          id: string
+          location: string
+          name: string
+          phone: string
+          profile_image_url: string | null
+          specializations: string[] | null
+          status: string | null
+          trainer_tier: string
+          updated_at: string | null
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "trainer_profiles"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
