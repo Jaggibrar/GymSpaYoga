@@ -76,7 +76,7 @@ export const useTrainerRegistration = () => {
         profile_image_url = publicUrl;
       }
 
-      // Insert trainer profile (pending approval)
+      // Insert trainer profile (status handled by trigger)
       const { data: created, error } = await supabase
         .from('trainer_profiles')
         .insert({
@@ -92,8 +92,7 @@ export const useTrainerRegistration = () => {
           hourly_rate: formData.hourly_rate,
           specializations: formData.specializations,
           certifications: formData.certifications,
-          profile_image_url,
-          status: 'pending'
+          profile_image_url
         })
         .select('id, status')
         .single();
@@ -123,7 +122,7 @@ export const useTrainerRegistration = () => {
         console.warn('Profile update failed (non-critical):', profileError);
       }
 
-      toast.success('🎉 Application submitted! Your profile is pending approval.');
+      toast.success('🎉 Registration complete! Your trainer profile is now live.');
       setLoading(false);
 
       return {
