@@ -77,7 +77,7 @@ export const useBusinessRegistration = () => {
       const imageUrls = await uploadMultipleImages(formData.images);
       console.log(`Successfully uploaded ${imageUrls.length} images`);
 
-      // Insert business profile
+      // Insert business profile (status handled by trigger)
       console.log('Inserting business profile to database...');
       const businessData = {
         user_id: user.id,
@@ -96,8 +96,7 @@ export const useBusinessRegistration = () => {
         session_price: formData.sessionPrice ? parseInt(formData.sessionPrice) : null,
         description: formData.description.trim(),
         amenities: formData.amenities || [],
-        image_urls: imageUrls,
-        status: 'approved'
+        image_urls: imageUrls
       };
 
       const { error } = await supabase
