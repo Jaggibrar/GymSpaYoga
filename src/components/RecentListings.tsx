@@ -1,13 +1,11 @@
-
 import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MapPin, Clock, Star, Crown, Diamond, IndianRupee, Shield, Award } from 'lucide-react';
+import { MapPin, Star, ArrowRight, Dumbbell, Flower2, Heart } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import OptimizedImage from '@/components/OptimizedImage';
-import FavoriteButton from '@/components/FavoriteButton';
 import { logger } from '@/utils/logger';
 
 interface RecentListing {
@@ -33,11 +31,11 @@ const RecentListings = () => {
     const fetchRecentListings = async () => {
       try {
         logger.debug('Fetching recent listings...');
-        const { data, error} = await supabase
+        const { data, error } = await supabase
           .from('public_business_listings')
           .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, amenities, created_at')
           .order('created_at', { ascending: false })
-          .limit(4);
+          .limit(6);
 
         if (error) {
           logger.error('Error fetching recent listings:', error);
@@ -48,7 +46,7 @@ const RecentListings = () => {
         setListings(data || []);
       } catch (error) {
         logger.error('Error fetching recent listings:', error);
-        // Set some sample data if there's an error or no data
+        // Set sample data if there's an error or no data
         setListings([
           {
             id: 'sample-1',
@@ -81,7 +79,7 @@ const RecentListings = () => {
             category: 'yoga',
             city: 'Delhi',
             state: 'Delhi',
-            image_urls: ['https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+            image_urls: ['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
             monthly_price: 1800,
             amenities: ['Hatha Yoga', 'Meditation', 'Pranayama'],
             created_at: new Date().toISOString()
@@ -97,6 +95,30 @@ const RecentListings = () => {
             monthly_price: 2200,
             amenities: ['Free Weights', 'Group Classes', 'Locker Rooms'],
             created_at: new Date().toISOString()
+          },
+          {
+            id: 'sample-5',
+            business_name: 'Tranquil Spa Resort',
+            business_type: 'spa',
+            category: 'wellness',
+            city: 'Goa',
+            state: 'Goa',
+            image_urls: ['https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+            session_price: 2500,
+            amenities: ['Hot Stone Massage', 'Ayurvedic Treatment', 'Pool'],
+            created_at: new Date().toISOString()
+          },
+          {
+            id: 'sample-6',
+            business_name: 'Sunrise Yoga Center',
+            business_type: 'yoga',
+            category: 'yoga',
+            city: 'Rishikesh',
+            state: 'Uttarakhand',
+            image_urls: ['https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+            monthly_price: 1500,
+            amenities: ['Ashtanga Yoga', 'Teacher Training', 'Retreats'],
+            created_at: new Date().toISOString()
           }
         ]);
       } finally {
@@ -106,7 +128,6 @@ const RecentListings = () => {
 
     fetchRecentListings();
 
-    // Set up real-time subscription for new listings
     const channel = supabase
       .channel('business-listings')
       .on(
@@ -142,205 +163,238 @@ const RecentListings = () => {
     }
   };
 
-  const getTierIcon = (price?: number) => {
-    if (!price) return <IndianRupee className="h-4 w-4" />;
-    if (price >= 5000) return <Crown className="h-4 w-4" />;
-    if (price >= 3000) return <Diamond className="h-4 w-4" />;
-    return <IndianRupee className="h-4 w-4" />;
-  };
-
-  const getTierColor = (price?: number) => {
-    if (!price) return "bg-gradient-to-r from-emerald-500 to-emerald-600";
-    if (price >= 5000) return "bg-gradient-to-r from-amber-500 to-amber-600";
-    if (price >= 3000) return "bg-gradient-to-r from-blue-500 to-blue-600";
-    return "bg-gradient-to-r from-emerald-500 to-emerald-600";
-  };
-
-  const getBusinessTypeColor = (businessType: string) => {
+  const getBusinessTypeInfo = (businessType: string) => {
     switch (businessType.toLowerCase()) {
       case 'gym':
-        return "bg-red-500 text-white";
+        return { color: 'bg-[#005EB8]', icon: Dumbbell, label: 'Gym' };
       case 'spa':
-        return "bg-purple-500 text-white";
+        return { color: 'bg-[#9C27B0]', icon: Flower2, label: 'Spa' };
       case 'yoga':
-        return "bg-green-500 text-white";
+        return { color: 'bg-[#2E7D32]', icon: Heart, label: 'Yoga' };
       default:
-        return "bg-gray-500 text-white";
+        return { color: 'bg-gray-500', icon: Dumbbell, label: 'Wellness' };
     }
+  };
+
+  const getPrice = (listing: RecentListing) => {
+    if (listing.monthly_price) return `₹${listing.monthly_price.toLocaleString()}/mo`;
+    if (listing.session_price) return `₹${listing.session_price.toLocaleString()}/session`;
+    return 'Contact for pricing';
   };
 
   if (loading) {
     return (
-      <section className="py-12 sm:py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <div className="h-8 w-48 bg-muted animate-pulse rounded mb-2"></div>
-              <div className="h-4 w-64 bg-muted animate-pulse rounded"></div>
-            </div>
-          </div>
-          <div className="overflow-x-auto scrollbar-hide -mx-4 px-4">
-            <div className="flex gap-4 lg:grid lg:grid-cols-4">
-              {[...Array(4)].map((_, i) => (
-                <Card key={i} shadow="elevated" className="flex-shrink-0 w-[280px] lg:w-auto animate-pulse">
-                  <div className="h-48 bg-muted rounded-t-lg"></div>
-                  <CardContent className="p-4 space-y-3">
-                    <div className="h-5 bg-muted rounded"></div>
-                    <div className="h-4 bg-muted rounded w-3/4"></div>
-                    <div className="h-4 bg-muted rounded w-1/2"></div>
-                    <div className="h-10 bg-muted rounded-lg"></div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[...Array(6)].map((_, i) => (
+          <Card key={i} className="overflow-hidden animate-pulse">
+            <div className="h-48 bg-gray-200"></div>
+            <CardContent className="p-5 space-y-3">
+              <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     );
   }
 
-  // Always show the section, even if no listings
+  if (listings.length === 0) {
+    return (
+      <div className="text-center py-12 bg-gray-50 rounded-2xl border border-gray-200">
+        <p className="text-gray-600 text-lg mb-2">No featured listings available yet.</p>
+        <p className="text-gray-500 text-sm">Check back soon for new wellness destinations!</p>
+      </div>
+    );
+  }
+
   return (
-    <section className="py-12 sm:py-16 bg-background">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground">Featured Near You</h2>
-            <p className="text-sm md:text-base text-muted-foreground">Top-rated wellness providers in your area</p>
-          </div>
-          <Button variant="outline" className="hidden sm:inline-flex">View All</Button>
+    <div className="space-y-8">
+      {/* Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-black">Featured Listings</h2>
+          <p className="text-gray-600 mt-1">Discover top-rated wellness destinations near you</p>
         </div>
+        <Link to="/explore">
+          <Button 
+            className="bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold px-6 min-h-[48px]"
+          >
+            View All
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </Link>
+      </div>
 
-        {listings.length === 0 ? (
-          <div className="text-center py-8 bg-card rounded-xl border border-border">
-            <p className="text-muted-foreground mb-2">No recent listings available at the moment.</p>
-            <p className="text-sm text-muted-foreground/70">Check back soon for new wellness destinations!</p>
-          </div>
-        ) : (
-          <>
-            {/* Mobile & Tablet: Horizontal Scroll */}
-            <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 snap-x snap-mandatory">
-              <div className="flex gap-4">
-                {listings.map((listing) => (
-                  <Card 
-                    key={listing.id}
-                    shadow="interactive"
-                    className="flex-shrink-0 w-[280px] overflow-hidden cursor-pointer snap-start transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-1"
-                    onClick={() => handleCardClick(listing)}
-                  >
-                    <div className="relative h-44 w-full overflow-hidden rounded-t-lg">
-                      <OptimizedImage 
-                        src={listing.image_urls[0] || "/placeholder.svg"} 
-                        alt={listing.business_name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        width={280}
-                        height={176}
-                      />
-                      <div className="absolute top-2 left-2">
-                        <Badge className="bg-secondary text-secondary-foreground px-2 py-0.5 text-xs font-semibold shadow-md">
-                          Featured
-                        </Badge>
-                      </div>
-                    </div>
-                    
-                    <CardContent className="p-4 space-y-2.5">
-                      <h3 className="font-bold text-base leading-tight line-clamp-1">
-                        {listing.business_name}
-                      </h3>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 fill-primary text-primary" />
-                          <span className="font-semibold text-sm">4.8</span>
-                          <span className="text-xs text-muted-foreground">(124)</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
-                        <span className="line-clamp-1">{listing.city}</span>
-                      </div>
-                      
-                      <Button 
-                        className="w-full bg-primary hover:shadow-[var(--shadow-glow)] text-white transition-all duration-300" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCardClick(listing);
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Desktop: 4 Column Grid */}
-            <div className="hidden lg:grid lg:grid-cols-4 gap-6">
-              {listings.map((listing) => (
-                <Card 
-                  key={listing.id}
-                  shadow="interactive"
-                  className="overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-soft)] hover:-translate-y-2"
-                  onClick={() => handleCardClick(listing)}
-                >
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <OptimizedImage 
-                      src={listing.image_urls[0] || "/placeholder.svg"} 
-                      alt={listing.business_name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      width={350}
-                      height={192}
-                    />
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-secondary text-secondary-foreground px-3 py-1 font-semibold shadow-lg">
-                        Featured
-                      </Badge>
+      {/* Mobile: Horizontal Scroll */}
+      <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 snap-x snap-mandatory">
+        <div className="flex gap-4">
+          {listings.map((listing) => {
+            const typeInfo = getBusinessTypeInfo(listing.business_type);
+            const TypeIcon = typeInfo.icon;
+            
+            return (
+              <Card 
+                key={listing.id}
+                className="flex-shrink-0 w-[300px] overflow-hidden cursor-pointer snap-start border-2 border-gray-100 hover:border-[#005EB8]/30 transition-all duration-300 hover:shadow-xl"
+                onClick={() => handleCardClick(listing)}
+              >
+                <div className="relative h-44 w-full overflow-hidden">
+                  <OptimizedImage 
+                    src={listing.image_urls?.[0] || "/placeholder.svg"} 
+                    alt={listing.business_name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    width={300}
+                    height={176}
+                  />
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    <Badge className={`${typeInfo.color} text-white px-3 py-1 text-xs font-semibold`}>
+                      <TypeIcon className="h-3 w-3 mr-1" />
+                      {typeInfo.label}
+                    </Badge>
+                  </div>
+                  <div className="absolute top-3 right-3">
+                    <Badge className="bg-white text-[#005EB8] px-2 py-1 text-xs font-bold shadow-lg">
+                      Featured
+                    </Badge>
+                  </div>
+                </div>
+                
+                <CardContent className="p-4 space-y-3">
+                  <h3 className="font-bold text-lg text-black leading-tight line-clamp-1">
+                    {listing.business_name}
+                  </h3>
+                  
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold text-black">4.8</span>
+                      <span className="text-sm text-gray-500">(124)</span>
                     </div>
                   </div>
                   
-                  <CardContent className="p-5 space-y-3">
-                    <h3 className="font-bold text-lg leading-tight line-clamp-1">
-                      {listing.business_name}
-                    </h3>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1">
-                        <Star className="h-4 w-4 fill-primary text-primary" />
-                        <span className="font-semibold">4.8</span>
-                        <span className="text-sm text-muted-foreground">(124)</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="h-4 w-4 flex-shrink-0" />
-                      <span className="line-clamp-1">{listing.city}, {listing.state}</span>
-                    </div>
-                    
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4 flex-shrink-0" />
-                      <span>6 AM - 9 PM</span>
-                    </div>
-                    
-                    <Button 
-                      className="w-full bg-primary hover:shadow-[var(--shadow-glow)] text-white transition-all duration-300" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleCardClick(listing);
-                      }}
-                    >
-                      View Details
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </>
-        )}
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <MapPin className="h-4 w-4 flex-shrink-0 text-[#005EB8]" />
+                    <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                    <span className="font-bold text-[#005EB8] text-lg">{getPrice(listing)}</span>
+                  </div>
+                  
+                  <Button 
+                    className="w-full bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold min-h-[44px]" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCardClick(listing);
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
-    </section>
+
+      {/* Desktop: 3 Column Grid */}
+      <div className="hidden lg:grid lg:grid-cols-3 gap-6">
+        {listings.map((listing) => {
+          const typeInfo = getBusinessTypeInfo(listing.business_type);
+          const TypeIcon = typeInfo.icon;
+          
+          return (
+            <Card 
+              key={listing.id}
+              className="group overflow-hidden cursor-pointer border-2 border-gray-100 hover:border-[#005EB8]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              onClick={() => handleCardClick(listing)}
+            >
+              <div className="relative h-56 w-full overflow-hidden">
+                <OptimizedImage 
+                  src={listing.image_urls?.[0] || "/placeholder.svg"} 
+                  alt={listing.business_name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  width={400}
+                  height={224}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute top-4 left-4 flex gap-2">
+                  <Badge className={`${typeInfo.color} text-white px-3 py-1.5 text-sm font-semibold shadow-lg`}>
+                    <TypeIcon className="h-4 w-4 mr-1.5" />
+                    {typeInfo.label}
+                  </Badge>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-white text-[#005EB8] px-3 py-1.5 text-sm font-bold shadow-lg">
+                    ⭐ Featured
+                  </Badge>
+                </div>
+              </div>
+              
+              <CardContent className="p-6 space-y-4">
+                <div>
+                  <h3 className="font-bold text-xl text-black leading-tight line-clamp-1 mb-2">
+                    {listing.business_name}
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                      <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                      <span className="font-bold text-black">4.8</span>
+                      <span className="text-gray-500">(124 reviews)</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MapPin className="h-5 w-5 flex-shrink-0 text-[#005EB8]" />
+                  <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+                </div>
+
+                {listing.amenities && listing.amenities.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {listing.amenities.slice(0, 3).map((amenity, idx) => (
+                      <Badge key={idx} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
+                        {amenity}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                  <div>
+                    <span className="text-sm text-gray-500">Starting from</span>
+                    <p className="font-bold text-[#005EB8] text-xl">{getPrice(listing)}</p>
+                  </div>
+                  <Button 
+                    className="bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold px-6 min-h-[44px]" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCardClick(listing);
+                    }}
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Mobile View All Button */}
+      <div className="lg:hidden text-center pt-4">
+        <Link to="/explore">
+          <Button 
+            className="bg-[#005EB8] hover:bg-[#004d96] text-white font-semibold px-8 min-h-[48px]"
+          >
+            View All Listings
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </Link>
+      </div>
+    </div>
   );
 };
 
