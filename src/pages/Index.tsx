@@ -136,17 +136,9 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Recent Listings */}
-        <section className="py-10 md:py-12 bg-gray-50">
+        {/* Featured Listings */}
+        <section className="py-10 md:py-14 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold text-black mb-2">
-                Featured Listings
-              </h2>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Discover top-rated wellness destinations near you
-              </p>
-            </div>
             <Suspense fallback={<LoadingFallback />}>
               <RecentListings />
             </Suspense>
