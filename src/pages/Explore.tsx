@@ -9,8 +9,6 @@ import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import ImageGallery from '@/components/ImageGallery';
 import ViewModeToggle, { ViewMode } from '@/components/ui/ViewModeToggle';
-import AppHeader from '@/components/AppHeader';
-import AppFooter from '@/components/AppFooter';
 import CommunityBanner from '@/components/CommunityBanner';
 
 const Explore = () => {
@@ -37,14 +35,6 @@ const Explore = () => {
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
   };
 
-  const communityImages = [
-    'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=200&h=200&fit=crop&crop=face',
-    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=face',
-  ];
-
   return (
     <>
       <SEOHead
@@ -53,61 +43,11 @@ const Explore = () => {
         keywords="explore gyms, find spas, yoga studios, wellness near me, fitness booking"
       />
       
-      <AppHeader />
-      
       <div className="min-h-screen bg-white">
-        {/* Hero Section with Real People Banner */}
-        <section className="py-12 md:py-16 bg-[#005EB8]">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-              {/* Left: Community Images */}
-              <div className="flex items-center">
-                <div className="flex -space-x-3">
-                  {communityImages.map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Community member ${index + 1}`}
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full border-3 border-white object-cover shadow-md"
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
-                <div className="ml-4 md:ml-6">
-                  <p className="text-2xl md:text-3xl font-bold text-white">10,000+</p>
-                  <p className="text-white/80 text-sm md:text-base">Active Members</p>
-                </div>
-              </div>
-
-              {/* Center: Message */}
-              <div className="text-center flex-1 max-w-lg">
-                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                  Explore Wellness Services
-                </h1>
-                <p className="text-white/80 text-base md:text-lg">
-                  Find your perfect gym, spa, or yoga studio from our curated collection
-                </p>
-              </div>
-
-              {/* Right: Stats */}
-              <div className="flex gap-6 text-center">
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-white">500+</p>
-                  <p className="text-white/80 text-sm">Listings</p>
-                </div>
-                <div>
-                  <p className="text-2xl md:text-3xl font-bold text-white">50+</p>
-                  <p className="text-white/80 text-sm">Cities</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Category Cards */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-black">Browse by Category</h2>
+            <h1 className="text-2xl md:text-3xl font-bold text-center mb-8 text-black">Browse by Category</h1>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-6xl mx-auto">
               {/* Gyms */}
               <Link to="/gyms">
@@ -306,8 +246,6 @@ const Explore = () => {
         {/* Community Banner */}
         <CommunityBanner />
       </div>
-      
-      <AppFooter />
     </>
   );
 };
