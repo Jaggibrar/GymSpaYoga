@@ -1,21 +1,21 @@
 
-import { Dumbbell, MapPin, Phone, Mail, Facebook, Instagram, Linkedin, X } from "lucide-react";
+import { Heart, MapPin, Phone, Mail, Facebook, Instagram, Linkedin, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const AppFooter = () => {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-8 sm:py-12 w-full border-t border-gray-700">
+    <footer className="bg-gray-900 text-white py-8 sm:py-12 w-full border-t border-gray-700">
       <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8 mx-auto max-w-7xl">
         {/* Mobile Horizontal Layout - Stack sections horizontally on mobile */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12">
           {/* Brand Section - Full width on mobile */}
           <div className="lg:col-span-2 mb-6 lg:mb-0 text-left">
-            <div className="flex items-center space-x-3 mb-3 lg:mb-4 justify-start">
-              <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Dumbbell className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
+            <Link to="/" className="flex items-center space-x-3 mb-3 lg:mb-4 justify-start">
+              <div className="h-10 w-10 lg:h-12 lg:w-12 rounded-lg bg-[#0A45FF] flex items-center justify-center">
+                <Heart className="h-5 w-5 lg:h-6 lg:w-6 text-white fill-white" />
               </div>
-              <h4 className="text-lg lg:text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">GymSpaYoga</h4>
-            </div>
+              <span className="text-lg lg:text-2xl font-semibold text-white">GymSpaYoga</span>
+            </Link>
             <p className="text-base lg:text-lg font-semibold text-white/90 mb-4 lg:mb-6 italic">
               Train. Relax. Rejuvenate.
             </p>
