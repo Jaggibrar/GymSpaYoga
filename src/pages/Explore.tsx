@@ -1,15 +1,17 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Filter, Star, Clock, DollarSign, Dumbbell } from 'lucide-react';
+import { MapPin, Star, Clock, DollarSign, Dumbbell, Sparkles, Heart, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
 import ImageGallery from '@/components/ImageGallery';
 import ViewModeToggle, { ViewMode } from '@/components/ui/ViewModeToggle';
+import AppHeader from '@/components/AppHeader';
+import AppFooter from '@/components/AppFooter';
+import CommunityBanner from '@/components/CommunityBanner';
 
 const Explore = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,28 +27,23 @@ const Explore = () => {
     sortBy
   );
 
-  const categories = [
-    { id: 'all', name: 'All', count: businesses.length },
-    { id: 'gym', name: 'Gyms', count: businesses.filter(b => b.business_type === 'gym').length },
-    { id: 'spa', name: 'Spas', count: businesses.filter(b => b.business_type === 'spa').length },
-    { id: 'yoga', name: 'Yoga Studios', count: businesses.filter(b => b.business_type === 'yoga').length },
-    { id: 'trainer', name: 'Trainers', count: businesses.filter(b => b.business_type === 'trainer').length }
-  ];
-
-  const handleSearch = () => {
-    // Search is handled by the hook automatically when searchTerm or location changes
-    console.log('Searching for:', searchTerm, 'in', location);
-  };
-
   const getCategoryColor = (category: string) => {
     const colors = {
-      gym: 'bg-orange-100 text-orange-700',
-      spa: 'bg-pink-100 text-pink-700',
-      yoga: 'bg-purple-100 text-purple-700',
-      trainer: 'bg-blue-100 text-blue-700'
+      gym: 'bg-[#005EB8]/10 text-[#005EB8]',
+      spa: 'bg-[#9C27B0]/10 text-[#9C27B0]',
+      yoga: 'bg-[#2E7D32]/10 text-[#2E7D32]',
+      trainer: 'bg-[#E85D04]/10 text-[#E85D04]'
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700';
   };
+
+  const communityImages = [
+    'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop&crop=face',
+    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&crop=face',
+    'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop&crop=face',
+    'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=200&h=200&fit=crop&crop=face',
+    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=face',
+  ];
 
   return (
     <>
@@ -56,130 +53,154 @@ const Explore = () => {
         keywords="explore gyms, find spas, yoga studios, wellness near me, fitness booking"
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+      <AppHeader />
+      
+      <div className="min-h-screen bg-white">
+        {/* Hero Section with Real People Banner */}
+        <section className="py-12 md:py-16 bg-[#005EB8]">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                Find Your Perfect Wellness Service
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8">
-                Browse through our comprehensive directory of wellness services, organized by category and price range
-              </p>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+              {/* Left: Community Images */}
+              <div className="flex items-center">
+                <div className="flex -space-x-3">
+                  {communityImages.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Community member ${index + 1}`}
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-full border-3 border-white object-cover shadow-md"
+                      loading="lazy"
+                    />
+                  ))}
+                </div>
+                <div className="ml-4 md:ml-6">
+                  <p className="text-2xl md:text-3xl font-bold text-white">10,000+</p>
+                  <p className="text-white/80 text-sm md:text-base">Active Members</p>
+                </div>
+              </div>
+
+              {/* Center: Message */}
+              <div className="text-center flex-1 max-w-lg">
+                <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  Explore Wellness Services
+                </h1>
+                <p className="text-white/80 text-base md:text-lg">
+                  Find your perfect gym, spa, or yoga studio from our curated collection
+                </p>
+              </div>
+
+              {/* Right: Stats */}
+              <div className="flex gap-6 text-center">
+                <div>
+                  <p className="text-2xl md:text-3xl font-bold text-white">500+</p>
+                  <p className="text-white/80 text-sm">Listings</p>
+                </div>
+                <div>
+                  <p className="text-2xl md:text-3xl font-bold text-white">50+</p>
+                  <p className="text-white/80 text-sm">Cities</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
         {/* Category Cards */}
-        <section className="pb-20">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-black">Browse by Category</h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-6xl mx-auto">
               {/* Gyms */}
               <Link to="/gyms">
-                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
+                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <div className="w-12 h-12 rounded-lg bg-[#005EB8] flex items-center justify-center mb-3 mx-auto">
                       <Dumbbell className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Gyms</h3>
-                    <p className="text-muted-foreground mb-4">Find fully-equipped fitness centers</p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-secondary text-white">150+ Available</Badge>
-                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
-                    </div>
+                    <h3 className="text-lg font-bold mb-1 text-black">Gyms</h3>
+                    <p className="text-gray-600 text-sm mb-2">Fitness centers</p>
+                    <span className="text-sm font-medium text-[#005EB8]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
 
               {/* Spas */}
               <Link to="/spas">
-                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-secondary flex items-center justify-center mb-4">
-                      <Star className="w-6 h-6 text-white" />
+                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <div className="w-12 h-12 rounded-lg bg-[#9C27B0] flex items-center justify-center mb-3 mx-auto">
+                      <Sparkles className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Spas</h3>
-                    <p className="text-muted-foreground mb-4">Relaxation and rejuvenation services</p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-secondary text-white">80+ Available</Badge>
-                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
-                    </div>
+                    <h3 className="text-lg font-bold mb-1 text-black">Spas</h3>
+                    <p className="text-gray-600 text-sm mb-2">Relaxation spots</p>
+                    <span className="text-sm font-medium text-[#9C27B0]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
 
               {/* Yoga Studios */}
               <Link to="/yoga">
-                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-secondary to-accent flex items-center justify-center mb-4">
-                      <Star className="w-6 h-6 text-white" />
+                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <div className="w-12 h-12 rounded-lg bg-[#2E7D32] flex items-center justify-center mb-3 mx-auto">
+                      <Leaf className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Yoga Studios</h3>
-                    <p className="text-muted-foreground mb-4">Mindful movement and meditation</p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-secondary text-white">120+ Available</Badge>
-                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
-                    </div>
+                    <h3 className="text-lg font-bold mb-1 text-black">Yoga</h3>
+                    <p className="text-gray-600 text-sm mb-2">Studios & classes</p>
+                    <span className="text-sm font-medium text-[#2E7D32]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
 
               {/* Personal Trainers */}
               <Link to="/trainers">
-                <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4">
-                      <Clock className="w-6 h-6 text-white" />
+                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <div className="w-12 h-12 rounded-lg bg-[#E85D04] flex items-center justify-center mb-3 mx-auto">
+                      <Heart className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-2">Personal Trainers</h3>
-                    <p className="text-muted-foreground mb-4">One-on-one fitness coaching</p>
-                    <div className="flex items-center justify-between">
-                      <Badge className="bg-secondary text-white">200+ Available</Badge>
-                      <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
-                    </div>
+                    <h3 className="text-lg font-bold mb-1 text-black">Trainers</h3>
+                    <p className="text-gray-600 text-sm mb-2">Personal coaching</p>
+                    <span className="text-sm font-medium text-[#E85D04]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
 
               {/* Therapists */}
-              <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:-translate-y-1 border-2 hover:border-primary/30 cursor-pointer">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-accent to-primary flex items-center justify-center mb-4">
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">Therapists</h3>
-                  <p className="text-muted-foreground mb-4">Mental wellness professionals</p>
-                  <div className="flex items-center justify-between">
-                    <Badge className="bg-secondary text-white">100+ Available</Badge>
-                    <span className="text-sm font-medium text-primary group-hover:translate-x-1 transition-transform">Explore →</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <Link to="/therapists">
+                <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
+                  <CardContent className="p-4 md:p-6 text-center">
+                    <div className="w-12 h-12 rounded-lg bg-[#005EB8] flex items-center justify-center mb-3 mx-auto">
+                      <MapPin className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-1 text-black">Therapists</h3>
+                    <p className="text-gray-600 text-sm mb-2">Mental wellness</p>
+                    <span className="text-sm font-medium text-[#005EB8]">Explore →</span>
+                  </CardContent>
+                </Card>
+              </Link>
             </div>
           </div>
         </section>
 
         {/* Results */}
-        <section className="py-8 sm:py-12">
+        <section className="py-8 sm:py-12 bg-gray-50">
           <div className="container mx-auto px-4">
             {loading ? (
               <div className="text-center py-12 sm:py-20">
-                <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-emerald-600 mx-auto"></div>
+                <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-[#005EB8] mx-auto"></div>
                 <p className="mt-4 text-gray-600 text-sm sm:text-base">Loading amazing places for you...</p>
               </div>
             ) : error ? (
               <div className="text-center py-12 sm:py-20">
                 <p className="text-red-600 text-sm sm:text-base">Error loading results: {error}</p>
-                <Button onClick={() => window.location.reload()} className="mt-4 min-h-[44px]">
+                <Button onClick={() => window.location.reload()} className="mt-4 min-h-[44px] bg-[#005EB8] hover:bg-[#004a93]">
                   Try Again
                 </Button>
               </div>
             ) : (
               <>
                 <div className="flex justify-between items-center mb-6 sm:mb-8">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  <h2 className="text-xl sm:text-2xl font-bold text-black">
                     {businesses.length} places found
                   </h2>
                   <ViewModeToggle mode={viewMode} onChange={setViewMode} />
@@ -187,7 +208,7 @@ const Explore = () => {
 
                 <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 justify-items-center' : 'grid grid-cols-1 gap-4 sm:gap-6'}>
                   {businesses.map((business) => (
-                    <Card key={business.id} className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden">
+                    <Card key={business.id} className="w-full max-w-sm group hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-200 shadow-md rounded-xl overflow-hidden bg-white">
                       <div className="relative h-48 sm:h-56 overflow-hidden">
                         <ImageGallery
                           images={business.image_urls}
@@ -208,7 +229,7 @@ const Explore = () => {
                       </div>
                       
                       <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6 pt-4 sm:pt-6">
-                        <CardTitle className="group-hover:text-emerald-600 transition-colors text-lg sm:text-xl font-bold leading-tight line-clamp-2">
+                        <CardTitle className="group-hover:text-[#005EB8] transition-colors text-lg sm:text-xl font-bold leading-tight line-clamp-2 text-black">
                           {business.business_name}
                         </CardTitle>
                         <div className="flex items-center text-gray-600">
@@ -239,12 +260,12 @@ const Explore = () => {
                         {business.amenities && business.amenities.length > 0 && (
                           <div className="flex flex-wrap gap-1 sm:gap-2">
                             {business.amenities.slice(0, 3).map((amenity) => (
-                              <Badge key={amenity} variant="outline" className="text-xs px-2 py-1">
+                              <Badge key={amenity} variant="outline" className="text-xs px-2 py-1 border-gray-300">
                                 {amenity}
                               </Badge>
                             ))}
                             {business.amenities.length > 3 && (
-                              <Badge variant="outline" className="text-xs px-2 py-1">
+                              <Badge variant="outline" className="text-xs px-2 py-1 border-gray-300">
                                 +{business.amenities.length - 3} more
                               </Badge>
                             )}
@@ -253,7 +274,7 @@ const Explore = () => {
                         
                         <div className="pt-3 sm:pt-4">
                           <Link to={`/business/${business.id}`} className="block">
-                            <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-600 hover:to-blue-600 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px]">
+                            <Button className="w-full bg-[#005EB8] hover:bg-[#004a93] py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px] text-white">
                               View Details
                             </Button>
                           </Link>
@@ -266,12 +287,12 @@ const Explore = () => {
                 {businesses.length === 0 && (
                   <div className="text-center py-12 sm:py-20">
                     <div className="text-4xl sm:text-6xl mb-4">🏃‍♀️</div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">No results found</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-black mb-2">No results found</h3>
                     <p className="text-gray-600 mb-6 text-sm sm:text-base">
                       Try adjusting your search criteria or explore different categories
                     </p>
                     <div className="flex flex-wrap gap-4 justify-center">
-                      <Button variant="outline" onClick={() => {setActiveFilter('all'); setSearchTerm(''); setLocation('');}} className="min-h-[44px]">
+                      <Button variant="outline" onClick={() => {setActiveFilter('all'); setSearchTerm(''); setLocation('');}} className="min-h-[44px] border-[#005EB8] text-[#005EB8]">
                         Clear Filters
                       </Button>
                     </div>
@@ -281,7 +302,12 @@ const Explore = () => {
             )}
           </div>
         </section>
+
+        {/* Community Banner */}
+        <CommunityBanner />
       </div>
+      
+      <AppFooter />
     </>
   );
 };
