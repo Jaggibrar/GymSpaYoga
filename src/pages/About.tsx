@@ -187,18 +187,18 @@ const About = () => {
               </p>
             </div>
             
-            <div className="max-w-lg mx-auto">
-              <Card className="group relative overflow-hidden border-2 border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500 hover:border-[#005EB8] bg-white">
+            <div className="max-w-md mx-auto">
+              <Card className="relative overflow-hidden border border-gray-200 shadow-lg rounded-2xl bg-white">
                 <CardContent className="relative p-8 text-center">
-                  {/* Profile Avatar */}
-                  <div className="relative mb-8">
-                    <div className="relative mx-auto">
-                      <div className="w-28 h-28 bg-[#005EB8] rounded-full flex items-center justify-center mx-auto shadow-lg">
+                  {/* Profile Avatar with Badge */}
+                  <div className="flex flex-col items-center mb-6">
+                    <div className="relative">
+                      <div className="w-24 h-24 bg-[#3B82F6] rounded-full flex items-center justify-center shadow-lg">
                         <span className="text-3xl font-bold text-white">JS</span>
                       </div>
                       {/* Floating Badge */}
                       <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
-                        <Badge className="bg-[#005EB8] text-white px-4 py-2 shadow-lg font-medium">
+                        <Badge className="bg-[#005EB8] text-white text-xs px-3 py-1 rounded-full shadow-md font-medium whitespace-nowrap">
                           Founder & CEO
                         </Badge>
                       </div>
@@ -206,24 +206,26 @@ const About = () => {
                   </div>
                   
                   {/* Name and Title */}
-                  <div className="mb-6">
-                    <h3 className="text-2xl font-bold text-black mb-2">Jagdeep Singh</h3>
-                    <p className="text-[#005EB8] font-semibold">Founder & CEO</p>
+                  <div className="mb-6 mt-4">
+                    <h3 className="text-2xl font-bold text-black mb-1">Jagdeep Singh</h3>
+                    <p className="text-[#005EB8] font-medium text-sm">Founder & CEO</p>
                   </div>
                   
                   {/* Vision Quote */}
-                  <div className="mb-6">
-                    <blockquote className="text-gray-600 leading-relaxed italic text-center relative">
-                      <span className="text-4xl text-[#005EB8]/30 absolute -top-2 -left-2">"</span>
-                      Our vision is to create a world where wellness is not a luxury, but an accessible 
-                      part of everyone's daily life. Through GymSpaYoga, we're democratizing access to 
-                      health and happiness, one booking at a time.
-                      <span className="text-4xl text-[#005EB8]/30 absolute -bottom-6 -right-2">"</span>
-                    </blockquote>
+                  <div className="mb-6 px-4">
+                    <div className="relative">
+                      <span className="text-4xl text-[#005EB8]/40 absolute -top-3 -left-2 font-serif">"</span>
+                      <p className="text-gray-600 leading-relaxed italic text-center pt-2">
+                        Our vision is to create a world where wellness is not a luxury, but an accessible 
+                        part of everyone's daily life. Through GymSpaYoga, we're democratizing access to 
+                        health and happiness, one booking at a time.
+                      </p>
+                      <span className="text-4xl text-[#005EB8]/40 absolute -bottom-4 -right-2 font-serif">"</span>
+                    </div>
                   </div>
                   
-                  {/* Mission Statement */}
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                  {/* Mission Statement Card */}
+                  <div className="bg-[#F0F7FF] rounded-xl p-5 mt-8">
                     <p className="text-sm text-gray-600 italic leading-relaxed">
                       "Every person deserves the opportunity to live their healthiest, happiest life. GymSpaYoga is our commitment to making that vision a reality."
                     </p>
