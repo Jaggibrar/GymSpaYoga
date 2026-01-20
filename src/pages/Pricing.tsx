@@ -18,7 +18,7 @@ const Pricing = () => {
       longDescription: "Get discovered by new customers in your area with ease. This plan is designed for businesses that want to build visibility and credibility on a budget. A great way to start your digital journey and attract steady leads without upfront complexity.",
       tagline: "Your first step to online visibility begins here.",
       isPopular: false,
-      gradient: "from-blue-500 to-blue-600",
+      bgColor: "bg-primary",
       badge: null
     },
     {
@@ -31,7 +31,7 @@ const Pricing = () => {
       longDescription: "Upgrade your brand presence with a more prominent profile, detailed insights, and a smoother customer experience. Designed to help you attract, engage, and retain more customers with powerful tools built to grow your wellness business.",
       tagline: "Get the spotlight your business deserves.",
       isPopular: true,
-      gradient: "from-primary to-primary-dark",
+      bgColor: "bg-[#2E7D32]",
       badge: "Most Popular"
     },
     {
@@ -44,7 +44,7 @@ const Pricing = () => {
       longDescription: "Put your brand on top and offer a world-class experience to your clients. This premium plan is built for scale, trust, and prestige — with tools that ensure high-converting leads, top placement in search results, and premium support tailored to your growth.",
       tagline: "Make your brand unforgettable — lead the wellness revolution.",
       isPopular: false,
-      gradient: "from-accent to-wellness-gold",
+      bgColor: "bg-[#E85D04]",
       badge: "Premium Tier"
     }
   ];
@@ -74,10 +74,10 @@ const Pricing = () => {
         canonical="https://gymspayyoga.com/pricing"
       />
 
-      <div className="min-h-screen bg-gradient-to-br from-background via-wellness-cream to-primary-light">
+      <div className="min-h-screen bg-muted/30">
         {/* Hero Section */}
-        <section className="section-padding bg-gradient-to-br from-primary/10 via-wellness-cream to-background">
-          <div className="container-modern text-center">
+        <section className="py-16 bg-primary/5">
+          <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto">
               <Badge className="mb-6 bg-primary text-primary-foreground text-lg px-6 py-2" variant="default">
                 <Shield className="h-4 w-4 mr-2" />
@@ -86,7 +86,7 @@ const Pricing = () => {
               
               <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
                 Simple, Transparent
-                <span className="text-gradient-primary block">Pricing for Everyone</span>
+                <span className="text-primary block">Pricing for Everyone</span>
               </h1>
               
               <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -96,13 +96,13 @@ const Pricing = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link to="/explore">
-                  <Button size="lg" className="btn-primary">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90">
                     Start Exploring Free
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <Link to="/register-business">
-                  <Button size="lg" variant="outline" className="btn-secondary">
+                  <Button size="lg" variant="outline">
                     List Your Business
                   </Button>
                 </Link>
@@ -113,7 +113,7 @@ const Pricing = () => {
 
         {/* User Pricing Section */}
         <section className="py-16 bg-background">
-          <div className="container-modern">
+          <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
                 For Wellness Seekers
@@ -124,8 +124,8 @@ const Pricing = () => {
             </div>
 
             <div className="max-w-2xl mx-auto">
-              <Card className="card-modern border-4 border-primary shadow-strong overflow-hidden">
-                <div className="bg-gradient-to-r from-primary to-primary-dark text-primary-foreground p-8 text-center">
+              <Card className="border-4 border-primary shadow-xl overflow-hidden">
+                <div className="bg-primary text-primary-foreground p-8 text-center">
                   <Heart className="h-16 w-16 mx-auto mb-4 opacity-90" />
                   <h3 className="text-3xl font-bold mb-2">Absolutely Free</h3>
                   <p className="text-xl opacity-90">For All Users</p>
@@ -157,7 +157,7 @@ const Pricing = () => {
                   </div>
 
                   <Link to="/explore" className="block">
-                    <Button size="lg" className="w-full btn-primary">
+                    <Button size="lg" className="w-full bg-primary hover:bg-primary/90">
                       Start Exploring
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
@@ -169,8 +169,8 @@ const Pricing = () => {
         </section>
 
         {/* Business Plans Section */}
-        <section className="py-16 bg-gradient-to-br from-muted/30 via-background to-primary-light/20">
-          <div className="container-modern">
+        <section className="py-16 bg-muted/50">
+          <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
                 For Business Owners
@@ -180,9 +180,9 @@ const Pricing = () => {
                 customer management, and our powerful booking platform.
               </p>
               
-              <div className="mt-8 bg-wellness-cream/80 backdrop-blur-sm rounded-2xl p-6 max-w-4xl mx-auto">
+              <div className="mt-8 bg-[#E85D04]/10 rounded-2xl p-6 max-w-4xl mx-auto">
                 <p className="text-foreground font-medium text-lg">
-                  <Star className="inline h-5 w-5 text-accent mr-2" />
+                  <Star className="inline h-5 w-5 text-[#E85D04] mr-2" />
                   <strong>Special Launch Offer:</strong> Monthly charges start only after 6 months!
                 </p>
               </div>
@@ -192,20 +192,20 @@ const Pricing = () => {
               {businessPlans.map((plan, index) => (
                 <Card 
                   key={index} 
-                  className={`relative card-modern hover-lift transition-all duration-500 ${
-                    plan.isPopular ? 'border-4 border-primary shadow-strong lg:-mt-8 lg:mb-8' : 'border-2 border-border'
+                  className={`relative hover:shadow-2xl transition-all duration-500 ${
+                    plan.isPopular ? 'border-4 border-primary shadow-xl lg:-mt-8 lg:mb-8' : 'border-2 border-border'
                   }`}
                 >
                   {plan.badge && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                      <Badge className={`bg-gradient-to-r ${plan.gradient} text-white px-6 py-2 text-sm font-bold shadow-lg`}>
+                      <Badge className={`${plan.bgColor} text-white px-6 py-2 text-sm font-bold shadow-lg`}>
                         <Crown className="h-4 w-4 mr-1" />
                         {plan.badge}
                       </Badge>
                     </div>
                   )}
 
-                   <div className={`bg-gradient-to-r ${plan.gradient} text-white p-8 text-center`}>
+                   <div className={`${plan.bgColor} text-white p-8 text-center`}>
                     <div className="opacity-90 mb-4">
                       {plan.icon}
                     </div>
@@ -239,20 +239,21 @@ const Pricing = () => {
 
                     {/* Trust Badges */}
                     <div className="grid grid-cols-2 gap-3 mb-6">
-                      <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
-                        <Check className="h-4 w-4 text-green-600 mx-auto mb-1" />
-                        <span className="text-xs text-green-700 font-medium">No hidden fees</span>
+                      <div className="bg-[#2E7D32]/10 border border-[#2E7D32]/20 rounded-lg p-3 text-center">
+                        <Check className="h-4 w-4 text-[#2E7D32] mx-auto mb-1" />
+                        <span className="text-xs text-[#2E7D32] font-medium">No hidden fees</span>
                       </div>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-center">
-                        <Shield className="h-4 w-4 text-blue-600 mx-auto mb-1" />
-                        <span className="text-xs text-blue-700 font-medium">100% verified leads</span>
+                      <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 text-center">
+                        <Shield className="h-4 w-4 text-primary mx-auto mb-1" />
+                        <span className="text-xs text-primary font-medium">100% verified leads</span>
                       </div>
                     </div>
 
                     <Link to="/register-business" className="block">
                       <Button 
                         size="lg" 
-                        className={`w-full ${plan.isPopular ? 'btn-primary' : 'btn-secondary'} transition-all duration-300`}
+                        className={`w-full ${plan.isPopular ? 'bg-primary hover:bg-primary/90' : ''} transition-all duration-300`}
+                        variant={plan.isPopular ? 'default' : 'outline'}
                       >
                         Register Your Business
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -267,9 +268,9 @@ const Pricing = () => {
 
         {/* Trust & Transparency Section */}
         <section className="py-16 bg-background">
-          <div className="container-modern">
+          <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="bg-gradient-to-br from-wellness-cream to-primary-light/20 rounded-3xl p-12 shadow-soft">
+              <div className="bg-primary/5 rounded-3xl p-12 shadow-lg">
                 <Shield className="h-16 w-16 mx-auto mb-6 text-primary" />
                 <h3 className="text-3xl font-bold text-foreground mb-6">
                   100% Transparent. No Hidden Charges.
