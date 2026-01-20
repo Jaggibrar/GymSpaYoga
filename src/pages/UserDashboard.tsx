@@ -12,31 +12,31 @@ export default function UserDashboard() {
   const { hasProfiles: hasBusinessProfiles } = useHasBusinessProfiles();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-muted/30">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Welcome back, {user?.user_metadata?.full_name || 'User'}!
           </h1>
-          <p className="text-gray-600">Manage your profile, bookings, and explore wellness services</p>
+          <p className="text-muted-foreground">Manage your profile, bookings, and explore wellness services</p>
         </div>
 
         {/* Business Dashboard Link for business owners */}
         {hasBusinessProfiles && (
-          <Card className="mb-8 border-0 shadow-lg bg-gradient-to-r from-indigo-50 to-purple-50">
+          <Card className="mb-8 border-0 shadow-lg bg-primary/5">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-                    <Building2 className="h-6 w-6 text-white" />
+                  <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
+                    <Building2 className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-800">Business Owner Dashboard</h3>
-                    <p className="text-gray-600">Manage your business bookings and profile</p>
+                    <h3 className="text-lg font-semibold text-foreground">Business Owner Dashboard</h3>
+                    <p className="text-muted-foreground">Manage your business bookings and profile</p>
                   </div>
                 </div>
                 <Link to="/business-dashboard">
-                  <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600">
+                  <Button className="bg-primary hover:bg-primary/90">
                     Go to Business Dashboard
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
@@ -51,11 +51,11 @@ export default function UserDashboard() {
           <Link to="/user-bookings" className="group">
             <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
-                  <Calendar className="h-8 w-8 text-white" />
+                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                  <Calendar className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">My Bookings</h3>
-                <p className="text-gray-600">View and manage your upcoming appointments</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">My Bookings</h3>
+                <p className="text-muted-foreground">View and manage your upcoming appointments</p>
               </CardContent>
             </Card>
           </Link>
@@ -63,11 +63,11 @@ export default function UserDashboard() {
           <Link to="/explore" className="group">
             <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                <div className="w-16 h-16 bg-[#2E7D32] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
                   <BookOpen className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Explore Services</h3>
-                <p className="text-gray-600">Discover gyms, spas, and wellness centers</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">Explore Services</h3>
+                <p className="text-muted-foreground">Discover gyms, spas, and wellness centers</p>
               </CardContent>
             </Card>
           </Link>
@@ -75,11 +75,11 @@ export default function UserDashboard() {
           <Link to="/profile" className="group">
             <Card className="h-full border-0 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105">
               <CardContent className="p-6 text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                <div className="w-16 h-16 bg-[#E85D04] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
                   <User className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">My Profile</h3>
-                <p className="text-gray-600">Update your personal information and preferences</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">My Profile</h3>
+                <p className="text-muted-foreground">Update your personal information and preferences</p>
               </CardContent>
             </Card>
           </Link>

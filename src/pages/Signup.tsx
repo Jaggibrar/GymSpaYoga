@@ -103,7 +103,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 py-12 px-4">
       <SEOHead
         title="Sign Up - Create Your Account | GymSpaYoga"
         description="Join GymSpaYoga today and discover premium gyms, luxury spas, and authentic yoga studios near you. Start your wellness journey with verified listings and instant booking."
@@ -113,7 +113,7 @@ const Signup = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
-          <p className="text-gray-600">Join GymSpaYoga and discover amazing wellness destinations</p>
+          <p className="text-muted-foreground">Join GymSpaYoga and discover amazing wellness destinations</p>
         </CardHeader>
         
         <CardContent>
@@ -132,24 +132,24 @@ const Signup = () => {
                 onValueChange={handleRoleChange}
                 className="grid grid-cols-1 gap-3"
               >
-                <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-muted/50 cursor-pointer">
                   <RadioGroupItem value="end_user" id="end_user" />
                   <Label htmlFor="end_user" className="flex items-center gap-2 cursor-pointer flex-1">
-                    <User className="h-5 w-5 text-blue-500" />
+                    <User className="h-5 w-5 text-primary" />
                     <div>
                       <div className="font-medium">User</div>
-                      <div className="text-xs text-gray-500">Looking for gyms, spas, and yoga studios</div>
+                      <div className="text-xs text-muted-foreground">Looking for gyms, spas, and yoga studios</div>
                     </div>
                   </Label>
                 </div>
                 
-                <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-gray-50 cursor-pointer">
+                <div className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-muted/50 cursor-pointer">
                   <RadioGroupItem value="business_owner" id="business_owner" />
                   <Label htmlFor="business_owner" className="flex items-center gap-2 cursor-pointer flex-1">
-                    <Building2 className="h-5 w-5 text-emerald-500" />
+                    <Building2 className="h-5 w-5 text-primary" />
                     <div>
                       <div className="font-medium">Business Owner</div>
-                      <div className="text-xs text-gray-500">I own a gym, spa, or yoga studio</div>
+                      <div className="text-xs text-muted-foreground">I own a gym, spa, or yoga studio</div>
                     </div>
                   </Label>
                 </div>
@@ -245,9 +245,9 @@ const Signup = () => {
             </Button>
 
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Already have an account?{" "}
-                <Link to="/login" className="text-blue-600 hover:underline font-medium">
+                <Link to="/login" className="text-primary hover:underline font-medium">
                   Sign in
                 </Link>
               </p>
