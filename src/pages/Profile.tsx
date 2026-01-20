@@ -21,11 +21,11 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-muted/30">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <div className="mobile-container py-8 flex items-center justify-center min-h-[50vh]">
           <div className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-16 w-16 md:h-20 md:w-20 border-4 border-primary border-t-transparent mx-auto"></div>
-            <p className="text-muted-foreground font-medium">Loading your profile...</p>
+            <div className="animate-spin rounded-full h-16 w-16 md:h-20 md:w-20 border-4 border-emerald-500 border-t-transparent mx-auto"></div>
+            <p className="text-gray-600 font-medium">Loading your profile...</p>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ const Profile = () => {
         keywords="user profile, account settings, fitness goals, wellness preferences"
         noindex={true}
       />
-      <div className="min-h-screen bg-muted/30">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <div className="mobile-container py-6 md:py-10">
         <EnhancedProfile />
       </div>

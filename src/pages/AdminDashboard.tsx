@@ -125,10 +125,10 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Verifying admin access...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-emerald-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verifying admin access...</p>
         </div>
       </div>
     );
@@ -136,14 +136,14 @@ const AdminDashboard = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <Shield className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <CardTitle>Access Denied</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="text-muted-foreground mb-4">Please sign in to access the admin dashboard.</p>
+            <p className="text-gray-600 mb-4">Please sign in to access the admin dashboard.</p>
             <Button onClick={() => window.location.href = '/login'}>
               Sign In
             </Button>
@@ -155,14 +155,14 @@ const AdminDashboard = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-muted/30 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <Shield className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <CardTitle>Admin Access Required</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="text-muted-foreground mb-4">You don't have admin permissions to access this area.</p>
+            <p className="text-gray-600 mb-4">You don't have admin permissions to access this area.</p>
             <Button onClick={() => window.location.href = '/'}>
               Go Home
             </Button>
@@ -173,11 +173,11 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">GymSpaYoga Prime Admin</h1>
-          <p className="text-muted-foreground">Complete platform management and analytics</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">GymSpaYoga Prime Admin</h1>
+          <p className="text-gray-600">Complete platform management and analytics</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -267,7 +267,7 @@ const AdminDashboard = () => {
                   <Bell className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-[#E85D04]">{stats.pendingApprovals}</div>
+                  <div className="text-2xl font-bold text-orange-600">{stats.pendingApprovals}</div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>{stats.pendingTrainers} trainers</span>
                     <span>•</span>
@@ -289,65 +289,65 @@ const AdminDashboard = () => {
             </div>
 
             {/* System Health Improvements */}
-            <Card className="border-[#2E7D32]/30 bg-[#2E7D32]/5">
+            <Card className="border-green-200 bg-green-50">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-[#2E7D32]">
+                <CardTitle className="flex items-center gap-2 text-green-800">
                   <CheckCircle className="h-5 w-5" />
                   System Health Improvements Completed
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <Database className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <Database className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Database Integrity</div>
-                      <div className="text-sm text-muted-foreground">Foreign key constraints added</div>
+                      <div className="font-medium text-green-900">Database Integrity</div>
+                      <div className="text-sm text-green-700">Foreign key constraints added</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <Bell className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <Bell className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Booking Reminders</div>
-                      <div className="text-sm text-muted-foreground">Automated reminder system active</div>
+                      <div className="font-medium text-green-900">Booking Reminders</div>
+                      <div className="text-sm text-green-700">Automated reminder system active</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <Shield className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <Shield className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Logging System</div>
-                      <div className="text-sm text-muted-foreground">Production-safe logging implemented</div>
+                      <div className="font-medium text-green-900">Logging System</div>
+                      <div className="text-sm text-green-700">Production-safe logging implemented</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <RefreshCw className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <RefreshCw className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Edge Functions</div>
-                      <div className="text-sm text-muted-foreground">Booking automation improved</div>
+                      <div className="font-medium text-green-900">Edge Functions</div>
+                      <div className="text-sm text-green-700">Booking automation improved</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <AlertTriangle className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <AlertTriangle className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Notifications</div>
-                      <div className="text-sm text-muted-foreground">Cleanup & optimization completed</div>
+                      <div className="font-medium text-green-900">Notifications</div>
+                      <div className="text-sm text-green-700">Cleanup & optimization completed</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                    <BarChart3 className="h-5 w-5 text-[#2E7D32]" />
+                  <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-green-200">
+                    <BarChart3 className="h-5 w-5 text-green-600" />
                     <div>
-                      <div className="font-medium text-foreground">Health Monitoring</div>
-                      <div className="text-sm text-muted-foreground">Real-time system monitoring active</div>
+                      <div className="font-medium text-green-900">Health Monitoring</div>
+                      <div className="text-sm text-green-700">Real-time system monitoring active</div>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 p-3 bg-background rounded-lg border border-[#2E7D32]/20">
-                  <div className="text-sm text-foreground">
+                <div className="mt-4 p-3 bg-white rounded-lg border border-green-200">
+                  <div className="text-sm text-green-800">
                     <strong>Key Improvements:</strong> Reduced booking cancellation risk, improved data integrity, 
                     enhanced system monitoring, and optimized notification system. All critical issues identified 
                     in the system audit have been resolved.
@@ -421,13 +421,7 @@ const AdminDashboard = () => {
                 <CardTitle>Notifications & Communication</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
-                  <Bell className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Notification Center</h3>
-                  <p className="text-muted-foreground">
-                    Advanced notification management coming soon.
-                  </p>
-                </div>
+                <p className="text-gray-600">Send announcements, manage notification templates, and handle support queries.</p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -438,13 +432,7 @@ const AdminDashboard = () => {
                 <CardTitle>Platform Settings</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-center py-12">
-                  <Settings className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-foreground mb-2">Settings Panel</h3>
-                  <p className="text-muted-foreground">
-                    Platform configuration options coming soon.
-                  </p>
-                </div>
+                <p className="text-gray-600">Configure categories, filters, security settings, and manage sub-admin permissions.</p>
               </CardContent>
             </Card>
           </TabsContent>

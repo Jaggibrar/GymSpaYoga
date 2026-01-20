@@ -129,20 +129,20 @@ const Login = () => {
         keywords="login, sign in, GymSpaYoga account, gym booking login, spa booking login"
         noindex={true}
       />
-      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-background font-sans">
+      <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-white font-sans">
       {/* Left Login Form */}
       <div className="w-full md:w-1/2 p-8 md:p-20">
         <div className="flex flex-col items-start max-w-md mx-auto">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center">
-              <Dumbbell className="w-6 h-6 text-primary-foreground" />
+            <div className="w-12 h-12 bg-[#005EB8] rounded-xl flex items-center justify-center">
+              <Dumbbell className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-3xl font-semibold text-foreground">GymSpaYoga.com</h1>
+            <h1 className="text-3xl font-semibold text-gray-800">GymSpaYoga.com</h1>
           </div>
 
           {/* Form Title */}
-          <h2 className="text-2xl font-bold text-foreground mb-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-8">
             {isSignUp ? 'Sign Up' : 'Login'}
           </h2>
 
@@ -153,7 +153,7 @@ const Login = () => {
               placeholder="Email Address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-colors bg-background text-foreground"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
               required
             />
             
@@ -162,7 +162,7 @@ const Login = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-colors bg-background text-foreground"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
               required
             />
 
@@ -172,7 +172,7 @@ const Login = () => {
                 placeholder="Confirm Password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full p-3 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary transition-colors bg-background text-foreground"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors"
                 required
               />
             )}
@@ -181,7 +181,7 @@ const Login = () => {
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="text-primary text-sm hover:underline"
+                className="text-blue-500 text-sm hover:underline"
               >
                 Forgot password?
               </button>
@@ -190,7 +190,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-primary text-primary-foreground rounded-full text-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#005EB8] text-white rounded-full text-lg font-semibold hover:bg-[#004d96] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 isSignUp ? 'Creating Account...' : 'Logging in...'
@@ -202,7 +202,7 @@ const Login = () => {
 
           {/* Toggle between Login/Sign Up */}
           <div className="mt-6 text-center w-full">
-            <p className="text-muted-foreground mb-2">
+            <p className="text-gray-600 mb-2">
               {isSignUp ? 'Already have an account?' : "Don't have an account?"}
             </p>
             <button
@@ -211,7 +211,7 @@ const Login = () => {
                 setPassword('');
                 setConfirmPassword('');
               }}
-              className="text-primary font-semibold hover:underline"
+              className="text-blue-500 font-semibold hover:underline"
             >
               {isSignUp ? 'Login here' : 'Sign up here'}
             </button>
@@ -220,7 +220,7 @@ const Login = () => {
       </div>
 
       {/* Right Image Side */}
-      <div className="w-full md:w-1/2 flex justify-center items-center p-10 bg-muted/30">
+      <div className="w-full md:w-1/2 flex justify-center items-center p-10 bg-gray-50">
         <img
           src={loginIllustration}
           alt="Wellness Illustration - Yoga, Gym, and Spa"

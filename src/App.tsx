@@ -59,7 +59,6 @@ const BusinessDetails = React.lazy(() => import("./pages/BusinessDetails"));
 const CreateListing = React.lazy(() => import("./pages/CreateListing"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const Profile = React.lazy(() => import("./pages/Profile"));
-const CityCategory = React.lazy(() => import("./pages/CityCategory"));
 const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const TrainerDashboard = React.lazy(() => import("./pages/TrainerDashboard"));
 const MyTrainerProfile = React.lazy(() => import("./pages/MyTrainerProfile"));
@@ -96,18 +95,6 @@ const AppContent = () => {
           <Route path="/therapists" element={<Therapists />} />
           <Route path="/therapists/:id" element={<TherapistDetails />} />
           <Route path="/business/:id" element={<BusinessDetails />} />
-          
-          {/* Programmatic SEO City/Area Pages */}
-          <Route path="/gyms/:city" element={<CityCategory />} />
-          <Route path="/gyms/:city/:area" element={<CityCategory />} />
-          <Route path="/spas/:city" element={<CityCategory />} />
-          <Route path="/spas/:city/:area" element={<CityCategory />} />
-          <Route path="/yoga/:city" element={<CityCategory />} />
-          <Route path="/yoga/:city/:area" element={<CityCategory />} />
-          <Route path="/trainers/:city" element={<CityCategory />} />
-          <Route path="/trainers/:city/:area" element={<CityCategory />} />
-          <Route path="/therapists/:city" element={<CityCategory />} />
-          <Route path="/therapists/:city/:area" element={<CityCategory />} />
           <Route path="/gyms/:slug" element={<GymDetails />} />
           <Route path="/spas/:slug" element={<SpaDetails />} />
           <Route path="/yoga/:slug" element={<YogaDetails />} />
