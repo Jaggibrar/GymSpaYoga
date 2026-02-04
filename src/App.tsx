@@ -64,7 +64,8 @@ const TrainerDashboard = React.lazy(() => import("./pages/TrainerDashboard"));
 const MyTrainerProfile = React.lazy(() => import("./pages/MyTrainerProfile"));
 const UserBookings = React.lazy(() => import("./pages/UserBookings"));
 const Favorites = React.lazy(() => import("./pages/Favorites"));
-
+const Assistant = React.lazy(() => import("./pages/Assistant"));
+const FloatingAIButton = React.lazy(() => import("./components/ai/FloatingAIButton"));
 
 const queryClient = new QueryClient();
 
@@ -178,10 +179,15 @@ const AppContent = () => {
               </AdminRoute>
             </ProtectedRoute>
           } />
+          <Route path="/assistant" element={<Assistant />} />
+          <Route path="/ai" element={<Assistant />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <AppFooter />
+      <React.Suspense fallback={null}>
+        <FloatingAIButton />
+      </React.Suspense>
       <Toaster />
     </div>
   );
