@@ -12,13 +12,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { validateBookingData, validateBookingTime } from '@/utils/bookingValidation';
 
-interface BookingFormProps {
-  businessId?: string;
-  trainerId?: string;
-  businessType: 'gym' | 'spa' | 'yoga' | 'trainer';
-  businessName: string;
-  onBookingSuccess?: () => void;
-}
+ interface BookingFormProps {
+   businessId?: string;
+   trainerId?: string;
+   businessType: 'gym' | 'spa' | 'yoga' | 'trainer' | 'chiropractor';
+   businessName: string;
+   onBookingSuccess?: () => void;
+ }
 
 export const BookingForm = ({ 
   businessId, 
