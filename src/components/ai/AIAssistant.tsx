@@ -200,10 +200,10 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
         
         <Button
           onClick={() => setIsOpen(true)}
-          className="relative h-14 w-14 rounded-full shadow-2xl bg-gradient-to-br from-primary via-purple-500 to-pink-500 hover:from-primary/90 hover:via-purple-500/90 hover:to-pink-500/90 border-2 border-white/20 transition-all duration-300 hover:scale-110"
-          size="icon"
-        >
-          <Sparkles className="h-6 w-6 text-white animate-[pulse_2s_ease-in-out_infinite]" />
+           className="relative h-auto px-4 py-3 rounded-full shadow-2xl bg-gradient-to-br from-primary via-purple-500 to-pink-500 hover:from-primary/90 hover:via-purple-500/90 hover:to-pink-500/90 border-2 border-white/20 transition-all duration-300 hover:scale-110 flex items-center gap-2"
+         >
+           <Sparkles className="h-5 w-5 text-white animate-[pulse_2s_ease-in-out_infinite]" />
+           <span className="text-white font-semibold text-sm">ASK AI</span>
         </Button>
       </div>
     );
