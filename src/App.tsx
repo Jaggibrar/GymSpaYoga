@@ -36,8 +36,10 @@ const SpaDetails = React.lazy(() => import("./pages/SpaDetails"));
 const Yoga = React.lazy(() => import("./pages/Yoga"));
 const YogaDetails = React.lazy(() => import("./pages/YogaDetails"));
 const Trainers = React.lazy(() => import("./pages/Trainers"));
-const Therapists = React.lazy(() => import("./pages/Therapists"));
-const TherapistDetails = React.lazy(() => import("./pages/TherapistDetails"));
+ const Therapists = React.lazy(() => import("./pages/Therapists"));
+ const TherapistDetails = React.lazy(() => import("./pages/TherapistDetails"));
+ const Chiropractors = React.lazy(() => import("./pages/Chiropractors"));
+ const ChiropractorDetails = React.lazy(() => import("./pages/ChiropractorDetails"));
 const TrainerDetails = React.lazy(() => import("./pages/TrainerDetails"));
 const BookTrainer = React.lazy(() => import("./pages/BookTrainer"));
 const Blogs = React.lazy(() => import("./pages/Blogs"));
@@ -93,8 +95,10 @@ const AppContent = () => {
           <Route path="/trainers" element={<Trainers />} />
           <Route path="/trainers/:id" element={<TrainerDetails />} />
           <Route path="/book-trainer/:id" element={<BookTrainer />} />
-          <Route path="/therapists" element={<Therapists />} />
-          <Route path="/therapists/:id" element={<TherapistDetails />} />
+           <Route path="/therapists" element={<Therapists />} />
+           <Route path="/therapists/:id" element={<TherapistDetails />} />
+           <Route path="/chiropractors" element={<Chiropractors />} />
+           <Route path="/chiropractors/:slug" element={<ChiropractorDetails />} />
           <Route path="/business/:id" element={<BusinessDetails />} />
           <Route path="/gyms/:slug" element={<GymDetails />} />
           <Route path="/spas/:slug" element={<SpaDetails />} />

@@ -5,9 +5,9 @@ import { MapPin, Star, ArrowRight, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTrainers } from "@/hooks/useTrainers";
 
-interface CategoryTrainersProps {
-  category: "gym" | "spa" | "yoga" | "trainer";
-}
+ interface CategoryTrainersProps {
+   category: "gym" | "spa" | "yoga" | "trainer" | "chiropractor";
+ }
 
 const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
   const { trainers, loading } = useTrainers('', '', '', category);
@@ -17,8 +17,9 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
       case "gym": return "Expert Gym Trainers";
       case "spa": return "Professional Spa Therapists";
       case "yoga": return "Certified Yoga Instructors";
-      case "trainer": return "Personal Trainers";
-      default: return "Expert Trainers";
+       case "trainer": return "Personal Trainers";
+       case "chiropractor": return "Professional Chiropractors";
+       default: return "Expert Trainers";
     }
   };
 
@@ -27,8 +28,9 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
       case "gym": return "Get personalized fitness training from certified gym professionals";
       case "spa": return "Experience healing and relaxation with our expert therapists";
       case "yoga": return "Find your inner peace with experienced yoga instructors";
-      case "trainer": return "Achieve your fitness goals with dedicated personal trainers";
-      default: return "Connect with professional trainers";
+       case "trainer": return "Achieve your fitness goals with dedicated personal trainers";
+       case "chiropractor": return "Get expert spinal care and pain relief from certified chiropractors";
+       default: return "Connect with professional trainers";
     }
   };
 

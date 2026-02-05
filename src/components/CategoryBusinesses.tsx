@@ -48,10 +48,13 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
       case 'yoga':
         navigate(`/yoga/${identifier}`);
         break;
-      case 'gym':
-      default:
-        navigate(`/gyms/${identifier}`);
-        break;
+       case 'chiropractor':
+         navigate(`/chiropractors/${identifier}`);
+         break;
+       case 'gym':
+       default:
+         navigate(`/gyms/${identifier}`);
+         break;
     }
   };
 

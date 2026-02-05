@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, MessageCircle } from 'lucide-react';
+ import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, MessageCircle, Activity } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
 import HeroBanner from '@/components/HeroBanner';
@@ -58,13 +58,20 @@ const Index = () => {
       href: "/yoga",
       count: "400+"
     },
-    {
-      title: "Trainers",
-      description: "Certified fitness professionals",
-      icon: UserCheck,
-      href: "/trainers",
-      count: "200+"
-    }
+     {
+       title: "Trainers",
+       description: "Certified fitness professionals",
+       icon: UserCheck,
+       href: "/trainers",
+       count: "200+"
+     },
+     {
+       title: "Chiropractors",
+       description: "Spine & pain relief specialists",
+       icon: Activity,
+       href: "/chiropractors",
+       count: "100+"
+     }
   ];
 
   const features = [
@@ -268,8 +275,42 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Spa Banner */}
-        <section className="py-12 md:py-16 bg-white">
+         {/* Chiropractor Banner */}
+         <section className="py-12 md:py-16 bg-white">
+           <div className="container mx-auto px-4">
+             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+               {/* Left: Chiropractor Image */}
+               <div className="flex-1 flex justify-center lg:justify-start">
+                 <img 
+                   src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=500&q=80"
+                   alt="Professional chiropractor treatment"
+                   className="rounded-2xl max-w-sm w-full object-cover"
+                 />
+               </div>
+ 
+               {/* Right: Content */}
+               <div className="flex-1 text-center lg:text-left">
+                 <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                   FIND EXPERT CHIROPRACTORS
+                 </h2>
+                 <p className="text-xl text-gray-700 mb-4">
+                   Relief from back pain, neck pain & posture issues.
+                 </p>
+                 <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                   Connect with certified chiropractors for professional spinal care, pain management, and improved mobility. Get the expert care your body deserves.
+                 </p>
+                 <Link to="/chiropractors">
+                   <Button size="lg" className="bg-[#0D9488] hover:bg-[#0B7A70] text-white font-semibold px-8 py-6 text-lg">
+                     FIND CHIROPRACTORS
+                   </Button>
+                 </Link>
+               </div>
+             </div>
+           </div>
+         </section>
+ 
+         {/* Spa Banner */}
+         <section className="py-12 md:py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
               {/* Left: Spa Image */}

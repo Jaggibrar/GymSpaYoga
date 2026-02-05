@@ -1,5 +1,5 @@
 
-import { HomeIcon, Building2, Sparkles, Heart, Users, BookOpen } from "lucide-react";
+ import { HomeIcon, Building2, Sparkles, Heart, Users, BookOpen, Activity } from "lucide-react";
 
 export const navItems = [
   {
@@ -32,10 +32,16 @@ export const navItems = [
     icon: <Users className="h-4 w-4" />,
     page: null,
   },
-  {
-    title: "Blogs",
-    to: "/blogs",
-    icon: <BookOpen className="h-4 w-4" />,
-    page: null,
-  },
-];
+   {
+     title: "Chiropractors",
+     to: "/chiropractors",
+     icon: <Activity className="h-4 w-4" />,
+     page: null,
+   },
+   {
+     title: "Blogs",
+     to: "/blogs",
+     icon: <BookOpen className="h-4 w-4" />,
+     page: null,
+   },
+ ];

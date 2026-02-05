@@ -6,10 +6,10 @@ import { Star, MapPin, Clock, Phone, Shield } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import BookingForm from '@/components/booking/BookingForm';
 
-interface BookingPanelProps {
-  businessId: string;
-  businessName: string;
-  businessType: "gym" | "spa" | "yoga" | "trainer";
+ interface BookingPanelProps {
+   businessId: string;
+   businessName: string;
+   businessType: "gym" | "spa" | "yoga" | "trainer" | "chiropractor";
   rating?: number;
   reviewCount?: number;
   location: {
