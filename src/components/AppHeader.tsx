@@ -137,6 +137,20 @@ const AppHeader = () => {
                   Trainers
                 </Link>
                 <Link
+                  to="/therapists"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Therapists
+                </Link>
+                <Link
+                  to="/chiropractors"
+                  className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Chiropractors
+                </Link>
+                <Link
                   to="/register-business"
                   className="text-gray-700 hover:text-[#0A45FF] font-medium px-2 py-2 w-full transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
