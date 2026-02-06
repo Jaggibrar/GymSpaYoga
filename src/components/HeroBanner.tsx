@@ -35,6 +35,12 @@ const HeroBanner = () => {
       case 'trainer':
         navigate(`/trainers?${params.toString()}`);
         break;
+      case 'therapist':
+        navigate(`/therapists?${params.toString()}`);
+        break;
+      case 'chiropractor':
+        navigate(`/chiropractors?${params.toString()}`);
+        break;
       default:
         navigate(`/explore?${params.toString()}`);
     }
@@ -103,6 +109,8 @@ const HeroBanner = () => {
                     <SelectItem value="spa">Spas</SelectItem>
                     <SelectItem value="yoga">Yoga</SelectItem>
                     <SelectItem value="trainer">Trainers</SelectItem>
+                    <SelectItem value="therapist">Therapists</SelectItem>
+                    <SelectItem value="chiropractor">Chiropractors</SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -162,6 +170,18 @@ const HeroBanner = () => {
               className="bg-[#E85D04] hover:bg-[#D4540A] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
             >
               Find Trainers
+            </Button>
+            <Button 
+              onClick={() => navigate('/therapists')}
+              className="bg-[#00838F] hover:bg-[#006977] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+            >
+              Find Therapists
+            </Button>
+            <Button 
+              onClick={() => navigate('/chiropractors')}
+              className="bg-[#5D4037] hover:bg-[#4E342E] text-white font-medium px-4 sm:px-6 min-h-[44px] whitespace-nowrap"
+            >
+              Find Chiropractors
             </Button>
           </div>
         </nav>
