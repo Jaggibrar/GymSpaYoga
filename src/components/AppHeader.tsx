@@ -50,6 +50,12 @@ const AppHeader = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/trainers" className="cursor-pointer">Trainers</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/therapists" className="cursor-pointer">Therapists</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/chiropractors" className="cursor-pointer">Chiropractors</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <Link

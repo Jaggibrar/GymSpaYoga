@@ -189,21 +189,16 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
     }
   };
 
-  // Floating chat button with glowing effect
+  // Floating chat button
   if (isFloating && !isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
-        {/* Glow rings */}
-         <div className="absolute inset-0 rounded-full bg-primary opacity-75 blur-lg animate-pulse" />
-         <div className="absolute inset-[-4px] rounded-full bg-primary opacity-50 blur-xl animate-[pulse_2s_ease-in-out_infinite]" />
-         <div className="absolute inset-[-8px] rounded-full bg-primary opacity-30 blur-2xl animate-[pulse_3s_ease-in-out_infinite]" />
-        
         <Button
           onClick={() => setIsOpen(true)}
-           className="relative h-auto px-4 py-3 rounded-full shadow-2xl bg-primary hover:bg-primary/90 border-2 border-white/20 transition-all duration-300 hover:scale-110 flex items-center gap-2"
-         >
-           <Sparkles className="h-5 w-5 text-primary-foreground animate-[pulse_2s_ease-in-out_infinite]" />
-           <span className="text-primary-foreground font-semibold text-sm">ASK AI</span>
+          className="h-auto px-4 py-3 rounded-full shadow-lg bg-primary hover:bg-primary/90 border-2 border-white/20 transition-all duration-300 hover:scale-105 flex items-center gap-2"
+        >
+          <Sparkles className="h-5 w-5 text-primary-foreground" />
+          <span className="text-primary-foreground font-semibold text-sm">ASK AI</span>
         </Button>
       </div>
     );
