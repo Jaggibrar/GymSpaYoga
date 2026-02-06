@@ -6,6 +6,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
+import aiLadyAvatar from '@/assets/ai-lady-avatar.png';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -193,13 +194,18 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
   if (isFloating && !isOpen) {
     return (
       <div className="fixed bottom-6 right-6 z-50">
-        <Button
+        <button
           onClick={() => setIsOpen(true)}
-          className="h-auto px-4 py-3 rounded-full shadow-lg bg-primary hover:bg-primary/90 border-2 border-white/20 transition-all duration-300 hover:scale-105 flex items-center gap-2"
+          className="group flex flex-col items-center gap-1 rounded-2xl bg-primary p-2 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+          style={{ width: 80, height: 80 }}
         >
-          <Sparkles className="h-5 w-5 text-primary-foreground" />
-          <span className="text-primary-foreground font-semibold text-sm">ASK AI</span>
-        </Button>
+          <img
+            src={aiLadyAvatar}
+            alt="AI Assistant"
+            className="h-12 w-12 rounded-full object-cover border-2 border-primary-foreground/30"
+          />
+          <span className="text-primary-foreground font-bold text-[10px] leading-none">Ask me</span>
+        </button>
       </div>
     );
   }
