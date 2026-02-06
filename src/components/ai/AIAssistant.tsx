@@ -6,7 +6,18 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import ReactMarkdown from 'react-markdown';
 import { toast } from 'sonner';
-import aiLadyAvatar from '@/assets/ai-lady-avatar.png';
+import woman1 from '@/assets/avatars/woman-1.png';
+import woman2 from '@/assets/avatars/woman-2.png';
+import woman3 from '@/assets/avatars/woman-3.png';
+import woman4 from '@/assets/avatars/woman-4.png';
+import woman5 from '@/assets/avatars/woman-5.png';
+import man1 from '@/assets/avatars/man-1.png';
+import man2 from '@/assets/avatars/man-2.png';
+import man3 from '@/assets/avatars/man-3.png';
+import man4 from '@/assets/avatars/man-4.png';
+import man5 from '@/assets/avatars/man-5.png';
+
+const AVATARS = [woman1, man1, woman2, man2, woman3, man3, woman4, man4, woman5, man5];
 
 interface Message {
   role: 'user' | 'assistant';
@@ -43,6 +54,20 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const [avatarIndex, setAvatarIndex] = useState(0);
+  const [avatarFade, setAvatarFade] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAvatarFade(false);
+      setTimeout(() => {
+        setAvatarIndex(prev => (prev + 1) % AVATARS.length);
+        setAvatarFade(true);
+      }, 300);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -200,9 +225,10 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
           style={{ width: 80, height: 80 }}
         >
           <img
-            src={aiLadyAvatar}
+            src={AVATARS[avatarIndex]}
             alt="AI Assistant"
-            className="h-12 w-12 rounded-full object-cover border-2 border-primary-foreground/30"
+            className="h-12 w-12 rounded-full object-cover border-2 border-primary-foreground/30 transition-opacity duration-300"
+            style={{ opacity: avatarFade ? 1 : 0 }}
           />
           <span className="text-primary-foreground font-bold text-[10px] leading-none">Ask me</span>
         </button>
