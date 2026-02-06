@@ -71,6 +71,8 @@ const AppFooter = () => {
                 <li><Link to="/spas" className="hover:text-emerald-400 transition-colors duration-300">Find Spas</Link></li>
                 <li><Link to="/yoga" className="hover:text-emerald-400 transition-colors duration-300">Find Yoga Centers</Link></li>
                 <li><Link to="/trainers" className="hover:text-emerald-400 transition-colors duration-300">Find Trainers</Link></li>
+                <li><Link to="/therapists" className="hover:text-emerald-400 transition-colors duration-300">Find Therapists</Link></li>
+                <li><Link to="/chiropractors" className="hover:text-emerald-400 transition-colors duration-300">Find Chiropractors</Link></li>
                 <li><Link to="/about" className="hover:text-emerald-400 transition-colors duration-300">About Us</Link></li>
               </ul>
             </div>
