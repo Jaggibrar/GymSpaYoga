@@ -32,11 +32,15 @@ const BusinessRegistrationForm = () => {
     amenities: [] as string[]
   });
 
-  const amenitiesList = [
-    'AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service',
-    'Personal Training', 'Group Classes', 'Nutrition Counseling', 'Steam Room',
-    'Sauna', 'Swimming Pool', 'Cardio Equipment', 'Weight Training', 'Yoga Classes'
-  ];
+  const amenitiesMap: Record<string, string[]> = {
+    gym: ['AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service', 'Personal Training', 'Group Classes', 'Nutrition Counseling', 'Steam Room', 'Sauna', 'Swimming Pool', 'Cardio Equipment', 'Weight Training', 'Yoga Classes'],
+    spa: ['AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service', 'Steam Room', 'Sauna', 'Swimming Pool', 'Aromatherapy', 'Massage Rooms', 'Relaxation Lounge'],
+    yoga: ['AC', 'Parking', 'Locker Room', 'Shower', 'WiFi', 'Towel Service', 'Group Classes', 'Meditation Room', 'Yoga Props', 'Nutrition Counseling'],
+    therapist: ['AC', 'Parking', 'WiFi', 'Waiting Area', 'Private Consultation Room', 'Relaxation Lounge', 'Aromatherapy', 'Herbal Treatments'],
+    chiropractor: ['AC', 'Parking', 'WiFi', 'Waiting Area', 'X-Ray Facility', 'Spinal Decompression', 'Physiotherapy Equipment', 'Private Treatment Room', 'Rehabilitation Area', 'Posture Analysis', 'Ergonomic Counseling', 'Hot/Cold Therapy', 'Electrotherapy', 'Wheelchair Accessible'],
+  };
+
+  const amenitiesList = amenitiesMap[formData.businessType] || amenitiesMap.gym;
 
   const handleInputChange = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
