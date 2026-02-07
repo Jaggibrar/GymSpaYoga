@@ -350,7 +350,7 @@ const Index = () => {
               {/* Right: Therapist Image */}
               <div className="flex-1 flex justify-center lg:justify-end">
                 <img 
-                  src="https://images.unsplash.com/photo-1519823551278-64ac92734314?auto=format&fit=crop&w=500&q=80"
+                  src="https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?auto=format&fit=crop&w=500&q=80"
                   alt="Wellness therapist providing treatment"
                   className="rounded-2xl max-w-sm w-full object-cover"
                 />
