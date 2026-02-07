@@ -92,6 +92,8 @@ Allow: /support
 Allow: /explore
 Allow: /register-business
 Allow: /register-trainer
+Allow: /therapists
+Allow: /chiropractors
 
 # Disallow tracking parameters and duplicate content
 Disallow: /*?*utm_source=
@@ -129,8 +131,6 @@ Allow: /*.webp$
 # Important files and sitemaps
 Sitemap: https://gymspayoga.com/sitemap-index.xml
 Sitemap: https://gymspayoga.com/sitemap.xml
-Sitemap: https://gymspayoga.com/sitemap-enhanced.xml
-Sitemap: https://gymspayoga.com/sitemap-blogs.xml
 Sitemap: https://gymspayoga.com/sitemap-businesses.xml
 Sitemap: https://gymspayoga.com/sitemap-trainers.xml
 
