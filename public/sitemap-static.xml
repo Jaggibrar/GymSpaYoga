@@ -48,6 +48,29 @@
   <mobile:mobile/>
 </url>
 
+<url>
+  <loc>https://gymspayoga.com/therapists</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2026-02-07T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
+</url>
+
+<url>
+  <loc>https://gymspayoga.com/chiropractors</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.9</priority>
+  <lastmod>2026-02-07T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
+</url>
+
+<url>
+  <loc>https://gymspayoga.com/explore</loc>
+  <changefreq>daily</changefreq>
+  <priority>0.8</priority>
+  <lastmod>2026-02-07T00:00:00+00:00</lastmod>
+  <mobile:mobile/>
+</url>
 <!-- Business Registration Pages -->
 <url>
   <loc>https://gymspayoga.com/register-business</loc>

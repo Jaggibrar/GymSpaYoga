@@ -21,14 +21,16 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-popover', '@radix-ui/react-select', '@radix-ui/react-scroll-area'],
           'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-utils': ['clsx', 'tailwind-merge', 'date-fns']
+          'vendor-utils': ['clsx', 'tailwind-merge', 'date-fns'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-charts': ['recharts']
         }
       }
     },
@@ -37,15 +39,14 @@ export default defineConfig(({ mode }) => ({
     terserOptions: {
       compress: {
         drop_console: mode === 'production',
-        drop_debugger: mode === 'production'
+        drop_debugger: mode === 'production',
+        passes: 2
       }
     },
-    target: 'esnext'
+    target: 'esnext',
+    chunkSizeWarningLimit: 600
   },
   css: {
     devSourcemap: true
-  },
-  esbuild: {
-    drop: mode === 'production' ? ['console', 'debugger'] : []
   }
 }));
