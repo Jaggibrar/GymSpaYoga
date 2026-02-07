@@ -343,6 +343,40 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Therapists Banner */}
+        <section className="py-12 md:py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-12">
+              {/* Right: Therapist Image */}
+              <div className="flex-1 flex justify-center lg:justify-end">
+                <img 
+                  src="https://images.unsplash.com/photo-1519823551278-64ac92734314?auto=format&fit=crop&w=500&q=80"
+                  alt="Wellness therapist providing treatment"
+                  className="rounded-2xl max-w-sm w-full object-cover"
+                />
+              </div>
+
+              {/* Left: Content */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
+                  BOOK WELLNESS THERAPISTS
+                </h2>
+                <p className="text-xl text-gray-700 mb-4">
+                  Heal naturally. Feel better. Live fully.
+                </p>
+                <p className="text-lg text-gray-600 mb-8 max-w-lg">
+                  Connect with certified wellness therapists for holistic treatments, stress relief, and overall well-being. Experience professional care tailored to your needs.
+                </p>
+                <Link to="/therapists">
+                  <Button size="lg" className="bg-[#00838F] hover:bg-[#006971] text-white font-semibold px-8 py-6 text-lg">
+                    FIND THERAPISTS
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-10 md:py-12 bg-gray-50">
           <div className="container mx-auto px-4">
