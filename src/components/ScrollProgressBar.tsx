@@ -5,9 +5,11 @@ const ScrollProgressBar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (window.scrollY / scrollHeight) * 100;
-      setScrollProgress(scrolled);
+      requestAnimationFrame(() => {
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = scrollHeight > 0 ? (window.scrollY / scrollHeight) * 100 : 0;
+        setScrollProgress(scrolled);
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
