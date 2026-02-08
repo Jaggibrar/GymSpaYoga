@@ -19,15 +19,15 @@ const AppHeader = () => {
   };
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 overflow-x-hidden w-full">
-      <div className="container mx-auto px-4 py-3 max-w-full">
-        <div className="flex items-center justify-between gap-4">
+    <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100 w-full overflow-hidden">
+      <div className="mx-auto px-3 sm:px-4 py-3 max-w-7xl w-full box-border">
+        <div className="flex items-center justify-between gap-2 sm:gap-4 min-w-0">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="h-10 w-10 bg-[#0A45FF] rounded-lg flex items-center justify-center">
-              <Heart className="h-6 w-6 text-white fill-white" />
+          <Link to="/" className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
+            <div className="h-8 w-8 sm:h-10 sm:w-10 bg-[#005EB8] rounded-lg flex items-center justify-center flex-shrink-0">
+              <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-white fill-white" />
             </div>
-            <span className="text-xl font-semibold text-black">GymSpaYoga</span>
+            <span className="text-lg sm:text-xl font-semibold text-black truncate">GymSpaYoga</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -70,7 +70,7 @@ const AppHeader = () => {
           <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
             {!user ? (
               <>
-                <Link to="/login" className="text-gray-700 hover:text-[#0A45FF] font-medium whitespace-nowrap">
+                <Link to="/login" className="text-gray-700 hover:text-[#005EB8] font-medium whitespace-nowrap">
                   Sign In
                 </Link>
                 <Link to="/register-business">
@@ -94,18 +94,19 @@ const AppHeader = () => {
           {/* Mobile Menu Button */}
           <Button
             variant="outline"
-            size="sm"
-            className="lg:hidden"
+            size="icon"
+            className="lg:hidden flex-shrink-0 h-9 w-9"
             onClick={toggleMobileMenu}
           >
-            {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="sr-only">Toggle menu</span>
           </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100 w-full overflow-x-hidden">
-            <div className="flex flex-col space-y-3 pt-4 w-full">
+          <div className="lg:hidden mt-4 pb-4 border-t border-gray-100 w-full overflow-hidden">
+            <div className="flex flex-col space-y-3 pt-4 w-full min-w-0">
               {/* Mobile Navigation Items */}
               <div className="flex flex-col space-y-2 w-full">
                 <Link
