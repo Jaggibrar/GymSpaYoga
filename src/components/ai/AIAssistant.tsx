@@ -238,21 +238,27 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
 
   const chatContent = (
     <div className={cn(
-      "flex flex-col bg-background border rounded-2xl shadow-2xl overflow-hidden",
-      isFloating && !isExpanded && "fixed bottom-6 right-6 w-[380px] h-[550px] z-50",
-      isFloating && isExpanded && "fixed inset-4 z-50",
-      !isFloating && "w-full h-full",
+      "flex flex-col overflow-hidden border-0",
+      isFloating && !isExpanded && "fixed bottom-6 right-6 w-[390px] h-[560px] z-50 rounded-2xl shadow-2xl",
+      isFloating && isExpanded && "fixed inset-4 z-50 rounded-2xl shadow-2xl",
+      !isFloating && "w-full h-full rounded-2xl shadow-lg",
       className
     )}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-primary text-primary-foreground">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-            <Bot className="h-5 w-5" />
+      {/* Branded Header */}
+      <div className="flex items-center justify-between px-4 py-3" style={{ background: '#005EB8' }}>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <img
+              src={AVATARS[avatarIndex]}
+              alt="GymSpaYoga AI"
+              className="h-10 w-10 rounded-full object-cover border-2 border-white/40 transition-opacity duration-300"
+              style={{ opacity: avatarFade ? 1 : 0 }}
+            />
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-400 border-2 border-white" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm">GymSpaYoga AI</h3>
-            <p className="text-xs opacity-80">Your wellness assistant</p>
+            <h3 className="font-bold text-sm text-white tracking-wide">GymSpaYoga AI</h3>
+            <p className="text-[11px] text-white/70">Train. Relax. Rejuvenate.</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
@@ -261,7 +267,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+                className="h-8 w-8 text-white hover:bg-white/20"
                 onClick={() => setIsExpanded(!isExpanded)}
               >
                 {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
@@ -269,7 +275,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-primary-foreground hover:bg-primary-foreground/20"
+                className="h-8 w-8 text-white hover:bg-white/20"
                 onClick={() => setIsOpen(false)}
               >
                 <X className="h-4 w-4" />
@@ -279,29 +285,32 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
         </div>
       </div>
 
-      {/* Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+      {/* Messages Area */}
+      <ScrollArea className="flex-1 p-4 bg-[#f0f4f8] dark:bg-background" ref={scrollRef}>
         {messages.length === 0 ? (
-          <div className="space-y-4">
-            <div className="text-center py-8">
-              <div className="h-16 w-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                <Sparkles className="h-8 w-8 text-primary" />
+          <div className="space-y-5">
+            {/* Branded Welcome */}
+            <div className="text-center py-6">
+              <div className="h-16 w-16 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ background: '#005EB8' }}>
+                <Sparkles className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-semibold text-lg">Welcome to GymSpaYoga AI! 👋</h4>
-              <p className="text-muted-foreground text-sm mt-2">
-                I can help you find gyms, spas, yoga studios, and trainers based on your mood, goals, and location.
+              <h4 className="font-bold text-lg text-foreground">Namaste! 🙏 Welcome to GymSpaYoga</h4>
+              <p className="text-muted-foreground text-sm mt-2 max-w-[280px] mx-auto">
+                Batao, aaj ka mood kya hai — workout 💪, relaxation 🧖, ya yoga 🧘?
               </p>
+              <p className="text-xs text-muted-foreground mt-1">Founded by Jagdeep Singh</p>
             </div>
             
+            {/* Quick Prompts */}
             <div className="space-y-2">
-              <p className="text-xs text-muted-foreground text-center">Quick suggestions:</p>
+              <p className="text-xs font-semibold text-muted-foreground text-center uppercase tracking-wider">Try asking</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {QUICK_PROMPTS.map((prompt, i) => (
                   <Button
                     key={i}
                     variant="outline"
                     size="sm"
-                    className="text-xs"
+                    className="text-xs rounded-full border-[#005EB8]/30 text-[#005EB8] hover:bg-[#005EB8] hover:text-white transition-colors"
                     onClick={() => handleQuickPrompt(prompt)}
                     disabled={isLoading}
                   >
@@ -322,20 +331,21 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                 )}
               >
                 {msg.role === 'assistant' && (
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Bot className="h-4 w-4 text-primary" />
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 border border-[#005EB8]/20" style={{ background: '#EBF2FA' }}>
+                    <Bot className="h-4 w-4" style={{ color: '#005EB8' }} />
                   </div>
                 )}
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-2xl px-4 py-2",
+                    "max-w-[80%] rounded-2xl px-4 py-2.5 shadow-sm",
                     msg.role === 'user'
-                      ? 'bg-primary text-primary-foreground rounded-br-md'
-                      : 'bg-muted rounded-bl-md'
+                      ? 'rounded-br-md text-white'
+                      : 'bg-white dark:bg-card rounded-bl-md border border-border/50'
                   )}
+                  style={msg.role === 'user' ? { background: '#005EB8' } : undefined}
                 >
                   {msg.role === 'assistant' ? (
-                    <div className="prose prose-sm dark:prose-invert max-w-none">
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-foreground">
                       <ReactMarkdown>{msg.content || '...'}</ReactMarkdown>
                     </div>
                   ) : (
@@ -343,19 +353,23 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                   )}
                 </div>
                 {msg.role === 'user' && (
-                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                    <User className="h-4 w-4 text-primary-foreground" />
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#005EB8' }}>
+                    <User className="h-4 w-4 text-white" />
                   </div>
                 )}
               </div>
             ))}
             {isLoading && messages[messages.length - 1]?.content === '' && (
               <div className="flex gap-3">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Bot className="h-4 w-4 text-primary" />
+                <div className="h-8 w-8 rounded-full flex items-center justify-center" style={{ background: '#EBF2FA' }}>
+                  <Bot className="h-4 w-4" style={{ color: '#005EB8' }} />
                 </div>
-                <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-2">
-                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                <div className="bg-white dark:bg-card rounded-2xl rounded-bl-md px-4 py-3 border border-border/50 shadow-sm">
+                  <div className="flex gap-1.5">
+                    <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '0ms' }} />
+                    <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '150ms' }} />
+                    <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '300ms' }} />
+                  </div>
                 </div>
               </div>
             )}
@@ -363,8 +377,8 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
         )}
       </ScrollArea>
 
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="p-4 border-t bg-background">
+      {/* Branded Input Area */}
+      <form onSubmit={handleSubmit} className="p-3 border-t bg-white dark:bg-card">
         <div className="flex gap-2">
           <Input
             ref={inputRef}
@@ -372,14 +386,20 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about gyms, spas, yoga, trainers..."
             disabled={isLoading}
-            className="flex-1"
+            className="flex-1 rounded-full border-[#005EB8]/20 focus-visible:ring-[#005EB8]/30"
           />
-          <Button type="submit" size="icon" disabled={isLoading || !input.trim()}>
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+          <Button
+            type="submit"
+            size="icon"
+            disabled={isLoading || !input.trim()}
+            className="rounded-full h-10 w-10 shrink-0"
+            style={{ background: '#005EB8' }}
+          >
+            {isLoading ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <Send className="h-4 w-4 text-white" />}
           </Button>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Powered by GymSpaYoga AI • Your wellness journey starts here
+          🏋️ Gym • 🧖 Spa • 🧘 Yoga — Powered by <span className="font-semibold" style={{ color: '#005EB8' }}>GymSpaYoga</span>
         </p>
       </form>
     </div>
