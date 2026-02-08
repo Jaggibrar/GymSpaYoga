@@ -9,33 +9,34 @@ const ScrollToTopButton = () => {
 
   // Debounced scroll handler for better performance
   const handleScroll = useCallback(() => {
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = (scrollTop / scrollHeight) * 100;
-    const shouldShow = scrollTop > 300;
-    
-    setScrollProgress(progress);
-    if (isVisible !== shouldShow) {
-      setIsVisible(shouldShow);
-    }
-  }, [isVisible]);
+    requestAnimationFrame(() => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      const shouldShow = scrollTop > 300;
+      
+      setScrollProgress(progress);
+      setIsVisible(prev => {
+        if (prev !== shouldShow) return shouldShow;
+        return prev;
+      });
+    });
+  }, []);
 
   useEffect(() => {
-    // Throttled scroll handler to improve performance
     let timeoutId: NodeJS.Timeout;
     
     const throttledScrollHandler = () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      timeoutId = setTimeout(handleScroll, 16); // ~60fps
+      timeoutId = setTimeout(handleScroll, 16);
     };
 
-    // Add scroll listener
     window.addEventListener('scroll', throttledScrollHandler, { passive: true });
     
-    // Check initial scroll position
-    handleScroll();
+    // Defer initial check to avoid forced reflow
+    requestAnimationFrame(handleScroll);
 
     return () => {
       window.removeEventListener('scroll', throttledScrollHandler);
