@@ -218,7 +218,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
   // Floating chat button
   if (isFloating && !isOpen) {
     return (
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-6 right-6 z-50" data-tour="ai-button">
         <button
           onClick={() => setIsOpen(true)}
           className="group flex flex-col items-center gap-1 rounded-2xl bg-primary p-2 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"

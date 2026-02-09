@@ -77,7 +77,7 @@ const HeroBanner = () => {
 
       {/* Search Bar - Positioned below the image */}
       <div className="container mx-auto px-4 -mt-6 md:-mt-8 relative z-10">
-        <div className="bg-white rounded-xl p-3 md:p-4 shadow-2xl w-full max-w-4xl mx-auto border border-gray-100">
+        <div data-tour="hero-search" className="bg-white rounded-xl p-3 md:p-4 shadow-2xl w-full max-w-4xl mx-auto border border-gray-100">
           <div className="flex flex-col gap-3">
             {/* Mobile: Stack vertically, Desktop: Row */}
             <div className="flex flex-col sm:flex-row gap-3 items-stretch">
