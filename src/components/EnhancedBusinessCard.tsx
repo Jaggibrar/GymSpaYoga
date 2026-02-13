@@ -81,7 +81,7 @@ const EnhancedBusinessCard = ({
 
   return (
     <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#005EB8] bg-white relative overflow-hidden rounded-xl">
-      <div className="relative overflow-hidden h-48 md:h-56 w-full rounded-t-xl">
+      <div className="relative overflow-hidden w-full rounded-t-xl" style={{ aspectRatio: '4/3' }}>
         <OptimizedImage 
           src={image} 
           alt={`${name} - ${description}`}
