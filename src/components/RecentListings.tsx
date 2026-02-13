@@ -187,12 +187,12 @@ const RecentListings = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, i) => (
           <Card key={i} className="overflow-hidden animate-pulse">
-            <div className="h-48 bg-gray-200"></div>
+            <div className="bg-muted" style={{ aspectRatio: '16/9' }}></div>
             <CardContent className="p-5 space-y-3">
-              <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-5 bg-muted rounded w-3/4"></div>
+              <div className="h-4 bg-muted rounded w-1/2"></div>
+              <div className="h-4 bg-muted rounded w-2/3"></div>
+              <div className="h-10 bg-muted rounded"></div>
             </CardContent>
           </Card>
         ))}
@@ -240,7 +240,7 @@ const RecentListings = () => {
                 className="flex-shrink-0 w-[300px] overflow-hidden cursor-pointer snap-start border-2 border-gray-100 hover:border-[#005EB8]/30 transition-all duration-300 hover:shadow-xl"
                 onClick={() => handleCardClick(listing)}
               >
-                <div className="relative h-44 w-full overflow-hidden">
+                <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
                   <OptimizedImage 
                     src={listing.image_urls?.[0] || "/placeholder.svg"} 
                     alt={listing.business_name}
@@ -311,7 +311,7 @@ const RecentListings = () => {
               className="group overflow-hidden cursor-pointer border-2 border-gray-100 hover:border-[#005EB8]/30 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               onClick={() => handleCardClick(listing)}
             >
-              <div className="relative h-56 w-full overflow-hidden">
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
                 <OptimizedImage 
                   src={listing.image_urls?.[0] || "/placeholder.svg"} 
                   alt={listing.business_name}

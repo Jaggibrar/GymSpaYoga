@@ -22,6 +22,8 @@ import ScrollProgressBar from "./components/ScrollProgressBar";
 import OnboardingCoachMarks from "./components/OnboardingCoachMarks";
 import TutorialHelpButton from "./components/TutorialHelpButton";
 import { TutorialProvider } from "./hooks/useOnboardingTutorial";
+import LiveActivityFeed from "./components/LiveActivityFeed";
+import ExitIntentPopup from "./components/ExitIntentPopup";
 
 import PerformanceWrapper from "./components/PerformanceWrapper";
 
@@ -197,6 +199,8 @@ const AppContent = () => {
       </React.Suspense>
       <OnboardingCoachMarks />
       <TutorialHelpButton />
+      <LiveActivityFeed />
+      <ExitIntentPopup />
       <Toaster />
     </div>
   );

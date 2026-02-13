@@ -30,10 +30,14 @@ const SEOHead = ({
   const location = useLocation();
   const fullTitle = title.includes('GymSpaYoga') ? title : `${title} | GymSpaYoga - Best Gyms, Spas & Yoga Studios`;
   
-  // Generate proper canonical URL
+  // Auto-noindex filtered/parameterized pages to save crawl budget
+  const searchParams = new URLSearchParams(location.search);
+  const hasFilterParams = searchParams.has('price') || searchParams.has('sort') || searchParams.has('page') || searchParams.has('tier');
+  const shouldNoindex = noindex || hasFilterParams;
+  
+  // Generate proper canonical URL (strip filter params)
   const getCanonicalURL = () => {
     if (canonicalUrl) return canonicalUrl;
-    if (url && url !== window.location.href) return url;
     
     const baseURL = 'https://gymspayoga.com';
     const path = location.pathname;
@@ -51,7 +55,7 @@ const SEOHead = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
       <meta name="author" content="GymSpaYoga" />
-      <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
+      <meta name="robots" content={shouldNoindex ? "noindex, follow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta name="google-site-verification" content="your-google-verification-code" />
       

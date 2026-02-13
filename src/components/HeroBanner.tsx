@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,35 @@ const HeroBanner = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('');
   const [tier, setTier] = useState('');
+  const [detectedCity, setDetectedCity] = useState<string | null>(null);
+
+  // Auto-detect city via geolocation
+  useEffect(() => {
+    const cached = sessionStorage.getItem('gymspayoga_detected_city');
+    if (cached) {
+      setDetectedCity(cached);
+      return;
+    }
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            const res = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&localityLanguage=en`
+            );
+            const data = await res.json();
+            const city = data.city || data.locality || null;
+            if (city) {
+              setDetectedCity(city);
+              sessionStorage.setItem('gymspayoga_detected_city', city);
+            }
+          } catch { /* silent */ }
+        },
+        () => { /* permission denied - no action */ },
+        { timeout: 5000, maximumAge: 600000 }
+      );
+    }
+  }, []);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -64,13 +93,16 @@ const HeroBanner = () => {
         {/* Text Overlay */}
         <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
           <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white text-center mb-3 md:mb-4 drop-shadow-lg">
-            Find Your Perfect Wellness
-            <br className="hidden sm:block" />
-            <span className="sm:hidden"> </span>
-            Experience
+            {detectedCity
+              ? `Best Wellness Centers in ${detectedCity}`
+              : <>Find Your Perfect Wellness<br className="hidden sm:block" /><span className="sm:hidden"> </span>Experience</>
+            }
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-white/90 mb-4 md:mb-6 text-center max-w-2xl drop-shadow-md px-2">
-            Discover gyms, spas, yoga studios, and personal trainers near you
+            {detectedCity
+              ? `Discover top-rated gyms, spas, yoga studios & trainers in ${detectedCity}`
+              : 'Discover gyms, spas, yoga studios, and personal trainers near you'
+            }
           </p>
         </div>
       </div>
