@@ -115,8 +115,8 @@ export const getStaticUrls = (baseUrl: string): SitemapUrl[] => {
 
 // Generate location-based URLs for better local SEO
 export const getLocationUrls = (baseUrl: string): SitemapUrl[] => {
-  const cities = ['mumbai', 'delhi', 'bangalore', 'hyderabad', 'pune', 'chennai', 'kolkata', 'ahmedabad'];
-  const services = ['gyms', 'spas', 'yoga'];
+  const cities = ['mumbai', 'delhi', 'bangalore', 'hyderabad', 'pune', 'chennai', 'kolkata', 'ahmedabad', 'jaipur', 'lucknow', 'chandigarh', 'goa', 'noida', 'gurgaon', 'indore', 'kochi', 'bhopal', 'nagpur', 'coimbatore', 'surat', 'patna', 'vadodara'];
+  const services = ['gyms', 'spas', 'yoga-classes'];
   const currentDate = new Date().toISOString().split('T')[0];
   
   const urls: SitemapUrl[] = [];
@@ -124,9 +124,9 @@ export const getLocationUrls = (baseUrl: string): SitemapUrl[] => {
   services.forEach(service => {
     cities.forEach(city => {
       urls.push({
-        loc: `${baseUrl}/${service}/${city}`,
+        loc: `${baseUrl}/${service}-in-${city}`,
         changefreq: 'daily',
-        priority: 0.8,
+        priority: 0.85,
         lastmod: currentDate
       });
     });

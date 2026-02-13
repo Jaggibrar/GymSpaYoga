@@ -7,7 +7,7 @@ import { Search, MapPin, Grid3X3, Map, Star, Clock, DollarSign, Navigation, List
 import { Link } from 'react-router-dom';
 import SEOHead from '@/components/SEOHead';
 import { useOptimizedBusinessData } from '@/hooks/useOptimizedBusinessData';
-import GoogleMapView from '@/components/GoogleMapView';
+import GoogleMapEmbed from '@/components/GoogleMapEmbed';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
