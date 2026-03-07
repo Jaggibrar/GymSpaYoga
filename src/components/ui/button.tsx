@@ -6,28 +6,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 transform hover:scale-105 active:scale-98 shadow-lg hover:shadow-xl hover:brightness-110 duration-300 text-center relative overflow-hidden",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-center",
   {
     variants: {
       variant: {
-        default: "bg-[#005EB8] text-white hover:bg-[#004d96] font-bold border-0",
-        destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-        outline:
-          "border-2 border-[#005EB8] bg-transparent text-[#005EB8] hover:bg-[#005EB8]/10 hover:text-[#004d96] hover:border-[#004d96]",
-        secondary:
-          "bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300",
-        ghost: "text-gray-900 hover:bg-gray-100 hover:text-gray-900 shadow-none hover:shadow-md hover:scale-102",
-        link: "text-[#005EB8] underline-offset-4 hover:underline shadow-none hover:shadow-none hover:scale-100",
-        gradient: "bg-[#005EB8] text-white hover:bg-[#004d96] font-black border-0",
-        urgent: "bg-red-500 text-white hover:bg-red-600 font-black animate-pulse border-0",
-        hero: "bg-[#005EB8] text-white shadow-lg hover:bg-[#004d96] hover:shadow-xl hover:scale-105 transition-all duration-300",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 font-semibold shadow-sm hover:shadow-md",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
+        outline: "border-2 border-primary bg-transparent text-primary hover:bg-primary/10 hover:shadow-sm",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-sm",
+        ghost: "text-foreground hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        hero: "bg-primary text-primary-foreground shadow-md hover:bg-primary/90 hover:shadow-lg transition-all duration-300",
       },
       size: {
-        default: "h-10 px-4 py-2 min-h-[40px] text-sm",
+        default: "h-10 px-5 py-2 min-h-[40px] text-sm",
         sm: "h-9 rounded-md px-3 min-h-[36px] text-sm",
-        lg: "h-12 rounded-lg px-8 text-lg min-h-[48px]",
-        xl: "h-16 rounded-xl px-12 text-xl min-h-[64px]",
+        lg: "h-12 rounded-lg px-8 text-base min-h-[48px]",
+        xl: "h-14 rounded-xl px-10 text-lg min-h-[56px]",
         icon: "h-10 w-10",
       },
     },
@@ -45,48 +40,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, children, onClick, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
-    const [ripples, setRipples] = React.useState<Array<{ x: number; y: number; id: number }>>([])
-
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      const button = e.currentTarget
-      const rect = button.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-      const id = Date.now()
-      
-      setRipples(prev => [...prev, { x, y, id }])
-      
-      setTimeout(() => {
-        setRipples(prev => prev.filter(ripple => ripple.id !== id))
-      }, 600)
-
-      onClick?.(e)
-    }
 
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        onClick={handleClick}
         {...props}
       >
-        {ripples.map((ripple) => (
-          <span
-            key={ripple.id}
-            className="absolute rounded-full bg-white/30 animate-ripple pointer-events-none"
-            style={{
-              left: ripple.x,
-              top: ripple.y,
-              width: 0,
-              height: 0,
-            }}
-          />
-        ))}
-        <span className="relative z-10 flex items-center justify-center gap-2 text-inherit font-inherit">
-          {children}
-        </span>
+        {children}
       </Comp>
     )
   }

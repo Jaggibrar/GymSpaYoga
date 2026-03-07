@@ -4,31 +4,31 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* Clean Typography - Bold Black Text */
+/* Elegant Typography - Warm Luxurious */
 h1, .h1 {
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   line-height: 1.15;
-  color: #000000;
+  color: hsl(20, 20%, 12%);
 }
 
 h2, .h2 {
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   line-height: 1.2;
-  color: #000000;
+  color: hsl(20, 20%, 12%);
 }
 
 h3, .h3 {
   font-weight: 600;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   line-height: 1.3;
-  color: #000000;
+  color: hsl(20, 20%, 12%);
 }
 
 /* Brand Color Text */
 .text-brand {
-  color: #0A45FF;
+  color: hsl(38, 92%, 50%);
 }
 
 /* Clean Card Hover */
@@ -37,30 +37,30 @@ h3, .h3 {
 }
 
 .card-hover:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(30, 20, 10, 0.1);
 }
 
-/* Button Styles - Solid Blue */
+/* Button Styles - Gold */
 .btn-brand {
-  background-color: #0A45FF;
-  color: white;
+  background-color: hsl(38, 92%, 50%);
+  color: hsl(30, 10%, 8%);
   font-weight: 600;
   transition: background-color 0.2s ease;
 }
 
 .btn-brand:hover {
-  background-color: #083ACC;
+  background-color: hsl(38, 92%, 45%);
 }
 
 /* Selection */
 ::selection {
-  background: #0A45FF;
-  color: white;
+  background: hsl(38, 92%, 50%);
+  color: hsl(30, 10%, 8%);
 }
 
 ::-moz-selection {
-  background: #0A45FF;
-  color: white;
+  background: hsl(38, 92%, 50%);
+  color: hsl(30, 10%, 8%);
 }
 
 /* Mobile Optimizations */
@@ -122,7 +122,7 @@ img {
 
 /* Lazy loading placeholder */
 .lazy-image {
-  background-color: #f3f4f6;
+  background-color: hsl(30, 15%, 92%);
   transition: opacity 0.3s ease;
 }
 
