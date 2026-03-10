@@ -20,10 +20,46 @@ export default {
   	},
   	extend: {
   		fontFamily: {
-  			sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-  			display: ['Playfair Display', 'Lora', 'ui-serif', 'Georgia', 'serif'],
-  			serif: ['Lora', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'serif'],
-  			mono: ['Space Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'monospace']
+  			sans: [
+  				'DM Sans',
+  				'ui-sans-serif',
+  				'system-ui',
+  				'-apple-system',
+  				'BlinkMacSystemFont',
+  				'Segoe UI',
+  				'Roboto',
+  				'Helvetica Neue',
+  				'Arial',
+  				'Noto Sans',
+  				'sans-serif'
+  			],
+  			display: [
+  				'Playfair Display',
+  				'Lora',
+  				'ui-serif',
+  				'Georgia',
+  				'serif'
+  			],
+  			serif: [
+  				'Crimson Pro',
+  				'ui-serif',
+  				'Georgia',
+  				'Cambria',
+  				'Times New Roman',
+  				'Times',
+  				'serif'
+  			],
+  			mono: [
+  				'SF Mono',
+  				'ui-monospace',
+  				'SFMono-Regular',
+  				'Menlo',
+  				'Monaco',
+  				'Consolas',
+  				'Liberation Mono',
+  				'Courier New',
+  				'monospace'
+  			]
   		},
   		colors: {
   			brand: {
@@ -97,15 +133,60 @@ export default {
   			}
   		},
   		fontSize: {
-  			xs: ['12px', { lineHeight: '16px' }],
-  			sm: ['14px', { lineHeight: '20px' }],
-  			base: ['16px', { lineHeight: '24px' }],
-  			lg: ['18px', { lineHeight: '28px' }],
-  			xl: ['20px', { lineHeight: '32px' }],
-  			'2xl': ['24px', { lineHeight: '36px' }],
-  			'3xl': ['30px', { lineHeight: '40px' }],
-  			'4xl': ['36px', { lineHeight: '44px' }],
-  			'5xl': ['48px', { lineHeight: '56px' }]
+  			xs: [
+  				'12px',
+  				{
+  					lineHeight: '16px'
+  				}
+  			],
+  			sm: [
+  				'14px',
+  				{
+  					lineHeight: '20px'
+  				}
+  			],
+  			base: [
+  				'16px',
+  				{
+  					lineHeight: '24px'
+  				}
+  			],
+  			lg: [
+  				'18px',
+  				{
+  					lineHeight: '28px'
+  				}
+  			],
+  			xl: [
+  				'20px',
+  				{
+  					lineHeight: '32px'
+  				}
+  			],
+  			'2xl': [
+  				'24px',
+  				{
+  					lineHeight: '36px'
+  				}
+  			],
+  			'3xl': [
+  				'30px',
+  				{
+  					lineHeight: '40px'
+  				}
+  			],
+  			'4xl': [
+  				'36px',
+  				{
+  					lineHeight: '44px'
+  				}
+  			],
+  			'5xl': [
+  				'48px',
+  				{
+  					lineHeight: '56px'
+  				}
+  			]
   		},
   		spacing: {
   			'18': '4.5rem',
@@ -136,20 +217,40 @@ export default {
   		},
   		keyframes: {
   			fadeIn: {
-  				'0%': { opacity: '0', transform: 'translateY(8px)' },
-  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translateY(8px)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translateY(0)'
+  				}
   			},
   			slideUp: {
-  				'0%': { opacity: '0', transform: 'translateY(16px)' },
-  				'100%': { opacity: '1', transform: 'translateY(0)' }
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translateY(16px)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translateY(0)'
+  				}
   			},
   			'accordion-down': {
-  				from: { height: '0' },
-  				to: { height: 'var(--radix-accordion-content-height)' }
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
   			},
   			'accordion-up': {
-  				from: { height: 'var(--radix-accordion-content-height)' },
-  				to: { height: '0' }
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
   			}
   		}
   	}
