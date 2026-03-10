@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
 import OptimizedImage from '@/components/performance/ImageOptimizer';
+import { motion, AnimatePresence } from 'framer-motion';
+import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
 
 const Gyms = () => {
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ const Gyms = () => {
   const [location, setLocation] = useState('');
   const [sortBy, setSortBy] = useState('created_at');
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
-  const [selectedBusiness, setSelectedBusiness] = useState<any>(null);
   
   const { position, getCurrentPosition, loading: geoLoading } = useGeolocation();
 
@@ -32,7 +33,6 @@ const Gyms = () => {
     sortBy
   );
 
-  // Group businesses by pricing tier
   const budgetGyms = businesses.filter(b => {
     const price = b.monthly_price || b.session_price || 0;
     return price < 2000;
@@ -62,7 +62,6 @@ const Gyms = () => {
   };
 
   const handleViewDetails = (business: any) => {
-    // Use slug if available, fallback to ID
     navigate(`/gyms/${business.slug || business.id}`);
   };
 
@@ -74,89 +73,122 @@ const Gyms = () => {
     }
   };
 
+  const tierConfig: Record<string, { color: string; bgLight: string; label: string }> = {
+    budget: { color: 'bg-warm-800', bgLight: 'bg-warm-800/10', label: 'Budget Tier' },
+    premium: { color: 'bg-primary', bgLight: 'bg-primary/10', label: 'Premium Tier' },
+    luxury: { color: 'bg-charcoal-800', bgLight: 'bg-charcoal-800/10', label: 'Luxury Tier' },
+  };
+
   const renderGymCard = (business: any, tierColor: string) => (
-    <Card key={business.id} className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden">
-      <div className="relative h-56 overflow-hidden">
-        <OptimizedImage
-          src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
-          alt={`${business.business_name} - Premium Gym in ${business.city}`}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-          width={400}
-          height={224}
-        />
-        <Badge className={`absolute top-4 right-4 ${tierColor} text-white border-0 capitalize px-3 py-1 shadow-lg`}>
-          <Star className="h-3 w-3 mr-1 fill-white inline" />
-          {(4.0 + Math.random()).toFixed(1)}
-        </Badge>
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
-          <div className={`w-10 h-10 rounded-lg ${tierColor} flex items-center justify-center shadow-lg`}>
-            <Dumbbell className="w-5 h-5 text-white" />
+    <motion.div
+      key={business.id}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.25 }}
+    >
+      <Card className="w-full group hover:shadow-xl transition-all duration-300 border border-border hover:border-primary/40 rounded-2xl overflow-hidden bg-card h-full">
+        <div className="relative h-56 overflow-hidden">
+          <OptimizedImage
+            src={business.image_urls?.[0] || "https://images.unsplash.com/photo-1534438327276-14e5300c3a48"}
+            alt={`${business.business_name} - Premium Gym in ${business.city}`}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            width={400}
+            height={224}
+          />
+          <Badge className={`absolute top-4 right-4 ${tierColor} text-white border-0 capitalize px-3 py-1 shadow-lg rounded-lg`}>
+            <Star className="h-3 w-3 mr-1 fill-white inline" />
+            {(4.0 + Math.random()).toFixed(1)}
+          </Badge>
+          <div className="absolute top-4 left-4">
+            <div className={`w-10 h-10 rounded-xl ${tierColor} flex items-center justify-center shadow-lg`}>
+              <Dumbbell className="w-5 h-5 text-white" />
+            </div>
           </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
-        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
-      </div>
-      <CardContent className="p-6 space-y-4">
-        <div className="space-y-2">
-          <div className="flex items-start justify-between">
-            <h3 className="text-xl font-bold group-hover:text-[#005EB8] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
+        <CardContent className="p-5 space-y-3">
+          <div className="space-y-1.5">
+            <h3 className="text-xl font-display font-bold group-hover:text-primary transition-colors line-clamp-1 leading-tight text-foreground">
               {business.business_name}
             </h3>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="h-4 w-4 flex-shrink-0 text-primary" />
+              <span className="text-sm font-medium">{business.city}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin className="h-4 w-4 flex-shrink-0" />
-            <span className="text-sm font-medium">{business.city}</span>
+          
+          <div className="flex flex-wrap gap-1.5">
+            {business.amenities?.slice(0, 2).map((amenity: string, index: number) => (
+              <Badge key={index} variant="outline" className="text-xs px-2 py-1 rounded-md border-border">
+                {amenity}
+              </Badge>
+            ))}
+            {business.amenities && business.amenities.length > 2 && (
+              <Badge variant="outline" className="text-xs px-2 py-1 rounded-md border-border">
+                +{business.amenities.length - 2} more
+              </Badge>
+            )}
           </div>
-        </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {business.amenities?.slice(0, 2).map((amenity: string, index: number) => (
-            <Badge key={index} variant="outline" className="text-xs px-2 py-1">
-              {amenity}
-            </Badge>
-          ))}
-          {business.amenities && business.amenities.length > 2 && (
-            <Badge variant="outline" className="text-xs px-2 py-1">
-              +{business.amenities.length - 2} more
-            </Badge>
-          )}
-        </div>
-        
-        <div className="grid grid-cols-1 gap-2 text-sm">
-          <div className="flex items-center gap-2 text-gray-600">
-            <Clock className="h-4 w-4 flex-shrink-0" />
-            <span>{business.opening_time} - {business.closing_time}</span>
+          
+          <div className="grid grid-cols-1 gap-1.5 text-sm">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Clock className="h-4 w-4 flex-shrink-0" />
+              <span>{business.opening_time} - {business.closing_time}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <DollarSign className="h-4 w-4 flex-shrink-0 text-primary" />
+              <p className="text-lg font-bold text-primary">
+                {business.monthly_price ? `₹${business.monthly_price}/month` : 
+                 business.session_price ? `₹${business.session_price}/session` : 'Contact for pricing'}
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 flex-shrink-0 text-[#005EB8]" />
-            <p className="text-lg font-bold text-[#005EB8]">
-              {business.monthly_price ? `₹${business.monthly_price}/month` : 
-               business.session_price ? `₹${business.session_price}/session` : 'Contact for pricing'}
-            </p>
-          </div>
-        </div>
 
-        <div className="flex gap-2 pt-2">
-          <Button 
-            variant="outline"
-            onClick={() => handleViewDetails(business)}
-            className="flex-1 min-h-[48px] font-semibold"
-            aria-label={`View details for ${business.business_name}`}
-          >
-            <Eye className="h-4 w-4 mr-1" />
-            View Details
-          </Button>
-          <Button 
-            onClick={() => handleBookNow(business.phone, business.business_name)}
-            className="flex-1 bg-[#25D366] hover:bg-[#20BD5A] min-h-[48px] font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-            aria-label={`Book now at ${business.business_name}`}
-          >
-            <MessageCircle className="h-4 w-4 mr-1" />
-            Book Now
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          <div className="flex gap-2 pt-2">
+            <Button 
+              variant="outline"
+              onClick={() => handleViewDetails(business)}
+              className="flex-1 min-h-[48px] font-semibold rounded-xl border-border"
+              aria-label={`View details for ${business.business_name}`}
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              View Details
+            </Button>
+            <Button 
+              onClick={() => handleBookNow(business.phone, business.business_name)}
+              className="flex-1 bg-[#25D366] hover:bg-[#20BD5A] min-h-[48px] font-semibold shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
+              aria-label={`Book now at ${business.business_name}`}
+            >
+              <MessageCircle className="h-4 w-4 mr-1" />
+              Book Now
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
+
+  const renderTierSection = (gyms: any[], tier: string, tierColor: string) => {
+    if (gyms.length === 0) return null;
+    const config = tierConfig[tier];
+    return (
+      <ScrollReveal key={tier}>
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className={`w-1.5 h-10 ${config.color} rounded-full`} />
+            <h2 className="text-3xl font-display font-bold text-foreground">{config.label}</h2>
+            <Badge className={`${config.color} text-white rounded-lg`}>{gyms.length} Gyms</Badge>
+          </div>
+          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {gyms.map((business) => (
+              <StaggerItem key={business.id}>
+                {renderGymCard(business, tierColor)}
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </ScrollReveal>
+    );
+  };
 
   return (
     <>
@@ -166,7 +198,7 @@ const Gyms = () => {
         keywords="gyms near me, best gym Mumbai, premium gym Delhi, fitness center Bangalore, gym membership India, workout facilities"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
@@ -178,41 +210,51 @@ const Gyms = () => {
               width={1920}
               height={350}
             />
-            <div className="absolute inset-0 bg-black/50"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-charcoal-900/40 via-charcoal-900/50 to-charcoal-900/70"></div>
           </div>
           <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
-            <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-3xl md:text-5xl font-bold mb-3 text-white">
+            <motion.div
+              className="max-w-4xl mx-auto text-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+            >
+              <h1 className="text-3xl md:text-5xl font-display font-bold mb-3 text-white">
                 Explore Premium Gyms
               </h1>
               <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
                 Discover state-of-the-art fitness centers with expert trainers
               </p>
-            </div>
+            </motion.div>
           </div>
         </section>
 
         {/* Search Section */}
-        <section className="container mx-auto px-4 py-6">
-          <Card className="border-2 border-gray-100 shadow-lg">
+        <motion.section
+          className="container mx-auto px-4 py-6 -mt-6 relative z-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <Card className="border border-border shadow-xl rounded-2xl bg-card">
             <CardContent className="p-4 md:p-6">
               <div className="flex flex-col md:flex-row gap-3">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
                     placeholder="Search gyms..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-11 text-black border-gray-200"
+                    className="pl-10 h-12 border-border rounded-xl"
                   />
                 </div>
                 <div className="relative flex-1">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
                     placeholder="Enter location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="pl-10 pr-10 h-11 text-black border-gray-200"
+                    className="pl-10 pr-10 h-12 border-border rounded-xl"
                   />
                   <Button
                     type="button"
@@ -227,7 +269,7 @@ const Gyms = () => {
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="bg-[#005EB8] hover:bg-[#004d96] text-white h-11 px-6"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground h-12 px-6 rounded-xl font-semibold"
                 >
                   <Search className="mr-2 h-4 w-4" />
                   Search
@@ -235,18 +277,18 @@ const Gyms = () => {
               </div>
             </CardContent>
           </Card>
-        </section>
+        </motion.section>
 
-        {/* Filters and View Toggle */}
-        <section className="py-6 bg-gray-50 border-y border-gray-100">
+        {/* Filters */}
+        <section className="py-5 bg-accent/50 border-y border-border">
           <div className="container mx-auto px-4">
             <div className="flex flex-wrap gap-4 items-center justify-between">
               <div className="flex items-center gap-4">
-                <Badge className="bg-[#005EB8] text-white px-3 py-1">
+                <Badge className="bg-primary text-primary-foreground px-4 py-1.5 rounded-lg font-semibold">
                   {businesses.length} Gyms Found
                 </Badge>
                 <select 
-                  className="px-4 py-2 border border-gray-200 rounded-lg text-sm bg-white"
+                  className="px-4 py-2 border border-border rounded-xl text-sm bg-card"
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
                 >
@@ -257,50 +299,35 @@ const Gyms = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className={viewMode === 'grid' ? 'bg-[#005EB8]' : 'border-gray-200'}
-                >
-                  <Grid3X3 className="h-4 w-4 mr-1" />
-                  Grid
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className={viewMode === 'list' ? 'bg-[#005EB8]' : 'border-gray-200'}
-                >
-                  <List className="h-4 w-4 mr-1" />
-                  List
-                </Button>
-                <Button
-                  variant={viewMode === 'map' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setViewMode('map')}
-                  className={viewMode === 'map' ? 'bg-[#005EB8]' : 'border-gray-200'}
-                >
-                  <Map className="h-4 w-4 mr-1" />
-                  Map
-                </Button>
+                {[
+                  { mode: 'grid' as const, icon: Grid3X3, label: 'Grid' },
+                  { mode: 'list' as const, icon: List, label: 'List' },
+                  { mode: 'map' as const, icon: Map, label: 'Map' },
+                ].map(({ mode, icon: Icon, label }) => (
+                  <Button
+                    key={mode}
+                    variant={viewMode === mode ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode(mode)}
+                    className={`rounded-lg ${viewMode === mode ? 'bg-primary text-primary-foreground' : 'border-border'}`}
+                  >
+                    <Icon className="h-4 w-4 mr-1" />
+                    {label}
+                  </Button>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Content - Tiered Gyms */}
-        <section className="py-12 bg-white">
+        {/* Content */}
+        <section className="py-12 bg-background">
           <div className="container mx-auto px-4 space-y-16">
             {error ? (
               <div className="text-center py-12">
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-                  <p className="text-red-600 mb-4">Failed to load gyms: {error}</p>
-                  <Button 
-                    onClick={() => window.location.reload()} 
-                    variant="outline"
-                    className="border-red-300 text-red-600 hover:bg-red-50"
-                  >
+                <div className="bg-destructive/10 border border-destructive/20 rounded-2xl p-6 max-w-md mx-auto">
+                  <p className="text-destructive mb-4">Failed to load gyms: {error}</p>
+                  <Button onClick={() => window.location.reload()} variant="outline" className="rounded-xl">
                     Try Again
                   </Button>
                 </div>
@@ -308,14 +335,14 @@ const Gyms = () => {
             ) : loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="animate-pulse border-gray-100">
-                    <div className="h-48 bg-gray-200 rounded-t-xl"></div>
+                  <Card key={i} className="animate-pulse border-border rounded-2xl">
+                    <div className="h-48 bg-muted rounded-t-2xl"></div>
                     <CardContent className="p-6">
-                      <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                      <div className="h-4 bg-muted rounded mb-2"></div>
+                      <div className="h-3 bg-muted rounded mb-4"></div>
                       <div className="flex justify-between">
-                        <div className="h-3 bg-gray-200 rounded w-20"></div>
-                        <div className="h-3 bg-gray-200 rounded w-16"></div>
+                        <div className="h-3 bg-muted rounded w-20"></div>
+                        <div className="h-3 bg-muted rounded w-16"></div>
                       </div>
                     </CardContent>
                   </Card>
@@ -324,146 +351,89 @@ const Gyms = () => {
             ) : businesses.length === 0 ? (
               <div className="text-center py-20">
                 <div className="text-6xl mb-4">🏋️‍♀️</div>
-                <h3 className="text-2xl font-bold text-black mb-2">No gyms found</h3>
-                <p className="text-gray-600 mb-6">
-                  Try adjusting your search criteria or explore different locations
-                </p>
+                <h3 className="text-2xl font-display font-bold text-foreground mb-2">No gyms found</h3>
+                <p className="text-muted-foreground mb-6">Try adjusting your search criteria or explore different locations</p>
               </div>
             ) : (
               <>
-                {/* Budget Tier */}
-                {budgetGyms.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-3xl font-bold text-black">Budget Tier</h2>
-                      <Badge className="bg-green-600 text-white">{budgetGyms.length} Gyms</Badge>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                      {budgetGyms.map((business) => renderGymCard(business, 'bg-green-600'))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Premium Tier */}
-                {premiumGyms.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-3xl font-bold text-black">Premium Tier</h2>
-                      <Badge className="bg-[#005EB8] text-white">{premiumGyms.length} Gyms</Badge>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                      {premiumGyms.map((business) => renderGymCard(business, 'bg-[#005EB8]'))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Luxury Tier */}
-                {luxuryGyms.length > 0 && (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-3xl font-bold text-black">Luxury Tier</h2>
-                      <Badge className="bg-yellow-500 text-white">{luxuryGyms.length} Gyms</Badge>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                      {luxuryGyms.map((business) => renderGymCard(business, 'bg-yellow-500'))}
-                    </div>
-                  </div>
-                )}
+                {renderTierSection(budgetGyms, 'budget', 'bg-warm-800')}
+                {renderTierSection(premiumGyms, 'premium', 'bg-primary')}
+                {renderTierSection(luxuryGyms, 'luxury', 'bg-charcoal-800')}
               </>
             )}
           </div>
         </section>
 
-        {/* Hire Personal Trainer Banner */}
-        <section className="py-12 md:py-16 bg-white">
+        {/* Trainer Banner */}
+        <section className="py-14 md:py-20 bg-accent/50">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-              {/* Left: Trainer Image */}
-              <div className="flex-1 flex justify-center lg:justify-start">
-                <img 
+            <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+              <ScrollReveal direction="left" className="flex-1 flex justify-center lg:justify-start">
+                <motion.img
                   src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=500&q=80"
                   alt="Personal trainer helping client"
-                  className="rounded-2xl max-w-sm w-full object-cover"
+                  className="rounded-3xl max-w-sm w-full object-cover shadow-xl"
+                  whileHover={{ scale: 1.03 }}
                 />
-              </div>
-
-              {/* Right: Content */}
-              <div className="flex-1 text-center lg:text-left">
-                <h2 className="text-3xl md:text-4xl font-bold text-black mb-4">
-                  HIRE A PERSONAL TRAINER
-                </h2>
-                <p className="text-xl text-gray-700 mb-4">
-                  Getting back in shape has never been so easy!
-                </p>
-                <p className="text-lg text-gray-600 mb-8 max-w-lg">
-                  Get a best-in-class Personal Trainer from GymSpaYoga and kick-start your fitness journey at the comfort of your home! You would love the results you see!
-                </p>
+              </ScrollReveal>
+              <ScrollReveal direction="right" className="flex-1 text-center lg:text-left">
+                <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground mb-4">HIRE A PERSONAL TRAINER</h2>
+                <p className="text-xl text-muted-foreground mb-4">Getting back in shape has never been so easy!</p>
+                <p className="text-lg text-muted-foreground mb-8 max-w-lg">Get a best-in-class Personal Trainer and kick-start your fitness journey!</p>
                 <Link to="/trainers">
-                  <Button size="lg" className="bg-[#E85D04] hover:bg-[#D4540A] text-white font-semibold px-8 py-6 text-lg">
-                    ENQUIRE NOW
-                  </Button>
+                  <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="inline-block">
+                    <Button size="lg" className="bg-secondary text-secondary-foreground hover:bg-secondary/90 font-semibold px-8 py-6 text-lg rounded-xl">
+                      ENQUIRE NOW
+                    </Button>
+                  </motion.div>
                 </Link>
-              </div>
+              </ScrollReveal>
             </div>
           </div>
         </section>
 
-        {/* GymSpaYoga Branding Banner with Real People */}
-        <section className="bg-[#005EB8] py-16">
+        {/* Community Banner */}
+        <section className="bg-secondary py-14">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-              {/* Left: Real People Images */}
-              <div className="flex items-center">
-                <div className="flex -space-x-4">
-                  {[
-                    'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop&crop=face',
-                    'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&crop=face',
-                    'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop&crop=face',
-                    'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=200&h=200&fit=crop&crop=face',
-                    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=face',
-                    'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=200&fit=crop&crop=face',
-                  ].map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`Community member ${index + 1}`}
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full border-3 border-white object-cover shadow-md"
-                      loading="lazy"
-                    />
-                  ))}
+            <ScrollReveal>
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div className="flex items-center">
+                  <div className="flex -space-x-4">
+                    {[
+                      'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=200&fit=crop&crop=face',
+                      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop&crop=face',
+                      'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=200&fit=crop&crop=face',
+                      'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=200&h=200&fit=crop&crop=face',
+                      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop&crop=face',
+                      'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=200&fit=crop&crop=face',
+                    ].map((img, index) => (
+                      <img key={index} src={img} alt={`Community member ${index + 1}`}
+                        className="w-12 h-12 md:w-14 md:h-14 rounded-full border-3 border-secondary object-cover shadow-md" loading="lazy" />
+                    ))}
+                  </div>
+                  <div className="ml-5">
+                    <p className="text-2xl md:text-3xl font-display font-bold text-primary">10,000+</p>
+                    <p className="text-secondary-foreground/70 text-sm">Active Members</p>
+                  </div>
                 </div>
-                <div className="ml-4 md:ml-6">
-                  <p className="text-2xl md:text-3xl font-bold text-white">10,000+</p>
-                  <p className="text-white/80 text-sm md:text-base">Active Members</p>
+                <div className="text-center lg:text-left flex-1 max-w-md">
+                  <h3 className="text-2xl md:text-3xl font-display font-bold text-secondary-foreground mb-2">GymSpaYoga.com</h3>
+                  <p className="text-secondary-foreground/80 text-sm">Your Complete Wellness Destination. Start your fitness journey today!</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/explore">
+                    <Button size="lg" className="bg-primary text-primary-foreground font-bold hover:bg-primary/90 rounded-xl">
+                      Explore More <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
+                    <Button size="lg" className="bg-card text-foreground font-bold hover:bg-card/90 rounded-xl">
+                      <MessageCircle className="mr-2 h-5 w-5" /> WhatsApp
+                    </Button>
+                  </a>
                 </div>
               </div>
-
-              {/* Center: Message */}
-              <div className="text-center lg:text-left flex-1 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                  GymSpaYoga.com
-                </h3>
-                <p className="text-white/90 text-sm md:text-base">
-                  Your Complete Wellness Destination. Start your fitness journey today!
-                </p>
-              </div>
-
-              {/* Right: CTAs */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/explore">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
-                    Explore More
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
-                    <MessageCircle className="mr-2 h-5 w-5" />
-                    Contact on WhatsApp
-                  </Button>
-                </a>
-              </div>
-            </div>
+            </ScrollReveal>
           </div>
         </section>
       </div>
