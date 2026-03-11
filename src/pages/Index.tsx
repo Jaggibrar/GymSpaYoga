@@ -425,6 +425,11 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Ad Slot - Before Footer */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="1122334455" adFormat="auto" className="min-h-[250px]" />
+        </div>
+
         <CommunityBanner />
       </div>
     </>
