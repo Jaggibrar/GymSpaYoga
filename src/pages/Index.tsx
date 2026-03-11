@@ -11,6 +11,7 @@ import AuthBanner from '@/components/AuthBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
+import AdSenseSlot from '@/components/AdSenseSlot';
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
 
@@ -101,6 +102,11 @@ const Index = () => {
         <AuthBanner />
         <HeroBanner />
 
+        {/* Ad Slot - After Hero */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="1234567890" adFormat="horizontal" className="min-h-[90px]" />
+        </div>
+
         {/* Categories Section */}
         <section className="py-14 md:py-20 bg-background" data-tour="categories">
           <div className="container mx-auto px-4">
@@ -152,6 +158,11 @@ const Index = () => {
             </Suspense>
           </div>
         </section>
+
+        {/* Ad Slot - Between Listings and Platform */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="0987654321" adFormat="auto" className="min-h-[250px]" />
+        </div>
 
         {/* Platform Banner */}
         <section className="py-16 md:py-24 bg-background overflow-hidden">
@@ -413,6 +424,11 @@ const Index = () => {
             </ScrollReveal>
           </div>
         </section>
+
+        {/* Ad Slot - Before Footer */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="1122334455" adFormat="auto" className="min-h-[250px]" />
+        </div>
 
         <CommunityBanner />
       </div>
