@@ -102,6 +102,11 @@ const Index = () => {
         <AuthBanner />
         <HeroBanner />
 
+        {/* Ad Slot - After Hero */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="1234567890" adFormat="horizontal" className="min-h-[90px]" />
+        </div>
+
         {/* Categories Section */}
         <section className="py-14 md:py-20 bg-background" data-tour="categories">
           <div className="container mx-auto px-4">
