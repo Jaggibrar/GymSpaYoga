@@ -159,6 +159,11 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Ad Slot - Between Listings and Platform */}
+        <div className="container mx-auto px-4 py-4">
+          <AdSenseSlot adSlot="0987654321" adFormat="auto" className="min-h-[250px]" />
+        </div>
+
         {/* Platform Banner */}
         <section className="py-16 md:py-24 bg-background overflow-hidden">
           <div className="container mx-auto px-4">
