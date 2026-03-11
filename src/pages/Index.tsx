@@ -11,6 +11,7 @@ import AuthBanner from '@/components/AuthBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
+import AdSenseSlot from '@/components/AdSenseSlot';
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
 
