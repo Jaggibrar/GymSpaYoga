@@ -205,8 +205,8 @@ const Index = () => {
                   <span className="text-warm-700">Yoga</span>
                 </h2>
                 <p className="text-xl text-muted-foreground mb-4 italic font-display">Train. Relax. Rejuvenate.</p>
-                <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-6">
-                  India's Ultimate Hub For<br />Wellness Services
+        <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-6">
+                  The World's Ultimate Hub For<br />Wellness Services
                 </h3>
                 <Link to="/explore">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="inline-block">
