@@ -113,16 +113,40 @@ export const getStaticUrls = (baseUrl: string): SitemapUrl[] => {
   ];
 };
 
-// Generate location-based URLs for better local SEO
+// Generate location-based URLs for better local SEO (global cities)
 export const getLocationUrls = (baseUrl: string): SitemapUrl[] => {
-  const cities = ['mumbai', 'delhi', 'bangalore', 'hyderabad', 'pune', 'chennai', 'kolkata', 'ahmedabad', 'jaipur', 'lucknow', 'chandigarh', 'goa', 'noida', 'gurgaon', 'indore', 'kochi', 'bhopal', 'nagpur', 'coimbatore', 'surat', 'patna', 'vadodara'];
+  // Import dynamically won't work in utility, so we define key global cities here
+  const globalCities = [
+    // India
+    'mumbai', 'delhi', 'bangalore', 'hyderabad', 'pune', 'chennai', 'kolkata', 'ahmedabad', 'jaipur', 'lucknow', 'chandigarh', 'goa', 'noida', 'gurgaon', 'indore', 'kochi', 'bhopal', 'nagpur', 'coimbatore', 'surat', 'patna', 'vadodara', 'mysore',
+    // USA
+    'new-york', 'los-angeles', 'chicago', 'houston', 'miami', 'san-francisco', 'seattle', 'boston', 'austin', 'denver', 'san-diego', 'dallas', 'atlanta', 'philadelphia', 'phoenix', 'las-vegas', 'portland', 'nashville', 'washington-dc', 'honolulu', 'scottsdale',
+    // UK
+    'london', 'manchester', 'birmingham', 'edinburgh', 'glasgow', 'bristol', 'liverpool', 'leeds', 'brighton', 'bath',
+    // UAE
+    'dubai', 'abu-dhabi', 'sharjah',
+    // Canada
+    'toronto', 'vancouver', 'montreal', 'calgary', 'ottawa',
+    // Australia
+    'sydney', 'melbourne', 'brisbane', 'perth', 'gold-coast',
+    // Europe
+    'paris', 'berlin', 'amsterdam', 'barcelona', 'madrid', 'rome', 'milan', 'lisbon', 'vienna', 'prague', 'dublin', 'stockholm', 'copenhagen', 'helsinki', 'zurich', 'munich', 'budapest',
+    // Asia
+    'singapore', 'tokyo', 'seoul', 'bangkok', 'kuala-lumpur', 'hong-kong', 'shanghai', 'taipei', 'bali', 'ho-chi-minh-city',
+    // Latin America
+    'mexico-city', 'sao-paulo', 'rio-de-janeiro', 'buenos-aires', 'bogota', 'medellin', 'cancun', 'tulum',
+    // Africa
+    'cape-town', 'nairobi', 'lagos', 'cairo', 'marrakech',
+    // Oceania
+    'auckland', 'queenstown',
+  ];
   const services = ['gyms', 'spas', 'yoga-classes'];
   const currentDate = new Date().toISOString().split('T')[0];
   
   const urls: SitemapUrl[] = [];
   
   services.forEach(service => {
-    cities.forEach(city => {
+    globalCities.forEach(city => {
       urls.push({
         loc: `${baseUrl}/${service}-in-${city}`,
         changefreq: 'daily',

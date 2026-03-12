@@ -92,10 +92,10 @@ const Index = () => {
 
   return (
     <>
-      <SEOHead
-        title="GymSpaYoga - Find Gyms, Spas & Yoga Studios Near You"
-        description="Discover and book the best gyms, spas, yoga studios, and personal trainers. Your complete wellness platform with verified listings and real reviews."
-        keywords="gyms near me, spas, yoga studios, personal trainers, fitness, wellness, health"
+        <SEOHead
+        title="GymSpaYoga - Find Gyms, Spas & Yoga Studios Worldwide"
+        description="Discover and book the best gyms, spas, yoga studios, and personal trainers in 200+ cities worldwide. New York, London, Dubai, Mumbai & more. Verified listings and real reviews."
+        keywords="gyms near me, spas near me, yoga studios worldwide, personal trainers, fitness centers, wellness, gym New York, spa London, yoga Dubai, gym Los Angeles, spa Singapore, yoga Bali, gym Toronto, spa Sydney, fitness Tokyo, wellness Paris, gym Mumbai, spa Bangkok"
       />
 
       <div className="min-h-screen bg-background">
@@ -205,8 +205,8 @@ const Index = () => {
                   <span className="text-warm-700">Yoga</span>
                 </h2>
                 <p className="text-xl text-muted-foreground mb-4 italic font-display">Train. Relax. Rejuvenate.</p>
-                <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-6">
-                  India's Ultimate Hub For<br />Wellness Services
+        <h3 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-6">
+                  The World's Ultimate Hub For<br />Wellness Services
                 </h3>
                 <Link to="/explore">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="inline-block">
@@ -284,8 +284,65 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Vision & Mission */}
+        {/* Global Cities Section */}
         <section className="py-16 md:py-24 bg-accent/50">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="text-center mb-12">
+                <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 rounded-lg px-4 py-1.5 text-sm">
+                  🌍 Global Coverage
+                </Badge>
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
+                  Find Gyms, Spas & Yoga Studios Anywhere in the World
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Explore wellness services in 200+ cities across 40+ countries
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-10">
+              {[
+                { name: 'New York', slug: 'new-york', flag: '🇺🇸' },
+                { name: 'London', slug: 'london', flag: '🇬🇧' },
+                { name: 'Dubai', slug: 'dubai', flag: '🇦🇪' },
+                { name: 'Los Angeles', slug: 'los-angeles', flag: '🇺🇸' },
+                { name: 'Toronto', slug: 'toronto', flag: '🇨🇦' },
+                { name: 'Sydney', slug: 'sydney', flag: '🇦🇺' },
+                { name: 'Singapore', slug: 'singapore', flag: '🇸🇬' },
+                { name: 'Tokyo', slug: 'tokyo', flag: '🇯🇵' },
+                { name: 'Paris', slug: 'paris', flag: '🇫🇷' },
+                { name: 'Bali', slug: 'bali', flag: '🇮🇩' },
+                { name: 'Mumbai', slug: 'mumbai', flag: '🇮🇳' },
+                { name: 'Bangkok', slug: 'bangkok', flag: '🇹🇭' },
+              ].map((city) => (
+                <StaggerItem key={city.slug}>
+                  <Link to={`/gyms-in-${city.slug}`}>
+                    <motion.div whileHover={{ y: -4, scale: 1.03 }} transition={{ duration: 0.2 }}>
+                      <Card className="border border-border hover:border-primary/40 transition-all hover:shadow-lg bg-card rounded-xl overflow-hidden">
+                        <CardContent className="p-4 text-center">
+                          <span className="text-2xl mb-2 block">{city.flag}</span>
+                          <h3 className="text-sm font-bold text-foreground">{city.name}</h3>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+
+            <div className="text-center">
+              <Link to="/explore">
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl px-8">
+                  View All 200+ Cities <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Vision & Mission */}
+        <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
             <ScrollReveal>
               <div className="text-center mb-12">
@@ -309,7 +366,7 @@ const Index = () => {
                       <h3 className="text-2xl md:text-3xl font-display font-bold text-primary">Our Vision</h3>
                     </div>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To become India's most trusted wellness platform, empowering every individual to discover, access, and embrace a healthier lifestyle.
+                      To become the world's most trusted wellness platform, empowering every individual to discover, access, and embrace a healthier lifestyle — anywhere on the planet.
                     </p>
                   </CardContent>
                 </Card>
@@ -325,7 +382,7 @@ const Index = () => {
                       <h3 className="text-2xl md:text-3xl font-display font-bold text-warm-700">Our Mission</h3>
                     </div>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To bridge the gap between wellness seekers and service providers with a transparent, user-friendly platform featuring verified listings and personalized recommendations.
+                      To bridge the gap between wellness seekers and service providers globally with a transparent, user-friendly platform featuring verified listings, personalized recommendations, and coverage in 200+ cities worldwide.
                     </p>
                   </CardContent>
                 </Card>
