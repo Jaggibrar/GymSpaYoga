@@ -366,7 +366,7 @@ const Index = () => {
                       <h3 className="text-2xl md:text-3xl font-display font-bold text-primary">Our Vision</h3>
                     </div>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To become India's most trusted wellness platform, empowering every individual to discover, access, and embrace a healthier lifestyle.
+                      To become the world's most trusted wellness platform, empowering every individual to discover, access, and embrace a healthier lifestyle — anywhere on the planet.
                     </p>
                   </CardContent>
                 </Card>
