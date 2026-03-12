@@ -42,10 +42,11 @@ const CityCategory = () => {
     );
   }
 
-  const faqs = generateFaqs(category.label, city.name);
-  const seoContent = generateSeoContent(category.label, city.name, city.description);
-  const pageTitle = `Best ${category.label} in ${city.name} — Top ${category.label} Near You | GymSpaYoga`;
-  const metaDescription = `Discover the best ${category.label.toLowerCase()} in ${city.name}, ${city.state}. Compare pricing, read reviews, and book directly. Budget, Premium & Luxury options available. No commission!`;
+  const faqs = generateFaqs(category.label, city.name, city.country);
+  const seoContent = generateSeoContent(category.label, city.name, city.description, city.country);
+  const locationSuffix = city.country && city.country !== 'India' ? `, ${city.country}` : `, ${city.state}`;
+  const pageTitle = `Best ${category.label} in ${city.name}${locationSuffix} — Top ${category.label} Near You | GymSpaYoga`;
+  const metaDescription = `Discover the best ${category.label.toLowerCase()} in ${city.name}${locationSuffix}. Compare pricing, read reviews, and book directly. Budget, Premium & Luxury options available.`;
 
   const handleViewDetails = (business: any) => {
     const categoryPath = category.businessType === 'gym' ? 'gyms' : category.businessType === 'spa' ? 'spas' : 'yoga';
