@@ -117,7 +117,7 @@ const CityCategory = () => {
         <section className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <Badge className="bg-primary text-primary-foreground">{businesses.length} {category.label} Found</Badge>
-            <span className="text-muted-foreground text-sm">in {city.name}, {city.state}</span>
+            <span className="text-muted-foreground text-sm">in {city.name}{locationSuffix}</span>
           </div>
         </section>
 
