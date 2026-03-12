@@ -284,8 +284,65 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Vision & Mission */}
+        {/* Global Cities Section */}
         <section className="py-16 md:py-24 bg-accent/50">
+          <div className="container mx-auto px-4">
+            <ScrollReveal>
+              <div className="text-center mb-12">
+                <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 rounded-lg px-4 py-1.5 text-sm">
+                  🌍 Global Coverage
+                </Badge>
+                <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
+                  Find Gyms, Spas & Yoga Studios Anywhere in the World
+                </h2>
+                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                  Explore wellness services in 200+ cities across 40+ countries
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-10">
+              {[
+                { name: 'New York', slug: 'new-york', flag: '🇺🇸' },
+                { name: 'London', slug: 'london', flag: '🇬🇧' },
+                { name: 'Dubai', slug: 'dubai', flag: '🇦🇪' },
+                { name: 'Los Angeles', slug: 'los-angeles', flag: '🇺🇸' },
+                { name: 'Toronto', slug: 'toronto', flag: '🇨🇦' },
+                { name: 'Sydney', slug: 'sydney', flag: '🇦🇺' },
+                { name: 'Singapore', slug: 'singapore', flag: '🇸🇬' },
+                { name: 'Tokyo', slug: 'tokyo', flag: '🇯🇵' },
+                { name: 'Paris', slug: 'paris', flag: '🇫🇷' },
+                { name: 'Bali', slug: 'bali', flag: '🇮🇩' },
+                { name: 'Mumbai', slug: 'mumbai', flag: '🇮🇳' },
+                { name: 'Bangkok', slug: 'bangkok', flag: '🇹🇭' },
+              ].map((city) => (
+                <StaggerItem key={city.slug}>
+                  <Link to={`/gyms-in-${city.slug}`}>
+                    <motion.div whileHover={{ y: -4, scale: 1.03 }} transition={{ duration: 0.2 }}>
+                      <Card className="border border-border hover:border-primary/40 transition-all hover:shadow-lg bg-card rounded-xl overflow-hidden">
+                        <CardContent className="p-4 text-center">
+                          <span className="text-2xl mb-2 block">{city.flag}</span>
+                          <h3 className="text-sm font-bold text-foreground">{city.name}</h3>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+
+            <div className="text-center">
+              <Link to="/explore">
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground rounded-xl px-8">
+                  View All 200+ Cities <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Vision & Mission */}
+        <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
             <ScrollReveal>
               <div className="text-center mb-12">
