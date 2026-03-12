@@ -96,7 +96,7 @@ const CityCategory = () => {
                 Best {category.label} in {city.name}
               </h1>
               <p className="text-base md:text-lg text-white/90">
-                Discover top-rated {category.label.toLowerCase()} in {city.name}, {city.state}. Compare pricing, amenities & book directly.
+                Discover top-rated {category.label.toLowerCase()} in {city.name}{locationSuffix}. Compare pricing, amenities & book directly.
               </p>
             </div>
           </div>
