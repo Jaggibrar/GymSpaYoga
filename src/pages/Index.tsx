@@ -382,7 +382,7 @@ const Index = () => {
                       <h3 className="text-2xl md:text-3xl font-display font-bold text-warm-700">Our Mission</h3>
                     </div>
                     <p className="text-lg text-muted-foreground leading-relaxed">
-                      To bridge the gap between wellness seekers and service providers with a transparent, user-friendly platform featuring verified listings and personalized recommendations.
+                      To bridge the gap between wellness seekers and service providers globally with a transparent, user-friendly platform featuring verified listings, personalized recommendations, and coverage in 200+ cities worldwide.
                     </p>
                   </CardContent>
                 </Card>
