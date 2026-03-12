@@ -92,10 +92,10 @@ const Index = () => {
 
   return (
     <>
-      <SEOHead
-        title="GymSpaYoga - Find Gyms, Spas & Yoga Studios Near You"
-        description="Discover and book the best gyms, spas, yoga studios, and personal trainers. Your complete wellness platform with verified listings and real reviews."
-        keywords="gyms near me, spas, yoga studios, personal trainers, fitness, wellness, health"
+        <SEOHead
+        title="GymSpaYoga - Find Gyms, Spas & Yoga Studios Worldwide"
+        description="Discover and book the best gyms, spas, yoga studios, and personal trainers in 200+ cities worldwide. New York, London, Dubai, Mumbai & more. Verified listings and real reviews."
+        keywords="gyms near me, spas near me, yoga studios worldwide, personal trainers, fitness centers, wellness, gym New York, spa London, yoga Dubai, gym Los Angeles, spa Singapore, yoga Bali, gym Toronto, spa Sydney, fitness Tokyo, wellness Paris, gym Mumbai, spa Bangkok"
       />
 
       <div className="min-h-screen bg-background">
