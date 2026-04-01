@@ -4,97 +4,37 @@ html, body, #root {
   overflow-x: hidden;
 }
 
-/* Elegant Typography - Warm Luxurious */
-h1, .h1 {
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: hsl(20, 20%, 12%);
-}
-
-h2, .h2 {
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  color: hsl(20, 20%, 12%);
-}
-
-h3, .h3 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  color: hsl(20, 20%, 12%);
-}
-
 /* Brand Color Text */
 .text-brand {
-  color: hsl(38, 92%, 50%);
+  color: hsl(25, 95%, 53%);
 }
 
 /* Clean Card Hover */
 .card-hover {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-
 .card-hover:hover {
-  box-shadow: 0 8px 24px rgba(30, 20, 10, 0.1);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
-/* Button Styles - Gold */
+/* Button Styles */
 .btn-brand {
-  background-color: hsl(38, 92%, 50%);
-  color: hsl(30, 10%, 8%);
+  background-color: hsl(25, 95%, 53%);
+  color: white;
   font-weight: 600;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
-
 .btn-brand:hover {
-  background-color: hsl(38, 92%, 45%);
-}
-
-/* Selection */
-::selection {
-  background: hsl(38, 92%, 50%);
-  color: hsl(30, 10%, 8%);
-}
-
-::-moz-selection {
-  background: hsl(38, 92%, 50%);
-  color: hsl(30, 10%, 8%);
+  background-color: hsl(25, 95%, 46%);
 }
 
 /* Mobile Optimizations */
 @media (max-width: 768px) {
-  h1, .h1 { font-size: 1.75rem; }
-  h2, .h2 { font-size: 1.5rem; }
-  h3, .h3 { font-size: 1.25rem; }
-  
   .touch-target {
     min-height: 44px;
     min-width: 44px;
   }
-}
-
-/* Line Clamp */
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.line-clamp-3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
 }
 
 /* Container */
@@ -104,7 +44,6 @@ h3, .h3 {
   margin: 0 auto;
   padding: 0 16px;
 }
-
 @media (min-width: 640px) { .mobile-container { padding: 0 24px; } }
 @media (min-width: 1024px) { .mobile-container { padding: 0 32px; } }
 
@@ -113,7 +52,6 @@ img {
   max-width: 100%;
   height: auto;
 }
-
 .img-cover {
   object-fit: cover;
   width: 100%;
@@ -122,10 +60,9 @@ img {
 
 /* Lazy loading placeholder */
 .lazy-image {
-  background-color: hsl(30, 15%, 92%);
+  background-color: hsl(var(--muted));
   transition: opacity 0.3s ease;
 }
-
 .lazy-image.loaded {
   opacity: 1;
 }

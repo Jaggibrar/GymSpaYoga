@@ -32,25 +32,22 @@ const RecentListings = () => {
   useEffect(() => {
     const fetchRecentListings = async () => {
       try {
-        logger.debug('Fetching recent listings...');
         const { data, error } = await supabase
           .from('public_business_listings')
           .select('id, business_name, business_type, category, city, state, image_urls, monthly_price, session_price, amenities, created_at')
           .order('created_at', { ascending: false })
           .limit(6);
-
-        if (error) { logger.error('Error fetching recent listings:', error); throw error; }
-        logger.debug('Recent listings fetched:', data);
+        if (error) throw error;
         setListings(data || []);
       } catch (error) {
-        logger.error('Error fetching recent listings:', error);
+        logger.error('Error fetching listings:', error);
         setListings([
-          { id: 'sample-1', business_name: 'FitZone Premium Gym', business_type: 'gym', category: 'fitness', city: 'Mumbai', state: 'Maharashtra', image_urls: ['https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], monthly_price: 2500, amenities: ['Cardio Equipment', 'Weight Training', 'Personal Trainer'], created_at: new Date().toISOString() },
-          { id: 'sample-2', business_name: 'Serenity Spa & Wellness', business_type: 'spa', category: 'wellness', city: 'Bangalore', state: 'Karnataka', image_urls: ['https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], session_price: 1200, amenities: ['Massage Therapy', 'Facial Treatments', 'Aromatherapy'], created_at: new Date().toISOString() },
-          { id: 'sample-3', business_name: 'Mindful Yoga Studio', business_type: 'yoga', category: 'yoga', city: 'Delhi', state: 'Delhi', image_urls: ['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], monthly_price: 1800, amenities: ['Hatha Yoga', 'Meditation', 'Pranayama'], created_at: new Date().toISOString() },
-          { id: 'sample-4', business_name: 'Urban Fitness Club', business_type: 'gym', category: 'fitness', city: 'Pune', state: 'Maharashtra', image_urls: ['https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], monthly_price: 2200, amenities: ['Free Weights', 'Group Classes', 'Locker Rooms'], created_at: new Date().toISOString() },
-          { id: 'sample-5', business_name: 'Tranquil Spa Resort', business_type: 'spa', category: 'wellness', city: 'Goa', state: 'Goa', image_urls: ['https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], session_price: 2500, amenities: ['Hot Stone Massage', 'Ayurvedic Treatment', 'Pool'], created_at: new Date().toISOString() },
-          { id: 'sample-6', business_name: 'Sunrise Yoga Center', business_type: 'yoga', category: 'yoga', city: 'Rishikesh', state: 'Uttarakhand', image_urls: ['https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'], monthly_price: 1500, amenities: ['Ashtanga Yoga', 'Teacher Training', 'Retreats'], created_at: new Date().toISOString() },
+          { id: 'sample-1', business_name: 'FitZone Premium Gym', business_type: 'gym', category: 'fitness', city: 'Mumbai', state: 'Maharashtra', image_urls: ['https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=500&q=80'], monthly_price: 2500, amenities: ['Cardio', 'Weight Training', 'Personal Trainer'], created_at: new Date().toISOString() },
+          { id: 'sample-2', business_name: 'Serenity Spa & Wellness', business_type: 'spa', category: 'wellness', city: 'Bangalore', state: 'Karnataka', image_urls: ['https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=500&q=80'], session_price: 1200, amenities: ['Massage', 'Facial', 'Aromatherapy'], created_at: new Date().toISOString() },
+          { id: 'sample-3', business_name: 'Mindful Yoga Studio', business_type: 'yoga', category: 'yoga', city: 'Delhi', state: 'Delhi', image_urls: ['https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80'], monthly_price: 1800, amenities: ['Hatha Yoga', 'Meditation', 'Pranayama'], created_at: new Date().toISOString() },
+          { id: 'sample-4', business_name: 'Urban Fitness Club', business_type: 'gym', category: 'fitness', city: 'Pune', state: 'Maharashtra', image_urls: ['https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=500&q=80'], monthly_price: 2200, amenities: ['Free Weights', 'Group Classes', 'Locker Rooms'], created_at: new Date().toISOString() },
+          { id: 'sample-5', business_name: 'Tranquil Spa Resort', business_type: 'spa', category: 'wellness', city: 'Goa', state: 'Goa', image_urls: ['https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=500&q=80'], session_price: 2500, amenities: ['Hot Stone', 'Ayurvedic', 'Pool'], created_at: new Date().toISOString() },
+          { id: 'sample-6', business_name: 'Sunrise Yoga Center', business_type: 'yoga', category: 'yoga', city: 'Rishikesh', state: 'Uttarakhand', image_urls: ['https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=500&q=80'], monthly_price: 1500, amenities: ['Ashtanga', 'Teacher Training', 'Retreats'], created_at: new Date().toISOString() },
         ]);
       } finally {
         setLoading(false);
@@ -58,51 +55,43 @@ const RecentListings = () => {
     };
 
     fetchRecentListings();
-
     const channel = supabase
       .channel('business-listings')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'business_profiles' }, () => fetchRecentListings())
       .subscribe();
-
     return () => { supabase.removeChannel(channel); };
   }, []);
 
   const handleCardClick = (listing: RecentListing) => {
-    const businessType = listing.business_type.toLowerCase();
-    switch (businessType) {
-      case 'gym': navigate(`/gyms`); break;
-      case 'spa': navigate(`/spas`); break;
-      case 'yoga': navigate(`/yoga`); break;
-      default: navigate(`/explore`);
-    }
+    const t = listing.business_type.toLowerCase();
+    navigate(t === 'gym' ? '/gyms' : t === 'spa' ? '/spas' : t === 'yoga' ? '/yoga' : '/explore');
   };
 
-  const getBusinessTypeInfo = (businessType: string) => {
-    switch (businessType.toLowerCase()) {
-      case 'gym': return { color: 'bg-charcoal-800', icon: Dumbbell, label: 'Gym' };
-      case 'spa': return { color: 'bg-warm-700', icon: Flower2, label: 'Spa' };
-      case 'yoga': return { color: 'bg-warm-800', icon: Heart, label: 'Yoga' };
+  const getTypeInfo = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'gym': return { color: 'bg-primary', icon: Dumbbell, label: 'Gym' };
+      case 'spa': return { color: 'bg-brand-600', icon: Flower2, label: 'Spa' };
+      case 'yoga': return { color: 'bg-brand-700', icon: Heart, label: 'Yoga' };
       default: return { color: 'bg-muted-foreground', icon: Dumbbell, label: 'Wellness' };
     }
   };
 
-  const getPrice = (listing: RecentListing) => {
-    if (listing.monthly_price) return `₹${listing.monthly_price.toLocaleString()}/mo`;
-    if (listing.session_price) return `₹${listing.session_price.toLocaleString()}/session`;
-    return 'Contact for pricing';
+  const getPrice = (l: RecentListing) => {
+    if (l.monthly_price) return `₹${l.monthly_price.toLocaleString()}/mo`;
+    if (l.session_price) return `₹${l.session_price.toLocaleString()}/session`;
+    return 'Contact';
   };
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {[...Array(6)].map((_, i) => (
-          <Card key={i} className="overflow-hidden animate-pulse rounded-2xl">
-            <div className="bg-muted" style={{ aspectRatio: '16/9' }}></div>
+          <Card key={i} className="overflow-hidden animate-pulse rounded-2xl border-border">
+            <div className="bg-muted aspect-video" />
             <CardContent className="p-5 space-y-3">
-              <div className="h-5 bg-muted rounded w-3/4"></div>
-              <div className="h-4 bg-muted rounded w-1/2"></div>
-              <div className="h-4 bg-muted rounded w-2/3"></div>
-              <div className="h-10 bg-muted rounded"></div>
+              <div className="h-5 bg-muted rounded w-3/4" />
+              <div className="h-4 bg-muted rounded w-1/2" />
+              <div className="h-10 bg-muted rounded" />
             </CardContent>
           </Card>
         ))}
@@ -113,113 +102,94 @@ const RecentListings = () => {
   if (listings.length === 0) {
     return (
       <div className="text-center py-12 bg-accent rounded-2xl border border-border">
-        <p className="text-muted-foreground text-lg mb-2">No featured listings available yet.</p>
-        <p className="text-muted-foreground text-sm">Check back soon for new wellness destinations!</p>
+        <p className="text-muted-foreground text-lg mb-1">No listings yet.</p>
+        <p className="text-muted-foreground text-sm">Check back soon!</p>
       </div>
     );
   }
 
   const renderCard = (listing: RecentListing) => {
-    const typeInfo = getBusinessTypeInfo(listing.business_type);
-    const TypeIcon = typeInfo.icon;
+    const info = getTypeInfo(listing.business_type);
+    const Icon = info.icon;
 
     return (
-      <motion.div
+      <Card
         key={listing.id}
-        whileHover={{ y: -6 }}
-        transition={{ duration: 0.25 }}
+        className="group overflow-hidden cursor-pointer border border-border hover:border-primary/20 transition-all duration-300 hover:shadow-lg rounded-2xl bg-card h-full hover:-translate-y-1"
+        onClick={() => handleCardClick(listing)}
       >
-        <Card
-          className="group overflow-hidden cursor-pointer border border-border hover:border-primary/40 transition-all duration-300 hover:shadow-xl rounded-2xl bg-card h-full"
-          onClick={() => handleCardClick(listing)}
-        >
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/9' }}>
-            <OptimizedImage
-              src={listing.image_urls?.[0] || "/placeholder.svg"}
-              alt={listing.business_name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              width={400}
-              height={224}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-charcoal-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="absolute top-3 left-3">
-              <Badge className={`${typeInfo.color} text-white px-3 py-1.5 text-xs font-semibold shadow-lg rounded-lg`}>
-                <TypeIcon className="h-3.5 w-3.5 mr-1.5" />
-                {typeInfo.label}
-              </Badge>
-            </div>
-            <div className="absolute top-3 right-3">
-              <Badge className="bg-primary text-primary-foreground px-2.5 py-1 text-xs font-bold shadow-lg rounded-lg">
-                ⭐ Featured
-              </Badge>
-            </div>
+        <div className="relative w-full overflow-hidden aspect-video">
+          <OptimizedImage
+            src={listing.image_urls?.[0] || "/placeholder.svg"}
+            alt={listing.business_name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            width={400}
+            height={224}
+          />
+          <div className="absolute top-3 left-3">
+            <Badge className={`${info.color} text-white px-2.5 py-1 text-xs font-semibold shadow-sm`}>
+              <Icon className="h-3 w-3 mr-1" />
+              {info.label}
+            </Badge>
+          </div>
+        </div>
+
+        <CardContent className="p-5 space-y-3">
+          <h3 className="font-display font-bold text-base text-foreground leading-tight line-clamp-1 group-hover:text-primary transition-colors">
+            {listing.business_name}
+          </h3>
+          
+          <div className="flex items-center gap-2">
+            <Star className="h-3.5 w-3.5 fill-primary text-primary" />
+            <span className="font-bold text-foreground text-sm">4.8</span>
+            <span className="text-muted-foreground text-xs">(124)</span>
           </div>
 
-          <CardContent className="p-5 space-y-3">
-            <h3 className="font-display font-bold text-lg text-foreground leading-tight line-clamp-1 group-hover:text-primary transition-colors">
-              {listing.business_name}
-            </h3>
-            
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-primary text-primary" />
-                <span className="font-bold text-foreground text-sm">4.8</span>
-                <span className="text-muted-foreground text-xs">(124)</span>
-              </div>
-            </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground text-xs">
+            <MapPin className="h-3.5 w-3.5 flex-shrink-0 text-primary" />
+            <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+          </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
-              <MapPin className="h-4 w-4 flex-shrink-0 text-primary" />
-              <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+          {listing.amenities && listing.amenities.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {listing.amenities.slice(0, 3).map((amenity, idx) => (
+                <Badge key={idx} variant="secondary" className="bg-accent text-accent-foreground text-[10px] px-2 py-0.5">
+                  {amenity}
+                </Badge>
+              ))}
             </div>
+          )}
 
-            {listing.amenities && listing.amenities.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
-                {listing.amenities.slice(0, 3).map((amenity, idx) => (
-                  <Badge key={idx} variant="secondary" className="bg-accent text-accent-foreground text-xs rounded-md">
-                    {amenity}
-                  </Badge>
-                ))}
-              </div>
-            )}
-
-            <div className="flex items-center justify-between pt-3 border-t border-border">
-              <div>
-                <span className="text-xs text-muted-foreground">Starting from</span>
-                <p className="font-bold text-primary text-lg">{getPrice(listing)}</p>
-              </div>
-              <Button
-                className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-5 min-h-[40px] rounded-xl"
-                onClick={(e) => { e.stopPropagation(); handleCardClick(listing); }}
-              >
-                View Details
-              </Button>
+          <div className="flex items-center justify-between pt-3 border-t border-border">
+            <div>
+              <p className="text-xs text-muted-foreground">From</p>
+              <p className="font-bold text-primary text-base">{getPrice(listing)}</p>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+            <Button
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-4 min-h-[36px] rounded-xl text-sm shadow-sm"
+              onClick={(e) => { e.stopPropagation(); handleCardClick(listing); }}
+            >
+              View <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     );
   };
 
   return (
     <div className="space-y-8">
-      {/* Section Header */}
       <ScrollReveal>
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-3 rounded-lg px-3 py-1">
-              Curated For You
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground">Featured Listings</h2>
-            <p className="text-muted-foreground mt-2">Discover top-rated wellness destinations near you</p>
+            <p className="text-primary font-semibold text-sm uppercase tracking-wider mb-1">Curated For You</p>
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground">Featured Listings</h2>
+            <p className="text-muted-foreground text-sm mt-1">Top-rated wellness destinations near you</p>
           </div>
           <Link to="/explore">
-            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-              <Button className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-6 min-h-[48px] rounded-xl">
-                View All
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </motion.div>
+            <Button variant="outline" className="border-border text-foreground hover:text-primary rounded-xl px-5 text-sm">
+              View All <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Button>
           </Link>
         </div>
       </ScrollReveal>
@@ -228,15 +198,15 @@ const RecentListings = () => {
       <div className="lg:hidden overflow-x-auto scrollbar-hide -mx-4 px-4 snap-x snap-mandatory">
         <div className="flex gap-4">
           {listings.map((listing) => (
-            <div key={listing.id} className="flex-shrink-0 w-[300px] snap-start">
+            <div key={listing.id} className="flex-shrink-0 w-[280px] snap-start">
               {renderCard(listing)}
             </div>
           ))}
         </div>
       </div>
 
-      {/* Desktop: Staggered Grid */}
-      <StaggerContainer className="hidden lg:grid lg:grid-cols-3 gap-6">
+      {/* Desktop: Grid */}
+      <StaggerContainer className="hidden lg:grid lg:grid-cols-3 gap-5">
         {listings.map((listing) => (
           <StaggerItem key={listing.id}>
             {renderCard(listing)}
@@ -244,12 +214,10 @@ const RecentListings = () => {
         ))}
       </StaggerContainer>
 
-      {/* Mobile View All */}
       <div className="lg:hidden text-center pt-4">
         <Link to="/explore">
-          <Button className="bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold px-8 min-h-[48px] rounded-xl">
-            View All Listings
-            <ArrowRight className="ml-2 h-5 w-5" />
+          <Button variant="outline" className="border-border text-foreground hover:text-primary rounded-xl px-6 text-sm">
+            View All Listings <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
           </Button>
         </Link>
       </div>

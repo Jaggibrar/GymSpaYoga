@@ -1,7 +1,6 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 
 interface ListingLayoutProps {
   children: React.ReactNode;
@@ -20,24 +19,21 @@ const ListingLayout: React.FC<ListingLayoutProps> = ({
 }) => {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card/90 backdrop-blur-lg border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-card/95 backdrop-blur-lg border-b border-border sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link 
               to={backLink} 
-              className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors duration-300"
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4" />
               <span>{backText}</span>
             </Link>
-            <Link to="/" className="flex items-center space-x-3">
-              <div className={`h-12 w-12 bg-gradient-to-r ${brandGradient} rounded-2xl flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-300`}>
+            <Link to="/" className="flex items-center gap-2">
+              <div className={`h-9 w-9 bg-primary rounded-xl flex items-center justify-center shadow-sm`}>
                 {brandIcon}
               </div>
-              <h1 className={`text-3xl font-bold bg-gradient-to-r ${brandGradient} bg-clip-text text-transparent`}>
-                GymSpaYoga
-              </h1>
+              <span className="text-lg font-display font-bold text-foreground">GymSpaYoga</span>
             </Link>
           </div>
         </div>
