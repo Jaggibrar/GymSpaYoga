@@ -208,14 +208,12 @@ const App = () => {
             <FavoritesProvider>
               <TooltipProvider>
                 <Router>
-                  <TutorialProvider>
-                    <AnalyticsProvider>
-                      <React.Suspense fallback={<GlobalLoadingIndicator />}>
-                        <AppContent />
-                      </React.Suspense>
-                    </AnalyticsProvider>
-                  </TutorialProvider>
-                </Router>
+                     <AnalyticsProvider>
+                       <React.Suspense fallback={<GlobalLoadingIndicator />}>
+                         <AppContent />
+                       </React.Suspense>
+                     </AnalyticsProvider>
+                 </Router>
               </TooltipProvider>
             </FavoritesProvider>
           </AuthProvider>
