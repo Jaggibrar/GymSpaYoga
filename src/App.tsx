@@ -19,11 +19,6 @@ import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import { AnalyticsProvider } from "./components/analytics/AnalyticsProvider";
 import ScrollProgressBar from "./components/ScrollProgressBar";
-import OnboardingCoachMarks from "./components/OnboardingCoachMarks";
-import TutorialHelpButton from "./components/TutorialHelpButton";
-import { TutorialProvider } from "./hooks/useOnboardingTutorial";
-import LiveActivityFeed from "./components/LiveActivityFeed";
-import ExitIntentPopup from "./components/ExitIntentPopup";
 
 import PerformanceWrapper from "./components/PerformanceWrapper";
 
