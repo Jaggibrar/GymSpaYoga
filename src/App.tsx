@@ -194,10 +194,6 @@ const AppContent = () => {
       <React.Suspense fallback={null}>
         <FloatingAIButton />
       </React.Suspense>
-      <OnboardingCoachMarks />
-      <TutorialHelpButton />
-      <LiveActivityFeed />
-      <ExitIntentPopup />
       <Toaster />
     </div>
   );
