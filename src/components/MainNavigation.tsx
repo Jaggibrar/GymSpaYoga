@@ -57,7 +57,7 @@ const MainNavigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             {/* Find Services Dropdown */}
             <div className="relative group">
-              <button data-tour="find-services" className="text-foreground hover:text-primary font-medium transition-colors flex items-center space-x-1">
+              <button className="text-foreground hover:text-primary font-medium transition-colors flex items-center space-x-1">
                 <span>Find Services</span>
                 <ChevronDown className="h-4 w-4" />
               </button>
