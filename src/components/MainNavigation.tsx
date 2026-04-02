@@ -101,8 +101,7 @@ const MainNavigation = () => {
             
             <Link 
               to="/register-business" 
-              data-tour="for-business"
-              className={`text-foreground hover:text-primary font-medium transition-colors ${
+               className={`text-foreground hover:text-primary font-medium transition-colors ${
                 isActive('/register-business') ? 'text-primary' : ''
               }`}
             >
