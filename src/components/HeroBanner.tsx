@@ -66,13 +66,19 @@ const HeroBanner = () => {
     <section className="relative" aria-label="Hero banner with search">
       {/* Hero Image */}
       <div className="relative w-full min-h-[420px] md:min-h-[520px] overflow-hidden">
-        <img
-          src="/images/hero-banner.png"
-          alt="GymSpaYoga - Premium Gyms, Spas and Yoga Studios"
-          className="w-full h-full object-cover object-center absolute inset-0"
-          loading="eager"
-          decoding="async"
-        />
+        <picture>
+          <source srcSet="/images/hero-banner.webp" type="image/webp" />
+          <img
+            src="/images/hero-banner.png"
+            alt="GymSpaYoga - Premium Gyms, Spas and Yoga Studios"
+            className="w-full h-full object-cover object-center absolute inset-0"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+            width="1920"
+            height="706"
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/70" />
         
         {/* Content */}
