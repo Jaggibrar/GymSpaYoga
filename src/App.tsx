@@ -19,6 +19,7 @@ import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import { AnalyticsProvider } from "./components/analytics/AnalyticsProvider";
 import ScrollProgressBar from "./components/ScrollProgressBar";
+import GoogleAdSenseHead from "./components/GoogleAdSenseHead";
 
 import PerformanceWrapper from "./components/PerformanceWrapper";
 
@@ -78,6 +79,7 @@ const AppContent = () => {
   return (
     <div className="min-h-screen bg-background font-sans antialiased overflow-x-hidden max-w-full w-full">
       <ScrollProgressBar />
+      <GoogleAdSenseHead />
       <SEORedirectHandler />
       <AdvancedSEOManager />
       <AccessibilityEnhancer />

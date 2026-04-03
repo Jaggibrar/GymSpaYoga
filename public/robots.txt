@@ -3,10 +3,14 @@
 
 User-agent: *
 Allow: /
+Allow: /ads.txt
 Crawl-delay: 1
 
 User-agent: Googlebot
 Allow: /
+
+User-agent: Mediapartners-Google
+Allow: /ads.txt
 
 User-agent: Bingbot
 Allow: /
