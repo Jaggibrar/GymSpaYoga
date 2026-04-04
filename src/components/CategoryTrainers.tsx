@@ -129,7 +129,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
               </div>
 
               {/* Content */}
-              <div className="p-5 flex flex-col gap-3">
+              <div className="p-5 flex flex-col gap-3 flex-1">
                 {/* Name & Price row */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
