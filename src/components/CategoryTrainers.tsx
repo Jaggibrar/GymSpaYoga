@@ -102,7 +102,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
           {displayTrainers.map((trainer) => (
             <div
               key={trainer.id}
-              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
@@ -129,7 +129,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
               </div>
 
               {/* Content */}
-              <div className="p-5 flex flex-col gap-3">
+              <div className="p-5 flex flex-col gap-3 flex-1">
                 {/* Name & Price row */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
