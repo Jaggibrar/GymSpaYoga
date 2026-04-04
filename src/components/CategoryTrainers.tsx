@@ -102,7 +102,7 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
           {displayTrainers.map((trainer) => (
             <div
               key={trainer.id}
-              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
