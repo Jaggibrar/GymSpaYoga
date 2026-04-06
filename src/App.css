@@ -6,7 +6,7 @@ html, body, #root {
 
 /* Brand Color Text */
 .text-brand {
-  color: hsl(25, 95%, 53%);
+  color: hsl(214, 89%, 52%);
 }
 
 /* Clean Card Hover */
@@ -20,13 +20,13 @@ html, body, #root {
 
 /* Button Styles */
 .btn-brand {
-  background-color: hsl(25, 95%, 53%);
+  background-color: hsl(214, 89%, 52%);
   color: white;
   font-weight: 600;
   transition: all 0.2s ease;
 }
 .btn-brand:hover {
-  background-color: hsl(25, 95%, 46%);
+  background-color: hsl(214, 89%, 45%);
 }
 
 /* Mobile Optimizations */
