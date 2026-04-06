@@ -206,15 +206,15 @@ const ManageBookings = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+              <Card className="bg-gradient-to-br from-amber-50 to-yellow-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-orange-700 mb-1">Pending Bookings</p>
-                      <p className="text-3xl font-bold text-orange-800">{analyticsData.pendingBookings}</p>
-                      <p className="text-xs text-orange-600 mt-1">Awaiting response</p>
+                      <p className="text-sm font-medium text-amber-700 mb-1">Pending Bookings</p>
+                      <p className="text-3xl font-bold text-amber-800">{analyticsData.pendingBookings}</p>
+                      <p className="text-xs text-amber-600 mt-1">Awaiting response</p>
                     </div>
-                    <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                    <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center shadow-lg">
                       <Clock className="h-6 w-6 text-white" />
                     </div>
                   </div>

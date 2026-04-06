@@ -57,7 +57,7 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
 
   const getCategoryColor = (businessType: string) => {
     const colors = {
-      gym: 'bg-orange-100 text-orange-700',
+      gym: 'bg-blue-100 text-blue-700',
       spa: 'bg-pink-100 text-pink-700',
       yoga: 'bg-purple-100 text-purple-700',
       trainer: 'bg-blue-100 text-blue-700'

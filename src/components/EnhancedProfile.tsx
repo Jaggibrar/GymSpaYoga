@@ -107,16 +107,16 @@ export const EnhancedProfile = () => {
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link to="/register-business" className="group">
-          <Card className="h-full border-0 shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:scale-105 bg-gradient-to-br from-orange-50 to-red-50 rounded-2xl overflow-hidden">
+          <Card className="h-full border-0 shadow-lg hover:shadow-2xl transition-all duration-500 group-hover:scale-105 bg-gradient-to-br from-blue-50 to-sky-50 rounded-2xl overflow-hidden">
             <CardContent className="p-8 text-center relative">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-orange-200/30 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-200/30 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
               <div className="relative">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
                   <Building className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-800 mb-2">Register Your Business</h3>
                 <p className="text-gray-600 mb-4">List your gym, spa, or yoga studio and reach more customers</p>
-                <Badge className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">
+                <Badge className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
                   Start Earning
                 </Badge>
               </div>

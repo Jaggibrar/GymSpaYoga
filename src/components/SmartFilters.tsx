@@ -208,7 +208,7 @@ export const SmartFilters = ({
                 </Badge>
               )}
               {tier !== 'all' && (
-                <Badge variant="secondary" className="flex items-center gap-2 px-3 py-2 rounded-full bg-orange-100 text-orange-700">
+                <Badge variant="secondary" className="flex items-center gap-2 px-3 py-2 rounded-full bg-blue-100 text-blue-700">
                   {tier}
                   <X className="h-4 w-4 cursor-pointer hover:text-red-500" onClick={() => clearFilter('tier')} />
                 </Badge>
