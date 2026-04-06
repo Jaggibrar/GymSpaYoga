@@ -23,7 +23,7 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
   const getCategoryColor = (category: string) => {
     const colors = {
       yoga: 'bg-purple-100 text-purple-700 border-purple-200',
-      fitness: 'bg-orange-100 text-orange-700 border-orange-200',
+      fitness: 'bg-blue-100 text-blue-700 border-blue-200',
       spa: 'bg-pink-100 text-pink-700 border-pink-200',
       nutrition: 'bg-green-100 text-green-700 border-green-200',
       wellness: 'bg-blue-100 text-blue-700 border-blue-200',

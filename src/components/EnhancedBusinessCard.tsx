@@ -110,7 +110,7 @@ const EnhancedBusinessCard = ({
         
         <div className="absolute top-3 right-3 flex flex-col gap-2">
           {trending && (
-            <Badge className="bg-orange-500 text-white font-bold text-xs flex items-center gap-1">
+            <Badge className="bg-blue-500 text-white font-bold text-xs flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
               Trending
             </Badge>

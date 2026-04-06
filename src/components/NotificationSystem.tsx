@@ -114,7 +114,7 @@ export const NotificationSystem = () => {
       case 'system':
         return <Info className="h-4 w-4 text-gray-600" />;
       case 'reminder':
-        return <AlertCircle className="h-4 w-4 text-orange-600" />;
+        return <AlertCircle className="h-4 w-4 text-blue-600" />;
       default:
         return <Bell className="h-4 w-4 text-gray-600" />;
     }

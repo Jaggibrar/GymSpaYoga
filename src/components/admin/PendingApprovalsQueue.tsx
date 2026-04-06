@@ -154,8 +154,8 @@ export const PendingApprovalsQueue = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-orange-100 rounded-full">
-                <AlertCircle className="h-6 w-6 text-orange-600" />
+              <div className="p-3 bg-blue-100 rounded-full">
+                <AlertCircle className="h-6 w-6 text-blue-600" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{totalPending}</p>
@@ -206,13 +206,13 @@ export const PendingApprovalsQueue = () => {
             <TabsTrigger value="trainers" className="relative">
               Trainers
               {pendingTrainers.length > 0 && (
-                <Badge className="ml-2 bg-orange-500">{pendingTrainers.length}</Badge>
+                <Badge className="ml-2 bg-blue-500">{pendingTrainers.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger value="businesses" className="relative">
               Businesses
               {pendingBusinesses.length > 0 && (
-                <Badge className="ml-2 bg-orange-500">{pendingBusinesses.length}</Badge>
+                <Badge className="ml-2 bg-blue-500">{pendingBusinesses.length}</Badge>
               )}
             </TabsTrigger>
           </TabsList>
@@ -226,7 +226,7 @@ export const PendingApprovalsQueue = () => {
               </Card>
             ) : (
               pendingTrainers.map((trainer) => (
-                <Card key={trainer.id} className="border-l-4 border-l-orange-400">
+                <Card key={trainer.id} className="border-l-4 border-l-blue-400">
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <div className="flex items-start gap-4">
@@ -395,7 +395,7 @@ export const PendingApprovalsQueue = () => {
               </Card>
             ) : (
               pendingBusinesses.map((business) => (
-                <Card key={business.id} className="border-l-4 border-l-orange-400">
+                <Card key={business.id} className="border-l-4 border-l-blue-400">
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <div>

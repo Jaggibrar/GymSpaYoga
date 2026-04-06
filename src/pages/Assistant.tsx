@@ -51,8 +51,8 @@ const Assistant: React.FC = () => {
               <p className="text-xs text-muted-foreground">Inner peace awaits</p>
             </div>
             <div className="p-4 rounded-xl bg-card border text-center">
-              <div className="h-12 w-12 mx-auto mb-3 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
-                <Brain className="h-6 w-6 text-orange-600" />
+              <div className="h-12 w-12 mx-auto mb-3 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                <Brain className="h-6 w-6 text-blue-600" />
               </div>
               <h3 className="font-semibold text-sm">Smart Matching</h3>
               <p className="text-xs text-muted-foreground">AI recommendations</p>

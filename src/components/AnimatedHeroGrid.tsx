@@ -12,7 +12,7 @@ const AnimatedHeroGrid = () => {
       title: "Premium Gyms",
       description: "State-of-the-art fitness centers with modern equipment and expert trainers",
       image: "/lovable-uploads/8a6d01a4-4710-4631-98d6-3ef7c16000c2.png",
-      gradient: "from-red-500/80 to-orange-500/80",
+      gradient: "from-blue-500/80 to-blue-600/80",
       route: "/gyms",
       subtitle: "Transform Your Body"
     },

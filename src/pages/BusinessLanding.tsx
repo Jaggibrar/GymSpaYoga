@@ -233,7 +233,7 @@ const BusinessLanding = () => {
               <Card key={index} className="text-center hover:shadow-xl transition-shadow duration-300 border-2 hover:border-emerald-400">
                 <CardHeader>
                   <benefit.icon className="h-12 w-12 mx-auto mb-4 text-blue-600" />
-                  <Badge className="bg-orange-100 text-orange-700 mx-auto mb-4">
+                  <Badge className="bg-blue-100 text-blue-700 mx-auto mb-4">
                     {benefit.highlight}
                   </Badge>
                   <CardTitle className="text-xl font-bold">{benefit.title}</CardTitle>
@@ -265,7 +265,7 @@ const BusinessLanding = () => {
                 <CardHeader>
                   <div className="flex items-center justify-between mb-4">
                     <Badge className="bg-blue-100 text-blue-700">{story.type}</Badge>
-                    <Badge className="bg-orange-100 text-orange-700">Beta Partner</Badge>
+                    <Badge className="bg-blue-100 text-blue-700">Beta Partner</Badge>
                   </div>
                   <CardTitle className="text-xl">{story.name}</CardTitle>
                   <p className="text-gray-600">{story.location}</p>
@@ -312,7 +312,7 @@ const BusinessLanding = () => {
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-black text-white">{step.step}</span>
                   </div>
-                  <Badge className="bg-orange-100 text-orange-700">
+                  <Badge className="bg-blue-100 text-blue-700">
                     {step.time}
                   </Badge>
                 </div>

@@ -267,7 +267,7 @@ const AdminDashboard = () => {
                   <Bell className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-orange-600">{stats.pendingApprovals}</div>
+                  <div className="text-2xl font-bold text-blue-600">{stats.pendingApprovals}</div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>{stats.pendingTrainers} trainers</span>
                     <span>•</span>
