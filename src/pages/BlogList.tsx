@@ -24,7 +24,7 @@ const BlogList = () => {
   const categories = [
     { value: 'all', label: 'All Categories', color: 'bg-gray-100 text-gray-700' },
     { value: 'wellness', label: 'Wellness', color: 'bg-blue-100 text-blue-700' },
-    { value: 'fitness', label: 'Fitness', color: 'bg-orange-100 text-orange-700' },
+    { value: 'fitness', label: 'Fitness', color: 'bg-blue-100 text-blue-700' },
     { value: 'yoga', label: 'Yoga', color: 'bg-purple-100 text-purple-700' },
     { value: 'spa', label: 'Spa', color: 'bg-pink-100 text-pink-700' },
     { value: 'nutrition', label: 'Nutrition', color: 'bg-green-100 text-green-700' },

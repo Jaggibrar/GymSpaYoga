@@ -138,7 +138,7 @@ export const MultiStepForm = ({
                       {isCompleted ? (
                         <CheckCircle className="h-8 w-8 text-green-500" />
                       ) : isCurrent && !canProceed ? (
-                        <AlertCircle className="h-8 w-8 text-orange-500" />
+                        <AlertCircle className="h-8 w-8 text-blue-500" />
                       ) : (
                         <Circle 
                           className={`h-8 w-8 ${
@@ -178,7 +178,7 @@ export const MultiStepForm = ({
 
               {/* Validation Message */}
               {!canProceed && steps[currentStep].validate && (
-                <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                <div className="mb-6 p-4 bg-orange-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center text-orange-800">
                     <AlertCircle className="h-5 w-5 mr-2" />
                     <span className="text-sm font-medium">

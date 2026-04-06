@@ -105,7 +105,7 @@ export default function TrainerDashboard() {
                       <p className="text-2xl font-bold text-yellow-600">--</p>
                       <p className="text-xs text-green-600">Client feedback</p>
                     </div>
-                    <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-600 rounded-xl flex items-center justify-center">
                       <Star className="h-6 w-6 text-white" />
                     </div>
                   </div>

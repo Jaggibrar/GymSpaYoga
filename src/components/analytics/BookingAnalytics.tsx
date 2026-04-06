@@ -47,8 +47,8 @@ export const BookingAnalytics = ({ data }: BookingAnalyticsProps) => {
       title: 'Pending Bookings',
       value: data.pendingBookings.toString(),
       icon: Clock,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     },
     {
       title: 'Avg Booking Value',

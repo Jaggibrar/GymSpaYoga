@@ -169,11 +169,11 @@ const SearchWithAutocomplete: React.FC<SearchWithAutocompleteProps> = ({
       case 'location':
         return <MapPin className="h-4 w-4 text-gray-400" />;
       case 'category':
-        return category === 'gym' ? <Dumbbell className="h-4 w-4 text-orange-500" /> :
+        return category === 'gym' ? <Dumbbell className="h-4 w-4 text-blue-500" /> :
                category === 'spa' ? <Waves className="h-4 w-4 text-blue-500" /> :
                <Heart className="h-4 w-4 text-green-500" />;
       default:
-        return category === 'gym' ? <Dumbbell className="h-4 w-4 text-orange-500" /> :
+        return category === 'gym' ? <Dumbbell className="h-4 w-4 text-blue-500" /> :
                category === 'spa' ? <Waves className="h-4 w-4 text-blue-500" /> :
                <Heart className="h-4 w-4 text-green-500" />;
     }

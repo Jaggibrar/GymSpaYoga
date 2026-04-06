@@ -162,7 +162,7 @@ const GymDetails = () => {
         backLink="/gyms"
         backText="Back to Gyms"
         brandIcon={<Dumbbell className="h-7 w-7 text-white" />}
-        brandGradient="from-red-500 to-orange-500"
+        brandGradient="from-blue-500 to-blue-600"
       >
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -179,14 +179,14 @@ const GymDetails = () => {
               description={gym.description}
               defaultDescription="Experience premium fitness at its finest with state-of-the-art equipment, expert trainers, and a motivating environment designed to help you achieve your fitness goals."
               icon={<Award className="h-5 w-5 text-white" />}
-              gradient="from-red-500 to-orange-500"
+              gradient="from-blue-500 to-blue-600"
             />
 
             <AmenitiesGrid
               amenities={gym.amenities || []}
               title="Gym Features & Equipment"
               icon={<Zap className="h-5 w-5 text-white" />}
-              gradient="from-red-500 to-orange-500"
+              gradient="from-blue-500 to-blue-600"
               defaultAmenities={[
                 'State-of-the-art Equipment',
                 'Personal Training',
@@ -204,7 +204,7 @@ const GymDetails = () => {
                 options={pricingOptions}
                 title="Membership Plans"
                 icon={<Dumbbell className="h-5 w-5 text-white" />}
-                gradient="from-red-500 to-orange-500"
+                gradient="from-blue-500 to-blue-600"
               />
             )}
           </div>

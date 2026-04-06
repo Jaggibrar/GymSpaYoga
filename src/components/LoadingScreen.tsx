@@ -31,7 +31,7 @@ const LoadingScreen = ({ category, onComplete }: LoadingScreenProps) => {
         return {
           icon: <Dumbbell className="h-16 w-16 text-white animate-spin" />,
           text: "Warming up your gym experience...",
-          gradient: "from-red-500 via-orange-500 to-yellow-500"
+          gradient: "from-blue-500 via-blue-600 to-blue-700"
         };
       case 'spa':
         return {

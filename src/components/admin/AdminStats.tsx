@@ -95,8 +95,8 @@ export const AdminStats = () => {
       title: 'Pending Reviews',
       value: stats.pendingBusinesses + stats.pendingTrainers,
       icon: TrendingUp,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-100'
     }
   ];
 

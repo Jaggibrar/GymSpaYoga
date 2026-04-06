@@ -60,7 +60,7 @@ const TrainerRoute = ({ children }: TrainerRouteProps) => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+            <Users className="h-12 w-12 text-blue-500 mx-auto mb-4" />
             <CardTitle>Trainer Access Only</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
