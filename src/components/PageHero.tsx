@@ -20,7 +20,7 @@ const PageHero = ({ title, subtitle, description, backgroundImage }: PageHeroPro
         sizes="100vw"
       />
       <div className="absolute inset-0 bg-black/50"></div>
-      <div className="absolute inset-0 bg-[#0A45FF]/30"></div>
+      <div className="absolute inset-0 bg-[#1877F2]/30"></div>
       <div className="absolute inset-0 flex flex-col items-center justify-center px-4 z-10">
         <div className="text-center mb-8 md:mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-2 md:mb-4 leading-tight drop-shadow-2xl">
