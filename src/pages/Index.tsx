@@ -89,11 +89,6 @@ const Index = () => {
         <AuthBanner />
         <HeroBanner />
 
-        {/* Ad Slot */}
-        <div className="container mx-auto px-4 py-4">
-          <AdSenseSlot adSlot="1234567890" adFormat="horizontal" className="min-h-[90px]" />
-        </div>
-
         {/* Categories */}
         <section className="py-16 md:py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -137,11 +132,6 @@ const Index = () => {
             </Suspense>
           </div>
         </section>
-
-        {/* Ad Slot */}
-        <div className="container mx-auto px-4 py-4">
-          <AdSenseSlot adSlot="0987654321" adFormat="auto" className="min-h-[250px]" />
-        </div>
 
         {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-background">
@@ -291,11 +281,6 @@ const Index = () => {
             </ScrollReveal>
           </div>
         </section>
-
-        {/* Ad Slot */}
-        <div className="container mx-auto px-4 py-4">
-          <AdSenseSlot adSlot="1122334455" adFormat="auto" className="min-h-[250px]" />
-        </div>
 
         <CommunityBanner />
       </div>
