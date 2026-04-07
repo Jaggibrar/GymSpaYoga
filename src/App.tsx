@@ -1,5 +1,6 @@
 
 import React from "react";
+import AdBanner from "./components/AdBanner";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -190,6 +191,14 @@ const AppContent = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
+      {/* Above-footer ad strip */}
+      <div className="w-full py-4 bg-muted/50 border-t border-border">
+        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-4">
+          <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
+          <AdBanner adKey="1db105cbc12c2b492ad823c9317403c3" width={160} height={300} className="hidden lg:flex" />
+          <AdBanner adKey="cc4a3ef11a0f474645d53f63702650a6" width={160} height={600} className="hidden xl:flex" />
+        </div>
+      </div>
       <AppFooter />
       <React.Suspense fallback={null}>
         <FloatingAIButton />
