@@ -42,7 +42,7 @@ const AppFooter = () => {
               <p className="text-xs font-semibold text-secondary-foreground/40 mb-2 uppercase tracking-wider">We Accept</p>
               <div className="flex gap-2 flex-wrap">
                 {[
-                  { src: "https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg", alt: "Visa" },
+                  { src: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg", alt: "Visa" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg", alt: "Mastercard" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg", alt: "Amex" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg", alt: "UPI" },
