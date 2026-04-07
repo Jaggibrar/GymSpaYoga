@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import AdBanner from '@/components/AdBanner';
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, Activity, Zap, Globe, CheckCircle2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
@@ -133,6 +134,13 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Ad: 468x60 Banner */}
+        <div className="py-4 bg-background">
+          <div className="container mx-auto px-4 flex justify-center">
+            <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
+          </div>
+        </div>
+
         {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
@@ -247,6 +255,13 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Ad: 300x250 Rectangle */}
+        <div className="py-6 bg-background">
+          <div className="container mx-auto px-4 flex justify-center">
+            <AdBanner adKey="8f3bfc05dbcd568d3d30af2a2d98df34" width={300} height={250} />
+          </div>
+        </div>
 
         {/* CTA */}
         <section className="py-16 md:py-20 bg-secondary">
