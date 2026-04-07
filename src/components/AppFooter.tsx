@@ -42,13 +42,17 @@ const AppFooter = () => {
               <p className="text-xs font-semibold text-secondary-foreground/40 mb-2 uppercase tracking-wider">We Accept</p>
               <div className="flex gap-2 flex-wrap">
                 {[
-                  { src: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg", alt: "Visa" },
+                  { label: "Visa", bg: "bg-[#1A1F71]", text: "text-white text-[10px] font-bold" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg", alt: "Mastercard" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg", alt: "Amex" },
                   { src: "https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg", alt: "UPI" },
                 ].map(pm => (
-                  <div key={pm.alt} className="bg-white rounded-md p-1.5">
-                    <img src={pm.src} alt={pm.alt} className="h-5 w-8 object-contain" />
+                  <div key={pm.label || pm.alt} className="bg-white rounded-md p-1.5 flex items-center justify-center w-12 h-8">
+                    {pm.label === "Visa" ? (
+                      <span className="text-[#1A1F71] font-bold text-sm italic">VISA</span>
+                    ) : (
+                      <img src={pm.src} alt={pm.alt} className="h-5 w-8 object-contain" />
+                    )}
                   </div>
                 ))}
               </div>
