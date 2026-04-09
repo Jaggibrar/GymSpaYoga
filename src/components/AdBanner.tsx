@@ -10,7 +10,7 @@ interface AdBannerProps {
 const AdBanner = ({ adKey, width, height, className = '' }: AdBannerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const loadedRef = useRef(false);
-  const [adLoaded, setAdLoaded] = useState(false);
+  const [adServed, setAdServed] = useState(false);
 
   useEffect(() => {
     if (loadedRef.current || !containerRef.current) return;
@@ -31,12 +31,18 @@ const AdBanner = ({ adKey, width, height, className = '' }: AdBannerProps) => {
     const invokeScript = document.createElement('script');
     invokeScript.src = `https://balancedsuppercreed.com/${adKey}/invoke.js`;
     invokeScript.onload = () => {
-      // Check if an iframe was injected (ad served)
-      setTimeout(() => {
-        if (containerRef.current?.querySelector('iframe')) {
-          setAdLoaded(true);
-        }
-      }, 2000);
+      // Check multiple times if iframe was injected
+      const checkAd = (attempts: number) => {
+        if (attempts <= 0) return;
+        setTimeout(() => {
+          if (containerRef.current?.querySelector('iframe')) {
+            setAdServed(true);
+          } else {
+            checkAd(attempts - 1);
+          }
+        }, 1000);
+      };
+      checkAd(5);
     };
     containerRef.current.appendChild(invokeScript);
   }, [adKey, width, height]);
@@ -44,18 +50,14 @@ const AdBanner = ({ adKey, width, height, className = '' }: AdBannerProps) => {
   return (
     <div
       ref={containerRef}
-      className={`flex justify-center items-center overflow-hidden ${className}`}
-      style={{ minHeight: height, maxWidth: '100%' }}
-    >
-      {!adLoaded && (
-        <div
-          className="flex items-center justify-center border border-dashed border-primary/30 rounded-lg bg-primary/5 text-muted-foreground text-xs"
-          style={{ width, height }}
-        >
-          <span className="opacity-60">Ad Space • {width}×{height}</span>
-        </div>
-      )}
-    </div>
+      className={`flex justify-center items-center overflow-hidden transition-all duration-300 ${className}`}
+      style={{
+        minHeight: adServed ? height : 0,
+        maxWidth: '100%',
+        opacity: adServed ? 1 : 0,
+        maxHeight: adServed ? height + 10 : 0,
+      }}
+    />
   );
 };
 

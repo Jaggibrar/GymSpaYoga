@@ -192,13 +192,13 @@ const AppContent = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {/* Single pre-footer ad — clean, not cluttered */}
-      <div className="w-full py-3 bg-muted/30 border-t border-border">
+      {/* Pre-footer ad — collapses to zero if no ad serves */}
+      <div className="w-full bg-muted/30">
         <div className="container mx-auto px-4 flex justify-center">
-          <div className="hidden md:flex">
+          <div className="hidden md:block">
             <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
           </div>
-          <div className="flex md:hidden">
+          <div className="block md:hidden">
             <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
           </div>
         </div>
