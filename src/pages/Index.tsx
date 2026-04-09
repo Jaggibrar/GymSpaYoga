@@ -90,6 +90,19 @@ const Index = () => {
         <AuthBanner />
         <HeroBanner />
 
+        {/* AD SLOT 1: Below Hero — Highest CTR position */}
+        <div className="py-3 bg-muted/30">
+          <div className="container mx-auto px-4 flex justify-center">
+            {/* 728x90 on desktop, 320x50 on mobile */}
+            <div className="hidden md:flex">
+              <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
+            </div>
+            <div className="flex md:hidden">
+              <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
+            </div>
+          </div>
+        </div>
+
         {/* Categories */}
         <section className="py-16 md:py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -134,10 +147,10 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Ad: 468x60 Banner */}
-        <div className="py-4 bg-background">
+        {/* AD SLOT 2: In-Feed Native — Between listings and features */}
+        <div className="py-5 bg-background">
           <div className="container mx-auto px-4 flex justify-center">
-            <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
+            <AdBanner adKey="8f3bfc05dbcd568d3d30af2a2d98df34" width={300} height={250} />
           </div>
         </div>
 
@@ -256,10 +269,15 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Ad: 300x250 Rectangle */}
-        <div className="py-6 bg-background">
+        {/* AD SLOT 3: Mid-content — Between cities and CTA */}
+        <div className="py-3 bg-muted/30">
           <div className="container mx-auto px-4 flex justify-center">
-            <AdBanner adKey="8f3bfc05dbcd568d3d30af2a2d98df34" width={300} height={250} />
+            <div className="hidden md:flex">
+              <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
+            </div>
+            <div className="flex md:hidden">
+              <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
+            </div>
           </div>
         </div>
 
