@@ -1,6 +1,7 @@
 
 import React from "react";
 import AdBanner from "./components/AdBanner";
+import StickyMobileAd from "./components/StickyMobileAd";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -191,15 +192,19 @@ const AppContent = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
-      {/* Above-footer ad strip */}
-      <div className="w-full py-4 bg-muted/50 border-t border-border">
-        <div className="container mx-auto px-4 flex flex-wrap justify-center gap-4">
-          <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
-          <AdBanner adKey="1db105cbc12c2b492ad823c9317403c3" width={160} height={300} className="hidden lg:flex" />
-          <AdBanner adKey="cc4a3ef11a0f474645d53f63702650a6" width={160} height={600} className="hidden xl:flex" />
+      {/* Single pre-footer ad — clean, not cluttered */}
+      <div className="w-full py-3 bg-muted/30 border-t border-border">
+        <div className="container mx-auto px-4 flex justify-center">
+          <div className="hidden md:flex">
+            <AdBanner adKey="0b43405f97033b12e2d99c7b797123c8" width={468} height={60} />
+          </div>
+          <div className="flex md:hidden">
+            <AdBanner adKey="01ab4e84bcc205e5cb18cdecfd4d9409" width={320} height={50} />
+          </div>
         </div>
       </div>
       <AppFooter />
+      <StickyMobileAd />
       <React.Suspense fallback={null}>
         <FloatingAIButton />
       </React.Suspense>
