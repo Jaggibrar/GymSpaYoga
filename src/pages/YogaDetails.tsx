@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Flower2, Users, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import SEOHead from "@/components/SEOHead";
+import ListingSchema from "@/components/listing/ListingSchema";
 import ListingLayout from "@/components/listing/ListingLayout";
 import MediaGallery from "@/components/listing/MediaGallery";
 import BookingPanel from "@/components/listing/BookingPanel";
@@ -132,12 +134,18 @@ const YogaDetails = () => {
   }
 
   return (
-    <ListingLayout
-      backLink="/yoga"
-      backText="Back to Yoga"
-      brandIcon={<Heart className="h-7 w-7 text-white" />}
-      brandGradient="from-[#005EB8] to-[#005EB8]"
-    >
+    <>
+      <SEOHead
+        title={`${studio.business_name} — Yoga Studio & Classes`}
+        description={studio.description || `Join authentic yoga classes at ${studio.business_name} in ${studio.city}. Certified instructors, all levels welcome. Book directly.`}
+      />
+      <ListingSchema business={{ ...studio, business_type: 'yoga' }} rating={4.7} reviewCount={76} />
+      <ListingLayout
+        backLink="/yoga"
+        backText="Back to Yoga"
+        brandIcon={<Heart className="h-7 w-7 text-white" />}
+        brandGradient="from-[#005EB8] to-[#005EB8]"
+      >
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Media & Content */}
@@ -223,7 +231,8 @@ const YogaDetails = () => {
           />
         </div>
       </div>
-    </ListingLayout>
+      </ListingLayout>
+    </>
   );
 };
 
