@@ -265,6 +265,12 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Animated Stats — social proof */}
+        <WellnessStats />
+
+        {/* FAQ — long-tail SEO + dwell time + FAQ schema */}
+        <HomeFAQ />
+
         {/* CTA */}
         <section className="py-16 md:py-20 bg-secondary">
           <div className="container mx-auto px-4 text-center">
