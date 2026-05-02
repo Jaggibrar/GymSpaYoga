@@ -260,7 +260,7 @@ const Index = () => {
                 { name: 'Bangkok', slug: 'bangkok', flag: '🇹🇭' },
               ].map((city) => (
                 <StaggerItem key={city.slug}>
-                  <Link to={`/gyms-in-${city.slug}`}>
+                  <Link to={`/city/${city.slug}`}>
                     <Card className="border border-border hover:border-primary/30 transition-all duration-200 hover:shadow-sm bg-card group cursor-pointer">
                       <CardContent className="p-3 text-center">
                         <span className="text-xl block mb-1">{city.flag}</span>
