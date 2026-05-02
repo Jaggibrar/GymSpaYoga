@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Dumbbell, Crown, Diamond, IndianRupee, Award, Zap, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
+import ListingSchema from "@/components/listing/ListingSchema";
 import ListingLayout from "@/components/listing/ListingLayout";
 import MediaGallery from "@/components/listing/MediaGallery";
 import BookingPanel from "@/components/listing/BookingPanel";
@@ -157,6 +158,7 @@ const GymDetails = () => {
         title={`${gym.business_name} - Premium Gym Details`}
         description={gym.description || `Discover ${gym.business_name} - Premium fitness center with state-of-the-art equipment and professional trainers.`}
       />
+      <ListingSchema business={{ ...gym, business_type: 'gym' }} rating={4.8} reviewCount={128} />
       
       <ListingLayout
         backLink="/gyms"
