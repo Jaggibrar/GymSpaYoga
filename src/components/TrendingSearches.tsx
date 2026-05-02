@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { TrendingUp, Flame } from 'lucide-react';
-import { ScrollReveal } from '@/components/ScrollReveal';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const trending = [
   { label: 'Gyms in Mumbai', href: '/gyms-in-mumbai', hot: true },

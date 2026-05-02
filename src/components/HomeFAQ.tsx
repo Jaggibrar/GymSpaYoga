@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { HelpCircle } from 'lucide-react';
-import { ScrollReveal } from '@/components/ScrollReveal';
+import ScrollReveal from '@/components/ScrollReveal';
 
 const faqs = [
   {
