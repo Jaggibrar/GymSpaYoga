@@ -12,6 +12,10 @@ import AuthBanner from '@/components/AuthBanner';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
+import WellnessQuiz from '@/components/WellnessQuiz';
+import TrendingSearches from '@/components/TrendingSearches';
+import HomeFAQ from '@/components/HomeFAQ';
+import WellnessStats from '@/components/WellnessStats';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
@@ -81,9 +85,9 @@ const Index = () => {
   return (
     <>
       <SEOHead
-        title="GymSpaYoga - Find Gyms, Spas & Yoga Studios Worldwide"
-        description="Discover and book the best gyms, spas, yoga studios, and personal trainers in 200+ cities worldwide. Verified listings and real reviews."
-        keywords="gyms near me, spas near me, yoga studios worldwide, personal trainers, fitness centers, wellness"
+        title="GymSpaYoga - Book Best Gyms, Spas, Yoga Classes & Personal Trainers Near Me"
+        description="Find & book the best gyms, luxury spas, yoga studios, certified personal trainers and chiropractors near you. 1500+ verified listings across 200+ cities. Real reviews, instant booking, exclusive wellness packages. Start your fitness & wellness journey today."
+        keywords="gym near me, spa near me, yoga classes near me, personal trainer near me, best gyms in india, luxury spas, yoga studios, fitness centers, wellness near me, gym membership, spa packages, yoga teacher training, weight loss gym, crossfit, hatha yoga, vinyasa yoga, ayurvedic spa, thai massage, deep tissue massage, prenatal yoga, hot yoga, female personal trainer, online yoga classes, home personal trainer, chiropractor near me, physiotherapist, sports massage, fitness booking app, wellness platform india, gymspayoga"
       />
 
       <div className="min-h-screen bg-background">
