@@ -62,6 +62,10 @@ Allow: /support
 Allow: /explore
 Allow: /register-business
 Allow: /register-trainer
+Allow: /city/
+Allow: /gyms-in-
+Allow: /spas-in-
+Allow: /yoga-classes-in-
 
 # Block tracking/filter params
 Disallow: /*?*utm_source=
@@ -83,5 +87,6 @@ Allow: /*.svg$
 # Sitemaps
 Sitemap: https://gymspayoga.com/sitemap.xml
 Sitemap: https://gymspayoga.com/sitemap-static.xml
+Sitemap: https://gymspayoga.com/sitemap-index.xml
 
 Host: https://gymspayoga.com
