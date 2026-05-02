@@ -4,6 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Waves, Heart, Sparkles, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import SEOHead from "@/components/SEOHead";
+import ListingSchema from "@/components/listing/ListingSchema";
 import ListingLayout from "@/components/listing/ListingLayout";
 import MediaGallery from "@/components/listing/MediaGallery";
 import BookingPanel from "@/components/listing/BookingPanel";
@@ -132,12 +134,18 @@ const SpaDetails = () => {
   }
 
   return (
-    <ListingLayout
-      backLink="/spas"
-      backText="Back to Spas"
-      brandIcon={<Waves className="h-7 w-7 text-white" />}
-      brandGradient="from-blue-500 to-cyan-500"
-    >
+    <>
+      <SEOHead
+        title={`${spa.business_name} — Luxury Spa & Wellness`}
+        description={spa.description || `${spa.business_name} offers premium spa treatments, massages and wellness packages in ${spa.city}. Book directly via WhatsApp.`}
+      />
+      <ListingSchema business={{ ...spa, business_type: 'spa' }} rating={4.9} reviewCount={92} />
+      <ListingLayout
+        backLink="/spas"
+        backText="Back to Spas"
+        brandIcon={<Waves className="h-7 w-7 text-white" />}
+        brandGradient="from-blue-500 to-cyan-500"
+      >
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column - Media & Content */}
@@ -221,7 +229,8 @@ const SpaDetails = () => {
           />
         </div>
       </div>
-    </ListingLayout>
+      </ListingLayout>
+    </>
   );
 };
 

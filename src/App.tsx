@@ -70,6 +70,7 @@ const UserBookings = React.lazy(() => import("./pages/UserBookings"));
 const Favorites = React.lazy(() => import("./pages/Favorites"));
 const Assistant = React.lazy(() => import("./pages/Assistant"));
 const CityCategory = React.lazy(() => import("./pages/CityCategory"));
+const CityOverview = React.lazy(() => import("./pages/CityOverview"));
 const FloatingAIButton = React.lazy(() => import("./components/ai/FloatingAIButton"));
 
 const queryClient = new QueryClient();
@@ -188,6 +189,7 @@ const AppContent = () => {
           } />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/ai" element={<Assistant />} />
+          <Route path="/city/:slug" element={<CityOverview />} />
           <Route path="/:slug" element={<CityCategory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

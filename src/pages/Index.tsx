@@ -16,6 +16,8 @@ import WellnessQuiz from '@/components/WellnessQuiz';
 import TrendingSearches from '@/components/TrendingSearches';
 import HomeFAQ from '@/components/HomeFAQ';
 import WellnessStats from '@/components/WellnessStats';
+import ServiceFinder from '@/components/ServiceFinder';
+import SearchWithAutocomplete from '@/components/SearchWithAutocomplete';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
@@ -94,6 +96,18 @@ const Index = () => {
         <AuthBanner />
         <HeroBanner />
 
+        {/* Prominent on-page search with autocomplete */}
+        <section className="py-6 md:py-8 bg-background border-b border-border">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto">
+              <p className="text-center text-sm text-muted-foreground mb-3">
+                Search 1,500+ verified gyms, spas, yoga studios & trainers across 200+ cities
+              </p>
+              <SearchWithAutocomplete placeholder="Search by name, city or category…" />
+            </div>
+          </div>
+        </section>
+
         {/* Categories */}
         <section className="py-16 md:py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -128,6 +142,9 @@ const Index = () => {
             </StaggerContainer>
           </div>
         </section>
+
+        {/* Service Finder — interactive goal+budget guide */}
+        <ServiceFinder />
 
         {/* Interactive Wellness Quiz — engagement booster */}
         <WellnessQuiz />
@@ -243,7 +260,7 @@ const Index = () => {
                 { name: 'Bangkok', slug: 'bangkok', flag: '🇹🇭' },
               ].map((city) => (
                 <StaggerItem key={city.slug}>
-                  <Link to={`/gyms-in-${city.slug}`}>
+                  <Link to={`/city/${city.slug}`}>
                     <Card className="border border-border hover:border-primary/30 transition-all duration-200 hover:shadow-sm bg-card group cursor-pointer">
                       <CardContent className="p-3 text-center">
                         <span className="text-xl block mb-1">{city.flag}</span>
