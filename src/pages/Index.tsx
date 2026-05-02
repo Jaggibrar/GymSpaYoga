@@ -129,6 +129,11 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Interactive Wellness Quiz — engagement booster */}
+        <WellnessQuiz />
+
+        {/* Trending Searches — internal linking + SEO */}
+        <TrendingSearches />
         {/* Featured Listings */}
         <section className="py-16 md:py-20 bg-accent/50">
           <div className="container mx-auto px-4">
