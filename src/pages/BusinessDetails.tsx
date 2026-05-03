@@ -52,7 +52,7 @@ const BusinessDetails = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings' as any)
         .select('*')
         .eq('id', id)
         .eq('status', 'approved')

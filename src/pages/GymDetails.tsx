@@ -54,7 +54,7 @@ const GymDetails = () => {
     try {
       // Try to fetch by slug first, fallback to ID for backward compatibility
       let query = supabase
-        .from('business_profiles')
+        .from('public_business_listings' as any)
         .select('*')
         .eq('business_type', 'gym')
         .eq('status', 'approved');

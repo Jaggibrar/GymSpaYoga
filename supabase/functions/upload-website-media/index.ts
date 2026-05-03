@@ -14,17 +14,94 @@ serve(async (req) => {
   }
 
   try {
+    // Require authenticated caller (high-privilege function)
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    const authClient = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+    const { data: claims, error: authErr } = await authClient.auth.getClaims(
+      authHeader.replace("Bearer ", "")
+    );
+    if (authErr || !claims?.claims?.sub) {
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { imageUrl, fileName } = await req.json();
 
-    // Download from external URL
-    const response = await fetch(imageUrl);
+    // SSRF guard: validate URL strictly
+    if (typeof imageUrl !== "string" || typeof fileName !== "string") {
+      return new Response(
+        JSON.stringify({ error: "imageUrl and fileName required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    let parsed: URL;
+    try {
+      parsed = new URL(imageUrl);
+    } catch {
+      return new Response(
+        JSON.stringify({ error: "Invalid URL" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    if (parsed.protocol !== "https:") {
+      return new Response(
+        JSON.stringify({ error: "Only https:// URLs are allowed" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    const host = parsed.hostname.toLowerCase();
+    const blocked = [
+      "localhost", "127.0.0.1", "0.0.0.0", "169.254.169.254",
+      "::1", "metadata.google.internal",
+    ];
+    const isPrivate =
+      blocked.includes(host) ||
+      /^10\./.test(host) ||
+      /^192\.168\./.test(host) ||
+      /^172\.(1[6-9]|2\d|3[01])\./.test(host) ||
+      host.endsWith(".internal") ||
+      host.endsWith(".local");
+    if (isPrivate) {
+      return new Response(
+        JSON.stringify({ error: "URL host not allowed" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Download from external URL with size cap
+    const response = await fetch(parsed.toString(), { redirect: "error" });
     if (!response.ok) {
       return new Response(
         JSON.stringify({ error: "Failed to fetch image from origin" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.startsWith("image/")) {
+      return new Response(
+        JSON.stringify({ error: "URL did not return an image" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
     const imgBuffer = await response.arrayBuffer();
+    if (imgBuffer.byteLength > 10 * 1024 * 1024) {
+      return new Response(
+        JSON.stringify({ error: "Image too large (max 10MB)" }),
+        { status: 413, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
     const ext = fileName.split('.').pop() || "jpeg";
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
