@@ -19,6 +19,7 @@ import { AdvancedSEOManager } from "./components/SEO/AdvancedSEOManager";
 import AccessibilityEnhancer from "./components/SEO/AccessibilityEnhancer";
 import PerformanceOptimizer from "./components/SEO/PerformanceOptimizer";
 import AnalyticsTracker from "./components/AnalyticsTracker";
+import ImageProtection from "./components/ImageProtection";
 import { AnalyticsProvider } from "./components/analytics/AnalyticsProvider";
 import ScrollProgressBar from "./components/ScrollProgressBar";
 
@@ -86,6 +87,7 @@ const AppContent = () => {
       <AccessibilityEnhancer />
       <PerformanceOptimizer />
       <AnalyticsTracker />
+      <ImageProtection />
       <GlobalLoadingIndicator />
       <MainNavigation />
       <Breadcrumbs />
