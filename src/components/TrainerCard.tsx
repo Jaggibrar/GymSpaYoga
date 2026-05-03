@@ -36,7 +36,7 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
 
   return (
     <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 overflow-hidden transform hover:scale-105 bg-white cursor-pointer">
-      <div className="relative" onClick={handleViewDetails}>
+      <div data-watermark="true" className="relative" onClick={handleViewDetails}>
         <img 
           src={trainer.profile_image_url || "/placeholder.svg"} 
           alt={trainer.name}

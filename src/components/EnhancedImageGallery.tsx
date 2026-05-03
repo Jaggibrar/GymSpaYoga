@@ -74,7 +74,7 @@ const EnhancedImageGallery: React.FC<EnhancedImageGalleryProps> = ({
     <>
       <div className="space-y-6">
         {/* Main Image */}
-        <div className={`relative ${aspectRatio} rounded-3xl overflow-hidden group cursor-pointer`}>
+        <div data-watermark="true" className={`relative ${aspectRatio} rounded-3xl overflow-hidden group cursor-pointer`}>
           <img 
             src={displayImages[selectedImage]} 
             alt={`${name} - Image ${selectedImage + 1}`} 
