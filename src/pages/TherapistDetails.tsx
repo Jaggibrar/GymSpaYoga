@@ -46,7 +46,7 @@ const TherapistDetails = () => {
   const fetchTherapistDetails = async (therapistId: string) => {
     try {
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings' as any)
         .select('*')
         .eq('id', therapistId)
         .eq('business_type', 'therapist')
