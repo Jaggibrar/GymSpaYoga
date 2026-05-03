@@ -64,7 +64,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
       className="w-full max-w-sm group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-0 shadow-md rounded-xl overflow-hidden bg-white"
     >
       {/* Image Section - matching CategoryBusinesses h-56 */}
-      <div className="relative h-56 overflow-hidden">
+      <div data-watermark="true" className="relative h-56 overflow-hidden">
         <img 
           src={trainer.profile_image_url || "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b"} 
           alt={trainer.name}

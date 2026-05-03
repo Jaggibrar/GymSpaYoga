@@ -80,7 +80,7 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
 
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 border border-border hover:border-primary/20 rounded-2xl overflow-hidden bg-card hover:-translate-y-1">
-      <div className="relative overflow-hidden aspect-[4/3]">
+      <div data-watermark="true" className="relative overflow-hidden aspect-[4/3]">
         <img 
           src={imageUrl}
           alt={`${business.business_name} - ${business.business_type} in ${business.city}`}
