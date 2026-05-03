@@ -47,10 +47,10 @@
  
    const fetchChiropractorDetails = async (slugOrId: string) => {
      try {
-       let query = supabase
-         .from('business_profiles')
-         .select('*')
-         .eq('business_type', 'chiropractor')
+      let query = supabase
+        .from('public_business_listings' as any)
+        .select('*')
+        .eq('business_type', 'chiropractor')
          .eq('status', 'approved');
  
        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(slugOrId);
