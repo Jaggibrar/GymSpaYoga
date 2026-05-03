@@ -66,3 +66,39 @@ img {
 .lazy-image.loaded {
   opacity: 1;
 }
+
+/* Image Protection - deter casual saving/screenshots */
+img, picture {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: auto;
+}
+
+/* Hide images briefly when window loses focus (snipping tool / printscreen) */
+body.hide-protected-images img,
+body.hide-protected-images picture {
+  visibility: hidden !important;
+}
+
+/* Prevent print of images */
+@media print {
+  img, picture, video {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  body::before {
+    content: "Printing of this content is disabled.";
+    display: block;
+    font-size: 18px;
+    text-align: center;
+    padding: 20px;
+  }
+}
