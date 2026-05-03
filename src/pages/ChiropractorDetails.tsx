@@ -68,7 +68,7 @@
          toast.error('Chiropractor not found');
          return;
        }
-       setChiropractor(data);
+       setChiropractor(data as any);
      } catch (error) {
        console.error('Error fetching chiropractor details:', error);
        toast.error('Failed to load chiropractor details');

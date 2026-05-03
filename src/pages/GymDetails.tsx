@@ -75,7 +75,7 @@ const GymDetails = () => {
         toast.error('Gym not found');
         return;
       }
-      setGym(data);
+      setGym(data as any);
     } catch (error) {
       console.error('Error fetching gym details:', error);
       toast.error('Failed to load gym details');

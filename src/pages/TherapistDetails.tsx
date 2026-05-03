@@ -58,7 +58,7 @@ const TherapistDetails = () => {
         toast.error('Therapist not found');
         return;
       }
-      setTherapist(data);
+      setTherapist(data as any);
     } catch (error) {
       console.error('Error fetching therapist details:', error);
       toast.error('Failed to load therapist details');
