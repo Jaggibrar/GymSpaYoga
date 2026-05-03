@@ -73,7 +73,7 @@ const SpaDetails = () => {
         toast.error('Spa not found');
         return;
       }
-      setSpa(data);
+      setSpa(data as any);
     } catch (error) {
       console.error('Error fetching spa details:', error);
       toast.error('Failed to load spa details');

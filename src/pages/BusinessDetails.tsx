@@ -67,7 +67,7 @@ const BusinessDetails = () => {
         return;
       }
 
-      setBusiness(data);
+      setBusiness(data as any);
     } catch (err: any) {
       console.error('Error fetching business details:', err);
       setError('Failed to load business details');

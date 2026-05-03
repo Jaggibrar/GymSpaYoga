@@ -73,7 +73,7 @@ const YogaDetails = () => {
         toast.error('Yoga studio not found');
         return;
       }
-      setStudio(data);
+      setStudio(data as any);
     } catch (error) {
       console.error('Error fetching studio details:', error);
       toast.error('Failed to load studio details');
