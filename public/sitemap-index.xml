@@ -2,14 +2,18 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://gymspayoga.com/sitemap.xml</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://gymspayoga.com/sitemap-static.xml</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://gymspayoga.com/sitemap-enhanced.xml</loc>
-    <lastmod>2026-03-02</lastmod>
+    <lastmod>2026-05-04</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://pihmoaogjjiicfnkmpbe.supabase.co/functions/v1/generate-sitemap</loc>
+    <lastmod>2026-05-04</lastmod>
   </sitemap>
 </sitemapindex>
