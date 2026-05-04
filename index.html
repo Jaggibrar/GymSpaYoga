@@ -163,7 +163,95 @@
     }
     </script>
 
-    <!-- Service Worker Registration -->
+    <!-- Speakable Schema (Voice Search / Google Assistant) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": "https://gymspayoga.com/#webpage",
+      "url": "https://gymspayoga.com/",
+      "name": "India's Best Gym, Spa & Yoga Booking Platform",
+      "isPartOf": { "@id": "https://gymspayoga.com#website" },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", "h2", ".speakable", "main p:first-of-type"]
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://gymspayoga.com/og-image.jpg"
+      }
+    }
+    </script>
+
+    <!-- Founder / Person Schema for E-E-A-T -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://gymspayoga.com/#founder",
+      "name": "Jagdeep Singh",
+      "jobTitle": "Founder & CEO",
+      "worksFor": { "@id": "https://gymspayoga.com#organization" },
+      "url": "https://gymspayoga.com/about",
+      "knowsAbout": ["Fitness", "Wellness Industry", "Yoga", "Spa Management", "Personal Training"],
+      "sameAs": [
+        "https://linkedin.com/in/jagdeepsingh",
+        "https://twitter.com/gymspayoga"
+      ]
+    }
+    </script>
+
+    <!-- Homepage FAQ Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I book a gym, spa or yoga class on GymSpaYoga?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Browse listings by city or category, open any verified gym, spa or yoga studio, and tap WhatsApp / Book Now. You can browse without login; booking with a quick sign-up takes under a minute."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is GymSpaYoga free for users?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Discovering and contacting gyms, spas, yoga studios, personal trainers, physiotherapists and chiropractors on GymSpaYoga is completely free for users. You only pay the business directly for the service."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Indian cities are covered?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We cover Mumbai, Delhi, Bangalore, Pune, Hyderabad, Chennai, Kolkata, Ahmedabad, Jaipur, Lucknow, Chandigarh, Gurgaon, Noida, Goa, Rishikesh and 50+ more Indian cities, with new locations added every week."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are listings verified?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Every gym, spa, yoga studio and trainer goes through manual approval by our admin team. We verify business details, photos, and contact information before publishing. Listings with violations are removed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I list my gym, spa, yoga studio or training service?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Visit /register-business or /register-trainer to create a free listing. After admin approval your business is live and discoverable across India on GymSpaYoga."
+          }
+        }
+      ]
+    }
+    </script>
+
+
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
