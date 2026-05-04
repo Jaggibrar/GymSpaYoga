@@ -1616,6 +1616,7 @@ export type Database = {
           phone: string | null
           pin_code: string | null
           session_price: number | null
+          slug: string | null
           state: string | null
           status: string | null
           updated_at: string | null
@@ -1639,6 +1640,7 @@ export type Database = {
           phone?: never
           pin_code?: string | null
           session_price?: number | null
+          slug?: string | null
           state?: string | null
           status?: string | null
           updated_at?: string | null
@@ -1662,6 +1664,7 @@ export type Database = {
           phone?: never
           pin_code?: string | null
           session_price?: number | null
+          slug?: string | null
           state?: string | null
           status?: string | null
           updated_at?: string | null
