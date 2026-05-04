@@ -85,8 +85,10 @@ Allow: /*.webp$
 Allow: /*.svg$
 
 # Sitemaps
+Sitemap: https://gymspayoga.com/sitemap-index.xml
 Sitemap: https://gymspayoga.com/sitemap.xml
 Sitemap: https://gymspayoga.com/sitemap-static.xml
-Sitemap: https://gymspayoga.com/sitemap-index.xml
+Sitemap: https://gymspayoga.com/sitemap-enhanced.xml
+Sitemap: https://pihmoaogjjiicfnkmpbe.supabase.co/functions/v1/generate-sitemap
 
 Host: https://gymspayoga.com
