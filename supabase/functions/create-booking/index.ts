@@ -113,14 +113,14 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in create-booking function:', error);
-    
+    // Log full details server-side only
+    console.error('Error in create-booking function:', error instanceof Error ? error.stack : error);
+
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    
-    return new Response(JSON.stringify({ 
+
+    return new Response(JSON.stringify({
       success: false,
-      error: errorMessage,
-      details: error instanceof Error ? error.stack : undefined
+      error: errorMessage
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 400,
