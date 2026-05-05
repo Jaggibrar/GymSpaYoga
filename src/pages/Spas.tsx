@@ -13,7 +13,7 @@ const Spas = () => {
       <SEOHead
         title="Best Spas in India - Luxury Wellness Centers in Mumbai, Delhi, Bangalore | GymSpaYoga"
         description="Book premium spa treatments in Mumbai, Delhi, Bangalore & across India. Professional massage therapy, aromatherapy, and rejuvenating treatments. Book now!"
-        keywords="spa near me, best spa Mumbai, luxury spa Delhi, wellness center Bangalore, massage therapy India, aromatherapy"
+        keywords="spa near me, best spa Mumbai, luxury spa Delhi, wellness center Bangalore, massage therapy India, aromatherapy, ayurvedic spa, balinese massage, thai massage, swedish massage, deep tissue massage, hot stone massage, couple spa, body scrub, facial treatment, full body massage, head massage, foot reflexology, sauna and steam, hammam spa, prenatal massage, sports massage, ladies only spa, spa in Goa, spa in Jaipur, spa in Kerala, spa packages, day spa, spa membership, spa offers, top rated spa India"
       />
       
       <div className="min-h-screen bg-white">

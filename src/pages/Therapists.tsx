@@ -48,7 +48,7 @@ const Therapists = () => {
       <SEOHead
         title="Find Wellness Therapists Near You | GymSpaYoga"
         description="Discover certified wellness therapists, massage therapists, physiotherapists, and holistic healers. Book sessions with experienced professionals for your health and wellness journey."
-        keywords="therapists, wellness therapists, massage therapy, physiotherapy, holistic healing, sports therapy, rehabilitation"
+        keywords="therapists, wellness therapists, massage therapists, physiotherapist near me, holistic healing, sports therapy, rehabilitation, occupational therapy, ayurvedic therapist, reiki healer, acupressure, acupuncture, cupping therapy, lymphatic drainage, mental health therapist, counsellor, psychologist, stress management, anxiety therapy, sleep therapy, sound healing, energy healing, reflexology, deep tissue therapist, sports physiotherapist, post surgery rehab, geriatric care, prenatal therapy, postnatal therapy, home physiotherapy, online therapy India"
       />
 
       <div className="min-h-screen bg-gradient-to-b from-background to-secondary/20">
