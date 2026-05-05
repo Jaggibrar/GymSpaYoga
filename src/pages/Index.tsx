@@ -19,6 +19,7 @@ import WellnessStats from '@/components/WellnessStats';
 import ServiceFinder from '@/components/ServiceFinder';
 import SearchWithAutocomplete from '@/components/SearchWithAutocomplete';
 import DietPlanner from '@/components/DietPlanner';
+import HealthChallengeHub from '@/components/HealthChallengeHub';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
