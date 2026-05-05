@@ -148,6 +148,9 @@ const Index = () => {
         {/* Free Diet Planner — engagement + SEO (calorie calculator, macros, meal plan) */}
         <DietPlanner />
 
+        {/* Daily Health Challenge — fresh quiz + tasks + health score every visit */}
+        <HealthChallengeHub />
+
         {/* Service Finder — interactive goal+budget guide */}
         <ServiceFinder />
 
