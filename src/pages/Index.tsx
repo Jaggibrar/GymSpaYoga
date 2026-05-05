@@ -19,6 +19,7 @@ import WellnessStats from '@/components/WellnessStats';
 import ServiceFinder from '@/components/ServiceFinder';
 import SearchWithAutocomplete from '@/components/SearchWithAutocomplete';
 import DietPlanner from '@/components/DietPlanner';
+import HealthChallengeHub from '@/components/HealthChallengeHub';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
@@ -146,6 +147,9 @@ const Index = () => {
 
         {/* Free Diet Planner — engagement + SEO (calorie calculator, macros, meal plan) */}
         <DietPlanner />
+
+        {/* Daily Health Challenge — fresh quiz + tasks + health score every visit */}
+        <HealthChallengeHub />
 
         {/* Service Finder — interactive goal+budget guide */}
         <ServiceFinder />
