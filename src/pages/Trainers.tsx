@@ -35,7 +35,7 @@ const Trainers = () => {
       <SEOHead
         title="Best Personal Trainers in India - Certified Fitness Coaches Mumbai, Delhi, Bangalore | GymSpaYoga"
         description="Connect with certified personal trainers in Mumbai, Delhi, Bangalore & across India. Achieve your fitness goals with expert guidance and personalized programs. Book now!"
-        keywords="personal trainer near me, best fitness coach Mumbai, certified trainer Delhi, personal training Bangalore, weight loss trainer India"
+        keywords="personal trainer near me, best fitness coach Mumbai, certified trainer Delhi, personal training Bangalore, weight loss trainer India, female personal trainer, online personal trainer, home personal trainer, transformation coach, bodybuilding coach, strength coach, nutritionist, diet coach, sports coach, rehab trainer, yoga trainer, zumba instructor, pilates trainer, kickboxing coach, MMA coach, kids fitness coach, senior fitness trainer, prenatal trainer, postnatal trainer, ACE certified trainer, ACSM trainer, NASM trainer, K11 certified, REPS India, trainer in Pune, trainer in Hyderabad, trainer in Chennai, trainer in Kolkata"
       />
       
       <div className="min-h-screen bg-white">

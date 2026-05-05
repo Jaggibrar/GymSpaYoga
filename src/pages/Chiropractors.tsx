@@ -13,7 +13,7 @@
        <SEOHead
          title="Best Chiropractors in India - Spine & Pain Relief Specialists | GymSpaYoga"
          description="Find certified chiropractors in Mumbai, Delhi, Bangalore & across India. Expert spinal adjustments, pain relief treatments, and posture correction. Book now!"
-         keywords="chiropractor near me, best chiropractor Mumbai, spine specialist Delhi, back pain treatment Bangalore, chiropractic care India, posture correction"
+         keywords="chiropractor near me, best chiropractor Mumbai, spine specialist Delhi, back pain treatment Bangalore, chiropractic care India, posture correction, neck pain relief, sciatica treatment, slipped disc treatment, lower back pain, cervical pain, spinal adjustment, dry needling, cupping therapy, sports injury chiropractor, pediatric chiropractor, prenatal chiropractor, chiropractor in Pune, chiropractor in Hyderabad, chiropractor in Chennai, chiropractor in Kolkata, chiropractor in Gurgaon, chiropractor in Noida, scoliosis treatment, headache relief, frozen shoulder, knee pain"
        />
        
        <div className="min-h-screen bg-white">

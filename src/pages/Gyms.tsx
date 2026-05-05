@@ -195,7 +195,7 @@ const Gyms = () => {
       <SEOHead
         title="Best Gyms in India - Find Premium Fitness Centers Near You | GymSpaYoga"
         description="Discover and book the best gyms in Mumbai, Delhi, Bangalore & across India. State-of-the-art equipment, expert trainers, and flexible membership options. Book now!"
-        keywords="gyms near me, best gym Mumbai, premium gym Delhi, fitness center Bangalore, gym membership India, workout facilities"
+        keywords="gyms near me, best gym Mumbai, premium gym Delhi, fitness center Bangalore, gym membership India, 24/7 gym, ladies gym, crossfit box, weight loss gym, bodybuilding gym, powerlifting gym, gym with personal trainer, MMA gym, boxing gym, cardio center, strength training, HIIT studio, functional fitness, calisthenics park, gym in Pune, gym in Hyderabad, gym in Chennai, gym in Kolkata, gym in Ahmedabad, gym in Jaipur, gym in Chandigarh, affordable gym, luxury gym, top fitness centers India, gym free trial, gym day pass"
       />
       
       <div className="min-h-screen bg-background">

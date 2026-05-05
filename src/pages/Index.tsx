@@ -18,6 +18,7 @@ import HomeFAQ from '@/components/HomeFAQ';
 import WellnessStats from '@/components/WellnessStats';
 import ServiceFinder from '@/components/ServiceFinder';
 import SearchWithAutocomplete from '@/components/SearchWithAutocomplete';
+import DietPlanner from '@/components/DietPlanner';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
@@ -87,9 +88,9 @@ const Index = () => {
   return (
     <>
       <SEOHead
-        title="GymSpaYoga - Book Best Gyms, Spas, Yoga Classes & Personal Trainers Near Me"
-        description="Find & book the best gyms, luxury spas, yoga studios, certified personal trainers and chiropractors near you. 1500+ verified listings across 200+ cities. Real reviews, instant booking, exclusive wellness packages. Start your fitness & wellness journey today."
-        keywords="gym near me, spa near me, yoga classes near me, personal trainer near me, best gyms in india, luxury spas, yoga studios, fitness centers, wellness near me, gym membership, spa packages, yoga teacher training, weight loss gym, crossfit, hatha yoga, vinyasa yoga, ayurvedic spa, thai massage, deep tissue massage, prenatal yoga, hot yoga, female personal trainer, online yoga classes, home personal trainer, chiropractor near me, physiotherapist, sports massage, fitness booking app, wellness platform india, gymspayoga"
+        title="GymSpaYoga - Book Best Gyms, Spas, Yoga Classes, Trainers & Free Diet Plan Near Me"
+        description="Find & book the best gyms, luxury spas, yoga studios, certified personal trainers, chiropractors & therapists near you. 1500+ verified listings across 200+ cities. Free diet planner, calorie calculator, BMI & macro tracker. Real reviews, instant booking, exclusive wellness packages."
+        keywords="gym near me, spa near me, yoga classes near me, personal trainer near me, best gyms in india, luxury spas, yoga studios, fitness centers, wellness near me, gym membership, spa packages, yoga teacher training, weight loss gym, crossfit, hatha yoga, vinyasa yoga, ashtanga yoga, power yoga, kundalini yoga, ayurvedic spa, thai massage, swedish massage, deep tissue massage, aromatherapy, prenatal yoga, hot yoga, female personal trainer, online yoga classes, home personal trainer, chiropractor near me, physiotherapist, sports massage, fitness booking app, wellness platform india, diet plan, free diet planner, calorie calculator, indian diet chart, weight loss diet, muscle gain diet, keto diet plan, vegan diet plan, BMI calculator, BMR calculator, macro calculator, protein calculator, meal plan, nutrition guide, fat loss workout, beginner workout, home workout, HIIT training, zumba classes, pilates studio, meditation classes, mindfulness, ayurveda, naturopathy, womens fitness, transformation coach, online fitness coach, gym trainer in mumbai, spa in delhi, yoga in bangalore, fitness in pune, kolkata gyms, hyderabad spas, chennai yoga, jaipur trainers, gymspayoga"
       />
 
       <div className="min-h-screen bg-background">
@@ -142,6 +143,9 @@ const Index = () => {
             </StaggerContainer>
           </div>
         </section>
+
+        {/* Free Diet Planner — engagement + SEO (calorie calculator, macros, meal plan) */}
+        <DietPlanner />
 
         {/* Service Finder — interactive goal+budget guide */}
         <ServiceFinder />
