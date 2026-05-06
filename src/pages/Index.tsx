@@ -168,13 +168,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* IN-FEED NATIVE AD — Highest CTR position: between content sections */}
-        <div className="py-4 bg-background">
-          <div className="container mx-auto px-4">
-            <NativeAdUnit />
-          </div>
-        </div>
-
         {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
