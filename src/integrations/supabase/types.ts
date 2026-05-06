@@ -955,6 +955,51 @@ export type Database = {
         }
         Relationships: []
       }
+      health_progress: {
+        Row: {
+          completed_tasks: Json
+          created_at: string
+          earned_points: number
+          health_score: number
+          id: string
+          quiz_answers: Json
+          quiz_correct: number
+          quiz_pct: number
+          quiz_total: number
+          task_pct: number
+          total_points: number
+          user_id: string
+        }
+        Insert: {
+          completed_tasks?: Json
+          created_at?: string
+          earned_points?: number
+          health_score?: number
+          id?: string
+          quiz_answers?: Json
+          quiz_correct?: number
+          quiz_pct?: number
+          quiz_total?: number
+          task_pct?: number
+          total_points?: number
+          user_id: string
+        }
+        Update: {
+          completed_tasks?: Json
+          created_at?: string
+          earned_points?: number
+          health_score?: number
+          id?: string
+          quiz_answers?: Json
+          quiz_correct?: number
+          quiz_pct?: number
+          quiz_total?: number
+          task_pct?: number
+          total_points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       in_app_notifications: {
         Row: {
           booking_id: number | null
