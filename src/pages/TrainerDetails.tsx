@@ -16,6 +16,7 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import { toast } from 'sonner';
 import { TrainerStructuredData } from '@/components/SEO/TrainerStructuredData';
 import { generateImageAlt, getImageLoadingStrategy, getImageFetchPriority } from '@/utils/imageOptimization';
+import TrainerCertificates from '@/components/TrainerCertificates';
 
 const TrainerDetails = () => {
   const { id } = useParams();
@@ -203,6 +204,8 @@ const TrainerDetails = () => {
                 </div>
               </CardContent>
             </Card>
+
+            <TrainerCertificates trainerId={trainer.id} />
 
             <AboutSection
               businessName={trainer.name}

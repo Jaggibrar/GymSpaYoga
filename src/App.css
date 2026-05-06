@@ -103,6 +103,20 @@ body.hide-protected-images picture {
   }
 }
 
+/* Protected certificate cards: extra hardening */
+.protected-cert, .protected-cert * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+  -webkit-touch-callout: none !important;
+}
+body.hide-protected-images .protected-cert > div[role="img"] {
+  visibility: hidden !important;
+}
+@media print {
+  .protected-cert { display: none !important; }
+}
+
 /* ============================================================
    Image Watermark Overlay (corner brand mark)
    Applied via [data-watermark] wrappers on gallery/card images.
