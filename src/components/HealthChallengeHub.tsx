@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Brain, ListChecks, Trophy, RefreshCw, Sparkles, Target, Flame, Award, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Brain, ListChecks, Trophy, RefreshCw, Sparkles, Target, Flame, Award, ArrowRight, CheckCircle2, Save, TrendingUp, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 /* ---------------- DATA POOLS ---------------- */
 
@@ -98,6 +101,7 @@ const pickN = <T,>(arr: T[], n: number) => shuffle(arr).slice(0, n);
 /* ---------------- COMPONENT ---------------- */
 
 const HealthChallengeHub = () => {
+  const { user } = useAuth();
   const [seed, setSeed] = useState(0);
 
   const quizzes = useMemo(() => pickN(QUIZ_POOL, 3).map(q => ({ ...q, options: shuffle(q.options) })), [seed]);
@@ -106,8 +110,25 @@ const HealthChallengeHub = () => {
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [done, setDone] = useState<Record<string, boolean>>({});
+  const [saving, setSaving] = useState(false);
+  const [history, setHistory] = useState<Array<{ id: string; health_score: number; quiz_pct: number; task_pct: number; created_at: string }>>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   useEffect(() => { setQuizIndex(0); setQuizAnswers({}); setDone({}); }, [seed]);
+
+  const loadHistory = async () => {
+    if (!user) return;
+    setLoadingHistory(true);
+    const { data, error } = await supabase
+      .from('health_progress')
+      .select('id, health_score, quiz_pct, task_pct, created_at')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (!error && data) setHistory(data as any);
+    setLoadingHistory(false);
+  };
+
+  useEffect(() => { loadHistory(); }, [user?.id]);
 
   const totalTaskPoints = tasks.reduce((s, t) => s + t.points, 0);
   const earnedTaskPoints = tasks.reduce((s, t) => s + (done[t.id] ? t.points : 0), 0);
@@ -119,13 +140,47 @@ const HealthChallengeHub = () => {
   }, 0);
   const quizPct = Math.round((correctAnswers / quizzes.length) * 100);
 
-  // Health score: weighted blend
   const healthScore = Math.round(quizPct * 0.4 + taskPct * 0.6);
   const grade = healthScore >= 85 ? { label: 'Wellness Champion', color: 'text-primary', icon: Trophy } :
                 healthScore >= 60 ? { label: 'On Track', color: 'text-primary', icon: Flame } :
                 healthScore >= 30 ? { label: 'Getting Started', color: 'text-foreground', icon: Target } :
                 { label: 'Take Action!', color: 'text-muted-foreground', icon: Sparkles };
   const GradeIcon = grade.icon;
+
+  const handleSave = async () => {
+    if (!user) {
+      toast({ title: 'Sign in to save progress', description: 'Track your Health Score over time by signing in.' });
+      return;
+    }
+    setSaving(true);
+    const quizSnapshot = quizzes.map((q, i) => ({
+      question: q.q,
+      selected: quizAnswers[i] !== undefined ? q.options[quizAnswers[i]].text : null,
+      correct: q.options.find(o => o.correct)?.text ?? null,
+      was_correct: quizAnswers[i] !== undefined ? !!q.options[quizAnswers[i]].correct : false,
+    }));
+    const completedTasks = tasks.filter(t => done[t.id]).map(t => ({ id: t.id, text: t.text, points: t.points }));
+
+    const { error } = await supabase.from('health_progress').insert({
+      user_id: user.id,
+      health_score: healthScore,
+      quiz_pct: quizPct,
+      task_pct: taskPct,
+      quiz_correct: correctAnswers,
+      quiz_total: quizzes.length,
+      earned_points: earnedTaskPoints,
+      total_points: totalTaskPoints,
+      quiz_answers: quizSnapshot,
+      completed_tasks: completedTasks,
+    });
+    setSaving(false);
+    if (error) {
+      toast({ title: 'Could not save', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Progress saved!', description: `Health Score ${healthScore}/100 recorded.` });
+      loadHistory();
+    }
+  };
 
   const currentQuiz = quizzes[quizIndex];
   const currentAnswer = quizAnswers[quizIndex];
@@ -330,12 +385,65 @@ const HealthChallengeHub = () => {
                   <Progress value={taskPct} className="h-1.5" />
                 </div>
 
-                <Link to="/explore" className="block mt-5">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold">
+                {/* Save / Sign in */}
+                {user ? (
+                  <Button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="w-full mt-5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold"
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    {saving ? 'Saving…' : 'Save My Progress'}
+                  </Button>
+                ) : (
+                  <Link to="/login" className="block mt-5">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Sign in to Track Progress
+                    </Button>
+                  </Link>
+                )}
+
+                <Link to="/explore" className="block mt-2">
+                  <Button variant="outline" className="w-full rounded-xl font-semibold">
                     Boost Your Score — Find Wellness Pros
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
+
+                {/* History */}
+                {user && history.length > 0 && (
+                  <div className="mt-5 pt-5 border-t border-border">
+                    <div className="flex items-center gap-2 mb-3">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <h4 className="text-sm font-display font-bold text-foreground">Your Progress History</h4>
+                    </div>
+                    <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                      {history.map(h => (
+                        <div key={h.id} className="flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-accent/40">
+                          <span className="text-muted-foreground">
+                            {new Date(h.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </span>
+                          <Badge variant="secondary" className="font-bold">{h.health_score}/100</Badge>
+                        </div>
+                      ))}
+                    </div>
+                    {history.length >= 2 && (
+                      <p className="text-xs text-muted-foreground mt-2 text-center">
+                        {history[0].health_score > history[history.length - 1].health_score
+                          ? `📈 Improved by ${history[0].health_score - history[history.length - 1].health_score} points!`
+                          : history[0].health_score < history[history.length - 1].health_score
+                          ? `Keep going — you can beat your best of ${Math.max(...history.map(h => h.health_score))}!`
+                          : `Consistency is key 💪`}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {user && !loadingHistory && history.length === 0 && (
+                  <p className="mt-4 text-xs text-muted-foreground text-center">
+                    Save your first result to start tracking improvements over time.
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>

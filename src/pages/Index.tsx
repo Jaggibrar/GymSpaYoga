@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import NativeAdUnit from '@/components/NativeAdUnit';
+
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, Activity, Zap, Globe, CheckCircle2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
@@ -167,13 +167,6 @@ const Index = () => {
             </Suspense>
           </div>
         </section>
-
-        {/* IN-FEED NATIVE AD — Highest CTR position: between content sections */}
-        <div className="py-4 bg-background">
-          <div className="container mx-auto px-4">
-            <NativeAdUnit />
-          </div>
-        </div>
 
         {/* Why Choose Us */}
         <section className="py-16 md:py-24 bg-background">
