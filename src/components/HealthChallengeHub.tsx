@@ -385,12 +385,65 @@ const HealthChallengeHub = () => {
                   <Progress value={taskPct} className="h-1.5" />
                 </div>
 
-                <Link to="/explore" className="block mt-5">
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold">
+                {/* Save / Sign in */}
+                {user ? (
+                  <Button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="w-full mt-5 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold"
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    {saving ? 'Saving…' : 'Save My Progress'}
+                  </Button>
+                ) : (
+                  <Link to="/login" className="block mt-5">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-semibold">
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Sign in to Track Progress
+                    </Button>
+                  </Link>
+                )}
+
+                <Link to="/explore" className="block mt-2">
+                  <Button variant="outline" className="w-full rounded-xl font-semibold">
                     Boost Your Score — Find Wellness Pros
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
+
+                {/* History */}
+                {user && history.length > 0 && (
+                  <div className="mt-5 pt-5 border-t border-border">
+                    <div className="flex items-center gap-2 mb-3">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <h4 className="text-sm font-display font-bold text-foreground">Your Progress History</h4>
+                    </div>
+                    <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+                      {history.map(h => (
+                        <div key={h.id} className="flex items-center justify-between text-xs px-3 py-2 rounded-lg bg-accent/40">
+                          <span className="text-muted-foreground">
+                            {new Date(h.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </span>
+                          <Badge variant="secondary" className="font-bold">{h.health_score}/100</Badge>
+                        </div>
+                      ))}
+                    </div>
+                    {history.length >= 2 && (
+                      <p className="text-xs text-muted-foreground mt-2 text-center">
+                        {history[0].health_score > history[history.length - 1].health_score
+                          ? `📈 Improved by ${history[0].health_score - history[history.length - 1].health_score} points!`
+                          : history[0].health_score < history[history.length - 1].health_score
+                          ? `Keep going — you can beat your best of ${Math.max(...history.map(h => h.health_score))}!`
+                          : `Consistency is key 💪`}
+                      </p>
+                    )}
+                  </div>
+                )}
+                {user && !loadingHistory && history.length === 0 && (
+                  <p className="mt-4 text-xs text-muted-foreground text-center">
+                    Save your first result to start tracking improvements over time.
+                  </p>
+                )}
               </CardContent>
             </Card>
           </div>
