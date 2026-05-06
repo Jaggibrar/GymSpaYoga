@@ -101,6 +101,7 @@ const pickN = <T,>(arr: T[], n: number) => shuffle(arr).slice(0, n);
 /* ---------------- COMPONENT ---------------- */
 
 const HealthChallengeHub = () => {
+  const { user } = useAuth();
   const [seed, setSeed] = useState(0);
 
   const quizzes = useMemo(() => pickN(QUIZ_POOL, 3).map(q => ({ ...q, options: shuffle(q.options) })), [seed]);
@@ -109,8 +110,25 @@ const HealthChallengeHub = () => {
   const [quizIndex, setQuizIndex] = useState(0);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [done, setDone] = useState<Record<string, boolean>>({});
+  const [saving, setSaving] = useState(false);
+  const [history, setHistory] = useState<Array<{ id: string; health_score: number; quiz_pct: number; task_pct: number; created_at: string }>>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
 
   useEffect(() => { setQuizIndex(0); setQuizAnswers({}); setDone({}); }, [seed]);
+
+  const loadHistory = async () => {
+    if (!user) return;
+    setLoadingHistory(true);
+    const { data, error } = await supabase
+      .from('health_progress')
+      .select('id, health_score, quiz_pct, task_pct, created_at')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (!error && data) setHistory(data as any);
+    setLoadingHistory(false);
+  };
+
+  useEffect(() => { loadHistory(); }, [user?.id]);
 
   const totalTaskPoints = tasks.reduce((s, t) => s + t.points, 0);
   const earnedTaskPoints = tasks.reduce((s, t) => s + (done[t.id] ? t.points : 0), 0);
@@ -122,13 +140,47 @@ const HealthChallengeHub = () => {
   }, 0);
   const quizPct = Math.round((correctAnswers / quizzes.length) * 100);
 
-  // Health score: weighted blend
   const healthScore = Math.round(quizPct * 0.4 + taskPct * 0.6);
   const grade = healthScore >= 85 ? { label: 'Wellness Champion', color: 'text-primary', icon: Trophy } :
                 healthScore >= 60 ? { label: 'On Track', color: 'text-primary', icon: Flame } :
                 healthScore >= 30 ? { label: 'Getting Started', color: 'text-foreground', icon: Target } :
                 { label: 'Take Action!', color: 'text-muted-foreground', icon: Sparkles };
   const GradeIcon = grade.icon;
+
+  const handleSave = async () => {
+    if (!user) {
+      toast({ title: 'Sign in to save progress', description: 'Track your Health Score over time by signing in.' });
+      return;
+    }
+    setSaving(true);
+    const quizSnapshot = quizzes.map((q, i) => ({
+      question: q.q,
+      selected: quizAnswers[i] !== undefined ? q.options[quizAnswers[i]].text : null,
+      correct: q.options.find(o => o.correct)?.text ?? null,
+      was_correct: quizAnswers[i] !== undefined ? !!q.options[quizAnswers[i]].correct : false,
+    }));
+    const completedTasks = tasks.filter(t => done[t.id]).map(t => ({ id: t.id, text: t.text, points: t.points }));
+
+    const { error } = await supabase.from('health_progress').insert({
+      user_id: user.id,
+      health_score: healthScore,
+      quiz_pct: quizPct,
+      task_pct: taskPct,
+      quiz_correct: correctAnswers,
+      quiz_total: quizzes.length,
+      earned_points: earnedTaskPoints,
+      total_points: totalTaskPoints,
+      quiz_answers: quizSnapshot,
+      completed_tasks: completedTasks,
+    });
+    setSaving(false);
+    if (error) {
+      toast({ title: 'Could not save', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: 'Progress saved!', description: `Health Score ${healthScore}/100 recorded.` });
+      loadHistory();
+    }
+  };
 
   const currentQuiz = quizzes[quizIndex];
   const currentAnswer = quizAnswers[quizIndex];
