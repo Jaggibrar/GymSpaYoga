@@ -4,9 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Brain, ListChecks, Trophy, RefreshCw, Sparkles, Target, Flame, Award, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Brain, ListChecks, Trophy, RefreshCw, Sparkles, Target, Flame, Award, ArrowRight, CheckCircle2, Save, TrendingUp, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 /* ---------------- DATA POOLS ---------------- */
 
