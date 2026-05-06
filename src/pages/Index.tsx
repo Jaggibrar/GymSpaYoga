@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import NativeAdUnit from '@/components/NativeAdUnit';
+
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, Activity, Zap, Globe, CheckCircle2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
