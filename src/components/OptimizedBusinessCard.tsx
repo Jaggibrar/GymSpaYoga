@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star, Clock, Crown, Diamond, IndianRupee, ArrowRight } from 'lucide-react';
+import RatingStars from '@/components/ui/RatingStars';
 import { Link } from 'react-router-dom';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
