@@ -100,9 +100,8 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
             <h3 className="text-xl font-bold group-hover:text-[#005EB8] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
               {trainer.name}
             </h3>
-            <div className="flex items-center gap-1 text-sm text-yellow-600 flex-shrink-0">
-              <Star className="h-4 w-4 fill-current" />
-              <span className="font-medium">{trainer.rating || 4.8}</span>
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <RatingStars rating={trainer.rating || 4.8} size="sm" />
             </div>
           </div>
           
