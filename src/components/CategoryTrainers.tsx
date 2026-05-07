@@ -170,13 +170,13 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                 )}
 
                 {/* CTA */}
-                <Link to={`/trainers/${trainer.id}`} className="block mt-auto pt-1">
+                <div className="block mt-auto pt-1">
                   <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-xl h-11">
                     View Profile
                   </Button>
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
