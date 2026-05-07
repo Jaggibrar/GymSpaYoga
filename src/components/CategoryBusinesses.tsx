@@ -153,7 +153,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
               const tier = getTierFromPricing(business);
               const imageUrl = business.image_urls?.[0];
               const type = business.business_type?.toLowerCase();
-              const identifier = business.slug || business.id;
+              const identifier = (business as any).slug || business.id;
               const href =
                 type === 'spa'
                   ? `/spas/${identifier}`
