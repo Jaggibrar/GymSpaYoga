@@ -236,9 +236,7 @@ const BentoCard: React.FC<{ block: Block; index: number }> = ({ block, index }) 
       <div className="relative z-10 mt-auto flex h-full flex-col justify-end p-5 md:p-6">
         <div className="flex items-center gap-2 mb-2">
           <div className="flex items-center gap-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 px-2.5 py-1">
-            <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-            <span className="text-white text-xs font-semibold">{block.rating}</span>
-            <span className="text-white/70 text-xs">({block.reviews})</span>
+            <RatingStars rating={block.rating} size="sm" emptyClassName="text-white/30" />
           </div>
           <div className="flex items-center gap-1 text-white/85 text-xs">
             <MapPin className="h-3.5 w-3.5" />
