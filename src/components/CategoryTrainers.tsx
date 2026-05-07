@@ -112,11 +112,9 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                {/* Rating pill */}
+                {/* Rating pill (stars only) */}
                 <div className="absolute top-3 right-3 bg-card/90 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
-                  <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-semibold text-foreground">{trainer.rating || 4.8}</span>
-                  <span className="text-xs text-muted-foreground">({trainer.reviews_count || 12})</span>
+                  <RatingStars rating={trainer.rating || 4.8} size="sm" />
                 </div>
                 {/* Tier badge */}
                 {trainer.trainer_tier && (
