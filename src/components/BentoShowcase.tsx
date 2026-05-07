@@ -108,7 +108,7 @@ const blocks: Block[] = [
     reviews: 198,
     price: '₹2,000',
     unit: '/session',
-    href: '/trainers',
+    href: '/trainers/1add22ab-7d89-4376-b8f4-1c6e31399938',
     phone: '+919999999994',
     size: 'wide',
     status: 'New',
