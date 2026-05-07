@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, ArrowRight, Users, Clock, Award } from "lucide-react";
+import { MapPin, ArrowRight, Users, Clock, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTrainers } from "@/hooks/useTrainers";
+import RatingStars from "@/components/ui/RatingStars";
 
 interface CategoryTrainersProps {
   category: "gym" | "spa" | "yoga" | "trainer" | "chiropractor";
