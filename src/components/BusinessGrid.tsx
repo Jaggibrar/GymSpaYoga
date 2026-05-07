@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Business } from '@/hooks/useBusinessData';
 import ImageGallery from './ImageGallery';
 import WhatsAppButton from './WhatsAppButton';
+import RatingStars from '@/components/ui/RatingStars';
 
 interface BusinessGridProps {
   businesses: Business[];
