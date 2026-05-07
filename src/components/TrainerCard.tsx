@@ -3,7 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Star, Phone, Mail, Users, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Users, ArrowRight } from 'lucide-react';
+import RatingStars from '@/components/ui/RatingStars';
 import { useNavigate } from 'react-router-dom';
 import { Trainer } from '@/hooks/useTrainers';
 import WhatsAppButton from '@/components/WhatsAppButton';
@@ -47,11 +48,7 @@ const TrainerCard: React.FC<TrainerCardProps> = ({ trainer }) => {
         />
         <div className="absolute top-4 right-4">
           <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1">
-            <div className="flex items-center space-x-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold">{trainer.rating || 4.8}</span>
-              <span className="text-sm text-gray-500">({trainer.reviews_count || 12})</span>
-            </div>
+            <RatingStars rating={trainer.rating || 4.8} size="sm" />
           </div>
         </div>
         <div className="absolute top-4 left-4">

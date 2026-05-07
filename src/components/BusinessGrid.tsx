@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Business } from '@/hooks/useBusinessData';
 import ImageGallery from './ImageGallery';
 import WhatsAppButton from './WhatsAppButton';
+import RatingStars from '@/components/ui/RatingStars';
 
 interface BusinessGridProps {
   businesses: Business[];
@@ -80,9 +81,8 @@ const BusinessGrid: React.FC<BusinessGridProps> = ({ businesses, loading, catego
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
             <div className="absolute top-3 right-3">
-              <Badge className="bg-white/95 text-gray-800 shadow-md backdrop-blur-sm">
-                <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
-                4.8
+              <Badge className="bg-white/95 text-gray-800 shadow-md backdrop-blur-sm flex items-center gap-1 px-2 py-1">
+                <RatingStars rating={4.8} size="sm" />
               </Badge>
             </div>
             <div className="absolute top-3 left-3 flex flex-col gap-2">

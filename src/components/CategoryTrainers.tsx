@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Star, ArrowRight, Users, Clock, Award } from "lucide-react";
+import { MapPin, ArrowRight, Users, Clock, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTrainers } from "@/hooks/useTrainers";
+import RatingStars from "@/components/ui/RatingStars";
 
 interface CategoryTrainersProps {
   category: "gym" | "spa" | "yoga" | "trainer" | "chiropractor";
@@ -100,9 +101,10 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
         {/* Trainer Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {displayTrainers.map((trainer) => (
-            <div
+            <Link
               key={trainer.id}
-              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+              to={`/trainers/${trainer.id}`}
+              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300 flex flex-col cursor-pointer"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
@@ -112,11 +114,9 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />
-                {/* Rating pill */}
+                {/* Rating pill (stars only) */}
                 <div className="absolute top-3 right-3 bg-card/90 backdrop-blur-sm rounded-full px-2.5 py-1 flex items-center gap-1 shadow-sm">
-                  <Star className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400" />
-                  <span className="text-sm font-semibold text-foreground">{trainer.rating || 4.8}</span>
-                  <span className="text-xs text-muted-foreground">({trainer.reviews_count || 12})</span>
+                  <RatingStars rating={trainer.rating || 4.8} size="sm" />
                 </div>
                 {/* Tier badge */}
                 {trainer.trainer_tier && (
@@ -170,13 +170,13 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
                 )}
 
                 {/* CTA */}
-                <Link to={`/trainers/${trainer.id}`} className="block mt-auto pt-1">
+                <div className="block mt-auto pt-1">
                   <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold rounded-xl h-11">
                     View Profile
                   </Button>
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

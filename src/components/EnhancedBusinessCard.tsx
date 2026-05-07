@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, MessageCircle, Star, Shield } from "lucide-react";
+import RatingStars from "@/components/ui/RatingStars";
 import OptimizedImage from "@/components/OptimizedImage";
 import { Badge } from "@/components/ui/badge";
 import { Verified, Award, TrendingUp } from "lucide-react";
@@ -122,9 +123,7 @@ const EnhancedBusinessCard = ({
           <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                <span className="text-sm font-bold">4.8</span>
-                <span className="text-xs text-gray-600">(124 reviews)</span>
+                <RatingStars rating={4.8} size="sm" />
               </div>
               <Badge className="bg-blue-100 text-blue-700 text-xs">
                 Open Now

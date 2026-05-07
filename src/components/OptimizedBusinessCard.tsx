@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MapPin, Star, Clock, Crown, Diamond, IndianRupee, ArrowRight } from 'lucide-react';
+import RatingStars from '@/components/ui/RatingStars';
 import { Link } from 'react-router-dom';
 import WhatsAppButton from '@/components/WhatsAppButton';
 
@@ -94,9 +95,8 @@ const OptimizedBusinessCard = memo(({ business }: OptimizedBusinessCardProps) =>
         <Badge className={`absolute top-3 right-3 ${getTierStyles(tier)} border-0 px-2.5 py-1 text-xs font-semibold shadow-sm`}>
           <span className="capitalize">{tier}</span>
         </Badge>
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm rounded-lg px-2.5 py-1">
-          <Star className="h-3.5 w-3.5 fill-current text-yellow-400" />
-          <span className="font-semibold text-white text-sm">4.7</span>
+        <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1">
+          <RatingStars rating={4.7} size="sm" emptyClassName="text-white/30" />
         </div>
       </div>
       
