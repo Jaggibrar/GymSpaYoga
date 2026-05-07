@@ -20,6 +20,7 @@ import ServiceFinder from '@/components/ServiceFinder';
 import SearchWithAutocomplete from '@/components/SearchWithAutocomplete';
 import DietPlanner from '@/components/DietPlanner';
 import HealthChallengeHub from '@/components/HealthChallengeHub';
+import BentoShowcase from '@/components/BentoShowcase';
 
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
@@ -144,6 +145,9 @@ const Index = () => {
             </StaggerContainer>
           </div>
         </section>
+
+        {/* Premium Bento Grid showcase */}
+        <BentoShowcase />
 
         {/* Free Diet Planner — engagement + SEO (calorie calculator, macros, meal plan) */}
         <DietPlanner />
