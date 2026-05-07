@@ -5,12 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Star, Clock, Phone, Mail, Search, MessageCircle, Eye, Verified } from 'lucide-react';
+import { MapPin, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import BookingModal from '@/components/BookingModal';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { getTierFromPricing, getTierColor } from '@/utils/businessUtils';
-import ViewModeToggle, { ViewMode } from '@/components/ui/ViewModeToggle';
+import { getTierFromPricing } from '@/utils/businessUtils';
+import { ViewMode } from '@/components/ui/ViewModeToggle';
+import PremiumListingCard from '@/components/PremiumListingCard';
 
 interface CategoryBusinessesProps {
   category: string;
