@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import ScrollReveal from '@/components/ScrollReveal';
+import RatingStars from '@/components/ui/RatingStars';
 
 type Block = {
   id: string;
