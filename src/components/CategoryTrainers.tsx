@@ -101,9 +101,10 @@ const CategoryTrainers = ({ category }: CategoryTrainersProps) => {
         {/* Trainer Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {displayTrainers.map((trainer) => (
-            <div
+            <Link
               key={trainer.id}
-              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+              to={`/trainers/${trainer.id}`}
+              className="group bg-card rounded-2xl overflow-hidden border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary/40 transition-all duration-300 flex flex-col cursor-pointer"
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
