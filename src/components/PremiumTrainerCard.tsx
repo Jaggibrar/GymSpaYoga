@@ -13,6 +13,7 @@ import {
   Zap,
   Verified
 } from 'lucide-react';
+import RatingStars from '@/components/ui/RatingStars';
 import { useNavigate } from 'react-router-dom';
 import { Trainer } from '@/hooks/useTrainers';
 
