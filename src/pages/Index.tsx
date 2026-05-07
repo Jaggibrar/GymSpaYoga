@@ -146,6 +146,9 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Premium Bento Grid showcase */}
+        <BentoShowcase />
+
         {/* Free Diet Planner — engagement + SEO (calorie calculator, macros, meal plan) */}
         <DietPlanner />
 
