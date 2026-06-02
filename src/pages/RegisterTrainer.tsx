@@ -14,56 +14,36 @@ const RegisterTrainer = () => {
   const [registrationResult, setRegistrationResult] = useState<{ trainerId: string; status: string } | null>(null);
 
   const benefits = [
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: "Connect with Clients",
-      description: "Meet fitness enthusiasts who are actively looking for professional trainers in your area."
-    },
-    {
-      icon: <TrendingUp className="h-8 w-8" />,
-      title: "Grow Your Income",
-      description: "Set your own rates and build a steady stream of clients through our platform."
-    },
-    {
-      icon: <Star className="h-8 w-8" />,
-      title: "Build Your Reputation",
-      description: "Showcase your expertise, collect reviews, and establish yourself as a trusted trainer."
-    },
-    {
-      icon: <Clock className="h-8 w-8" />,
-      title: "Flexible Schedule",
-      description: "Work on your own terms with flexible scheduling and booking management tools."
-    }
+    { icon: <Users className="h-7 w-7" />, title: 'Connect with clients', description: 'Reach motivated trainees actively searching for trainers.' },
+    { icon: <TrendingUp className="h-7 w-7" />, title: 'Grow your income', description: 'Set your rates and build a steady client base.' },
+    { icon: <Star className="h-7 w-7" />, title: 'Build your reputation', description: 'Showcase expertise and collect verified reviews.' },
+    { icon: <Clock className="h-7 w-7" />, title: 'Flexible schedule', description: 'Work on your terms with smart booking tools.' },
   ];
 
   const features = [
-    "Professional profile showcase",
-    "Direct client communication",
-    "Secure payment processing",
-    "Review and rating system",
-    "Booking management tools",
-    "Marketing support"
+    'Professional profile showcase',
+    'Direct client communication',
+    'Secure payment processing',
+    'Review and rating system',
+    'Booking management tools',
+    'Marketing support',
   ];
 
   if (showForm) {
     return (
       <>
         <SEOHead
-          title="Trainer Registration - GymSpaYoga | Join Our Platform"
-          description="Register as a fitness trainer on GymSpaYoga. Connect with clients, manage bookings, and grow your training business with our comprehensive platform."
+          title="Trainer Registration - GymSpaYoga"
+          description="Register as a fitness trainer on GymSpaYoga. Connect with clients and grow your training business."
           keywords="trainer registration, fitness trainer, personal trainer, yoga instructor"
         />
-
-        <div className="min-h-screen bg-gray-50 py-12">
+        <div className="min-h-screen bg-background py-12">
           <div className="container mx-auto px-4">
             {registrationResult ? (
               <TrainerRegistrationSuccess
                 trainerId={registrationResult.trainerId}
                 status={registrationResult.status}
-                onBack={() => {
-                  setRegistrationResult(null);
-                  setShowForm(false);
-                }}
+                onBack={() => { setRegistrationResult(null); setShowForm(false); }}
               />
             ) : (
               <TrainerRegistrationForm
@@ -71,19 +51,15 @@ const RegisterTrainer = () => {
                   if (result.trainerId) {
                     setRegistrationResult({
                       trainerId: result.trainerId,
-                      status: result.status || 'pending'
+                      status: result.status || 'pending',
                     });
                   }
                 }}
-                onCancel={() => {
-                  setRegistrationResult(null);
-                  setShowForm(false);
-                }}
+                onCancel={() => { setRegistrationResult(null); setShowForm(false); }}
               />
             )}
-
             {!user && (
-              <p className="text-center text-sm text-gray-600 mt-4">
+              <p className="text-center text-sm text-muted-foreground mt-4">
                 You must be logged in to submit your trainer application.
               </p>
             )}
@@ -97,47 +73,36 @@ const RegisterTrainer = () => {
     <>
       <SEOHead
         title="Become a Trainer - GymSpaYoga | Join Our Network"
-        description="Join GymSpaYoga as a certified trainer. Connect with fitness enthusiasts, grow your client base, and build your reputation in the wellness industry."
+        description="Join GymSpaYoga as a certified trainer. Connect with fitness enthusiasts and grow your client base."
         keywords="become trainer, fitness trainer jobs, personal trainer platform, yoga instructor"
       />
-      
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-[#005EB8] text-white py-20 lg:py-32">
-          <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative container mx-auto px-4">
-            <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-8">
-                <div className="flex justify-center mb-8">
-                  <div className="bg-white/20 p-6 rounded-full backdrop-blur-sm">
-                    <Dumbbell className="h-20 w-20" />
+
+      <div className="min-h-screen bg-background">
+        {/* Hero */}
+        <section className="relative overflow-hidden section-padding">
+          <div className="absolute inset-0 bg-gradient-hero" />
+          <div className="absolute inset-0 grain-overlay pointer-events-none" />
+          <div className="container-modern relative">
+            <div className="max-w-3xl mx-auto text-center animate-fade-in">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute -inset-3 bg-gradient-emerald opacity-30 blur-2xl rounded-full" />
+                  <div className="relative w-20 h-20 rounded-3xl bg-primary/15 border border-primary/30 flex items-center justify-center">
+                    <Dumbbell className="h-10 w-10 text-primary" />
                   </div>
                 </div>
-                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-                  Become a <span className="text-white/80">Trainer</span>
-                </h1>
-                <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                  Join thousands of certified trainers who are building successful careers through our platform. 
-                  Connect with motivated clients and grow your fitness business with purpose and passion.
-                </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  onClick={() => setShowForm(true)}
-                  size="lg"
-                  className="bg-white text-[#005EB8] hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
-                >
+              <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 leading-[1.05]">
+                Become a <span className="text-gradient-emerald">trainer</span>
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed max-w-2xl mx-auto">
+                Join certified trainers building successful careers on our platform. Connect with motivated clients and grow with purpose.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button size="lg" className="btn-primary" onClick={() => setShowForm(true)}>
                   Get Started Now
                 </Button>
-                <Button 
-                  variant="outline"
-                  size="lg"
-                  className="border-white text-white hover:bg-white/10 px-8 py-4 text-lg"
-                  asChild
-                >
+                <Button size="lg" className="btn-secondary" asChild>
                   <Link to="/trainers">View Trainers</Link>
                 </Button>
               </div>
@@ -145,33 +110,26 @@ const RegisterTrainer = () => {
           </div>
         </section>
 
-        {/* Benefits Section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Why Choose Our Platform?
+        {/* Benefits */}
+        <section className="section-padding">
+          <div className="container-modern">
+            <div className="text-center mb-16 max-w-2xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
+                Why choose <span className="text-gradient-emerald">our platform</span>
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                We provide everything you need to succeed as a fitness professional
-              </p>
+              <p className="text-muted-foreground text-lg">Everything you need to succeed as a fitness professional.</p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="flex justify-center mb-4">
-                      <div className="bg-[#005EB8] text-white p-3 rounded-full">
-                        {benefit.icon}
-                      </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {benefits.map((b, i) => (
+                <Card key={i} className="glass-card glass-card-hover border-0">
+                  <CardHeader className="pb-3">
+                    <div className="w-12 h-12 rounded-2xl bg-primary/15 border border-primary/30 flex items-center justify-center mb-4 text-primary">
+                      {b.icon}
                     </div>
-                    <CardTitle className="text-xl font-bold text-gray-900">
-                      {benefit.title}
-                    </CardTitle>
+                    <CardTitle className="text-lg font-display text-foreground">{b.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600">{benefit.description}</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{b.description}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -179,52 +137,43 @@ const RegisterTrainer = () => {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                    Everything You Need to Succeed
-                  </h2>
-                  <p className="text-lg text-gray-600 mb-8">
-                    Our comprehensive platform provides all the tools and support you need to build 
-                    and grow your training business.
-                  </p>
-                  
-                  <div className="space-y-4">
-                    {features.map((feature, index) => (
-                      <div key={index} className="flex items-center">
-                        <CheckCircle className="h-6 w-6 text-[#005EB8] mr-3 flex-shrink-0" />
-                        <span className="text-gray-700 font-medium">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <Button 
-                    onClick={() => setShowForm(true)}
-                    size="lg"
-                    className="mt-8 bg-[#005EB8] hover:bg-[#004d96]"
-                  >
-                    Start Your Journey
-                  </Button>
-                </div>
-                
-                <div className="relative">
-                  <img
-                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&h=400&fit=crop"
-                    alt="Fitness trainer helping client"
-                    className="rounded-2xl shadow-2xl"
-                  />
-                  <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-xl shadow-lg">
-                    <div className="flex items-center">
-                      <Heart className="h-8 w-8 text-red-500 mr-3" />
-                      <div>
-                        <p className="font-bold text-gray-900">5000+</p>
-                        <p className="text-sm text-gray-600">Happy Clients</p>
-                      </div>
+        {/* Features split */}
+        <section className="section-padding">
+          <div className="container-modern">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 leading-tight">
+                  Everything you need to <span className="text-gradient-emerald">succeed</span>
+                </h2>
+                <p className="text-lg text-muted-foreground mb-8">
+                  A complete toolkit to build and grow your training business.
+                </p>
+                <div className="space-y-3">
+                  {features.map((feature, i) => (
+                    <div key={i} className="flex items-center gap-3 glass-card px-4 py-3">
+                      <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
+                      <span className="text-foreground text-sm">{feature}</span>
                     </div>
+                  ))}
+                </div>
+                <Button onClick={() => setShowForm(true)} size="lg" className="mt-8 btn-primary">
+                  Start Your Journey
+                </Button>
+              </div>
+
+              <div className="relative">
+                <div className="absolute -inset-6 bg-gradient-emerald opacity-20 blur-3xl rounded-full" />
+                <img
+                  src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=900&q=80"
+                  alt="Fitness trainer helping client"
+                  className="relative rounded-3xl shadow-2xl w-full h-[480px] object-cover border border-white/10"
+                  loading="lazy"
+                />
+                <div className="absolute -bottom-5 -left-5 glass-card px-5 py-4 flex items-center gap-3">
+                  <Heart className="h-7 w-7 text-primary" />
+                  <div>
+                    <p className="font-display font-bold text-foreground">5,000+</p>
+                    <p className="text-xs text-muted-foreground">Happy Clients</p>
                   </div>
                 </div>
               </div>
@@ -232,23 +181,22 @@ const RegisterTrainer = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-[#005EB8]">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-3xl mx-auto text-white">
-              <h2 className="text-4xl font-bold mb-6">
-                Ready to Transform Lives?
-              </h2>
-              <p className="text-xl mb-8">
-                Join our community of successful trainers and start making a difference today.
-              </p>
-              <Button 
-                onClick={() => setShowForm(true)}
-                size="lg"
-                className="bg-white text-[#005EB8] hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
-              >
-                Register Now - It's Free!
-              </Button>
+        {/* CTA */}
+        <section className="section-padding">
+          <div className="container-modern">
+            <div className="relative overflow-hidden rounded-3xl glass-card p-12 md:p-16 text-center">
+              <div className="absolute inset-0 bg-gradient-hero opacity-60" />
+              <div className="relative max-w-2xl mx-auto">
+                <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
+                  Ready to <span className="text-gradient-emerald">transform lives?</span>
+                </h2>
+                <p className="text-muted-foreground text-lg mb-8">
+                  Join our community of successful trainers and start making a difference today.
+                </p>
+                <Button onClick={() => setShowForm(true)} size="lg" className="btn-primary">
+                  Register Now — It's Free
+                </Button>
+              </div>
             </div>
           </div>
         </section>
