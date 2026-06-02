@@ -77,7 +77,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
           <LoadingSpinner />
-          <p className="mt-4 text-gray-600">Loading {title.toLowerCase()}...</p>
+          <p className="mt-4 text-muted-foreground">Loading {title.toLowerCase()}...</p>
         </div>
       </div>
     );
@@ -87,17 +87,18 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-red-600">Error loading {title.toLowerCase()}: {error}</p>
+          <p className="text-destructive">Error loading {title.toLowerCase()}: {error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">{title}</h2>
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">{title}</h2>
+          <div className="mx-auto h-px w-24 bg-gradient-emerald" />
         </div>
 
         {/* Search and Filter Controls (optional per category) */}
@@ -140,12 +141,12 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
 
         {/* Business Cards */}
         {businesses.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-400 mb-4">
+          <div className="text-center py-16 glass-card max-w-xl mx-auto">
+            <div className="text-muted-foreground mb-4">
               <Search className="h-16 w-16 mx-auto" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">No {title.toLowerCase()} found</h3>
-            <p className="text-gray-500">Try adjusting your search filters or check back later</p>
+            <h3 className="text-xl font-semibold text-foreground mb-2">No {title.toLowerCase()} found</h3>
+            <p className="text-muted-foreground">Try adjusting your search filters or check back later</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
@@ -200,7 +201,7 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
 
         {/* Description Section - Moved Below Listings */}
         <div className="text-center mt-16">
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             {description}
           </p>
         </div>
