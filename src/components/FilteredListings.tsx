@@ -171,7 +171,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
           {getFilterTitle()} - {pageType.charAt(0).toUpperCase() + pageType.slice(1)}s
         </h2>
-        <Badge className="mb-4 bg-[#005EB8]/20 text-white border-[#005EB8]/30 backdrop-blur-sm text-lg px-4 py-2">
+        <Badge className="mb-4 bg-[hsl(var(--primary))]/20 text-white border-[hsl(var(--primary))]/30 backdrop-blur-sm text-lg px-4 py-2">
           Showing {filteredListings.length} premium results
         </Badge>
       </div>
@@ -186,17 +186,17 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                 className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              <Badge className="absolute top-4 right-4 bg-[#005EB8] backdrop-blur-sm hover:bg-[#004d96]">
+              <Badge className="absolute top-4 right-4 bg-[hsl(var(--primary))] backdrop-blur-sm hover:bg-[hsl(var(--primary))]">
                 {listing.category}
               </Badge>
             </div>
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors duration-300">
+                  <CardTitle className="text-lg md:text-xl font-bold text-gray-800 group-hover:text-[hsl(var(--primary))] transition-colors duration-300">
                     {listing.name}
                   </CardTitle>
-                  <p className="text-[#005EB8] font-semibold text-sm md:text-base">{listing.type}</p>
+                  <p className="text-[hsl(var(--primary))] font-semibold text-sm md:text-base">{listing.type}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Star className="h-4 md:h-5 w-4 md:w-5 fill-yellow-400 text-yellow-400" />
@@ -207,10 +207,10 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
             <CardContent className="pt-0">
               <div className="space-y-3 mb-6">
                 <div className="flex items-center text-gray-600">
-                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-3 text-[#005EB8]" />
+                  <MapPin className="h-4 md:h-5 w-4 md:w-5 mr-3 text-[hsl(var(--primary))]" />
                   <span className="text-sm md:text-base">{listing.location}</span>
                 </div>
-                <div className="flex items-center text-[#005EB8] font-bold text-base md:text-lg">
+                <div className="flex items-center text-[hsl(var(--primary))] font-bold text-base md:text-lg">
                   <span>{listing.price}</span>
                 </div>
               </div>
@@ -230,7 +230,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
                 <BusinessDetailsModal
                   business={convertToBusinessFormat(listing)}
                   trigger={
-                    <Button className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-sm px-4 py-2 min-h-[40px]">
+                    <Button className="flex-1 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-sm px-4 py-2 min-h-[40px]">
                       <span className="block">View Details</span>
                       <ArrowRight className="ml-2 h-4 w-4 flex-shrink-0" />
                     </Button>
@@ -265,7 +265,7 @@ const FilteredListings = ({ listings, pageType, searchTerm = '', location = '' }
               No {pageType}s found for the selected filters or search criteria.
             </p>
             <Button 
-              className="mt-4 bg-[#005EB8] hover:bg-[#004d96]"
+              className="mt-4 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]"
               onClick={() => {
                 setActiveFilter('all');
                 setActiveSort('popular');

@@ -100,7 +100,7 @@ export const BookingsList = ({
             }
           </p>
           {!businessOwnersView && (
-            <Button className="bg-[#005EB8] hover:bg-[#004d96]">
+            <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
               Browse Services
             </Button>
           )}

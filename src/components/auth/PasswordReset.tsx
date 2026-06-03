@@ -40,8 +40,8 @@ const PasswordReset = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="h-12 w-12 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-6 w-6 text-[#005EB8]" />
+            <div className="h-12 w-12 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Mail className="h-6 w-6 text-[hsl(var(--primary))]" />
             </div>
             <CardTitle>Check Your Email</CardTitle>
           </CardHeader>
@@ -92,7 +92,7 @@ const PasswordReset = () => {
             </Button>
 
             <div className="text-center">
-              <Link to="/login" className="text-sm text-[#005EB8] hover:underline">
+              <Link to="/login" className="text-sm text-[hsl(var(--primary))] hover:underline">
                 Remember your password? Sign in
               </Link>
             </div>

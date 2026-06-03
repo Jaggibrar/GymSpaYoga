@@ -78,7 +78,7 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
       </div>
       
       <CardHeader className="pb-4 px-6">
-        <CardTitle className="text-xl font-semibold group-hover:text-[#005EB8] transition-colors line-clamp-1 mb-2">
+        <CardTitle className="text-xl font-semibold group-hover:text-[hsl(var(--primary))] transition-colors line-clamp-1 mb-2">
           {business.business_name}
         </CardTitle>
         <div className="flex items-center text-gray-600 text-sm">
@@ -97,7 +97,7 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
             <Clock className="h-4 w-4 mr-2" />
             <span>{business.opening_time} - {business.closing_time}</span>
           </div>
-          <div className="font-semibold text-[#005EB8] text-base">
+          <div className="font-semibold text-[hsl(var(--primary))] text-base">
             {business.session_price ? `₹${business.session_price}/session` : 
              business.monthly_price ? `₹${business.monthly_price}/month` : 'Contact'}
           </div>
@@ -120,7 +120,7 @@ const BusinessCard = memo(({ business, onSelect, isSelected }: {
         
         <div className="flex gap-2 pt-3">
           <Link to={`/business/${business.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
-            <Button size="sm" className="w-full bg-[#005EB8] hover:bg-[#004d96] text-sm py-2.5">
+            <Button size="sm" className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-sm py-2.5">
               View Details
             </Button>
           </Link>

@@ -98,7 +98,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
       <CardContent className="p-6 space-y-4">
         <div className="space-y-2">
           <div className="flex items-start justify-between">
-            <h3 className="text-xl font-bold group-hover:text-[#005EB8] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
+            <h3 className="text-xl font-bold group-hover:text-[hsl(var(--primary))] transition-colors line-clamp-2 leading-tight flex-1 mr-2">
               {trainer.name}
             </h3>
             <div className="flex items-center gap-1 flex-shrink-0">
@@ -138,7 +138,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
           </div>
           
           <div className="flex items-center gap-2">
-            <p className="text-lg font-bold text-[#005EB8]">₹{trainer.hourly_rate}/session</p>
+            <p className="text-lg font-bold text-[hsl(var(--primary))]">₹{trainer.hourly_rate}/session</p>
           </div>
         </div>
 
@@ -157,7 +157,7 @@ const PremiumTrainerCard: React.FC<PremiumTrainerCardProps> = ({
             View Details
           </Button>
           <Button 
-            className="flex-1 bg-[#005EB8] hover:bg-[#004d96] text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="flex-1 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={handleBookSession}
           >
             <MessageCircle className="h-4 w-4 mr-1" />

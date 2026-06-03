@@ -105,7 +105,7 @@ export const GeolocationRecommendations = () => {
               <Button 
                 onClick={getCurrentPosition}
                 disabled={geoLoading}
-                className="bg-[#005EB8] hover:bg-[#004d96]"
+                className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]"
               >
                 {geoLoading ? 'Getting Location...' : 'Share Location'}
               </Button>

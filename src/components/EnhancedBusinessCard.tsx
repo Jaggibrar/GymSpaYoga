@@ -81,7 +81,7 @@ const EnhancedBusinessCard = ({
   };
 
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[#005EB8] bg-white relative overflow-hidden rounded-xl">
+    <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-2 hover:border-[hsl(var(--primary))] bg-white relative overflow-hidden rounded-xl">
       <div data-watermark="true" className="relative overflow-hidden w-full rounded-t-xl" style={{ aspectRatio: '4/3' }}>
         <OptimizedImage 
           src={image} 
@@ -92,7 +92,7 @@ const EnhancedBusinessCard = ({
         
         {/* Enhanced Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <Badge className="bg-[#005EB8] hover:bg-[#004d96] text-white font-bold text-xs">
+          <Badge className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white font-bold text-xs">
             {category}
           </Badge>
           {verified && (
@@ -134,7 +134,7 @@ const EnhancedBusinessCard = ({
       </div>
       
       <CardHeader className="pb-2 sm:pb-3 p-4 sm:p-6 md:p-8">
-        <CardTitle className="text-lg sm:text-xl md:text-2xl group-hover:text-[#005EB8] transition-colors line-clamp-1 font-black">
+        <CardTitle className="text-lg sm:text-xl md:text-2xl group-hover:text-[hsl(var(--primary))] transition-colors line-clamp-1 font-black">
           {name}
         </CardTitle>
         <div className="flex items-center gap-2 text-gray-600">
@@ -164,13 +164,13 @@ const EnhancedBusinessCard = ({
           <div className="flex items-center justify-between">
             <span className="text-base font-bold text-gray-800">Starting at</span>
             <div className="text-right">
-              <span className="text-2xl font-black text-[#005EB8]">{price}</span>
+              <span className="text-2xl font-black text-[hsl(var(--primary))]">{price}</span>
             </div>
           </div>
           
           <Button 
             onClick={handleViewDetails}
-            className="w-full bg-[#005EB8] hover:bg-[#004d96] font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
+            className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] font-black py-3 text-lg transition-all duration-300 transform hover:scale-105"
           >
             View Details
           </Button>

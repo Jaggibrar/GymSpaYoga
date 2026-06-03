@@ -210,7 +210,7 @@ const Therapists = () => {
         </div>
 
         {/* GymSpaYoga Branding Banner with Real People */}
-        <section className="bg-[#005EB8] py-16">
+        <section className="bg-[hsl(var(--primary))] py-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
               {/* Left: Real People Images */}
@@ -252,13 +252,13 @@ const Therapists = () => {
               {/* Right: CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/explore">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
                     Explore More
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
                     <MessageCircle className="mr-2 h-5 w-5" />
                     Contact on WhatsApp
                   </Button>

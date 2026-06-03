@@ -43,7 +43,7 @@ export default function BusinessDashboard() {
               <h1 className="text-3xl font-bold text-gray-800 mb-4">Welcome to Your Business Dashboard</h1>
               <p className="text-gray-600 mb-8 text-lg">Get started by creating your business profile to begin receiving bookings and managing your services.</p>
               <Link to="/register-business">
-                <Button size="lg" className="bg-[#005EB8] hover:bg-[#004d96] px-8 py-3">
+                <Button size="lg" className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] px-8 py-3">
                   <Building2 className="h-5 w-5 mr-2" />
                   Create Business Profile
                 </Button>
@@ -76,7 +76,7 @@ export default function BusinessDashboard() {
           </div>
           <div className="flex flex-col sm:flex-row gap-3 mt-4 lg:mt-0">
             <Link to="/register-business">
-              <Button className="bg-[#005EB8] hover:bg-[#004d96]">
+              <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Listing
               </Button>
@@ -125,7 +125,7 @@ export default function BusinessDashboard() {
                       <p className="text-2xl font-bold text-gray-800">--</p>
                       <p className="text-xs text-green-600">Live data coming soon</p>
                     </div>
-                    <div className="w-12 h-12 bg-[#005EB8] rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[hsl(var(--primary))] rounded-xl flex items-center justify-center">
                       <Calendar className="h-6 w-6 text-white" />
                     </div>
                   </div>
@@ -192,7 +192,7 @@ export default function BusinessDashboard() {
           <Card className="border-0 shadow-xl">
             <CardHeader className="bg-gray-100 rounded-t-lg">
               <CardTitle className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-[#005EB8] rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-[hsl(var(--primary))] rounded-lg flex items-center justify-center">
                   <Calendar className="h-5 w-5 text-white" />
                 </div>
                 Booking Management
