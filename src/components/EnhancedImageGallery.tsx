@@ -94,18 +94,24 @@ const EnhancedImageGallery: React.FC<EnhancedImageGalleryProps> = ({
           data-watermark="true"
           className={`relative ${aspectRatio} rounded-3xl overflow-hidden group cursor-zoom-in bg-muted/30 border border-border/50`}
         >
-          {displayImages.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt={`${name} - Image ${i + 1}`}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              onClick={() => i === selectedImage && setIsLightboxOpen(true)}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
-                i === selectedImage ? 'opacity-100 scale-100 group-hover:scale-105' : 'opacity-0 scale-105 pointer-events-none'
-              }`}
-            />
-          ))}
+          {displayImages.map((img, i) => {
+            const isNeighbor = Math.abs(i - selectedImage) <= 1 || (selectedImage === 0 && i === displayImages.length - 1) || (selectedImage === displayImages.length - 1 && i === 0);
+            if (!isNeighbor && i !== selectedImage) return null;
+            return (
+              <img
+                key={i}
+                src={img}
+                alt={`${name} - Image ${i + 1}`}
+                loading={i === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+                fetchPriority={i === 0 ? 'high' : 'low'}
+                onClick={() => i === selectedImage && setIsLightboxOpen(true)}
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 ${
+                  i === selectedImage ? 'opacity-100 scale-100 group-hover:scale-105' : 'opacity-0 scale-105 pointer-events-none'
+                }`}
+              />
+            );
+          })}
 
           {/* Top overlays */}
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 pointer-events-none">
