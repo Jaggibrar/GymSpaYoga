@@ -27,7 +27,7 @@ const Explore = () => {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      gym: 'bg-[#005EB8]/10 text-[#005EB8]',
+      gym: 'bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))]',
       spa: 'bg-[#9C27B0]/10 text-[#9C27B0]',
       yoga: 'bg-[#2E7D32]/10 text-[#2E7D32]',
       trainer: 'bg-[#E85D04]/10 text-[#E85D04]'
@@ -53,12 +53,12 @@ const Explore = () => {
               <Link to="/gyms">
                 <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
                   <CardContent className="p-4 md:p-6 text-center">
-                    <div className="w-12 h-12 rounded-lg bg-[#005EB8] flex items-center justify-center mb-3 mx-auto">
+                    <div className="w-12 h-12 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center mb-3 mx-auto">
                       <Dumbbell className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold mb-1 text-black">Gyms</h3>
                     <p className="text-gray-600 text-sm mb-2">Fitness centers</p>
-                    <span className="text-sm font-medium text-[#005EB8]">Explore →</span>
+                    <span className="text-sm font-medium text-[hsl(var(--primary))]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
@@ -109,12 +109,12 @@ const Explore = () => {
               <Link to="/therapists">
                 <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200 cursor-pointer h-full">
                   <CardContent className="p-4 md:p-6 text-center">
-                    <div className="w-12 h-12 rounded-lg bg-[#005EB8] flex items-center justify-center mb-3 mx-auto">
+                    <div className="w-12 h-12 rounded-lg bg-[hsl(var(--primary))] flex items-center justify-center mb-3 mx-auto">
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold mb-1 text-black">Therapists</h3>
                     <p className="text-gray-600 text-sm mb-2">Mental wellness</p>
-                    <span className="text-sm font-medium text-[#005EB8]">Explore →</span>
+                    <span className="text-sm font-medium text-[hsl(var(--primary))]">Explore →</span>
                   </CardContent>
                 </Card>
               </Link>
@@ -127,13 +127,13 @@ const Explore = () => {
           <div className="container mx-auto px-4">
             {loading ? (
               <div className="text-center py-12 sm:py-20">
-                <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-[#005EB8] mx-auto"></div>
+                <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-[hsl(var(--primary))] mx-auto"></div>
                 <p className="mt-4 text-gray-600 text-sm sm:text-base">Loading amazing places for you...</p>
               </div>
             ) : error ? (
               <div className="text-center py-12 sm:py-20">
                 <p className="text-red-600 text-sm sm:text-base">Error loading results: {error}</p>
-                <Button onClick={() => window.location.reload()} className="mt-4 min-h-[44px] bg-[#005EB8] hover:bg-[#004a93]">
+                <Button onClick={() => window.location.reload()} className="mt-4 min-h-[44px] bg-[hsl(var(--primary))] hover:bg-[#004a93]">
                   Try Again
                 </Button>
               </div>
@@ -169,7 +169,7 @@ const Explore = () => {
                       </div>
                       
                       <CardHeader className="pb-3 sm:pb-4 px-4 sm:px-6 pt-4 sm:pt-6">
-                        <CardTitle className="group-hover:text-[#005EB8] transition-colors text-lg sm:text-xl font-bold leading-tight line-clamp-2 text-black">
+                        <CardTitle className="group-hover:text-[hsl(var(--primary))] transition-colors text-lg sm:text-xl font-bold leading-tight line-clamp-2 text-black">
                           {business.business_name}
                         </CardTitle>
                         <div className="flex items-center text-gray-600">
@@ -214,7 +214,7 @@ const Explore = () => {
                         
                         <div className="pt-3 sm:pt-4">
                           <Link to={`/business/${business.id}`} className="block">
-                            <Button className="w-full bg-[#005EB8] hover:bg-[#004a93] py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px] text-white">
+                            <Button className="w-full bg-[hsl(var(--primary))] hover:bg-[#004a93] py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 min-h-[44px] text-white">
                               View Details
                             </Button>
                           </Link>
@@ -232,7 +232,7 @@ const Explore = () => {
                       Try adjusting your search criteria or explore different categories
                     </p>
                     <div className="flex flex-wrap gap-4 justify-center">
-                      <Button variant="outline" onClick={() => {setActiveFilter('all'); setSearchTerm(''); setLocation('');}} className="min-h-[44px] border-[#005EB8] text-[#005EB8]">
+                      <Button variant="outline" onClick={() => {setActiveFilter('all'); setSearchTerm(''); setLocation('');}} className="min-h-[44px] border-[hsl(var(--primary))] text-[hsl(var(--primary))]">
                         Clear Filters
                       </Button>
                     </div>

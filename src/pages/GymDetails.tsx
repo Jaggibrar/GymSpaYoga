@@ -221,7 +221,7 @@ const GymDetails = () => {
                   businessName={gym.business_name}
                   variant="default"
                   size="lg"
-                  className="w-full bg-[#005EB8] hover:bg-[#004d96]"
+                  className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]"
                 />
               </CardContent>
             </Card>

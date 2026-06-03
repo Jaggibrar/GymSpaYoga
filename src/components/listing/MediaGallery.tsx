@@ -12,7 +12,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   images,
   name,
   category,
-  aspectRatio = "aspect-[16/9]"
+  aspectRatio = "aspect-[4/3] sm:aspect-[16/10]"
 }) => {
   return (
     <EnhancedImageGallery

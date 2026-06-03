@@ -99,7 +99,7 @@ const Trainers = () => {
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="bg-[#005EB8] hover:bg-[#004d96] text-white h-11 px-6"
+                  className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white h-11 px-6"
                 >
                   <Search className="mr-2 h-4 w-4" />
                   Search
@@ -131,8 +131,8 @@ const Trainers = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-[#005EB8]" />
+              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="h-8 w-8 text-[hsl(var(--primary))]" />
               </div>
               <h3 className="text-xl font-bold mb-3 text-black">Certified Professionals</h3>
               <p className="text-gray-600">
@@ -141,8 +141,8 @@ const Trainers = () => {
             </div>
 
             <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="h-8 w-8 text-[#005EB8]" />
+              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Target className="h-8 w-8 text-[hsl(var(--primary))]" />
               </div>
               <h3 className="text-xl font-bold mb-3 text-black">Personalized Programs</h3>
               <p className="text-gray-600">
@@ -151,8 +151,8 @@ const Trainers = () => {
             </div>
 
             <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[#005EB8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-[#005EB8]" />
+              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-[hsl(var(--primary))]" />
               </div>
               <h3 className="text-xl font-bold mb-3 text-black">Proven Results</h3>
               <p className="text-gray-600">
@@ -163,7 +163,7 @@ const Trainers = () => {
         </section>
 
         {/* GymSpaYoga Branding Banner with Real People */}
-        <section className="bg-[#005EB8] py-16">
+        <section className="bg-[hsl(var(--primary))] py-16">
           <div className="container mx-auto px-4">
             <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
               {/* Left: Real People Images */}
@@ -205,13 +205,13 @@ const Trainers = () => {
               {/* Right: CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/explore">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
                     Explore More
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-white text-[#005EB8] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
                     <MessageCircle className="mr-2 h-5 w-5" />
                     Contact on WhatsApp
                   </Button>

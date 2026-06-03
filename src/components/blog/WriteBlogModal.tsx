@@ -31,7 +31,7 @@ const WriteBlogModal = ({ isOpen, setIsOpen, onSubmit }: WriteBlogModalProps) =>
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-[#005EB8] hover:bg-[#004d96]">
+        <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
           <Plus className="h-4 w-4 mr-2" />
           Write Blog
         </Button>
@@ -90,7 +90,7 @@ const WriteBlogModal = ({ isOpen, setIsOpen, onSubmit }: WriteBlogModalProps) =>
               required
             />
           </div>
-          <Button type="submit" className="w-full bg-[#005EB8] hover:bg-[#004d96]">
+          <Button type="submit" className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
             Publish Blog
           </Button>
         </form>

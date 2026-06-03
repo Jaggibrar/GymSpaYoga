@@ -115,7 +115,7 @@ const CalendarView = () => {
             </Button>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" className="bg-[#005EB8] hover:bg-[#004d96] touch-target flex-1 sm:flex-initial">
+                <Button size="sm" className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] touch-target flex-1 sm:flex-initial">
                   <Plus className="h-4 w-4 mr-1" />
                   <span className="hidden xs:inline">Add Event</span>
                   <span className="xs:hidden">Add</span>
@@ -179,7 +179,7 @@ const CalendarView = () => {
                   <Button 
                     onClick={handleCreateEvent}
                     disabled={!newEvent.title || !newEvent.start_time || !newEvent.end_time}
-                    className="w-full bg-[#005EB8] hover:bg-[#004d96] touch-target"
+                    className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] touch-target"
                   >
                     Create Event
                   </Button>

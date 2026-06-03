@@ -95,7 +95,7 @@ const MyBlogs = () => {
             </div>
             <Button 
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-[#005EB8] hover:bg-[#004d96] text-white shadow-lg"
+              className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white shadow-lg"
             >
               <Plus className="h-4 w-4 mr-2" />
               Create New Blog

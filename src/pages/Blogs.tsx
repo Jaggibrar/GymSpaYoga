@@ -109,14 +109,14 @@ const Blogs = () => {
                   <Button 
                     onClick={() => navigate('/my-blogs')}
                     variant="outline"
-                    className="text-[#005EB8] border-[#005EB8] hover:bg-[#005EB8]/10"
+                    className="text-[hsl(var(--primary))] border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/10"
                   >
                     <Edit3 className="h-4 w-4 mr-2" />
                     My Blogs
                   </Button>
                   <Button 
                     onClick={() => setIsCreateModalOpen(true)}
-                    className="bg-[#005EB8] hover:bg-[#004d96] text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white shadow-lg hover:shadow-xl transition-all duration-200"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Write Article
@@ -130,7 +130,7 @@ const Blogs = () => {
           {featuredBlogs.length > 0 && !searchTerm && (
             <div className="mb-12">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-1 h-6 bg-[#005EB8] rounded-full"></div>
+                <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
                 <h2 className="text-2xl font-bold text-gray-800">Featured Articles</h2>
               </div>
               <BlogGrid 
@@ -144,7 +144,7 @@ const Blogs = () => {
           <div>
             {!searchTerm && featuredBlogs.length > 0 && (
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-1 h-6 bg-[#005EB8] rounded-full"></div>
+                <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
                 <h2 className="text-2xl font-bold text-gray-800">All Articles</h2>
               </div>
             )}
@@ -189,7 +189,7 @@ const Blogs = () => {
                 type="email"
                 className="flex-1"
               />
-              <Button className="bg-[#005EB8] hover:bg-[#004d96]">
+              <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
                 Subscribe
               </Button>
             </div>

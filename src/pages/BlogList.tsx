@@ -76,12 +76,12 @@ const BlogList = () => {
         {/* Enhanced Header */}
         <div className="text-center mb-8 sm:mb-12">
           <div className="mb-4 sm:mb-6">
-            <Badge className="bg-[#005EB8] text-white px-4 py-2 text-sm font-bold shadow-lg">
+            <Badge className="bg-[hsl(var(--primary))] text-white px-4 py-2 text-sm font-bold shadow-lg">
               📚 Expert Wellness Insights
             </Badge>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-800 mb-3 sm:mb-4">
-            Wellness <span className="text-[#005EB8]">Blog</span>
+            Wellness <span className="text-[hsl(var(--primary))]">Blog</span>
           </h1>
           <p className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl mx-auto">
             Discover expert insights, tips, and inspiration for your fitness and wellness journey
@@ -90,11 +90,11 @@ const BlogList = () => {
           {/* Stats Row */}
           <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-6 sm:mb-8">
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200">
-              <BookOpen className="h-4 w-4 text-[#005EB8]" />
+              <BookOpen className="h-4 w-4 text-[hsl(var(--primary))]" />
               <span className="text-sm font-semibold text-gray-700">{blogs.length} Articles</span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200">
-              <TrendingUp className="h-4 w-4 text-[#005EB8]" />
+              <TrendingUp className="h-4 w-4 text-[hsl(var(--primary))]" />
               <span className="text-sm font-semibold text-gray-700">{totalViews.toLocaleString()} Views</span>
             </div>
           </div>
@@ -109,7 +109,7 @@ const BlogList = () => {
                     placeholder="Search wellness articles..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-white/80 backdrop-blur-sm border-gray-200 focus:border-[#005EB8] focus:ring-[#005EB8]"
+                    className="pl-10 bg-white/80 backdrop-blur-sm border-gray-200 focus:border-[hsl(var(--primary))] focus:ring-[hsl(var(--primary))]"
                   />
                 </div>
               </div>
@@ -134,7 +134,7 @@ const BlogList = () => {
               {user && (
                 <Button 
                   onClick={() => setIsCreateModalOpen(true)} 
-                  className="flex items-center gap-2 bg-[#005EB8] hover:bg-[#004d96] text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="flex items-center gap-2 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   <Plus className="h-4 w-4" />
                   <span className="hidden sm:inline">Write Blog</span>
@@ -145,7 +145,7 @@ const BlogList = () => {
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                <span className="font-semibold text-[#005EB8]">{filteredBlogs.length}</span> {filteredBlogs.length === 1 ? 'article' : 'articles'} found
+                <span className="font-semibold text-[hsl(var(--primary))]">{filteredBlogs.length}</span> {filteredBlogs.length === 1 ? 'article' : 'articles'} found
                 {searchTerm && <span className="text-gray-500"> for "{searchTerm}"</span>}
                 {selectedCategory && selectedCategory !== 'all' && <span className="text-gray-500"> in {selectedCategory}</span>}
               </p>
@@ -157,7 +157,7 @@ const BlogList = () => {
         {featuredBlogs.length > 0 && !searchTerm && !selectedCategory && (
           <div className="mb-8 sm:mb-12">
             <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <div className="w-1 h-6 bg-[#005EB8] rounded-full"></div>
+              <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Featured Articles</h2>
             </div>
             <BlogGrid 
@@ -171,7 +171,7 @@ const BlogList = () => {
         <div>
           {!searchTerm && !selectedCategory && featuredBlogs.length > 0 && (
             <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <div className="w-1 h-6 bg-[#005EB8] rounded-full"></div>
+              <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">All Articles</h2>
             </div>
           )}
@@ -202,7 +202,7 @@ const BlogList = () => {
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold text-[#005EB8]">
+              <DialogTitle className="text-xl font-bold text-[hsl(var(--primary))]">
                 Create New Blog Post
               </DialogTitle>
             </DialogHeader>

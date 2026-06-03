@@ -39,7 +39,7 @@ const MOOD_PROMPTS = [
   { icon: Leaf, label: "🧘 Relax & heal", prompt: "I'm stressed and need relaxation", color: "#38A169" },
   { icon: Zap, label: "⚡ Lose weight", prompt: "Help me start my weight loss journey", color: "#D69E2E" },
   { icon: Brain, label: "🧠 Mental peace", prompt: "I need something for mental wellness", color: "#805AD5" },
-  { icon: Heart, label: "🏢 List my business", prompt: "I want to list my gym/spa/yoga studio on GymSpaYoga", color: "#005EB8" },
+  { icon: Heart, label: "🏢 List my business", prompt: "I want to list my gym/spa/yoga studio on GymSpaYoga", color: "hsl(var(--primary))" },
 ];
 
 const FOLLOW_UP_SUGGESTIONS = [
@@ -253,7 +253,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
       className
     )}>
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3" style={{ background: '#005EB8' }}>
+      <div className="flex items-center justify-between px-4 py-3" style={{ background: 'hsl(var(--primary))' }}>
         <div className="flex items-center gap-3">
           <div className="relative">
             <img
@@ -294,7 +294,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
           <div className="space-y-5">
             {/* Welcome */}
             <div className="text-center py-4">
-              <div className="h-16 w-16 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ background: '#005EB8' }}>
+              <div className="h-16 w-16 mx-auto mb-3 rounded-full flex items-center justify-center" style={{ background: 'hsl(var(--primary))' }}>
                 <Sparkles className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-bold text-lg text-foreground">Hey there! 👋</h4>
@@ -337,8 +337,8 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                 )}
               >
                 {msg.role === 'assistant' && (
-                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 border border-[#005EB8]/20" style={{ background: '#EBF2FA' }}>
-                    <Bot className="h-4 w-4" style={{ color: '#005EB8' }} />
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 border border-[hsl(var(--primary))]/20" style={{ background: '#EBF2FA' }}>
+                    <Bot className="h-4 w-4" style={{ color: 'hsl(var(--primary))' }} />
                   </div>
                 )}
                 <div
@@ -348,7 +348,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                       ? 'rounded-br-md text-white'
                       : 'bg-white dark:bg-card rounded-bl-md border border-border/50'
                   )}
-                  style={msg.role === 'user' ? { background: '#005EB8' } : undefined}
+                  style={msg.role === 'user' ? { background: 'hsl(var(--primary))' } : undefined}
                 >
                   {msg.role === 'assistant' ? (
                     <div className="prose prose-sm dark:prose-invert max-w-none text-foreground [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2">
@@ -359,7 +359,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                   )}
                 </div>
                 {msg.role === 'user' && (
-                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#005EB8' }}>
+                  <div className="h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'hsl(var(--primary))' }}>
                     <User className="h-4 w-4 text-white" />
                   </div>
                 )}
@@ -370,14 +370,14 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
             {isLoading && messages[messages.length - 1]?.content === '' && (
               <div className="flex gap-3 animate-in fade-in duration-300">
                 <div className="h-8 w-8 rounded-full flex items-center justify-center" style={{ background: '#EBF2FA' }}>
-                  <Bot className="h-4 w-4" style={{ color: '#005EB8' }} />
+                  <Bot className="h-4 w-4" style={{ color: 'hsl(var(--primary))' }} />
                 </div>
                 <div className="bg-white dark:bg-card rounded-2xl rounded-bl-md px-4 py-3 border border-border/50 shadow-sm">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1.5">
-                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '0ms' }} />
-                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '150ms' }} />
-                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: '#005EB8', animationDelay: '300ms' }} />
+                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: 'hsl(var(--primary))', animationDelay: '0ms' }} />
+                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: 'hsl(var(--primary))', animationDelay: '150ms' }} />
+                      <span className="h-2 w-2 rounded-full animate-bounce" style={{ background: 'hsl(var(--primary))', animationDelay: '300ms' }} />
                     </div>
                     <span className="text-xs text-muted-foreground ml-1">Soch raha hoon...</span>
                   </div>
@@ -391,7 +391,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
                 {FOLLOW_UP_SUGGESTIONS[followUpIndex].map((suggestion, i) => (
                   <button
                     key={i}
-                    className="text-xs px-3 py-1.5 rounded-full border border-[#005EB8]/25 text-[#005EB8] hover:bg-[#005EB8] hover:text-white transition-colors duration-200"
+                    className="text-xs px-3 py-1.5 rounded-full border border-[hsl(var(--primary))]/25 text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-white transition-colors duration-200"
                     onClick={() => streamChat(suggestion)}
                   >
                     {suggestion}
@@ -412,20 +412,20 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({
             onChange={(e) => setInput(e.target.value)}
             placeholder="Type your message..."
             disabled={isLoading}
-            className="flex-1 rounded-full border-[#005EB8]/20 focus-visible:ring-[#005EB8]/30"
+            className="flex-1 rounded-full border-[hsl(var(--primary))]/20 focus-visible:ring-[hsl(var(--primary))]/30"
           />
           <Button
             type="submit"
             size="icon"
             disabled={isLoading || !input.trim()}
             className="rounded-full h-10 w-10 shrink-0"
-            style={{ background: '#005EB8' }}
+            style={{ background: 'hsl(var(--primary))' }}
           >
             {isLoading ? <Loader2 className="h-4 w-4 animate-spin text-white" /> : <Send className="h-4 w-4 text-white" />}
           </Button>
         </div>
         <p className="text-[10px] text-muted-foreground text-center mt-2">
-          Powered by <span className="font-semibold" style={{ color: '#005EB8' }}>GymSpaYoga AI</span> — Your Wellness Buddy
+          Powered by <span className="font-semibold" style={{ color: 'hsl(var(--primary))' }}>GymSpaYoga AI</span> — Your Wellness Buddy
         </p>
       </form>
     </div>

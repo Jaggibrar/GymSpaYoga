@@ -155,7 +155,7 @@ const BusinessDetailsModal = ({ business, trigger }: BusinessDetailsModalProps) 
             businessId={business.id}
             price={business.monthly_price ? `₹${business.monthly_price}` : business.session_price ? `₹${business.session_price}` : undefined}
             trigger={
-              <Button className="flex-1 bg-[#005EB8] hover:bg-[#004d96]">
+              <Button className="flex-1 bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
                 Book Now
               </Button>
             }

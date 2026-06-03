@@ -85,25 +85,25 @@ const FAQSection = () => {
   return (
     <section className="py-12 md:py-16 bg-gray-50 relative overflow-hidden" aria-labelledby="faq-heading">
       {/* Background Elements */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-[#005EB8] rounded-full"></div>
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-[hsl(var(--primary))] rounded-full"></div>
 
       <div className="relative w-full px-4 md:px-8 mx-auto max-w-6xl">
         {/* Enhanced Header */}
         <div className="text-center mb-12">
           <div className="mb-4">
-            <Badge className="bg-[#005EB8]/10 text-[#005EB8] px-6 py-3 text-lg font-bold">
+            <Badge className="bg-[hsl(var(--primary))]/10 text-[hsl(var(--primary))] px-6 py-3 text-lg font-bold">
               💡 Your Questions, Answered Instantly
             </Badge>
           </div>
           <h2 id="faq-heading" className="text-3xl md:text-5xl font-black text-gray-800 mb-4">
             Everything You Need to Know
-            <span className="block text-[#005EB8] text-2xl md:text-4xl mt-2">
+            <span className="block text-[hsl(var(--primary))] text-2xl md:text-4xl mt-2">
               About Your Transformation
             </span>
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto font-medium leading-relaxed">
             Join 25,000+ members who found their answers and transformed their lives.
-            <span className="block text-[#005EB8] font-bold mt-1">Still have questions? We're here 24/7!</span>
+            <span className="block text-[hsl(var(--primary))] font-bold mt-1">Still have questions? We're here 24/7!</span>
           </p>
         </div>
 
@@ -120,13 +120,13 @@ const FAQSection = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {popularFAQs.slice(0, 4).map((faq, index) => (
-              <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-[#005EB8] bg-white">
+              <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-2 hover:border-[hsl(var(--primary))] bg-white">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="bg-[#005EB8] text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                    <div className="bg-[hsl(var(--primary))] text-white rounded-full w-7 h-7 flex items-center justify-center font-bold text-sm flex-shrink-0">
                       {index + 1}
                     </div>
-                    <h4 className="font-bold text-base text-gray-800 group-hover:text-[#005EB8] transition-colors">
+                    <h4 className="font-bold text-base text-gray-800 group-hover:text-[hsl(var(--primary))] transition-colors">
                       {faq.question}
                     </h4>
                   </div>
@@ -149,8 +149,8 @@ const FAQSection = () => {
                 variant={selectedCategory === category.id ? "default" : "outline"}
                 className={`px-4 py-2 font-bold transition-all duration-300 text-sm ${
                   selectedCategory === category.id
-                    ? "bg-[#005EB8] text-white shadow-lg"
-                    : "hover:border-[#005EB8] hover:text-[#005EB8]"
+                    ? "bg-[hsl(var(--primary))] text-white shadow-lg"
+                    : "hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]"
                 }`}
               >
                 <category.icon className="h-4 w-4 mr-2" />
@@ -167,7 +167,7 @@ const FAQSection = () => {
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="border-2 border-gray-200 hover:border-[#005EB8] rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300"
+                className="border-2 border-gray-200 hover:border-[hsl(var(--primary))] rounded-xl bg-white shadow-sm hover:shadow-lg transition-all duration-300"
               >
                 <AccordionTrigger className="px-5 py-4 text-left hover:no-underline group">
                   <div className="flex items-center gap-3">
@@ -176,13 +176,13 @@ const FAQSection = () => {
                         🔥 Popular
                       </Badge>
                     )}
-                    <h3 className="text-base md:text-lg font-bold text-gray-800 group-hover:text-[#005EB8] transition-colors">
+                    <h3 className="text-base md:text-lg font-bold text-gray-800 group-hover:text-[hsl(var(--primary))] transition-colors">
                       {faq.question}
                     </h3>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-5 pb-4">
-                  <div className="bg-[#005EB8]/5 rounded-lg p-4 border-l-4 border-[#005EB8]">
+                  <div className="bg-[hsl(var(--primary))]/5 rounded-lg p-4 border-l-4 border-[hsl(var(--primary))]">
                     <p className="text-gray-700 leading-relaxed font-medium">
                       {faq.answer}
                     </p>
@@ -194,7 +194,7 @@ const FAQSection = () => {
         </div>
 
         {/* Enhanced Contact Section - Reduced spacing */}
-        <div className="mt-8 bg-[#005EB8] rounded-2xl p-4 md:p-6 text-white relative overflow-hidden">
+        <div className="mt-8 bg-[hsl(var(--primary))] rounded-2xl p-4 md:p-6 text-white relative overflow-hidden">
           {/* Background Pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>

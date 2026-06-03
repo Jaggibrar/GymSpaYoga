@@ -144,7 +144,7 @@ const YogaDetails = () => {
         backLink="/yoga"
         backText="Back to Yoga"
         brandIcon={<Heart className="h-7 w-7 text-white" />}
-        brandGradient="from-[#005EB8] to-[#005EB8]"
+        brandGradient="from-[hsl(var(--primary))] to-[hsl(var(--primary))]"
       >
       {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -161,7 +161,7 @@ const YogaDetails = () => {
             description={studio.description}
             defaultDescription="Experience authentic yoga practice in a peaceful environment. Our studio offers traditional and modern yoga styles taught by certified instructors, focusing on mind-body harmony and spiritual well-being."
             icon={<Flower2 className="h-5 w-5 text-white" />}
-            gradient="from-[#005EB8] to-[#005EB8]"
+            gradient="from-[hsl(var(--primary))] to-[hsl(var(--primary))]"
           />
 
           {studio.amenities && studio.amenities.length > 0 && (
@@ -169,7 +169,7 @@ const YogaDetails = () => {
               amenities={studio.amenities}
               title="Studio Features"
               icon={<Users className="h-5 w-5 text-white" />}
-              gradient="from-[#005EB8] to-[#005EB8]"
+              gradient="from-[hsl(var(--primary))] to-[hsl(var(--primary))]"
               defaultAmenities={[
                 'Certified Instructors',
                 'Natural Lighting',
@@ -188,7 +188,7 @@ const YogaDetails = () => {
               options={pricingOptions}
               title="Membership Options"
               icon={<Heart className="h-5 w-5 text-white" />}
-              gradient="from-[#005EB8] to-[#005EB8]"
+              gradient="from-[hsl(var(--primary))] to-[hsl(var(--primary))]"
             />
           )}
         </div>
@@ -203,7 +203,7 @@ const YogaDetails = () => {
                 businessName={studio.business_name}
                 variant="default"
                 size="lg"
-                className="w-full bg-[#005EB8] hover:bg-[#004d96]"
+                className="w-full bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]"
               />
             </CardContent>
           </Card>

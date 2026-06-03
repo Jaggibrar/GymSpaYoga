@@ -135,7 +135,7 @@ const Login = () => {
         <div className="flex flex-col items-start max-w-md mx-auto">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 bg-[#005EB8] rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-[hsl(var(--primary))] rounded-xl flex items-center justify-center">
               <Dumbbell className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-3xl font-semibold text-gray-800">GymSpaYoga.com</h1>
@@ -190,7 +190,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#005EB8] text-white rounded-full text-lg font-semibold hover:bg-[#004d96] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[hsl(var(--primary))] text-white rounded-full text-lg font-semibold hover:bg-[hsl(var(--primary))] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 isSignUp ? 'Creating Account...' : 'Logging in...'
