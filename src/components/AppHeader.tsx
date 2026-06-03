@@ -40,8 +40,8 @@ const AppHeader = () => {
     <header
       className={`sticky top-0 z-50 w-full overflow-hidden transition-all duration-300 ${
         scrolled
-          ? 'bg-background/95 backdrop-blur-lg shadow-md border-b border-border'
-          : 'bg-background border-b border-transparent'
+          ? 'bg-background/90 backdrop-blur-xl shadow-lg border-b border-border'
+          : 'bg-background/80 backdrop-blur-md border-b border-border/50'
       }`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 max-w-7xl w-full box-border">
