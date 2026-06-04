@@ -38,7 +38,7 @@ const Trainers = () => {
         keywords="personal trainer near me, best fitness coach Mumbai, certified trainer Delhi, personal training Bangalore, weight loss trainer India, female personal trainer, online personal trainer, home personal trainer, transformation coach, bodybuilding coach, strength coach, nutritionist, diet coach, sports coach, rehab trainer, yoga trainer, zumba instructor, pilates trainer, kickboxing coach, MMA coach, kids fitness coach, senior fitness trainer, prenatal trainer, postnatal trainer, ACE certified trainer, ACSM trainer, NASM trainer, K11 certified, REPS India, trainer in Pune, trainer in Hyderabad, trainer in Chennai, trainer in Kolkata"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
@@ -119,43 +119,43 @@ const Trainers = () => {
         />
 
         {/* Features Section */}
-        <section className="container mx-auto px-4 py-12 bg-gray-50">
+        <section className="container mx-auto px-4 py-12">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-black mb-4">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
               Why Choose Our Expert Trainers?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Experience personalized fitness coaching with certified professionals
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Award className="h-8 w-8 text-[hsl(var(--primary))]" />
+            <div className="text-center p-6 glass-card glass-card-hover">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-black">Certified Professionals</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Certified Professionals</h3>
+              <p className="text-muted-foreground">
                 All trainers are certified with proven track records in fitness coaching
               </p>
             </div>
 
-            <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Target className="h-8 w-8 text-[hsl(var(--primary))]" />
+            <div className="text-center p-6 glass-card glass-card-hover">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Target className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-black">Personalized Programs</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Personalized Programs</h3>
+              <p className="text-muted-foreground">
                 Custom fitness plans tailored to your specific goals and fitness level
               </p>
             </div>
 
-            <div className="text-center p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
-              <div className="w-16 h-16 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-[hsl(var(--primary))]" />
+            <div className="text-center p-6 glass-card glass-card-hover">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-black">Proven Results</h3>
-              <p className="text-gray-600">
+              <h3 className="text-xl font-bold mb-3 text-foreground">Proven Results</h3>
+              <p className="text-muted-foreground">
                 Track record of helping clients achieve their fitness transformation goals
               </p>
             </div>
