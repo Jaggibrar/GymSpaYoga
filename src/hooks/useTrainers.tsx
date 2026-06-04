@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { getRatingInfo } from '@/utils/ratingFromId';
 
 export interface Trainer {
   id: string;
@@ -72,12 +73,13 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
         return;
       }
 
-      // Add mock ratings for display
-      const trainersWithRatings = data?.map(trainer => ({
-        ...trainer,
-        rating: 4.8,
-        reviews_count: Math.floor(Math.random() * 50) + 5
-      })) || [];
+      // Deterministic per-trainer rating + reviews
+      const trainersWithRatings = data?.map(trainer => {
+        const info = getRatingInfo(trainer.id);
+        return { ...trainer, rating: info.rating, reviews_count: info.reviews };
+      }) || [];
+
+
 
       setTrainers(trainersWithRatings);
     } catch (err: any) {
@@ -105,13 +107,14 @@ export const useTrainers = (searchTerm?: string, location?: string, priceFilter?
 
       if (!data) return null;
 
+      const info = getRatingInfo(data.id);
       return {
         ...data,
         email: data.email || '',
         phone: data.phone || '',
         user_id: data.user_id || '',
-        rating: 4.8,
-        reviews_count: Math.floor(Math.random() * 50) + 5
+        rating: info.rating,
+        reviews_count: info.reviews,
       };
     } catch (err: any) {
       console.error('Error fetching trainer:', err);
