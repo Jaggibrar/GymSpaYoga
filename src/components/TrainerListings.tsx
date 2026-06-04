@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useTrainerData } from "@/hooks/useTrainerData";
 import PremiumTrainerCard from "@/components/PremiumTrainerCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { getRatingInfo } from "@/utils/ratingFromId";
 
 interface TrainerListingsProps {
   searchTerm?: string;
@@ -90,14 +91,14 @@ const TrainerListings = ({ searchTerm, location, sortBy, priceFilter }: TrainerL
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
         {sortedTrainers.map((trainer, index) => {
-          // Convert TrainerData to Trainer format for compatibility
+          const info = getRatingInfo(trainer.id);
           const trainerForCard = {
             ...trainer,
-            user_id: trainer.id, // Add missing user_id field
-            rating: 4.8,
-            reviews_count: Math.floor(Math.random() * 50) + 10,
+            user_id: trainer.id,
+            rating: info.rating,
+            reviews_count: info.reviews,
             created_at: trainer.created_at,
-            updated_at: trainer.updated_at
+            updated_at: trainer.updated_at,
           };
           
           return (

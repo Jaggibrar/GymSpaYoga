@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { getRatingInfo } from '@/utils/ratingFromId';
+
 
 interface TrainerData {
   id: string;
@@ -59,12 +61,13 @@ export const useSingleTrainer = (trainerId: string | undefined) => {
         return;
       }
 
-      // Add mock rating and reviews for demo
+      const info = getRatingInfo(data.id);
       const trainerWithRating = {
         ...data,
-        rating: 4.8,
-        reviews_count: Math.floor(Math.random() * 50) + 10
+        rating: info.rating,
+        reviews_count: info.reviews,
       };
+
 
       setTrainer(trainerWithRating);
     } catch (err) {
