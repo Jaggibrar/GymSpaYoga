@@ -13,11 +13,11 @@ import {
 
 const serviceLinks = [
   { label: "Gyms", path: "/gyms", icon: Dumbbell, color: "text-primary" },
-  { label: "Spas", path: "/spas", icon: Flower2, color: "text-brand-600" },
-  { label: "Yoga Studios", path: "/yoga", icon: HeartIcon, color: "text-brand-500" },
+  { label: "Spas", path: "/spas", icon: Flower2, color: "text-primary" },
+  { label: "Yoga Studios", path: "/yoga", icon: HeartIcon, color: "text-primary" },
   { label: "Trainers", path: "/trainers", icon: UserCheck, color: "text-primary" },
-  { label: "Therapists", path: "/therapists", icon: Stethoscope, color: "text-brand-700" },
-  { label: "Chiropractors", path: "/chiropractors", icon: Activity, color: "text-charcoal-600" },
+  { label: "Therapists", path: "/therapists", icon: Stethoscope, color: "text-primary" },
+  { label: "Chiropractors", path: "/chiropractors", icon: Activity, color: "text-primary" },
 ];
 
 const AppHeader = () => {
@@ -38,10 +38,8 @@ const AppHeader = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full overflow-hidden transition-all duration-300 ${
-        scrolled
-          ? 'bg-background backdrop-blur-xl shadow-lg border-b border-border'
-          : 'bg-background backdrop-blur-md border-b border-border/50'
+      className={`sticky top-0 z-50 w-full overflow-hidden bg-background opacity-100 border-b border-border transition-shadow duration-300 ${
+        scrolled ? 'shadow-lg' : 'shadow-md'
       }`}
     >
       <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 max-w-7xl w-full box-border">
@@ -64,7 +62,7 @@ const AppHeader = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 text-foreground/90 hover:text-foreground font-medium transition-colors duration-200 px-4 py-2.5 rounded-xl hover:bg-accent text-sm">
+              <DropdownMenuTrigger className="flex items-center gap-1.5 text-foreground hover:text-foreground font-medium transition-colors duration-200 px-4 py-2.5 rounded-xl hover:bg-secondary text-sm">
                 Find Services
                 <ChevronDown className="h-3.5 w-3.5" />
               </DropdownMenuTrigger>
@@ -92,8 +90,8 @@ const AppHeader = () => {
                 to={link.path}
                 className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-colors duration-200 ${
                   location.pathname === link.path
-                    ? 'text-primary bg-primary/8'
-                    : 'text-foreground/90 hover:text-foreground hover:bg-accent'
+                    ? 'text-primary-foreground bg-primary'
+                    : 'text-foreground hover:text-foreground hover:bg-secondary'
                 }`}
               >
                 {link.label}
@@ -106,7 +104,7 @@ const AppHeader = () => {
             {!user ? (
               <>
                 <Link to="/login">
-                  <Button variant="ghost" className="text-foreground/90 hover:text-foreground font-medium text-sm rounded-xl">
+                  <Button variant="ghost" className="text-foreground hover:text-foreground hover:bg-secondary font-medium text-sm rounded-xl">
                     Sign In
                   </Button>
                 </Link>
@@ -145,22 +143,22 @@ const AppHeader = () => {
           {isMobileMenuOpen && (
             <motion.div
               className="lg:hidden mt-3 pb-4 border-t border-border w-full overflow-hidden"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
               transition={{ duration: 0.2, ease: 'easeInOut' }}
             >
               <div className="flex flex-col space-y-0.5 pt-3 w-full min-w-0">
                 {serviceLinks.map((item, i) => (
                   <motion.div
                     key={item.path}
-                    initial={{ opacity: 0, x: -16 }}
-                    animate={{ opacity: 1, x: 0 }}
+                    initial={{ x: -16 }}
+                    animate={{ x: 0 }}
                     transition={{ delay: i * 0.04 }}
                   >
                     <Link
                       to={item.path}
-                      className="flex items-center gap-3 text-foreground/90 hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-accent transition-colors w-full text-sm"
+                      className="flex items-center gap-3 text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors w-full text-sm"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
@@ -173,13 +171,13 @@ const AppHeader = () => {
                 
                 <div className="border-t border-border my-2" />
                 
-                <Link to="/explore" className="text-foreground/90 hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-accent transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link to="/explore" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
                   Explore All
                 </Link>
-                <Link to="/pricing" className="text-foreground/90 hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-accent transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link to="/pricing" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
                   Pricing
                 </Link>
-                <Link to="/register-business" className="text-foreground/90 hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-accent transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link to="/register-business" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
                   For Business
                 </Link>
                 
