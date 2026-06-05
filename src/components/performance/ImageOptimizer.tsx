@@ -108,7 +108,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
     }
   };
 
-  const baseClasses = `transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`;
+  const baseClasses = 'block';
   const combinedClasses = `${baseClasses} ${className}`;
 
   return (
@@ -139,7 +139,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       />
       
       {!isLoaded && !hasError && isInView && (
-        <div className={`absolute inset-0 bg-gray-200 animate-pulse ${className}`} />
+        <div className={`absolute inset-0 bg-muted animate-pulse ${className}`} />
       )}
     </div>
   );
