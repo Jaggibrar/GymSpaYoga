@@ -8,7 +8,7 @@ const GlobalLoadingIndicator: React.FC = () => {
   if (!loading) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-background z-50 flex items-center justify-center opacity-100">
       <div className="text-center">
         <LoadingSpinner size="sm" />
         <p className="mt-4 text-muted-foreground">Loading...</p>
