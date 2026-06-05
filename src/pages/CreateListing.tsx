@@ -23,7 +23,7 @@ const CreateListing = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background/80 backdrop-blur-xl sticky top-0 z-50 border-b border-border">
+      <header className="bg-background opacity-100 sticky top-0 z-50 border-b border-border shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-center">
             <div className="flex items-center space-x-3">

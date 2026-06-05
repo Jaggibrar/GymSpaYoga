@@ -112,21 +112,21 @@ const CinematicHero: React.FC = () => {
       <div className="relative z-10 container-modern flex flex-col items-center justify-center text-center min-h-[100svh] py-24">
         {/* Trust pill */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.05] backdrop-blur-md border border-white/10 mb-8"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border mb-8 shadow-medium"
         >
           <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-          <span className="text-xs sm:text-sm text-white/85 font-medium">
+          <span className="text-xs sm:text-sm text-foreground font-medium">
             India's #1 Premium Wellness Discovery · 1,500+ Verified Listings
           </span>
         </motion.div>
 
         {/* Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 30 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="font-display font-extrabold tracking-tight text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.02] max-w-5xl"
         >
@@ -137,10 +137,10 @@ const CinematicHero: React.FC = () => {
 
         {/* Subhead */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-white/70 leading-relaxed"
+          className="mt-6 max-w-2xl text-base sm:text-lg md:text-xl text-white leading-relaxed"
         >
           {city
             ? <>Discover India's most premium gyms, yoga studios, spas, trainers & therapists in <span className="text-white font-medium">{city}</span>. Booked in seconds.</>
@@ -149,24 +149,24 @@ const CinematicHero: React.FC = () => {
 
         {/* Search command */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 24 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.7, delay: 0.45 }}
           className="mt-10 w-full max-w-3xl"
         >
           <div className="glass-card p-2 sm:p-2.5 flex flex-col sm:flex-row gap-2 sm:gap-2">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground" />
               <Input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="Search gyms, yoga, spas, trainers, cities…"
-                className="pl-11 h-12 sm:h-14 bg-transparent border-0 text-white placeholder:text-white/40 focus-visible:ring-0 text-sm sm:text-base"
+                className="pl-11 h-12 sm:h-14 bg-background border-0 text-foreground placeholder:text-muted-foreground focus-visible:ring-0 text-sm sm:text-base"
               />
             </div>
             <Select value={cat} onValueChange={setCat}>
-              <SelectTrigger className="w-full sm:w-[170px] h-12 sm:h-14 bg-white/[0.04] border-white/10 text-white rounded-2xl">
+              <SelectTrigger className="w-full sm:w-[170px] h-12 sm:h-14 bg-background border-border text-foreground rounded-2xl">
                 <SelectValue placeholder="All categories" />
               </SelectTrigger>
               <SelectContent className="bg-card border-border">
@@ -177,7 +177,7 @@ const CinematicHero: React.FC = () => {
             </Select>
             <Button
               onClick={handleSearch}
-              className="h-12 sm:h-14 px-6 rounded-2xl bg-gradient-emerald text-charcoal-950 font-semibold hover:opacity-90 shadow-emerald"
+              className="h-12 sm:h-14 px-6 rounded-2xl bg-primary text-primary-foreground font-semibold hover:bg-primary shadow-emerald"
             >
               <Search className="h-4 w-4 sm:mr-2" />
               <span className="hidden sm:inline">Search</span>
@@ -187,15 +187,15 @@ const CinematicHero: React.FC = () => {
 
         {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 20 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-6 flex flex-wrap items-center justify-center gap-3"
         >
           <Button
             onClick={() => navigate('/explore')}
             size="lg"
-            className="rounded-2xl bg-gradient-emerald text-charcoal-950 font-semibold px-7 h-12 shadow-emerald hover:opacity-90"
+            className="rounded-2xl bg-primary text-primary-foreground font-semibold px-7 h-12 shadow-emerald hover:bg-primary"
           >
             Explore Wellness <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
@@ -203,7 +203,7 @@ const CinematicHero: React.FC = () => {
             onClick={() => navigate('/register-business')}
             size="lg"
             variant="outline"
-            className="rounded-2xl h-12 px-7 bg-white/[0.04] border-white/15 text-white hover:bg-white/[0.08] hover:text-white backdrop-blur-md"
+            className="rounded-2xl h-12 px-7 bg-card border-border text-foreground hover:bg-secondary hover:text-foreground"
           >
             List Your Business
           </Button>
@@ -211,8 +211,8 @@ const CinematicHero: React.FC = () => {
 
         {/* Floating category chips */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ y: 0 }}
+          animate={{ y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-2 max-w-3xl"
         >
@@ -222,7 +222,7 @@ const CinematicHero: React.FC = () => {
               onClick={() => navigate(c.path)}
               whileHover={{ y: -2, scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.04] backdrop-blur-md border border-white/10 text-white/85 hover:text-white hover:border-primary/50 hover:bg-white/[0.08] transition-all text-sm font-medium"
+              className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border text-foreground hover:text-foreground hover:border-primary hover:bg-secondary transition-all text-sm font-medium"
               style={{ animationDelay: `${i * 0.05}s` }}
             >
               <c.icon className="h-3.5 w-3.5 text-primary" />
