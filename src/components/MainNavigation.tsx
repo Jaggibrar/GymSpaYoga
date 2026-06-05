@@ -33,7 +33,7 @@ const MainNavigation = () => {
 
   return (
     <nav 
-      className={`bg-white sticky top-0 z-50 border-b border-border transition-transform duration-300 ${
+      className={`bg-background opacity-100 sticky top-0 z-50 border-b border-border transition-transform duration-300 ${
         shouldHide ? '-translate-y-full' : 'translate-y-0'
       } shadow-sm`}
     >
@@ -63,7 +63,7 @@ const MainNavigation = () => {
               </button>
               
               {/* Dropdown Menu */}
-              <div className="absolute left-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="absolute left-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border hidden group-hover:block transition-all duration-200 z-50">
                 <div className="py-2">
                   <Link 
                     to="/gyms" 
@@ -133,7 +133,7 @@ const MainNavigation = () => {
                   </Button>
                   
                   {/* Dropdown Menu */}
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-card rounded-lg shadow-lg border border-border hidden group-hover:block transition-all duration-200 z-50">
                     <div className="py-2">
                       <Link 
                         to="/profile" 
@@ -168,7 +168,7 @@ const MainNavigation = () => {
                             <span>My Trainer Profile</span>
                           </div>
                           {trainerStatus === 'pending' && (
-                            <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">
+                            <Badge variant="secondary" className="text-xs bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))]">
                               Pending
                             </Badge>
                           )}
@@ -201,7 +201,7 @@ const MainNavigation = () => {
                   </Button>
                 </Link>
                 <Link to="/register-business">
-                  <Button className="bg-primary hover:bg-primary/90 text-white font-semibold">
+                  <Button className="bg-primary hover:bg-primary text-primary-foreground font-semibold">
                     List Your Business
                   </Button>
                 </Link>
@@ -316,9 +316,9 @@ const MainNavigation = () => {
                   >
                     Business Dashboard
                   </Link>
-                  <button 
+                    <button 
                     onClick={handleSignOut}
-                    className="text-destructive hover:opacity-80 font-medium px-2 py-2 text-left transition-opacity"
+                      className="text-destructive hover:text-destructive font-medium px-2 py-2 text-left transition-colors"
                   >
                     Sign Out
                   </button>
@@ -337,7 +337,7 @@ const MainNavigation = () => {
                     to="/register-business" 
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <Button className="w-full bg-primary hover:bg-primary/90 text-white font-semibold">
+                    <Button className="w-full bg-primary hover:bg-primary text-primary-foreground font-semibold">
                       List Your Business
                     </Button>
                   </Link>
