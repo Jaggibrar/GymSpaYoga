@@ -38,7 +38,7 @@ const Trainers = () => {
         keywords="personal trainer near me, best fitness coach Mumbai, certified trainer Delhi, personal training Bangalore, weight loss trainer India, female personal trainer, online personal trainer, home personal trainer, transformation coach, bodybuilding coach, strength coach, nutritionist, diet coach, sports coach, rehab trainer, yoga trainer, zumba instructor, pilates trainer, kickboxing coach, MMA coach, kids fitness coach, senior fitness trainer, prenatal trainer, postnatal trainer, ACE certified trainer, ACSM trainer, NASM trainer, K11 certified, REPS India, trainer in Pune, trainer in Hyderabad, trainer in Chennai, trainer in Kolkata"
       />
       
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background opacity-100">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
@@ -50,14 +50,17 @@ const Trainers = () => {
               width={1920}
               height={350}
             />
-            <div className="absolute inset-0 bg-black/50"></div>
+            <div
+              className="absolute inset-0"
+              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0.1))' }}
+            ></div>
           </div>
           <div className="relative container mx-auto px-4 h-full flex items-center justify-center">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-3xl md:text-5xl font-bold mb-3 text-white">
                 Find Expert Personal Trainers
               </h1>
-              <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
+              <p className="text-base md:text-lg text-white max-w-2xl mx-auto">
                 Connect with certified coaches for personalized fitness guidance
               </p>
             </div>
@@ -65,26 +68,26 @@ const Trainers = () => {
         </section>
 
         {/* Search and Filters Section */}
-        <section className="container mx-auto px-4 py-6">
-          <Card className="border-2 border-gray-100 shadow-lg">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-3">
+        <section className="container mx-auto px-4 py-8 md:py-10">
+          <Card className="border border-border bg-card shadow-lg opacity-100">
+            <CardContent className="p-5 md:p-6">
+              <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
                     placeholder="Search trainers..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-11 border-gray-200"
+                    className="pl-10 h-12 border-border bg-background text-foreground"
                   />
                 </div>
                 <div className="relative flex-1">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
                     placeholder="Enter location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="pl-10 pr-10 h-11 border-gray-200"
+                    className="pl-10 pr-10 h-12 border-border bg-background text-foreground"
                   />
                   <Button
                     type="button"
@@ -92,14 +95,14 @@ const Trainers = () => {
                     variant="ghost"
                     onClick={handleGetCurrentLocation}
                     disabled={geoLoading}
-                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 h-9 w-9 p-0"
                   >
                     <Navigation className={`h-4 w-4 ${geoLoading ? 'animate-spin' : ''}`} />
                   </Button>
                 </div>
                 <Button 
                   onClick={handleSearch}
-                  className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white h-11 px-6"
+                  className="bg-primary hover:bg-primary text-primary-foreground h-12 px-6"
                 >
                   <Search className="mr-2 h-4 w-4" />
                   Search
@@ -129,8 +132,8 @@ const Trainers = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 glass-card glass-card-hover">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+            <div className="text-center p-6 md:p-8 glass-card glass-card-hover">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Award className="h-8 w-8 text-primary" />
               </div>
@@ -140,7 +143,7 @@ const Trainers = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 glass-card glass-card-hover">
+            <div className="text-center p-6 md:p-8 glass-card glass-card-hover">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Target className="h-8 w-8 text-primary" />
               </div>
@@ -150,7 +153,7 @@ const Trainers = () => {
               </p>
             </div>
 
-            <div className="text-center p-6 glass-card glass-card-hover">
+            <div className="text-center p-6 md:p-8 glass-card glass-card-hover">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="h-8 w-8 text-primary" />
               </div>
@@ -187,17 +190,17 @@ const Trainers = () => {
                   ))}
                 </div>
                 <div className="ml-4 md:ml-6">
-                  <p className="text-2xl md:text-3xl font-bold text-white">10,000+</p>
-                  <p className="text-white/80 text-sm md:text-base">Active Members</p>
+                  <p className="text-2xl md:text-3xl font-bold text-primary-foreground">10,000+</p>
+                  <p className="text-primary-foreground text-sm md:text-base">Active Members</p>
                 </div>
               </div>
 
               {/* Center: Message */}
               <div className="text-center lg:text-left flex-1 max-w-md">
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <h3 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-2">
                   GymSpaYoga.com
                 </h3>
-                <p className="text-white/90 text-sm md:text-base">
+                <p className="text-primary-foreground text-sm md:text-base">
                   Your Complete Wellness Destination. Transform your fitness journey!
                 </p>
               </div>
@@ -205,13 +208,13 @@ const Trainers = () => {
               {/* Right: CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/explore">
-                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-background text-foreground font-bold hover:bg-secondary">
                     Explore More
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
                 <a href="https://wa.me/919876543210?text=Hi%2C%20I%20want%20to%20know%20more%20about%20GymSpaYoga" target="_blank" rel="noopener noreferrer">
-                  <Button size="lg" className="bg-white text-[hsl(var(--primary))] font-bold hover:bg-gray-100">
+                  <Button size="lg" className="bg-background text-foreground font-bold hover:bg-secondary">
                     <MessageCircle className="mr-2 h-5 w-5" />
                     Contact on WhatsApp
                   </Button>

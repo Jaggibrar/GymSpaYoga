@@ -79,17 +79,17 @@ const TrainerListings = ({ searchTerm, location, sortBy, priceFilter }: TrainerL
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-foreground mb-4">
+    <div className="container mx-auto px-4 py-10 md:py-14 opacity-100">
+      <div className="text-center mb-10 md:mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
           Featured Personal Trainers
         </h2>
-        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+        <p className="text-foreground text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
           Connect with certified fitness professionals who will help you achieve your goals
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 lg:gap-8 justify-items-center items-stretch">
         {sortedTrainers.map((trainer, index) => {
           const info = getRatingInfo(trainer.id);
           const trainerForCard = {

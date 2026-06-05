@@ -66,18 +66,18 @@ const TrainerDetails = () => {
   const getTierInfo = (tier: string) => {
     const tiers = {
       certified: {
-        color: 'bg-blue-50 text-blue-700 border-blue-200',
-        gradient: 'from-blue-500 to-blue-600',
+        color: 'bg-primary text-primary-foreground border-primary',
+        gradient: 'from-primary to-primary',
         icon: CheckCircle
       },
       expert: {
-        color: 'bg-purple-50 text-purple-700 border-purple-200',
-        gradient: 'from-purple-500 to-purple-600',
+        color: 'bg-primary text-primary-foreground border-primary',
+        gradient: 'from-primary to-primary',
         icon: Award
       },
       elite: {
-        color: 'bg-amber-50 text-amber-700 border-amber-200',
-        gradient: 'from-amber-500 to-amber-600',
+        color: 'bg-[hsl(var(--gold))] text-[hsl(var(--gold-foreground))] border-[hsl(var(--gold))]',
+        gradient: 'from-[hsl(var(--gold))] to-[hsl(var(--gold))]',
         icon: Star
       }
     };
@@ -126,13 +126,13 @@ const TrainerDetails = () => {
                        <TierIcon className="h-8 w-8" />
                        <div>
                          <h1 className="text-4xl font-bold">{trainer.name}</h1>
-                         <p className="text-xl opacity-90 capitalize">{trainer.trainer_tier} Trainer</p>
+                          <p className="text-xl text-white capitalize">{trainer.trainer_tier} Trainer</p>
                        </div>
                      </div>
                      <div className="text-right">
-                       <div className="bg-white/20 backdrop-blur-sm rounded-lg px-3 py-1">
-                         <p className="text-xs opacity-80">Trainer ID</p>
-                         <p className="font-mono font-semibold text-sm">{getShortId(trainer.id)}</p>
+                        <div className="bg-background rounded-lg px-3 py-1">
+                          <p className="text-xs text-foreground">Trainer ID</p>
+                          <p className="font-mono font-semibold text-sm text-foreground">{getShortId(trainer.id)}</p>
                        </div>
                      </div>
                    </div>
@@ -142,27 +142,27 @@ const TrainerDetails = () => {
                       <Star className="h-5 w-5" />
                       <div>
                         <p className="font-semibold">{trainer.rating || 4.8}</p>
-                        <p className="text-sm opacity-80">Rating</p>
+                        <p className="text-sm text-white">Rating</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Clock className="h-5 w-5" />
                       <div>
                         <p className="font-semibold">{trainer.experience} Years</p>
-                        <p className="text-sm opacity-80">Experience</p>
+                        <p className="text-sm text-white">Experience</p>
                       </div>
                     </div>
                      <div className="flex items-center gap-2">
                        <MapPin className="h-5 w-5" />
                        <div>
                          <p className="font-semibold">{trainer.location.split(',')[0]}</p>
-                         <p className="text-sm opacity-80">
+                          <p className="text-sm text-white">
                            {position ? 'Near you' : 'Location'}
                          </p>
                          {position && (
                            <button 
                              onClick={getCurrentPosition}
-                             className="text-xs opacity-60 hover:opacity-80 transition-opacity"
+                              className="text-xs text-white hover:text-primary-foreground transition-colors"
                            >
                              Update location
                            </button>

@@ -76,7 +76,7 @@ const Breadcrumbs = () => {
         })}
       </script>
       
-      <nav className="bg-background/80 backdrop-blur-sm border-b border-border" aria-label="Breadcrumb">
+      <nav className="bg-background opacity-100 border-b border-border" aria-label="Breadcrumb">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-2 py-3">
             <ol className="flex items-center space-x-2 text-sm">
