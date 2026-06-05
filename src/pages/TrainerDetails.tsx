@@ -132,7 +132,7 @@ const TrainerDetails = () => {
                      <div className="text-right">
                         <div className="bg-background rounded-lg px-3 py-1">
                           <p className="text-xs text-foreground">Trainer ID</p>
-                         <p className="font-mono font-semibold text-sm">{getShortId(trainer.id)}</p>
+                          <p className="font-mono font-semibold text-sm text-foreground">{getShortId(trainer.id)}</p>
                        </div>
                      </div>
                    </div>
