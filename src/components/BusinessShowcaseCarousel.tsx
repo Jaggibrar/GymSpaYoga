@@ -166,7 +166,10 @@ const BusinessShowcaseCarousel: React.FC = () => {
 
                     {/* Top badges */}
                     <div className="absolute top-4 left-4 right-4 flex items-start justify-between gap-2 z-10">
-                      <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-charcoal-950 text-[11px] font-semibold uppercase tracking-wider shadow-sm">
+                      <span
+                        className="px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider shadow-sm"
+                        style={{ background: '#ffffff', color: '#0f172a' }}
+                      >
                         {categoryLabel(item.business_type)}
                       </span>
                       {item.verified && (
@@ -177,16 +180,28 @@ const BusinessShowcaseCarousel: React.FC = () => {
                       )}
                     </div>
 
-                    {/* Bottom content with glass effect */}
+                    {/* Bottom content — solid dark overlay for guaranteed contrast */}
                     <div className="absolute inset-x-0 bottom-0 p-5 z-10">
-                      <div className="rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3">
-                        <h3 className="font-display text-lg md:text-xl font-bold text-white leading-tight line-clamp-1">
+                      <div
+                        className="rounded-2xl px-4 py-3 border"
+                        style={{
+                          background: 'rgba(15, 23, 42, 0.82)',
+                          borderColor: 'rgba(255,255,255,0.14)',
+                        }}
+                      >
+                        <h3
+                          className="font-display text-lg md:text-xl font-bold leading-tight line-clamp-1"
+                          style={{ color: '#ffffff' }}
+                        >
                           {item.business_name}
                         </h3>
                         {item.city && (
                           <div className="flex items-center gap-1.5 mt-1.5">
                             <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                            <span className="text-white/90 text-sm font-medium truncate">
+                            <span
+                              className="text-sm font-medium truncate"
+                              style={{ color: 'rgba(255,255,255,0.92)' }}
+                            >
                               {item.city}
                             </span>
                           </div>
