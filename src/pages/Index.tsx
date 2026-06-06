@@ -16,6 +16,7 @@ import WellnessStats from '@/components/WellnessStats';
 import HomeFAQ from '@/components/HomeFAQ';
 
 const RecentListings = lazy(() => import('@/components/RecentListings'));
+const BusinessShowcaseCarousel = lazy(() => import('@/components/BusinessShowcaseCarousel'));
 
 const LoadingFallback = () => (
   <div className="flex justify-center py-12">
@@ -287,6 +288,10 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        <Suspense fallback={<LoadingFallback />}>
+          <BusinessShowcaseCarousel />
+        </Suspense>
 
         <CommunityBanner />
       </div>
