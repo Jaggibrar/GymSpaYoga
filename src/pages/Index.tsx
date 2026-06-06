@@ -289,6 +289,10 @@ const Index = () => {
           </div>
         </section>
 
+        <Suspense fallback={<LoadingFallback />}>
+          <BusinessShowcaseCarousel />
+        </Suspense>
+
         <CommunityBanner />
       </div>
     </>
