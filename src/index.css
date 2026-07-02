@@ -364,6 +364,27 @@
   color: revert;
 }
 
+/* On explicit light surfaces, force dark text for headings and foreground utilities */
+.dark .bg-white h1,
+.dark .bg-white h2,
+.dark .bg-white h3,
+.dark .bg-white h4,
+.dark .bg-white h5,
+.dark .bg-white h6,
+.dark .bg-white .text-foreground,
+.dark [class*="bg-white"] h1,
+.dark [class*="bg-white"] h2,
+.dark [class*="bg-white"] h3,
+.dark [class*="bg-white"] h4,
+.dark [class*="bg-white"] h5,
+.dark [class*="bg-white"] h6,
+.dark [class*="bg-white"] .text-foreground {
+  color: #0f172a;
+}
+.dark [class*="bg-white"] .text-muted-foreground {
+  color: #475569;
+}
+
 /* Inputs / placeholders should remain readable on dark */
 .dark input::placeholder,
 .dark textarea::placeholder {
