@@ -1,13 +1,10 @@
-
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { useBlogs } from '@/hooks/useBlogs';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, BookOpen, TrendingUp, Edit3 } from 'lucide-react';
+import { Search, Plus, BookOpen, TrendingUp, Edit3, Sparkles } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import BlogGrid from '@/components/blog/BlogGrid';
 import BlogRichEditor from '@/components/blog/BlogRichEditor';
@@ -17,7 +14,7 @@ const Blogs = () => {
   const { blogs, loading, createBlog, likeBlog } = useBlogs();
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,156 +48,140 @@ const Blogs = () => {
         description="Discover expert tips, guides, and insights on fitness, wellness, yoga, and spa treatments. Stay updated with the latest health trends and advice."
         keywords="health blog, fitness tips, wellness guide, yoga advice, spa treatments, exercise tips"
       />
-      
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-teal-50">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-emerald-500 via-blue-500 to-teal-600 text-white py-20 lg:py-32">
-          <div className="absolute inset-0">
-            <div className="absolute top-0 left-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl"></div>
-          </div>
-          <div className="relative container mx-auto px-4">
-            <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-8">
-                <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-                  Wellness <span className="text-emerald-200">Insights</span>
-                </h1>
-                <p className="text-xl md:text-2xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
-                  Expert insights, actionable tips, and comprehensive guides for your holistic wellness journey. Stay informed about the latest trends in fitness, nutrition, and mental well-being.
-                </p>
+
+      <div className="min-h-screen bg-background text-foreground">
+        {/* Hero */}
+        <section className="relative overflow-hidden border-b border-border bg-gradient-hero">
+          <div className="container-modern relative py-20 lg:py-28">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 mb-6">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Wellness Journal</span>
               </div>
-              
-              {/* Search Bar */}
-              <div className="relative max-w-md mx-auto">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight mb-6">
+                Wellness{' '}
+                <span className="text-gradient-emerald">Insights</span>
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-10">
+                Expert insights, actionable tips, and comprehensive guides for your holistic wellness journey.
+              </p>
+
+              <div className="relative max-w-xl mx-auto">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5" />
                 <Input
-                  placeholder="Search articles..."
+                  placeholder="Search articles, topics, tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 py-3 text-gray-900"
+                  className="pl-12 py-6 h-14 bg-card border-border rounded-2xl text-base"
                 />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Main Content */}
-        <section className="container mx-auto px-4 py-12">
-          <div className="flex justify-between items-center mb-8">
+        {/* Toolbar */}
+        <section className="container-modern py-12">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Latest Articles ({filteredBlogs.length})
+              <h2 className="text-2xl md:text-3xl font-bold mb-3">
+                Latest Articles <span className="text-muted-foreground font-normal">({filteredBlogs.length})</span>
               </h2>
-              <div className="flex items-center gap-6 text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="h-4 w-4 text-emerald-600" />
+                  <BookOpen className="h-4 w-4 text-primary" />
                   <span>{blogs.length} Total Articles</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-blue-600" />
+                  <TrendingUp className="h-4 w-4 text-primary" />
                   <span>{totalViews.toLocaleString()} Total Views</span>
                 </div>
               </div>
             </div>
-            
-            <div className="flex gap-2">
-              {user && (
-                <>
-                  <Button 
-                    onClick={() => navigate('/my-blogs')}
-                    variant="outline"
-                    className="text-[hsl(var(--primary))] border-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/10"
-                  >
-                    <Edit3 className="h-4 w-4 mr-2" />
-                    My Blogs
-                  </Button>
-                  <Button 
-                    onClick={() => setIsCreateModalOpen(true)}
-                    className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] text-white shadow-lg hover:shadow-xl transition-all duration-200"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Write Article
-                  </Button>
-                </>
-              )}
-            </div>
+
+            {user && (
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => navigate('/my-blogs')}
+                  variant="outline"
+                  className="border-border bg-secondary hover:bg-accent"
+                >
+                  <Edit3 className="h-4 w-4 mr-2" />
+                  My Blogs
+                </Button>
+                <Button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="btn-primary"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Write Article
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* Featured Blogs Section */}
           {featuredBlogs.length > 0 && !searchTerm && (
-            <div className="mb-12">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
-                <h2 className="text-2xl font-bold text-gray-800">Featured Articles</h2>
+            <div className="mb-14">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-6 bg-primary rounded-full" />
+                <h2 className="text-xl md:text-2xl font-bold">Featured Articles</h2>
               </div>
-              <BlogGrid 
-                blogs={featuredBlogs} 
-                onLike={user ? likeBlog : undefined}
-              />
+              <BlogGrid blogs={featuredBlogs} onLike={user ? likeBlog : undefined} />
             </div>
           )}
 
-          {/* All Blogs Section */}
           <div>
             {!searchTerm && featuredBlogs.length > 0 && (
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-1 h-6 bg-[hsl(var(--primary))] rounded-full"></div>
-                <h2 className="text-2xl font-bold text-gray-800">All Articles</h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-1 h-6 bg-primary rounded-full" />
+                <h2 className="text-xl md:text-2xl font-bold">All Articles</h2>
               </div>
             )}
-            
+
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="bg-gray-200 h-48 rounded-t-lg"></div>
-                    <div className="bg-white rounded-b-lg p-6 space-y-3">
-                      <div className="bg-gray-200 h-4 rounded w-3/4"></div>
-                      <div className="bg-gray-200 h-4 rounded w-1/2"></div>
-                      <div className="bg-gray-200 h-3 rounded w-full"></div>
-                      <div className="bg-gray-200 h-3 rounded w-2/3"></div>
+                  <div key={i} className="rounded-3xl border border-border bg-card overflow-hidden">
+                    <div className="bg-secondary h-52 animate-pulse" />
+                    <div className="p-6 space-y-3">
+                      <div className="bg-secondary h-4 rounded w-3/4 animate-pulse" />
+                      <div className="bg-secondary h-4 rounded w-1/2 animate-pulse" />
+                      <div className="bg-secondary h-3 rounded w-full animate-pulse" />
+                      <div className="bg-secondary h-3 rounded w-2/3 animate-pulse" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <BlogGrid 
-                blogs={filteredBlogs} 
-                onLike={user ? likeBlog : undefined}
-              />
+              <BlogGrid blogs={filteredBlogs} onLike={user ? likeBlog : undefined} />
             )}
           </div>
         </section>
 
-        {/* Newsletter Section */}
-        <section className="bg-white py-16">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Stay Updated
+        {/* Newsletter */}
+        <section className="border-t border-border bg-card/50">
+          <div className="container-modern py-16 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Stay <span className="text-gradient-emerald">Updated</span>
             </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Subscribe to our newsletter for the latest health and wellness tips, 
-              delivered straight to your inbox.
+            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Subscribe to our newsletter for the latest health and wellness tips, delivered straight to your inbox.
             </p>
-            
-            <div className="max-w-md mx-auto flex gap-3">
-              <Input 
+
+            <div className="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
+              <Input
                 placeholder="Enter your email"
                 type="email"
-                className="flex-1"
+                className="flex-1 h-12 bg-background border-border rounded-xl"
               />
-              <Button className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]">
-                Subscribe
-              </Button>
+              <Button className="btn-primary h-12">Subscribe</Button>
             </div>
           </div>
         </section>
 
-        {/* Create Blog Modal */}
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto bg-card border-border">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <DialogTitle className="text-xl font-bold text-gradient-emerald">
                 Create New Blog Post
               </DialogTitle>
             </DialogHeader>
