@@ -191,6 +191,32 @@ const BlogPost = () => {
                 />
               </div>
 
+              <div className="mt-8">
+                <ShareButtons
+                  url={typeof window !== 'undefined' ? window.location.href : ''}
+                  title={blog.title}
+                  excerpt={blog.excerpt}
+                />
+              </div>
+
+              <AuthorProfile
+                name={blog.author?.full_name || blog.author_name}
+                avatarUrl={blog.author?.avatar_url || blog.author_avatar}
+              />
+
+              <BlogComments blogId={blog.id} />
+                    prose-headings:text-foreground prose-headings:font-bold
+                    prose-p:text-foreground/85 prose-p:leading-relaxed
+                    prose-a:text-primary hover:prose-a:text-primary/80
+                    prose-strong:text-foreground
+                    prose-li:text-foreground/85
+                    prose-blockquote:text-muted-foreground prose-blockquote:border-primary
+                    prose-code:text-primary prose-code:bg-secondary prose-code:px-1 prose-code:rounded
+                    prose-img:rounded-2xl"
+                  dangerouslySetInnerHTML={{ __html: safeHtml }}
+                />
+              </div>
+
               <BlogComments blogId={blog.id} />
 
               <div className="text-center mt-12">
