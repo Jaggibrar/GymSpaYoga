@@ -44,22 +44,6 @@ const BlogPost = () => {
       day: 'numeric',
     });
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: blog?.title,
-          text: blog?.excerpt,
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    }
-  };
 
   const handleLike = async () => {
     if (!user || !blog) {
