@@ -1,7 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useBlogs, Blog } from '@/hooks/useBlogs';
@@ -20,14 +18,11 @@ const BlogPost = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (slug) {
-      fetchBlog();
-    }
+    if (slug) fetchBlog();
   }, [slug]);
 
   const fetchBlog = async () => {
     if (!slug) return;
-    
     try {
       setLoading(true);
       const blogData = await getBlogBySlug(slug);
@@ -40,14 +35,12 @@ const BlogPost = () => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
-  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -55,7 +48,7 @@ const BlogPost = () => {
         await navigator.share({
           title: blog?.title,
           text: blog?.excerpt,
-          url: window.location.href
+          url: window.location.href,
         });
       } catch (error) {
         console.error('Error sharing:', error);
@@ -71,10 +64,8 @@ const BlogPost = () => {
       toast.error('Please log in to like posts');
       return;
     }
-    
     try {
       await likeBlog(blog.id);
-      // Refresh blog to get updated like count
       fetchBlog();
     } catch (error) {
       console.error('Error liking blog:', error);
@@ -83,21 +74,25 @@ const BlogPost = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
-        <span className="ml-2 text-gray-600">Loading blog post...</span>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <span className="ml-3 text-muted-foreground">Loading article...</span>
       </div>
     );
   }
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Blog Post Not Found</h1>
-          <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center px-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Article Not Found
+          </h1>
+          <p className="text-muted-foreground mb-8">
+            The blog post you're looking for doesn't exist.
+          </p>
           <Link to="/blogs">
-            <Button>
+            <Button className="btn-primary">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Blogs
             </Button>
@@ -108,6 +103,8 @@ const BlogPost = () => {
   }
 
   const featuredImage = blog.image_url || blog.featured_image_url;
+  const rawContent = blog.content || blog.excerpt || '';
+  const safeHtml = DOMPurify.sanitize(rawContent.replace(/\n/g, '<br />'));
 
   return (
     <>
@@ -116,13 +113,12 @@ const BlogPost = () => {
         description={blog.meta_description || blog.excerpt || ''}
         keywords={blog.tags?.join(', ') || 'health, fitness, wellness'}
       />
-      
-      <div className="min-h-screen bg-white">
-        {/* Header */}
-        <div className="bg-gray-50 py-8">
+
+      <div className="min-h-screen bg-background">
+        <div className="bg-secondary/40 border-b border-border py-6">
           <div className="container mx-auto px-4">
             <Link to="/blogs">
-              <Button variant="outline" className="mb-6">
+              <Button variant="outline" className="border-border">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Blogs
               </Button>
@@ -130,57 +126,74 @@ const BlogPost = () => {
           </div>
         </div>
 
-        {/* Blog Content */}
-        <article className="py-8">
+        <article className="py-10 md:py-14">
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto">
-              {/* Featured Image */}
               {featuredImage && (
                 <img
                   src={featuredImage}
                   alt={blog.title}
-                  className="w-full h-64 md:h-96 object-cover rounded-2xl mb-8 shadow-lg"
+                  className="w-full h-64 md:h-96 object-cover rounded-3xl mb-8 shadow-medium border border-border"
                 />
               )}
 
-              {/* Title and Meta */}
               <div className="mb-8">
-                <div className="flex flex-wrap items-center gap-3 mb-4">
-                  {blog.tags?.map((tag) => (
-                    <Badge key={tag} variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
+                {blog.tags && blog.tags.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 mb-5">
+                    {blog.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="outline"
+                        className="border-border bg-secondary/50 text-muted-foreground"
+                      >
+                        #{tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
 
-                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
                   {blog.title}
                 </h1>
 
-                <div className="flex items-center justify-between text-gray-600 mb-6">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-2" />
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-primary" />
                       {formatDate(blog.published_at || blog.created_at)}
                     </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-2" />
-                      {blog.read_time_minutes} min read
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-4 w-4 text-primary" />
+                      {blog.read_time_minutes || 5} min read
                     </div>
-                    <div className="flex items-center">
-                      <Eye className="h-4 w-4 mr-2" />
-                      {blog.views_count || 0} views
+                    <div className="flex items-center gap-1.5">
+                      <Eye className="h-4 w-4 text-primary" />
+                      {(blog.views_count || 0).toLocaleString()} views
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     {user && (
-                      <Button variant="outline" size="sm" onClick={handleLike}>
-                        <Heart className="h-4 w-4 mr-2" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleLike}
+                        className="border-border"
+                      >
+                        <Heart
+                          className={`h-4 w-4 mr-2 ${
+                            blog.is_liked ? 'fill-destructive text-destructive' : ''
+                          }`}
+                        />
                         {blog.likes_count || 0}
                       </Button>
                     )}
-                    <Button variant="outline" size="sm" onClick={handleShare}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleShare}
+                      className="border-border"
+                    >
                       <Share2 className="h-4 w-4 mr-2" />
                       Share
                     </Button>
@@ -188,29 +201,32 @@ const BlogPost = () => {
                 </div>
 
                 {blog.excerpt && (
-                  <p className="text-xl text-gray-600 leading-relaxed mb-8 font-medium">
+                  <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 font-medium border-l-4 border-primary/60 pl-4">
                     {blog.excerpt}
                   </p>
                 )}
               </div>
 
-              {/* Content */}
-              <Card className="shadow-lg">
-                <CardContent className="p-8 md:p-12">
-                  <div 
-                    className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-emerald-600 prose-strong:text-gray-900"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content.replace(/\n/g, '<br />')) }}
-                  />
-                </CardContent>
-              </Card>
+              <div className="rounded-3xl bg-card border border-border shadow-medium p-6 md:p-10">
+                <div
+                  className="prose prose-lg max-w-none dark:prose-invert
+                    prose-headings:text-foreground prose-headings:font-bold
+                    prose-p:text-foreground/85 prose-p:leading-relaxed
+                    prose-a:text-primary hover:prose-a:text-primary/80
+                    prose-strong:text-foreground
+                    prose-li:text-foreground/85
+                    prose-blockquote:text-muted-foreground prose-blockquote:border-primary
+                    prose-code:text-primary prose-code:bg-secondary prose-code:px-1 prose-code:rounded
+                    prose-img:rounded-2xl"
+                  dangerouslySetInnerHTML={{ __html: safeHtml }}
+                />
+              </div>
 
-              {/* Comments Section */}
               <BlogComments blogId={blog.id} />
 
-              {/* Back to Blogs */}
               <div className="text-center mt-12">
                 <Link to="/blogs">
-                  <Button size="lg">
+                  <Button size="lg" className="btn-primary">
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to All Blogs
                   </Button>
