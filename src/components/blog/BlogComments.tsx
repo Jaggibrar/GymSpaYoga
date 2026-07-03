@@ -163,23 +163,23 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
     const userInitials = userName.split(' ').map(name => name[0]).join('').toUpperCase();
 
     return (
-      <div key={comment.id} className={`${isReply ? 'ml-12 mt-4' : 'mb-6'}`}>
+      <div key={comment.id} className={`${isReply ? 'ml-8 md:ml-12 mt-4' : 'mb-6'}`}>
         <div className="flex space-x-3">
-          <Avatar className="h-8 w-8 flex-shrink-0">
+          <Avatar className="h-9 w-9 flex-shrink-0 border border-border">
             <AvatarImage src={comment.user_profiles?.avatar_url || ''} />
-            <AvatarFallback className="text-xs">{userInitials}</AvatarFallback>
+            <AvatarFallback className="text-xs bg-secondary text-foreground">{userInitials}</AvatarFallback>
           </Avatar>
 
           <div className="flex-1 min-w-0">
-            <div className="bg-gray-50 rounded-lg p-4">
+            <div className="bg-secondary/50 border border-border rounded-2xl p-4">
               <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-gray-900">{userName}</span>
-                  <span className="text-xs text-gray-500">
+                <div className="flex items-center space-x-2 flex-wrap">
+                  <span className="font-semibold text-foreground">{userName}</span>
+                  <span className="text-xs text-muted-foreground">
                     {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
                   </span>
                   {comment.updated_at !== comment.created_at && (
-                    <span className="text-xs text-gray-400">(edited)</span>
+                    <span className="text-xs text-muted-foreground/70">(edited)</span>
                   )}
                 </div>
 
@@ -189,17 +189,17 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
                       size="sm"
                       variant="ghost"
                       onClick={() => startEditing(comment)}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-gray-600"
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground"
                     >
-                      <Edit3 className="h-3 w-3" />
+                      <Edit3 className="h-3.5 w-3.5" />
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => handleDeleteComment(comment.id)}
-                      className="h-6 w-6 p-0 text-gray-400 hover:text-red-600"
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </Button>
                   </div>
                 )}
@@ -211,23 +211,24 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
                     value={editContent}
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={3}
-                    className="text-sm"
+                    className="text-sm bg-background border-border text-foreground"
                   />
                   <div className="flex space-x-2">
                     <Button
                       size="sm"
                       onClick={() => handleUpdateComment(comment.id)}
                       disabled={!editContent.trim()}
+                      className="btn-primary"
                     >
                       Save
                     </Button>
-                    <Button size="sm" variant="outline" onClick={cancelEditing}>
+                    <Button size="sm" variant="outline" onClick={cancelEditing} className="border-border">
                       Cancel
                     </Button>
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+                <p className="text-foreground/90 whitespace-pre-wrap leading-relaxed">{comment.content}</p>
               )}
             </div>
 
@@ -237,7 +238,7 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
                   size="sm"
                   variant="ghost"
                   onClick={() => setReplyTo(replyTo === comment.id ? null : comment.id)}
-                  className="text-xs text-gray-500 hover:text-gray-700"
+                  className="text-xs text-muted-foreground hover:text-primary"
                 >
                   Reply
                 </Button>
