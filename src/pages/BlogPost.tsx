@@ -143,13 +143,7 @@ const BlogPost = () => {
                 {blog.tags && blog.tags.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mb-5">
                     {blog.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="outline"
-                        className="border-border bg-secondary/50 text-muted-foreground"
-                      >
-                        #{tag}
-                      </Badge>
+                      <TagChip key={tag} tag={tag} size="md" />
                     ))}
                   </div>
                 )}
@@ -174,32 +168,21 @@ const BlogPost = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    {user && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleLike}
-                        className="border-border"
-                      >
-                        <Heart
-                          className={`h-4 w-4 mr-2 ${
-                            blog.is_liked ? 'fill-destructive text-destructive' : ''
-                          }`}
-                        />
-                        {blog.likes_count || 0}
-                      </Button>
-                    )}
+                  {user && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={handleShare}
+                      onClick={handleLike}
                       className="border-border"
                     >
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
+                      <Heart
+                        className={`h-4 w-4 mr-2 ${
+                          blog.is_liked ? 'fill-destructive text-destructive' : ''
+                        }`}
+                      />
+                      {blog.likes_count || 0}
                     </Button>
-                  </div>
+                  )}
                 </div>
 
                 {blog.excerpt && (
