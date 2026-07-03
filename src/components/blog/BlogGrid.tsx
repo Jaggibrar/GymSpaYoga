@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Heart, Calendar, Eye, Clock, Tag, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Blog } from '@/hooks/useBlogs';
+import TagChip from '@/components/blog/TagChip';
 
 interface BlogGridProps {
   blogs: Blog[];
