@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Heart, Calendar, Eye, Clock, Tag, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Blog } from '@/hooks/useBlogs';
+import TagChip from '@/components/blog/TagChip';
 
 interface BlogGridProps {
   blogs: Blog[];
@@ -107,13 +108,7 @@ const BlogGrid = ({ blogs, onLike }: BlogGridProps) => {
             <div className="flex items-center justify-between mt-auto pt-4 border-t border-border">
               <div className="flex flex-wrap gap-2">
                 {blog.tags.slice(0, 2).map((tag) => (
-                  <Badge
-                    key={tag}
-                    variant="outline"
-                    className="text-xs px-2.5 py-0.5 text-muted-foreground border-border bg-secondary/50"
-                  >
-                    #{tag}
-                  </Badge>
+                  <TagChip key={tag} tag={tag} />
                 ))}
               </div>
 

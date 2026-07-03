@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useBlogs, Blog } from '@/hooks/useBlogs';
 import { useAuth } from '@/hooks/useAuth';
-import { Calendar, Clock, ArrowLeft, Share2, Heart, Eye } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Heart, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import BlogComments from '@/components/blog/BlogComments';
+import TagChip from '@/components/blog/TagChip';
+import ShareButtons from '@/components/blog/ShareButtons';
+import AuthorProfile from '@/components/blog/AuthorProfile';
 import DOMPurify from 'dompurify';
 
 const BlogPost = () => {
@@ -42,22 +44,6 @@ const BlogPost = () => {
       day: 'numeric',
     });
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: blog?.title,
-          text: blog?.excerpt,
-          url: window.location.href,
-        });
-      } catch (error) {
-        console.error('Error sharing:', error);
-      }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    }
-  };
 
   const handleLike = async () => {
     if (!user || !blog) {
@@ -141,13 +127,7 @@ const BlogPost = () => {
                 {blog.tags && blog.tags.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mb-5">
                     {blog.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        variant="outline"
-                        className="border-border bg-secondary/50 text-muted-foreground"
-                      >
-                        #{tag}
-                      </Badge>
+                      <TagChip key={tag} tag={tag} size="md" />
                     ))}
                   </div>
                 )}
@@ -172,32 +152,21 @@ const BlogPost = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    {user && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleLike}
-                        className="border-border"
-                      >
-                        <Heart
-                          className={`h-4 w-4 mr-2 ${
-                            blog.is_liked ? 'fill-destructive text-destructive' : ''
-                          }`}
-                        />
-                        {blog.likes_count || 0}
-                      </Button>
-                    )}
+                  {user && (
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={handleShare}
+                      onClick={handleLike}
                       className="border-border"
                     >
-                      <Share2 className="h-4 w-4 mr-2" />
-                      Share
+                      <Heart
+                        className={`h-4 w-4 mr-2 ${
+                          blog.is_liked ? 'fill-destructive text-destructive' : ''
+                        }`}
+                      />
+                      {blog.likes_count || 0}
                     </Button>
-                  </div>
+                  )}
                 </div>
 
                 {blog.excerpt && (
@@ -221,6 +190,19 @@ const BlogPost = () => {
                   dangerouslySetInnerHTML={{ __html: safeHtml }}
                 />
               </div>
+
+              <div className="mt-8">
+                <ShareButtons
+                  url={typeof window !== 'undefined' ? window.location.href : ''}
+                  title={blog.title}
+                  excerpt={blog.excerpt}
+                />
+              </div>
+
+              <AuthorProfile
+                name={blog.author?.full_name || blog.author_name}
+                avatarUrl={blog.author?.avatar_url || blog.author_avatar}
+              />
 
               <BlogComments blogId={blog.id} />
 
