@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useBlogs, Blog } from '@/hooks/useBlogs';
 import { useAuth } from '@/hooks/useAuth';
-import { Calendar, Clock, ArrowLeft, Share2, Heart, Eye } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Heart, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import SEOHead from '@/components/SEOHead';
 import BlogComments from '@/components/blog/BlogComments';
+import TagChip from '@/components/blog/TagChip';
+import ShareButtons from '@/components/blog/ShareButtons';
+import AuthorProfile from '@/components/blog/AuthorProfile';
 import DOMPurify from 'dompurify';
 
 const BlogPost = () => {
