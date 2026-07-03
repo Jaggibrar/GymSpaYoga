@@ -253,16 +253,17 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder={`Reply to ${userName}...`}
                   rows={3}
-                  className="text-sm"
+                  className="text-sm bg-background border-border text-foreground"
                 />
                 <div className="flex space-x-2">
-                  <Button type="submit" size="sm" disabled={submitting || !newComment.trim()}>
+                  <Button type="submit" size="sm" disabled={submitting || !newComment.trim()} className="btn-primary">
                     {submitting ? 'Posting...' : 'Reply'}
                   </Button>
                   <Button
                     type="button"
                     size="sm"
                     variant="outline"
+                    className="border-border"
                     onClick={() => {
                       setReplyTo(null);
                       setNewComment('');
@@ -287,10 +288,10 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
   const topLevelComments = comments.filter(comment => !comment.parent_id);
 
   return (
-    <Card className="mt-8">
+    <Card className="mt-10 bg-card border border-border rounded-3xl shadow-medium">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5 text-emerald-600" />
+        <CardTitle className="flex items-center gap-2 text-foreground">
+          <MessageCircle className="h-5 w-5 text-primary" />
           Comments ({topLevelComments.length})
         </CardTitle>
       </CardHeader>
@@ -299,9 +300,9 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
         {user ? (
           <form onSubmit={handleSubmitComment} className="mb-8 space-y-4">
             <div className="flex space-x-3">
-              <Avatar className="h-8 w-8 flex-shrink-0">
+              <Avatar className="h-9 w-9 flex-shrink-0 border border-border">
                 <AvatarImage src={user.user_metadata?.avatar_url || ''} />
-                <AvatarFallback>
+                <AvatarFallback className="bg-secondary text-foreground">
                   {user.email?.charAt(0).toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
@@ -311,15 +312,15 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Share your thoughts..."
                   rows={4}
-                  className="w-full"
+                  className="w-full bg-background border-border text-foreground placeholder:text-muted-foreground"
                 />
               </div>
             </div>
             <div className="flex justify-end">
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={submitting || !newComment.trim()}
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="btn-primary"
               >
                 {submitting ? 'Posting...' : (
                   <>
@@ -331,8 +332,8 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
             </div>
           </form>
         ) : (
-          <div className="mb-8 p-4 bg-gray-50 rounded-lg text-center">
-            <p className="text-gray-600">Please log in to leave a comment.</p>
+          <div className="mb-8 p-4 bg-secondary/50 border border-border rounded-2xl text-center">
+            <p className="text-muted-foreground">Please log in to leave a comment.</p>
           </div>
         )}
 
@@ -342,10 +343,10 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
             {[1, 2, 3].map(i => (
               <div key={i} className="animate-pulse">
                 <div className="flex space-x-3">
-                  <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+                  <div className="h-9 w-9 bg-muted rounded-full"></div>
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                    <div className="h-16 bg-gray-200 rounded"></div>
+                    <div className="h-4 bg-muted rounded w-1/4"></div>
+                    <div className="h-16 bg-muted rounded"></div>
                   </div>
                 </div>
               </div>
@@ -356,8 +357,8 @@ const BlogComments: React.FC<BlogCommentsProps> = ({ blogId }) => {
             {topLevelComments.map(comment => renderComment(comment))}
           </div>
         ) : (
-          <div className="text-center py-8 text-gray-500">
-            <MessageCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+          <div className="text-center py-8 text-muted-foreground">
+            <MessageCircle className="h-12 w-12 mx-auto mb-3 text-muted-foreground/40" />
             <p>No comments yet. Be the first to share your thoughts!</p>
           </div>
         )}
