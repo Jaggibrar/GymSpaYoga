@@ -34,7 +34,7 @@ const Login = () => {
       // Validate input using schema
       const validation = loginSchema.safeParse({ email, password });
       if (!validation.success) {
-        toast.error(validation.error.errors[0].message);
+        toast.error(validation.error.issues[0].message);
         setLoading(false);
         return;
       }
@@ -71,7 +71,7 @@ const Login = () => {
       });
       
       if (!validation.success) {
-        toast.error(validation.error.errors[0].message);
+        toast.error(validation.error.issues[0].message);
         setLoading(false);
         return;
       }
