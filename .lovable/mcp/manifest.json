@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "gymspayoga-mcp",
+      "version": "0.1.0",
+      "title": "GymSpaYoga MCP"
+    },
+    "tools": [
+      {
+        "name": "search_businesses",
+        "title": "Search wellness businesses",
+        "description": "Search GymSpaYoga's public directory of gyms, spas, yoga studios, therapists, and chiropractors. Filter by city and/or business type.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "city": {
+              "description": "City name filter (partial match).",
+              "type": "string"
+            },
+            "business_type": {
+              "description": "One of: gym, spa, yoga, therapist, chiropractor.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_trainers",
+        "title": "Search trainers",
+        "description": "Search GymSpaYoga's public directory of fitness, yoga, and wellness trainers. Filter by location and/or category.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "location": {
+              "description": "Location/city filter (partial match).",
+              "type": "string"
+            },
+            "category": {
+              "description": "Trainer category, e.g. yoga, fitness.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_blogs",
+        "title": "List wellness blog posts",
+        "description": "List published GymSpaYoga wellness blog posts. Optionally filter by category or search text in the title.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "search": {
+              "description": "Text to search in blog titles.",
+              "type": "string"
+            },
+            "category": {
+              "description": "Blog category filter.",
+              "type": "string"
+            },
+            "limit": {
+              "default": 10,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
