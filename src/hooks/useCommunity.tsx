@@ -119,7 +119,9 @@ async function enrichPosts(posts: any[], viewerId?: string): Promise<CommunityPo
     arr.push(m);
     mediaByPost.set(m.post_id, arr);
   });
-  const profMap = new Map((profilesRes.data || []).map((p: any) => [p.user_id, { user_id: p.user_id, full_name: p.full_name, avatar_url: p.profile_image_url }]));
+  const profMap = new Map((profilesRes.data || []).map((p: any) => [p.user_id, { user_id: p.user_id, full_name: p.full_name, avatar_url: p.avatar_url }]));
+  // Normalize business image_urls -> image_url for consumers
+  (bizRes.data || []).forEach((b: any) => { b.image_url = Array.isArray(b.image_urls) ? b.image_urls[0] : null; });
   const bizMap = new Map((bizRes.data || []).map((b: any) => [b.id, b]));
   const trMap = new Map((trRes.data || []).map((t: any) => [t.id, t]));
   const likedSet = new Set((likesRes.data || []).map((l: any) => l.target_id));
