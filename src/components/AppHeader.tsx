@@ -81,6 +81,7 @@ const AppHeader = () => {
             </DropdownMenu>
 
             {[
+              { path: '/community', label: 'Community' },
               { path: '/explore', label: 'Explore' },
               { path: '/blogs', label: 'Blog' },
               { path: '/pricing', label: 'Pricing' },
