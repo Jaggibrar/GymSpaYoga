@@ -29,7 +29,7 @@ export default function CommentThread({ postId }: { postId: string }) {
           {comments.map(c => (
             <div key={c.id} className="flex gap-3">
               <Avatar className="h-8 w-8 flex-shrink-0">
-                <AvatarImage src={c.author?.profile_image_url || undefined} />
+                <AvatarImage src={c.author?.avatar_url || undefined} />
                 <AvatarFallback>{(c.author?.full_name || 'U').slice(0, 1)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
