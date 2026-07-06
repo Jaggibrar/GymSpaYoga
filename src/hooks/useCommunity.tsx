@@ -106,8 +106,8 @@ async function enrichPosts(posts: any[], viewerId?: string): Promise<CommunityPo
 
   const [mediaRes, profilesRes, bizRes, trRes, likesRes, savesRes] = await Promise.all([
     supabase.from('community_post_media').select('*').in('post_id', ids).order('sort_order'),
-    supabase.from('user_profiles').select('user_id, full_name, profile_image_url').in('user_id', authorIds),
-    bizIds.length ? supabase.from('business_profiles').select('id, business_name, slug, image_url').in('id', bizIds) : Promise.resolve({ data: [] } as any),
+    supabase.from('user_profiles').select('user_id, full_name, avatar_url').in('user_id', authorIds),
+    bizIds.length ? supabase.from('business_profiles').select('id, business_name, slug, image_urls').in('id', bizIds) : Promise.resolve({ data: [] } as any),
     trIds.length ? supabase.from('trainer_profiles').select('id, name, profile_image_url').in('id', trIds) : Promise.resolve({ data: [] } as any),
     viewerId ? supabase.from('community_likes').select('target_id').eq('user_id', viewerId).eq('target_type', 'post').in('target_id', ids) : Promise.resolve({ data: [] } as any),
     viewerId ? supabase.from('community_saves').select('post_id').eq('user_id', viewerId).in('post_id', ids) : Promise.resolve({ data: [] } as any),
@@ -289,7 +289,7 @@ export const useComments = (postId: string) => {
       if (error) throw error;
       const authorIds = Array.from(new Set((data || []).map((c: any) => c.author_id)));
       const { data: profiles } = authorIds.length
-        ? await supabase.from('user_profiles').select('user_id, full_name, profile_image_url').in('user_id', authorIds)
+        ? await supabase.from('user_profiles').select('user_id, full_name, avatar_url').in('user_id', authorIds)
         : { data: [] as any[] };
       const map = new Map((profiles || []).map((p: any) => [p.user_id, p]));
       return (data || []).map((c: any) => ({
@@ -339,7 +339,7 @@ export const useSuggested = () => {
     queryKey: ['community-suggested'],
     queryFn: async () => {
       const [biz, tr] = await Promise.all([
-        supabase.from('business_profiles').select('id, business_name, slug, image_url, category').eq('status', 'approved').limit(4),
+        supabase.from('business_profiles').select('id, business_name, slug, image_urls, category').eq('status', 'approved').limit(4),
         supabase.from('trainer_profiles').select('id, name, profile_image_url, category').eq('status', 'approved').limit(4),
       ]);
       return { businesses: biz.data || [], trainers: tr.data || [] };
@@ -354,7 +354,7 @@ export const useUserBusinessesAndTrainers = () => {
     enabled: !!user,
     queryFn: async () => {
       const [biz, tr] = await Promise.all([
-        supabase.from('business_profiles').select('id, business_name, image_url').eq('user_id', user!.id),
+        supabase.from('business_profiles').select('id, business_name, image_urls').eq('user_id', user!.id),
         supabase.from('trainer_profiles').select('id, name, profile_image_url').eq('user_id', user!.id),
       ]);
       return { businesses: biz.data || [], trainers: tr.data || [] };
@@ -372,7 +372,7 @@ export const useProfileHeader = (kind: 'user' | 'business' | 'trainer', id: stri
         const { data } = await supabase.from('user_profiles').select('user_id, full_name, profile_image_url, bio').eq('user_id', id).maybeSingle();
         profile = data ? { id: data.user_id, name: data.full_name, avatar: data.profile_image_url, bio: data.bio } : null;
       } else if (kind === 'business') {
-        const { data } = await supabase.from('business_profiles').select('id, business_name, image_url, description, category, city').eq('id', id).maybeSingle();
+        const { data } = await supabase.from('business_profiles').select('id, business_name, image_urls, description, category, city').eq('id', id).maybeSingle();
         profile = data ? { id: data.id, name: data.business_name, avatar: data.image_url, bio: data.description, meta: `${data.category || ''} • ${data.city || ''}` } : null;
       } else {
         const { data } = await supabase.from('trainer_profiles').select('id, name, profile_image_url, bio, category, location').eq('id', id).maybeSingle();
