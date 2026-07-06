@@ -97,7 +97,7 @@ export default function PostComposer() {
                   Post as myself
                 </DropdownMenuItem>
                 {identities?.businesses.map(b => (
-                  <DropdownMenuItem key={b.id} onClick={() => setIdentity({ label: `As ${b.business_name}`, type: 'business', id: b.id, avatar: b.image_url })}>
+                  <DropdownMenuItem key={b.id} onClick={() => setIdentity({ label: `As ${b.business_name}`, type: 'business', id: b.id, avatar: b.image_urls?.[0] })}>
                     As {b.business_name}
                   </DropdownMenuItem>
                 ))}

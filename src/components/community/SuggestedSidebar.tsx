@@ -18,7 +18,7 @@ export default function SuggestedSidebar() {
             <div key={b.id} className="flex items-center gap-3">
               <Link to={`/community/business/${b.id}`}>
                 <Avatar className="h-10 w-10">
-                  <AvatarImage src={b.image_url || undefined} />
+                  <AvatarImage src={b.image_urls?.[0] || undefined} />
                   <AvatarFallback>{b.business_name.slice(0, 1)}</AvatarFallback>
                 </Avatar>
               </Link>
