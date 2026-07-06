@@ -191,6 +191,10 @@ const AppContent = () => {
           } />
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/ai" element={<Assistant />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/community/user/:id" element={<CommunityProfile kind="user" />} />
+          <Route path="/community/business/:id" element={<CommunityProfile kind="business" />} />
+          <Route path="/community/trainer/:id" element={<CommunityProfile kind="trainer" />} />
           <Route path="/city/:slug" element={<CityOverview />} />
           <Route path="/:slug" element={<CityCategory />} />
           <Route path="*" element={<NotFound />} />
