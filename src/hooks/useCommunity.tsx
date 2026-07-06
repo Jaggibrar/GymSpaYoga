@@ -371,11 +371,11 @@ export const useProfileHeader = (kind: 'user' | 'business' | 'trainer', id: stri
     queryFn: async () => {
       let profile: any = null;
       if (kind === 'user') {
-        const { data } = await supabase.from('user_profiles').select('user_id, full_name, profile_image_url, bio').eq('user_id', id).maybeSingle();
-        profile = data ? { id: data.user_id, name: data.full_name, avatar: data.profile_image_url, bio: data.bio } : null;
+        const { data } = await supabase.from('user_profiles').select('user_id, full_name, avatar_url').eq('user_id', id).maybeSingle();
+        profile = data ? { id: data.user_id, name: data.full_name, avatar: data.avatar_url, bio: null } : null;
       } else if (kind === 'business') {
         const { data } = await supabase.from('business_profiles').select('id, business_name, image_urls, description, category, city').eq('id', id).maybeSingle();
-        profile = data ? { id: data.id, name: data.business_name, avatar: data.image_url, bio: data.description, meta: `${data.category || ''} • ${data.city || ''}` } : null;
+        profile = data ? { id: data.id, name: data.business_name, avatar: Array.isArray(data.image_urls) ? data.image_urls[0] : null, bio: data.description, meta: `${data.category || ''} • ${data.city || ''}` } : null;
       } else {
         const { data } = await supabase.from('trainer_profiles').select('id, name, profile_image_url, bio, category, location').eq('id', id).maybeSingle();
         profile = data ? { id: data.id, name: data.name, avatar: data.profile_image_url, bio: data.bio, meta: `${data.category || ''} • ${data.location || ''}` } : null;
