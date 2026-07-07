@@ -118,10 +118,21 @@ export default function PostCard({ post }: { post: CommunityPost }) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={onShare}>Copy link</DropdownMenuItem>
-                {user?.id === post.author_id && (
-                  <DropdownMenuItem className="text-destructive" onClick={() => del.mutate(post.id)}>
-                    <Trash2 className="h-4 w-4 mr-2" /> Delete
+                {user && user.id !== post.author_id && (
+                  <DropdownMenuItem onClick={() => {
+                    const reason = window.prompt('Why are you reporting this post? (spam, harassment, inappropriate, etc.)');
+                    if (reason && reason.trim()) report.mutate({ targetType: 'post', targetId: post.id, reason: reason.trim() });
+                  }}>
+                    <Flag className="h-4 w-4 mr-2" /> Report
                   </DropdownMenuItem>
+                )}
+                {user?.id === post.author_id && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-destructive" onClick={() => del.mutate(post.id)}>
+                      <Trash2 className="h-4 w-4 mr-2" /> Delete
+                    </DropdownMenuItem>
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -132,7 +143,9 @@ export default function PostCard({ post }: { post: CommunityPost }) {
           <p className="mt-3 text-foreground/90 whitespace-pre-wrap break-words">
             {post.content.split(/(\s+)/).map((tok, i) =>
               tok.startsWith('#') ? (
-                <span key={i} className="text-primary">{tok}</span>
+                <Link key={i} to={`/community/tag/${tok.slice(1).toLowerCase()}`} className="text-primary hover:underline">
+                  {tok}
+                </Link>
               ) : (
                 <span key={i}>{tok}</span>
               )
