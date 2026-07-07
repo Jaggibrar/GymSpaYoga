@@ -4,14 +4,14 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, MapPin, Trash2, Building2, Dumbbell, User as UserIcon,
+  Heart, MessageCircle, Share2, Bookmark, MoreHorizontal, MapPin, Trash2, Building2, Dumbbell, User as UserIcon, Flag,
 } from 'lucide-react';
 import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
 import { Link, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow } from 'date-fns';
-import { CommunityPost, useDeletePost, useToggleLike, useToggleSave } from '@/hooks/useCommunity';
+import { CommunityPost, useDeletePost, useReportContent, useToggleLike, useToggleSave } from '@/hooks/useCommunity';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import CommentThread from './CommentThread';
