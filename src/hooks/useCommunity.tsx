@@ -407,3 +407,110 @@ export const useProfilePosts = (kind: 'user' | 'business' | 'trainer', id: strin
     },
   });
 };
+
+// ---------- Phase 2: hashtag feed, saved posts, reports, blocks, trending ----------
+
+export const useHashtagFeed = (tag: string) => {
+  const { user } = useAuth();
+  return useInfiniteQuery({
+    queryKey: ['community-hashtag', tag, user?.id],
+    initialPageParam: 0,
+    enabled: !!tag,
+    queryFn: async ({ pageParam }) => {
+      const from = pageParam as number;
+      const to = from + PAGE_SIZE - 1;
+      const { data, error } = await supabase
+        .from('community_posts')
+        .select('*')
+        .eq('moderation_status', 'active')
+        .contains('hashtags', [tag.toLowerCase()])
+        .order('created_at', { ascending: false })
+        .range(from, to);
+      if (error) throw error;
+      const enriched = await enrichPosts(data || [], user?.id);
+      return { posts: enriched, nextCursor: (data?.length || 0) < PAGE_SIZE ? null : from + PAGE_SIZE };
+    },
+    getNextPageParam: (last) => last.nextCursor,
+  });
+};
+
+export const useSavedPosts = () => {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ['community-saved', user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data: saves } = await supabase
+        .from('community_saves')
+        .select('post_id, created_at')
+        .eq('user_id', user!.id)
+        .order('created_at', { ascending: false })
+        .limit(100);
+      const ids = (saves || []).map((s: any) => s.post_id);
+      if (!ids.length) return [] as CommunityPost[];
+      const { data: posts } = await supabase
+        .from('community_posts')
+        .select('*')
+        .in('id', ids)
+        .eq('moderation_status', 'active');
+      const enriched = await enrichPosts(posts || [], user!.id);
+      // preserve saved order
+      const order = new Map(ids.map((id, i) => [id, i]));
+      return enriched.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+    },
+  });
+};
+
+export const useTrendingHashtags = () => {
+  return useQuery({
+    queryKey: ['community-trending-hashtags'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('community_trending_hashtags' as any)
+        .select('*')
+        .limit(8);
+      if (error) return [] as { tag: string; post_count: number }[];
+      return (data as any[]) || [];
+    },
+  });
+};
+
+export const useReportContent = () => {
+  const { user } = useAuth();
+  return useMutation({
+    mutationFn: async ({ targetType, targetId, reason, details }: { targetType: 'post' | 'comment' | 'user'; targetId: string; reason: string; details?: string }) => {
+      if (!user) throw new Error('Sign in to report');
+      const { error } = await supabase.from('community_reports').insert({
+        reporter_id: user.id,
+        target_type: targetType,
+        target_id: targetId,
+        reason,
+        details: details || null,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => toast.success('Report submitted — thank you.'),
+    onError: (e: any) => toast.error(e.message || 'Failed to report'),
+  });
+};
+
+export const useToggleBlock = () => {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ targetUserId, blocked }: { targetUserId: string; blocked: boolean }) => {
+      if (!user) throw new Error('Sign in to block');
+      if (blocked) {
+        await supabase.from('community_blocks').delete().match({ blocker_id: user.id, blocked_id: targetUserId });
+      } else {
+        await supabase.from('community_blocks').insert({ blocker_id: user.id, blocked_id: targetUserId });
+      }
+    },
+    onSuccess: (_d, v) => {
+      toast.success(v.blocked ? 'User unblocked' : 'User blocked');
+      qc.invalidateQueries({ queryKey: ['community-feed'] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+};
+
