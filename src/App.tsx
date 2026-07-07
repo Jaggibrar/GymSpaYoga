@@ -72,6 +72,8 @@ const CityCategory = React.lazy(() => import("./pages/CityCategory"));
 const CityOverview = React.lazy(() => import("./pages/CityOverview"));
 const Community = React.lazy(() => import("./pages/Community"));
 const CommunityProfile = React.lazy(() => import("./pages/CommunityProfile"));
+const CommunityTag = React.lazy(() => import("./pages/CommunityTag"));
+const CommunitySaved = React.lazy(() => import("./pages/CommunitySaved"));
 const FloatingAIButton = React.lazy(() => import("./components/ai/FloatingAIButton"));
 
 const queryClient = new QueryClient();
