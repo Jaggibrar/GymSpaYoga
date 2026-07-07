@@ -53,17 +53,41 @@ export default function PostComposer() {
     }
   };
 
+  const handleVideo = async (files: FileList | null) => {
+    const f = files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith('video/')) return toast.error('Please choose a video file');
+    if (f.size > 50 * 1024 * 1024) return toast.error('Video must be under 50MB');
+    setVideoUploading(true);
+    try {
+      const ext = f.name.split('.').pop();
+      const path = `${user.id}/community/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('website-media').upload(path, f, { cacheControl: '3600', upsert: false });
+      if (error) throw error;
+      const { data } = supabase.storage.from('website-media').getPublicUrl(path);
+      setVideo(data.publicUrl);
+      setImages([]); // videos are exclusive of images for a cleaner card
+    } catch (e: any) {
+      toast.error(e.message || 'Video upload failed');
+    } finally {
+      setVideoUploading(false);
+    }
+  };
+
   const extractHashtags = (text: string) =>
     Array.from(new Set((text.match(/#(\w+)/g) || []).map(h => h.slice(1).toLowerCase())));
 
   const submit = () => {
-    if (!content.trim() && !images.length) return;
+    if (!content.trim() && !images.length && !video) return;
+    const mediaUrls: { url: string; type: 'image' | 'video' }[] = video
+      ? [{ url: video, type: 'video' }]
+      : images.map(url => ({ url, type: 'image' as const }));
     createPost.mutate(
       {
         content: content.trim(),
         hashtags: extractHashtags(content),
         location: location.trim() || undefined,
-        mediaUrls: images.map(url => ({ url, type: 'image' })),
+        mediaUrls,
         authorType: identity.type,
         businessId: identity.type === 'business' ? identity.id : null,
         trainerId: identity.type === 'trainer' ? identity.id : null,
@@ -74,6 +98,7 @@ export default function PostComposer() {
           setLocation('');
           setShowLoc(false);
           setImages([]);
+          setVideo(null);
           setIdentity({ label: 'Post as myself', type: 'user' });
         },
       }
