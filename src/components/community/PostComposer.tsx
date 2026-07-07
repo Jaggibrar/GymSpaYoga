@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Image as ImageIcon, MapPin, Hash, X, Loader2, ChevronDown } from 'lucide-react';
+import { Image as ImageIcon, MapPin, Hash, X, Loader2, ChevronDown, Video as VideoIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost, useUserBusinessesAndTrainers } from '@/hooks/useCommunity';
 import { useImageUpload } from '@/hooks/useImageUpload';
