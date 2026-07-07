@@ -830,6 +830,27 @@ export type Database = {
         }
         Relationships: []
       }
+      community_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
       community_comments: {
         Row: {
           author_id: string
@@ -1065,6 +1086,42 @@ export type Database = {
           },
         ]
       }
+      community_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          status: string
+          target_id: string
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          status?: string
+          target_id: string
+          target_type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          status?: string
+          target_id?: string
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_saves: {
         Row: {
           created_at: string
@@ -1266,10 +1323,12 @@ export type Database = {
       }
       in_app_notifications: {
         Row: {
+          actor_id: string | null
           booking_id: number | null
           created_at: string | null
           id: string
           is_read: boolean | null
+          link_url: string | null
           message: string
           title: string
           type: string
@@ -1277,10 +1336,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          actor_id?: string | null
           booking_id?: number | null
           created_at?: string | null
           id?: string
           is_read?: boolean | null
+          link_url?: string | null
           message: string
           title: string
           type?: string
@@ -1288,10 +1349,12 @@ export type Database = {
           user_id: string
         }
         Update: {
+          actor_id?: string | null
           booking_id?: number | null
           created_at?: string | null
           id?: string
           is_read?: boolean | null
+          link_url?: string | null
           message?: string
           title?: string
           type?: string
@@ -1948,6 +2011,13 @@ export type Database = {
       }
     }
     Views: {
+      community_trending_hashtags: {
+        Row: {
+          post_count: number | null
+          tag: string | null
+        }
+        Relationships: []
+      }
       public_business_listings: {
         Row: {
           address: string | null
