@@ -169,11 +169,26 @@ export default function PostComposer() {
               ))}
             </div>
           )}
+          {video && (
+            <div className="relative rounded-xl overflow-hidden aspect-video bg-black">
+              <video src={video} controls className="w-full h-full object-contain" />
+              <button
+                onClick={() => setVideo(null)}
+                className="absolute top-2 right-2 h-7 w-7 rounded-full bg-background/80 hover:bg-background flex items-center justify-center"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-1">
               <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={e => handleFiles(e.target.files)} />
-              <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading || images.length >= 4}>
+              <input ref={videoRef} type="file" accept="video/*" hidden onChange={e => handleVideo(e.target.files)} />
+              <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading || !!video || images.length >= 4}>
                 <ImageIcon className="h-4 w-4 mr-1" /> Photo
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => videoRef.current?.click()} disabled={videoUploading || !!video || images.length > 0}>
+                {videoUploading ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <VideoIcon className="h-4 w-4 mr-1" />} Video
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowLoc(s => !s)}>
                 <MapPin className="h-4 w-4 mr-1" /> Location
@@ -182,11 +197,12 @@ export default function PostComposer() {
                 <Hash className="h-4 w-4 mr-1" /> Tag
               </Button>
             </div>
-            <Button onClick={submit} disabled={createPost.isPending || uploading || (!content.trim() && !images.length)} className="rounded-full">
-              {createPost.isPending || uploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+            <Button onClick={submit} disabled={createPost.isPending || uploading || videoUploading || (!content.trim() && !images.length && !video)} className="rounded-full">
+              {createPost.isPending || uploading || videoUploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               Post
             </Button>
           </div>
+
         </div>
       </div>
     </Card>
