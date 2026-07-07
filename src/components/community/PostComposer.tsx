@@ -23,11 +23,14 @@ export default function PostComposer() {
   const [location, setLocation] = useState('');
   const [showLoc, setShowLoc] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [video, setVideo] = useState<string | null>(null);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [identity, setIdentity] = useState<{ label: string; type: 'user' | 'business' | 'trainer'; id?: string; avatar?: string | null }>({
     label: 'Post as myself',
     type: 'user',
   });
   const fileRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
   const { uploadImage, uploading } = useImageUpload();
   const createPost = useCreatePost();
   const { data: identities } = useUserBusinessesAndTrainers();
