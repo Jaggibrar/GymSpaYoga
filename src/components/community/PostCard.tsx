@@ -24,6 +24,7 @@ export default function PostCard({ post }: { post: CommunityPost }) {
   const like = useToggleLike();
   const save = useToggleSave();
   const del = useDeletePost();
+  const report = useReportContent();
   const [showComments, setShowComments] = useState(false);
 
   const authorName =
