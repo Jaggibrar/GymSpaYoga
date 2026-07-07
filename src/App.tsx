@@ -72,6 +72,8 @@ const CityCategory = React.lazy(() => import("./pages/CityCategory"));
 const CityOverview = React.lazy(() => import("./pages/CityOverview"));
 const Community = React.lazy(() => import("./pages/Community"));
 const CommunityProfile = React.lazy(() => import("./pages/CommunityProfile"));
+const CommunityTag = React.lazy(() => import("./pages/CommunityTag"));
+const CommunitySaved = React.lazy(() => import("./pages/CommunitySaved"));
 const FloatingAIButton = React.lazy(() => import("./components/ai/FloatingAIButton"));
 
 const queryClient = new QueryClient();
@@ -192,6 +194,8 @@ const AppContent = () => {
           <Route path="/assistant" element={<Assistant />} />
           <Route path="/ai" element={<Assistant />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/community/saved" element={<CommunitySaved />} />
+          <Route path="/community/tag/:tag" element={<CommunityTag />} />
           <Route path="/community/user/:id" element={<CommunityProfile kind="user" />} />
           <Route path="/community/business/:id" element={<CommunityProfile kind="business" />} />
           <Route path="/community/trainer/:id" element={<CommunityProfile kind="trainer" />} />

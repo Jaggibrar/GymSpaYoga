@@ -3,11 +3,13 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Image as ImageIcon, MapPin, Hash, X, Loader2, ChevronDown } from 'lucide-react';
+import { Image as ImageIcon, MapPin, Hash, X, Loader2, ChevronDown, Video as VideoIcon } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCreatePost, useUserBusinessesAndTrainers } from '@/hooks/useCommunity';
 import { useImageUpload } from '@/hooks/useImageUpload';
 import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +23,14 @@ export default function PostComposer() {
   const [location, setLocation] = useState('');
   const [showLoc, setShowLoc] = useState(false);
   const [images, setImages] = useState<string[]>([]);
+  const [video, setVideo] = useState<string | null>(null);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [identity, setIdentity] = useState<{ label: string; type: 'user' | 'business' | 'trainer'; id?: string; avatar?: string | null }>({
     label: 'Post as myself',
     type: 'user',
   });
   const fileRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLInputElement>(null);
   const { uploadImage, uploading } = useImageUpload();
   const createPost = useCreatePost();
   const { data: identities } = useUserBusinessesAndTrainers();
@@ -48,17 +53,41 @@ export default function PostComposer() {
     }
   };
 
+  const handleVideo = async (files: FileList | null) => {
+    const f = files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith('video/')) return toast.error('Please choose a video file');
+    if (f.size > 50 * 1024 * 1024) return toast.error('Video must be under 50MB');
+    setVideoUploading(true);
+    try {
+      const ext = f.name.split('.').pop();
+      const path = `${user.id}/community/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('website-media').upload(path, f, { cacheControl: '3600', upsert: false });
+      if (error) throw error;
+      const { data } = supabase.storage.from('website-media').getPublicUrl(path);
+      setVideo(data.publicUrl);
+      setImages([]); // videos are exclusive of images for a cleaner card
+    } catch (e: any) {
+      toast.error(e.message || 'Video upload failed');
+    } finally {
+      setVideoUploading(false);
+    }
+  };
+
   const extractHashtags = (text: string) =>
     Array.from(new Set((text.match(/#(\w+)/g) || []).map(h => h.slice(1).toLowerCase())));
 
   const submit = () => {
-    if (!content.trim() && !images.length) return;
+    if (!content.trim() && !images.length && !video) return;
+    const mediaUrls: { url: string; type: 'image' | 'video' }[] = video
+      ? [{ url: video, type: 'video' }]
+      : images.map(url => ({ url, type: 'image' as const }));
     createPost.mutate(
       {
         content: content.trim(),
         hashtags: extractHashtags(content),
         location: location.trim() || undefined,
-        mediaUrls: images.map(url => ({ url, type: 'image' })),
+        mediaUrls,
         authorType: identity.type,
         businessId: identity.type === 'business' ? identity.id : null,
         trainerId: identity.type === 'trainer' ? identity.id : null,
@@ -69,6 +98,7 @@ export default function PostComposer() {
           setLocation('');
           setShowLoc(false);
           setImages([]);
+          setVideo(null);
           setIdentity({ label: 'Post as myself', type: 'user' });
         },
       }
@@ -139,11 +169,26 @@ export default function PostComposer() {
               ))}
             </div>
           )}
+          {video && (
+            <div className="relative rounded-xl overflow-hidden aspect-video bg-black">
+              <video src={video} controls className="w-full h-full object-contain" />
+              <button
+                onClick={() => setVideo(null)}
+                className="absolute top-2 right-2 h-7 w-7 rounded-full bg-background/80 hover:bg-background flex items-center justify-center"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <div className="flex items-center gap-1">
               <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={e => handleFiles(e.target.files)} />
-              <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading || images.length >= 4}>
+              <input ref={videoRef} type="file" accept="video/*" hidden onChange={e => handleVideo(e.target.files)} />
+              <Button variant="ghost" size="sm" onClick={() => fileRef.current?.click()} disabled={uploading || !!video || images.length >= 4}>
                 <ImageIcon className="h-4 w-4 mr-1" /> Photo
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => videoRef.current?.click()} disabled={videoUploading || !!video || images.length > 0}>
+                {videoUploading ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <VideoIcon className="h-4 w-4 mr-1" />} Video
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowLoc(s => !s)}>
                 <MapPin className="h-4 w-4 mr-1" /> Location
@@ -152,11 +197,12 @@ export default function PostComposer() {
                 <Hash className="h-4 w-4 mr-1" /> Tag
               </Button>
             </div>
-            <Button onClick={submit} disabled={createPost.isPending || uploading || (!content.trim() && !images.length)} className="rounded-full">
-              {createPost.isPending || uploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
+            <Button onClick={submit} disabled={createPost.isPending || uploading || videoUploading || (!content.trim() && !images.length && !video)} className="rounded-full">
+              {createPost.isPending || uploading || videoUploading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : null}
               Post
             </Button>
           </div>
+
         </div>
       </div>
     </Card>

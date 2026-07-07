@@ -1,14 +1,40 @@
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useSuggested } from '@/hooks/useCommunity';
+import { useSuggested, useTrendingHashtags } from '@/hooks/useCommunity';
 import { Link } from 'react-router-dom';
 import FollowButton from './FollowButton';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Hash, Bookmark, TrendingUp } from 'lucide-react';
 
 export default function SuggestedSidebar() {
   const { data } = useSuggested();
+  const { data: trending } = useTrendingHashtags();
   return (
     <div className="space-y-4 sticky top-24">
+      <Card className="glass-card p-4 rounded-2xl">
+        <h3 className="font-heading text-sm font-semibold text-foreground flex items-center gap-2 mb-3">
+          <TrendingUp className="h-4 w-4 text-primary" /> Trending hashtags
+        </h3>
+        {trending && trending.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {trending.map(t => (
+              <Link
+                key={t.tag}
+                to={`/community/tag/${t.tag}`}
+                className="inline-flex items-center gap-1 text-xs bg-secondary/60 hover:bg-secondary text-foreground rounded-full px-2.5 py-1"
+              >
+                <Hash className="h-3 w-3 text-primary" />{t.tag}
+                <span className="text-muted-foreground">· {t.post_count}</span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">No trends yet — start a #hashtag.</p>
+        )}
+        <Link to="/community/saved" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:underline">
+          <Bookmark className="h-3 w-3" /> Your saved posts
+        </Link>
+      </Card>
+
       <Card className="glass-card p-4 rounded-2xl">
         <h3 className="font-heading text-sm font-semibold text-foreground flex items-center gap-2 mb-3">
           <Sparkles className="h-4 w-4 text-primary" /> Suggested businesses
