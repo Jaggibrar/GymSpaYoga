@@ -183,6 +183,7 @@ export const NotificationSystem = () => {
         size="sm"
         className="relative p-2"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label="Notifications"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
