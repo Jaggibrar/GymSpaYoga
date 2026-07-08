@@ -40,18 +40,19 @@ const useReports = (status: ReportStatus) => useQuery({
 const useCommunityStats = () => useQuery({
   queryKey: ['admin-community-stats'],
   queryFn: async () => {
-    const [posts, comments, openReports, activeUsers] = await Promise.all([
-      supabase.from('community_posts').select('id', { count: 'exact', head: true }).eq('is_active', true),
-      supabase.from('community_comments').select('id', { count: 'exact', head: true }).eq('is_active', true),
-      supabase.from('community_reports').select('id', { count: 'exact', head: true }).eq('status', 'open'),
-      supabase.from('community_follows').select('follower_id', { count: 'exact', head: true }),
-    ]);
-    return {
-      posts: posts.count ?? 0,
-      comments: comments.count ?? 0,
-      openReports: openReports.count ?? 0,
-      follows: activeUsers.count ?? 0,
+    const countOf = async (table: 'community_posts' | 'community_comments' | 'community_reports' | 'community_follows', filter?: (q: any) => any) => {
+      let q: any = supabase.from(table).select('*', { count: 'exact', head: true });
+      if (filter) q = filter(q);
+      const { count } = await q;
+      return count ?? 0;
     };
+    const [posts, comments, openReports, follows] = await Promise.all([
+      countOf('community_posts', q => q.neq('moderation_status', 'removed')),
+      countOf('community_comments', q => q.neq('moderation_status', 'removed')),
+      countOf('community_reports', q => q.eq('status', 'open')),
+      countOf('community_follows'),
+    ]);
+    return { posts, comments, openReports, follows };
   },
 });
 
