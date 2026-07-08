@@ -172,6 +172,9 @@ const AppHeader = () => {
                 
                 <div className="border-t border-border my-2" />
                 
+                <Link to="/community" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
+                  Community
+                </Link>
                 <Link to="/explore" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
                   Explore All
                 </Link>
