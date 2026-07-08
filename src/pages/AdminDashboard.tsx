@@ -438,6 +438,10 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+          <TabsContent value="community">
+            <AdminCommunityModeration />
+          </TabsContent>
+
           <TabsContent value="analytics">
             <AdminAnalytics />
           </TabsContent>
