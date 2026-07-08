@@ -38,6 +38,7 @@ import { AdminPayments } from '@/components/admin/AdminPayments';
 import { AdminContent } from '@/components/admin/AdminContent';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import { PendingApprovalsQueue } from '@/components/admin/PendingApprovalsQueue';
+import AdminCommunityModeration from '@/components/admin/AdminCommunityModeration';
 
 interface AdminStats {
   totalUsers: number;
