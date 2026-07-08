@@ -1,0 +1,28 @@
+# GymSpaYoga
+
+> GymSpaYoga is a wellness discovery marketplace and social community connecting people with verified gyms, spas, yoga studios, personal trainers, therapists, and chiropractors across India and worldwide.
+
+GymSpaYoga helps users find, compare, and book wellness services. Businesses and wellness professionals can list their services, reach nearby customers, and engage with a fitness-focused community feed.
+
+## Pages
+
+- [Home](/): Discover gyms, spas, yoga studios, trainers and more near you.
+- [Gyms](/gyms): Browse verified gyms with pricing, amenities and reviews.
+- [Spas](/spas): Luxury spas, massages and wellness therapies.
+- [Yoga](/yoga): Yoga studios, classes and certified instructors.
+- [Trainers](/trainers): Certified personal trainers for gym, home and online sessions.
+- [Therapists](/therapists): Licensed massage and wellness therapists.
+- [Chiropractors](/chiropractors): Verified chiropractors and spinal care specialists.
+- [Community](/community): Wellness-focused social feed for users, businesses and trainers.
+- [Blogs](/blogs): Articles on fitness, yoga, nutrition and wellness.
+- [Pricing](/pricing): Plans for businesses and trainers.
+- [About](/about): About GymSpaYoga and our mission.
+- [Support](/support): Help center and contact.
+- [Explore](/explore): Explore wellness services across categories.
+- [Register a Business](/register-business): List a gym, spa or yoga studio.
+- [Register as a Trainer](/register-trainer): Join as a certified trainer.
+
+## Optional
+
+- [Privacy Policy](/privacy-policy)
+- [Terms of Service](/terms-of-service)

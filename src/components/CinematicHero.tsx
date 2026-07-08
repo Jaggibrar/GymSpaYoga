@@ -177,6 +177,7 @@ const CinematicHero: React.FC = () => {
             </Select>
             <Button
               onClick={handleSearch}
+              aria-label="Search"
               className="h-12 sm:h-14 px-6 rounded-2xl bg-primary text-primary-foreground font-semibold hover:bg-primary shadow-emerald"
             >
               <Search className="h-4 w-4 sm:mr-2" />
