@@ -38,6 +38,7 @@ import { AdminPayments } from '@/components/admin/AdminPayments';
 import { AdminContent } from '@/components/admin/AdminContent';
 import { AdminAnalytics } from '@/components/admin/AdminAnalytics';
 import { PendingApprovalsQueue } from '@/components/admin/PendingApprovalsQueue';
+import AdminCommunityModeration from '@/components/admin/AdminCommunityModeration';
 
 interface AdminStats {
   totalUsers: number;
@@ -181,7 +182,7 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9">
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-10">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="pending" className="relative">
               Pending
@@ -195,6 +196,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="users">Users</TabsTrigger>
             <TabsTrigger value="payments">Payments</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
+            <TabsTrigger value="community">Community</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
@@ -435,6 +437,10 @@ const AdminDashboard = () => {
                 <p className="text-gray-600">Configure categories, filters, security settings, and manage sub-admin permissions.</p>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="community">
+            <AdminCommunityModeration />
           </TabsContent>
 
           <TabsContent value="analytics">
