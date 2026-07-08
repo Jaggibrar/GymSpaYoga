@@ -81,7 +81,7 @@ export default function AdminCommunityModeration() {
   const removeTarget = useMutation({
     mutationFn: async ({ target_id, target_type }: { target_id: string; target_type: string }) => {
       const table = target_type === 'comment' ? 'community_comments' : 'community_posts';
-      const { error } = await supabase.from(table).update({ is_active: false }).eq('id', target_id);
+      const { error } = await (supabase.from(table) as any).update({ moderation_status: 'removed' }).eq('id', target_id);
       if (error) throw error;
     },
     onSuccess: () => {
