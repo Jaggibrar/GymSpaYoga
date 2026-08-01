@@ -37,7 +37,7 @@ const PasswordReset = () => {
 
   if (sent) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="h-12 w-12 bg-[hsl(var(--primary))]/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -65,7 +65,7 @@ const PasswordReset = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">Reset Password</CardTitle>

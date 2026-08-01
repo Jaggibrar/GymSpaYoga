@@ -65,7 +65,7 @@ const BlogList = () => {
   const totalViews = blogs.reduce((sum, blog) => sum + blog.views_count, 0);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <SEOHead 
         title="Wellness Blog - Expert Tips & Insights | GymSpaYoga"
         description="Discover expert wellness tips, fitness advice, yoga guides, and spa insights from certified professionals in our comprehensive wellness blog."

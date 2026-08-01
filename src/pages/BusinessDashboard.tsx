@@ -24,7 +24,7 @@ export default function BusinessDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
         <div className="flex items-center justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin mr-2" />
           <span>Loading business dashboard...</span>
@@ -35,7 +35,7 @@ export default function BusinessDashboard() {
 
   if (!hasProfiles) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
           <Card className="max-w-2xl mx-auto border-0 shadow-xl">
             <CardContent className="py-12 text-center">
@@ -63,7 +63,7 @@ export default function BusinessDashboard() {
         keywords="business dashboard, gym management, spa management, yoga studio management"
         noindex={true}
       />
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Connection Health Monitor */}
         <ConnectionHealthMonitor onReconnect={handleReconnect} />

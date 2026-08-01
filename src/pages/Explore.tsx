@@ -43,7 +43,7 @@ const Explore = () => {
         keywords="explore gyms, find spas, yoga studios, wellness near me, fitness booking"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Category Cards */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">

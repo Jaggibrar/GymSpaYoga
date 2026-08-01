@@ -5,7 +5,7 @@ import SiteAuditChecklist from '@/components/SiteAuditChecklist';
 
 const SiteAudit = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <Helmet>
         <title>Site Audit - GymSpaYoga</title>
         <meta name="description" content="Comprehensive site audit and functionality check" />

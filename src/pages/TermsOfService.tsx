@@ -13,7 +13,7 @@ const TermsOfService = () => {
         keywords="terms of service, user agreement, platform rules"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-gray-50 to-blue-50 py-16">
           <div className="container mx-auto px-4 text-center">

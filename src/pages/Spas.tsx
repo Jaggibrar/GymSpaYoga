@@ -16,7 +16,7 @@ const Spas = () => {
         keywords="spa near me, best spa Mumbai, luxury spa Delhi, wellness center Bangalore, massage therapy India, aromatherapy, ayurvedic spa, balinese massage, thai massage, swedish massage, deep tissue massage, hot stone massage, couple spa, body scrub, facial treatment, full body massage, head massage, foot reflexology, sauna and steam, hammam spa, prenatal massage, sports massage, ladies only spa, spa in Goa, spa in Jaipur, spa in Kerala, spa packages, day spa, spa membership, spa offers, top rated spa India"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">
