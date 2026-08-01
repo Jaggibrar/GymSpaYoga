@@ -11,7 +11,7 @@ import SEOHead from '@/components/SEOHead';
 
 const PlatformAuditPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <SEOHead
         title="Platform Audit - GymSpaYoga"
         description="Comprehensive audit tool for the GymSpaYoga platform to ensure all features work seamlessly"

@@ -93,7 +93,7 @@ const BusinessDetails = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );
@@ -101,7 +101,7 @@ const BusinessDetails = () => {
 
   if (error || !business) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {error || 'Business not found'}
@@ -126,7 +126,7 @@ const BusinessDetails = () => {
       />
       <BusinessStructuredData business={business} />
       
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-8">
           <div className="mb-6">
             <Link to="/explore">

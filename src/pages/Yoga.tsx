@@ -16,7 +16,7 @@ const Yoga = () => {
         keywords="yoga classes near me, best yoga Mumbai, yoga studio Delhi, meditation Bangalore, hatha yoga India, vinyasa yoga, ashtanga yoga, iyengar yoga, kundalini yoga, power yoga, yin yoga, hot yoga, aerial yoga, prenatal yoga, postnatal yoga, yoga for beginners, yoga for back pain, yoga for weight loss, yoga teacher training, RYT 200, online yoga classes, home yoga instructor, pranayama, mindfulness meditation, yoga retreat India, yoga in Rishikesh, yoga in Goa, yoga in Pune, yoga in Hyderabad, kids yoga, senior yoga, corporate yoga"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="relative overflow-hidden h-[250px] md:h-[350px]">
           <div className="absolute inset-0">

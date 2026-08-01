@@ -90,7 +90,7 @@ const EditListing = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center space-x-3">
           <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
           <span className="text-gray-600">Loading listing details...</span>
@@ -101,7 +101,7 @@ const EditListing = () => {
 
   if (error || !listing) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {error || 'Listing not found'}
@@ -116,7 +116,7 @@ const EditListing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
           <Button 

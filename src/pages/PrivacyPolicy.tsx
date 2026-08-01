@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
         keywords="privacy policy, data protection, user privacy"
       />
       
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-blue-50 to-indigo-50 py-16">
           <div className="container mx-auto px-4 text-center">
