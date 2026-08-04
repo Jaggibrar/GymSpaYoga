@@ -134,6 +134,11 @@ const AppContent = () => {
               <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/account-security" element={
+            <ProtectedRoute>
+              <AccountSecurity />
+            </ProtectedRoute>
+          } />
           <Route path="/user-bookings" element={
             <ProtectedRoute>
               <UserBookings />
