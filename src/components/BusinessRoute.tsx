@@ -4,6 +4,7 @@ import { ReactNode, useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import MFAGate from '@/components/auth/MFAGate';
 
 interface BusinessRouteProps {
   children: ReactNode;
@@ -77,7 +78,11 @@ const BusinessRoute = ({ children }: BusinessRouteProps) => {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <MFAGate areaLabel="the business dashboard" roleLabel="your business account">
+      {children}
+    </MFAGate>
+  );
 };
 
 export default BusinessRoute;

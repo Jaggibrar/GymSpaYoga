@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart, UserCheck } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart, UserCheck, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useHasTrainerProfile } from '@/hooks/useHasTrainerProfile';
 import NotificationSystem from '@/components/NotificationSystem';
@@ -141,6 +141,13 @@ const MainNavigation = () => {
                       >
                         <User className="h-4 w-4" />
                         <span>Profile</span>
+                      </Link>
+                      <Link 
+                        to="/account-security" 
+                        className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Shield className="h-4 w-4" />
+                        <span>Security</span>
                       </Link>
                       {isAdmin && (
                         <Link 

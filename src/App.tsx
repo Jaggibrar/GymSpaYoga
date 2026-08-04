@@ -30,6 +30,7 @@ import MainNavigation from "./components/MainNavigation";
 import ProtectedRoute from "./components/ProtectedRoute";
 // Lazy-load pages to improve initial load performance
 const Index = React.lazy(() => import("./pages/Index"));
+const AccountSecurity = React.lazy(() => import("./pages/AccountSecurity"));
 const Gyms = React.lazy(() => import("./pages/Gyms"));
 const GymDetails = React.lazy(() => import("./pages/GymDetails"));
 const Spas = React.lazy(() => import("./pages/Spas"));
@@ -132,6 +133,11 @@ const AppContent = () => {
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/account-security" element={
+            <ProtectedRoute>
+              <AccountSecurity />
             </ProtectedRoute>
           } />
           <Route path="/user-bookings" element={

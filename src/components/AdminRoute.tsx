@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
+import MFAGate from '@/components/auth/MFAGate';
 
 interface AdminRouteProps {
   children: ReactNode;
@@ -48,7 +49,11 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <MFAGate areaLabel="the admin dashboard" roleLabel="your admin account">
+      {children}
+    </MFAGate>
+  );
 };
 
 export default AdminRoute;

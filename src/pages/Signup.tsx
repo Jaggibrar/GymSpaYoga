@@ -12,6 +12,7 @@ import { Eye, EyeOff, User, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/SEOHead";
 import { supabase } from "@/integrations/supabase/client";
+import { validatePasswordSafety } from "@/utils/passwordSecurity";
 
 type UserRole = "business_owner" | "end_user";
 
@@ -40,12 +41,15 @@ const Signup = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    setLoading(true);
+
+    const passwordIssue = await validatePasswordSafety(formData.password);
+    if (passwordIssue) {
+      setError(passwordIssue);
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
 
     try {
       // First, sign up the user

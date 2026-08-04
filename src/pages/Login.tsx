@@ -9,6 +9,7 @@ import loginIllustration from '@/assets/login-illustration.png';
 import SEOHead from '@/components/SEOHead';
 import { loginSchema, signupSchema } from '@/schemas/authSchemas';
 import { z } from 'zod';
+import { validatePasswordSafety } from '@/utils/passwordSecurity';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -75,6 +76,15 @@ const Login = () => {
         setLoading(false);
         return;
       }
+
+      const passwordIssue = await validatePasswordSafety(validation.data.password);
+      if (passwordIssue) {
+        toast.error(passwordIssue);
+        setLoading(false);
+        return;
+      }
+
+
 
       const { error } = await supabase.auth.signUp({
         email: validation.data.email,
