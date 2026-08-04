@@ -142,6 +142,13 @@ const MainNavigation = () => {
                         <User className="h-4 w-4" />
                         <span>Profile</span>
                       </Link>
+                      <Link 
+                        to="/account-security" 
+                        className="flex items-center space-x-2 px-4 py-2 text-foreground hover:bg-muted transition-colors"
+                      >
+                        <Shield className="h-4 w-4" />
+                        <span>Security</span>
+                      </Link>
                       {isAdmin && (
                         <Link 
                           to="/admin-dashboard" 
