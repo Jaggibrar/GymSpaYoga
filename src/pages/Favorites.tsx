@@ -54,7 +54,7 @@ export default function Favorites() {
       setLoading(true);
       const businessIds = favorites.map(fav => fav.business_id);
       const { data, error } = await supabase
-        .from('business_profiles')
+        .from('public_business_listings')
         .select('*')
         .in('id', businessIds)
         .eq('status', 'approved');

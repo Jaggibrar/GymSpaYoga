@@ -54,10 +54,7 @@ const EditListing = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('business_profiles')
-        .select('*')
-        .eq('id', id)
-        .eq('user_id', user?.id) // Ensure user can only edit their own listings
+        .rpc('get_business_profiles_full', { p_id: id })
         .maybeSingle();
 
       if (error) {

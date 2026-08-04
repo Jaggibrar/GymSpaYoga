@@ -52,13 +52,11 @@ export const PendingApprovalsQueue = () => {
     try {
       const [trainersRes, businessesRes] = await Promise.all([
         supabase
-          .from('trainer_profiles')
-          .select('*')
+          .rpc('get_trainer_profiles_full')
           .eq('status', 'pending')
           .order('created_at', { ascending: true }),
         supabase
-          .from('business_profiles')
-          .select('*')
+          .rpc('get_business_profiles_full')
           .eq('status', 'pending')
           .order('created_at', { ascending: true })
       ]);
