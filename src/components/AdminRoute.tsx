@@ -49,7 +49,11 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <MFAGate areaLabel="the admin dashboard" roleLabel="your admin account">
+      {children}
+    </MFAGate>
+  );
 };
 
 export default AdminRoute;
