@@ -67,8 +67,8 @@ export const useBookingConfirmation = () => {
 
       // Get business details for notification with proper error handling
       const { data: business, error: businessError } = await supabase
-        .from('business_profiles')
-        .select('business_name, user_id, email')
+        .from('public_business_listings')
+        .select('business_name, user_id')
         .eq('id', bookingData.business_id)
         .maybeSingle();
 
