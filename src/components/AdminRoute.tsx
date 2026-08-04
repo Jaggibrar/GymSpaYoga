@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
+import MFAGate from '@/components/auth/MFAGate';
 
 interface AdminRouteProps {
   children: ReactNode;
