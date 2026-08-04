@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart, UserCheck } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, Building, Edit, ChevronDown, Heart, UserCheck, Shield } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useHasTrainerProfile } from '@/hooks/useHasTrainerProfile';
 import NotificationSystem from '@/components/NotificationSystem';
