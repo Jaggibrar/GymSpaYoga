@@ -67,8 +67,8 @@ export const useBookingConfirmation = () => {
 
       // Get business details for notification with proper error handling
       const { data: business, error: businessError } = await supabase
-        .from('business_profiles')
-        .select('business_name, user_id, email')
+        .from('public_business_listings')
+        .select('business_name, user_id')
         .eq('id', bookingData.business_id)
         .maybeSingle();
 
@@ -94,7 +94,7 @@ export const useBookingConfirmation = () => {
             body: {
               bookingId: booking.id,
               type: 'new_booking',
-              businessOwnerEmail: business.email,
+              // owner email is resolved server-side to avoid exposing PII to clients
               businessName: business.business_name,
               customerName: userProfile.full_name,
               bookingDate: bookingData.booking_date,

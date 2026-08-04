@@ -3,7 +3,7 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { defineMcp, auth } from "npm:@lovable.dev/mcp-js@0.20.0";
 
 // src/lib/mcp/tools/search-businesses.ts
 import { createClient } from "npm:@supabase/supabase-js@^2.50.0";
@@ -112,11 +112,19 @@ var list_blogs_default = defineTool3({
 });
 
 // src/lib/mcp/index.ts
+var SUPABASE_URL4 = "https://pihmoaogjjiicfnkmpbe.supabase.co";
 var mcp_default = defineMcp({
   name: "gymspayoga-mcp",
   title: "GymSpaYoga MCP",
   version: "0.1.0",
   instructions: "Tools to search GymSpaYoga's public directory of gyms, spas, yoga studios, trainers, therapists, chiropractors, and wellness blog content across India.",
+  // Require OAuth: only clients presenting a valid Supabase-issued token can call tools.
+  auth: auth.oauth.issuer({
+    issuer: `${SUPABASE_URL4}/auth/v1`,
+    jwksUri: `${SUPABASE_URL4}/auth/v1/.well-known/jwks.json`,
+    acceptedAudiences: ["authenticated"],
+    resourceName: "GymSpaYoga MCP"
+  }),
   tools: [search_businesses_default, search_trainers_default, list_blogs_default]
 });
 

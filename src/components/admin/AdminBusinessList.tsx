@@ -44,8 +44,7 @@ export const AdminBusinessList = () => {
   const fetchBusinesses = async () => {
     try {
       const { data, error } = await supabase
-        .from('business_profiles')
-        .select('*')
+        .rpc('get_business_profiles_full')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

@@ -46,8 +46,7 @@ export const AdminTrainerList = () => {
   const fetchTrainers = async () => {
     try {
       const { data, error } = await supabase
-        .from('trainer_profiles')
-        .select('*')
+        .rpc('get_trainer_profiles_full')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

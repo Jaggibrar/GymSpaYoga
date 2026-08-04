@@ -51,8 +51,7 @@ const BusinessListingsManager = () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('business_profiles')
-        .select('*')
+        .rpc('get_business_profiles_full')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 

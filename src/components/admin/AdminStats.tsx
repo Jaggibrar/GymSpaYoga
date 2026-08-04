@@ -43,13 +43,13 @@ export const AdminStats = () => {
         { count: approvedBusinesses },
         { count: approvedTrainers }
       ] = await Promise.all([
-        supabase.from('business_profiles').select('*', { count: 'exact', head: true }),
-        supabase.from('trainer_profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('business_profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('trainer_profiles').select('id', { count: 'exact', head: true }),
         supabase.from('bookings').select('*', { count: 'exact', head: true }),
-        supabase.from('business_profiles').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('trainer_profiles').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('business_profiles').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
-        supabase.from('trainer_profiles').select('*', { count: 'exact', head: true }).eq('status', 'approved')
+        supabase.from('business_profiles').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('trainer_profiles').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+        supabase.from('business_profiles').select('id', { count: 'exact', head: true }).eq('status', 'approved'),
+        supabase.from('trainer_profiles').select('id', { count: 'exact', head: true }).eq('status', 'approved')
       ]);
 
       setStats({

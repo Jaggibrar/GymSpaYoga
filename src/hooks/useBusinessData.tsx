@@ -53,7 +53,7 @@ export const useBusinessData = (
       // For trainer category, fetch from trainer_profiles
       if (category === 'trainer') {
         const { data: trainers, error: trainerError } = await supabase
-          .from('trainer_profiles')
+          .from('public_trainer_listings')
           .select('*')
           .eq('status', 'approved')
           .order('created_at', { ascending: false });
