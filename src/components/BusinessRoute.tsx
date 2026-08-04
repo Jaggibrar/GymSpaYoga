@@ -78,7 +78,11 @@ const BusinessRoute = ({ children }: BusinessRouteProps) => {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <MFAGate areaLabel="the business dashboard" roleLabel="your business account">
+      {children}
+    </MFAGate>
+  );
 };
 
 export default BusinessRoute;
