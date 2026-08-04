@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
+import { validatePasswordSafety } from '@/utils/passwordSecurity';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -44,12 +45,15 @@ const ResetPassword = () => {
       return;
     }
 
-    if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+    setLoading(true);
+
+    const passwordIssue = await validatePasswordSafety(password);
+    if (passwordIssue) {
+      toast.error(passwordIssue);
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
 
     try {
       const { error } = await supabase.auth.updateUser({
