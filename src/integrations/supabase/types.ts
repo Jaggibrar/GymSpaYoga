@@ -2188,6 +2188,39 @@ export type Database = {
         Args: { booking_id_param: number }
         Returns: string
       }
+      get_business_profiles_full: {
+        Args: { p_id?: string }
+        Returns: {
+          address: string
+          amenities: string[] | null
+          business_name: string
+          business_type: string
+          category: string
+          city: string
+          closing_time: string
+          created_at: string | null
+          description: string | null
+          email: string
+          id: string
+          image_urls: string[] | null
+          monthly_price: number | null
+          opening_time: string
+          phone: string
+          pin_code: string
+          session_price: number | null
+          slug: string | null
+          state: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "business_profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_pricing_tier: {
         Args: { monthly_price: number; session_price: number }
         Returns: string
@@ -2205,6 +2238,34 @@ export type Database = {
           email: string
           phone: string
         }[]
+      }
+      get_trainer_profiles_full: {
+        Args: { p_id?: string }
+        Returns: {
+          bio: string
+          category: string
+          certifications: string | null
+          created_at: string | null
+          email: string
+          experience: number
+          hourly_rate: number
+          id: string
+          location: string
+          name: string
+          phone: string
+          profile_image_url: string | null
+          specializations: string[] | null
+          status: string | null
+          trainer_tier: string
+          updated_at: string | null
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "trainer_profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       grant_admin_access: { Args: { user_email: string }; Returns: boolean }
       has_admin_permission: {
