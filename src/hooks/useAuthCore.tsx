@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { validatePasswordSafety } from '@/utils/passwordSecurity';
 
 interface UserProfile {
   id: string;
@@ -237,7 +238,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log('📝 Attempting sign up...');
       const redirectUrl = `${window.location.origin}/`;
-      
+
+      // Block weak or breach-exposed passwords before they reach the auth server.
+      const passwordIssue = await validatePasswordSafety(password);
+      if (passwordIssue) {
+        toast.error(passwordIssue);
+        return { error: { message: passwordIssue } };
+      }
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
