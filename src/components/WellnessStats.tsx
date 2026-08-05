@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Users, Building2, Globe2, Star } from 'lucide-react';
 
 const stats = [
-  { icon: Users, value: 50000, suffix: '+', label: 'Active Members' },
-  { icon: Building2, value: 1500, suffix: '+', label: 'Verified Listings' },
-  { icon: Globe2, value: 200, suffix: '+', label: 'Cities Worldwide' },
-  { icon: Star, value: 4.8, suffix: '/5', label: 'Average Rating', decimals: 1 },
+  { icon: Users, value: 100, suffix: '%', label: 'Revenue Kept by Studios' },
+  { icon: Building2, value: 0, suffix: '%', label: 'Commission Charged' },
+  { icon: Globe2, value: 60, suffix: ' days', label: 'Free Trial for Studios' },
+  { icon: Star, value: 24, suffix: ' hrs', label: 'Listing Review Time' },
 ];
 
 const Counter = ({ value, decimals = 0 }: { value: number; decimals?: number }) => {
@@ -48,7 +48,7 @@ const WellnessStats = () => (
               <s.icon className="h-6 w-6 text-primary" />
             </div>
             <div className="text-3xl md:text-4xl font-display font-bold text-white mb-1">
-              <Counter value={s.value} decimals={s.decimals || 0} />
+              <Counter value={s.value} decimals={0} />
               {s.suffix}
             </div>
             <p className="text-secondary-foreground/70 text-sm">{s.label}</p>

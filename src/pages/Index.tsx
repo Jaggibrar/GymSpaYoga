@@ -25,12 +25,12 @@ const LoadingFallback = () => (
 );
 
 const CATEGORIES = [
-  { title: 'Gyms', desc: 'Strength · cardio · CrossFit', icon: Dumbbell, href: '/gyms', count: '500+' },
-  { title: 'Yoga', desc: 'Hatha · Vinyasa · Ashtanga', icon: Flower2, href: '/yoga', count: '400+' },
-  { title: 'Spas', desc: 'Ayurveda · Swedish · Thai', icon: Heart, href: '/spas', count: '300+' },
-  { title: 'Trainers', desc: 'Certified · 1-on-1 · online', icon: UserCheck, href: '/trainers', count: '200+' },
-  { title: 'Therapists', desc: 'Physio · sports · recovery', icon: Activity, href: '/therapists', count: '150+' },
-  { title: 'Chiropractors', desc: 'Spine · posture · pain', icon: Stethoscope, href: '/chiropractors', count: '100+' },
+  { title: 'Gyms', desc: 'Strength · cardio · CrossFit', icon: Dumbbell, href: '/gyms' },
+  { title: 'Yoga', desc: 'Hatha · Vinyasa · Ashtanga', icon: Flower2, href: '/yoga' },
+  { title: 'Spas', desc: 'Ayurveda · Swedish · Thai', icon: Heart, href: '/spas' },
+  { title: 'Trainers', desc: 'Certified · 1-on-1 · online', icon: UserCheck, href: '/trainers' },
+  { title: 'Therapists', desc: 'Physio · sports · recovery', icon: Activity, href: '/therapists' },
+  { title: 'Chiropractors', desc: 'Spine · posture · pain', icon: Stethoscope, href: '/chiropractors' },
 ];
 
 const FEATURES = [
@@ -70,7 +70,7 @@ const Index = () => {
     <>
       <SEOHead
         title="GymSpaYoga — Premium Wellness Discovery & Booking Platform"
-        description="India's premium wellness ecosystem. Discover and book the best gyms, yoga studios, spas, certified trainers, therapists and chiropractors. 1,500+ verified listings across 200+ cities."
+        description="Discover and book independent gyms, yoga studios, spas, certified trainers, therapists and chiropractors across India. Verified listings, direct booking, zero commission for studios."
         keywords="gym near me, yoga near me, spa near me, personal trainer, premium wellness platform india, gymspayoga"
       />
 
@@ -112,7 +112,7 @@ const Index = () => {
                       </div>
                       <h3 className="font-display text-base font-bold text-white mb-1">{cat.title}</h3>
                       <p className="text-white/55 text-xs mb-3 leading-relaxed">{cat.desc}</p>
-                      <span className="text-primary text-xs font-semibold">{cat.count} listings →</span>
+                      <span className="text-primary text-xs font-semibold">Browse {cat.title.toLowerCase()} →</span>
                     </motion.div>
                   </Link>
                 </StaggerItem>
@@ -260,7 +260,7 @@ const Index = () => {
                   <span className="text-gradient-emerald">starts with one tap.</span>
                 </h2>
                 <p className="text-white/65 mt-5 text-base md:text-lg max-w-xl mx-auto">
-                  Join 50,000+ members transforming their lives with India's premium wellness ecosystem.
+                  Discover independent gyms, spas and yoga studios near you — booked directly, with zero commission taken from the studio.
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                   {!user ? (

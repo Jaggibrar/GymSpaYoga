@@ -90,7 +90,7 @@ const HeroBanner = () => {
             className="text-center max-w-3xl"
           >
             <span className="inline-block bg-primary/20 backdrop-blur-sm text-white text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-4 border border-white/10">
-              🌍 200+ Cities · 50,000+ Users · 1,000+ Listings
+              🌿 Independent Studios · Verified Listings · Zero Commission
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white mb-4 leading-tight">
               {detectedCity

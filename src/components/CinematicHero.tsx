@@ -119,7 +119,7 @@ const CinematicHero: React.FC = () => {
         >
           <ShieldCheck className="h-3.5 w-3.5 text-primary" />
           <span className="text-xs sm:text-sm text-foreground font-medium">
-            India's #1 Premium Wellness Discovery · 1,500+ Verified Listings
+            Independent Studios · Verified Listings · Zero Commission
           </span>
         </motion.div>
 
@@ -240,9 +240,9 @@ const CinematicHero: React.FC = () => {
           className="mt-12 grid grid-cols-3 gap-4 sm:gap-10 max-w-2xl w-full"
         >
           {[
-            { label: 'Verified Listings', value: '1,500+' },
-            { label: 'Happy Members', value: '50K+' },
-            { label: 'Cities Covered', value: '200+' },
+            { label: 'Commission', value: '0%' },
+            { label: 'Revenue Kept', value: '100%' },
+            { label: 'Studio Free Trial', value: '60 days' },
           ].map((s) => (
             <div key={s.label} className="text-center">
               <div className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-white">{s.value}</div>
