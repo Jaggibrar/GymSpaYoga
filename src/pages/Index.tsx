@@ -25,12 +25,12 @@ const LoadingFallback = () => (
 );
 
 const CATEGORIES = [
-  { title: 'Gyms', desc: 'Strength · cardio · CrossFit', icon: Dumbbell, href: '/gyms', count: '500+' },
-  { title: 'Yoga', desc: 'Hatha · Vinyasa · Ashtanga', icon: Flower2, href: '/yoga', count: '400+' },
-  { title: 'Spas', desc: 'Ayurveda · Swedish · Thai', icon: Heart, href: '/spas', count: '300+' },
-  { title: 'Trainers', desc: 'Certified · 1-on-1 · online', icon: UserCheck, href: '/trainers', count: '200+' },
-  { title: 'Therapists', desc: 'Physio · sports · recovery', icon: Activity, href: '/therapists', count: '150+' },
-  { title: 'Chiropractors', desc: 'Spine · posture · pain', icon: Stethoscope, href: '/chiropractors', count: '100+' },
+  { title: 'Gyms', desc: 'Strength · cardio · CrossFit', icon: Dumbbell, href: '/gyms' },
+  { title: 'Yoga', desc: 'Hatha · Vinyasa · Ashtanga', icon: Flower2, href: '/yoga' },
+  { title: 'Spas', desc: 'Ayurveda · Swedish · Thai', icon: Heart, href: '/spas' },
+  { title: 'Trainers', desc: 'Certified · 1-on-1 · online', icon: UserCheck, href: '/trainers' },
+  { title: 'Therapists', desc: 'Physio · sports · recovery', icon: Activity, href: '/therapists' },
+  { title: 'Chiropractors', desc: 'Spine · posture · pain', icon: Stethoscope, href: '/chiropractors' },
 ];
 
 const FEATURES = [
@@ -112,7 +112,7 @@ const Index = () => {
                       </div>
                       <h3 className="font-display text-base font-bold text-white mb-1">{cat.title}</h3>
                       <p className="text-white/55 text-xs mb-3 leading-relaxed">{cat.desc}</p>
-                      <span className="text-primary text-xs font-semibold">{cat.count} listings →</span>
+                      <span className="text-primary text-xs font-semibold">Browse {cat.title.toLowerCase()} →</span>
                     </motion.div>
                   </Link>
                 </StaggerItem>
