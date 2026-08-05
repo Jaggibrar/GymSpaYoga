@@ -48,7 +48,7 @@ const WellnessStats = () => (
               <s.icon className="h-6 w-6 text-primary" />
             </div>
             <div className="text-3xl md:text-4xl font-display font-bold text-white mb-1">
-              <Counter value={s.value} decimals={s.decimals || 0} />
+              <Counter value={s.value} decimals={0} />
               {s.suffix}
             </div>
             <p className="text-secondary-foreground/70 text-sm">{s.label}</p>
