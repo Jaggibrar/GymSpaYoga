@@ -70,7 +70,7 @@ const Index = () => {
     <>
       <SEOHead
         title="GymSpaYoga — Premium Wellness Discovery & Booking Platform"
-        description="India's premium wellness ecosystem. Discover and book the best gyms, yoga studios, spas, certified trainers, therapists and chiropractors. 1,500+ verified listings across 200+ cities."
+        description="Discover and book independent gyms, yoga studios, spas, certified trainers, therapists and chiropractors across India. Verified listings, direct booking, zero commission for studios."
         keywords="gym near me, yoga near me, spa near me, personal trainer, premium wellness platform india, gymspayoga"
       />
 
@@ -260,7 +260,7 @@ const Index = () => {
                   <span className="text-gradient-emerald">starts with one tap.</span>
                 </h2>
                 <p className="text-white/65 mt-5 text-base md:text-lg max-w-xl mx-auto">
-                  Join 50,000+ members transforming their lives with India's premium wellness ecosystem.
+                  Discover independent gyms, spas and yoga studios near you — booked directly, with zero commission taken from the studio.
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                   {!user ? (
