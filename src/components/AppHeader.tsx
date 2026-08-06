@@ -1,5 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Heart, Menu, X, ChevronDown, Dumbbell, Flower2, Heart as HeartIcon, UserCheck, Activity, Stethoscope } from "lucide-react";
+import { Heart, Menu, X, ChevronDown, User, Dumbbell, Flower2, Heart as HeartIcon, UserCheck, Activity, Stethoscope } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useState, useEffect } from "react";
@@ -12,12 +11,22 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const serviceLinks = [
-  { label: "Gyms", path: "/gyms", icon: Dumbbell, color: "text-primary" },
-  { label: "Spas", path: "/spas", icon: Flower2, color: "text-primary" },
-  { label: "Yoga Studios", path: "/yoga", icon: HeartIcon, color: "text-primary" },
-  { label: "Trainers", path: "/trainers", icon: UserCheck, color: "text-primary" },
-  { label: "Therapists", path: "/therapists", icon: Stethoscope, color: "text-primary" },
-  { label: "Chiropractors", path: "/chiropractors", icon: Activity, color: "text-primary" },
+  { label: "Gyms", path: "/gyms", icon: Dumbbell },
+  { label: "Yoga Studios", path: "/yoga", icon: HeartIcon },
+  { label: "Spas", path: "/spas", icon: Flower2 },
+  { label: "Trainers", path: "/trainers", icon: UserCheck },
+  { label: "Therapists", path: "/therapists", icon: Stethoscope },
+  { label: "Chiropractors", path: "/chiropractors", icon: Activity },
+];
+
+const navLinks = [
+  { path: "/explore", label: "Explore" },
+  { path: "/gyms", label: "Gyms" },
+  { path: "/yoga", label: "Yoga" },
+  { path: "/spas", label: "Spa" },
+  { path: "/trainers", label: "Trainers" },
+  { path: "/community", label: "Community" },
+  { path: "/blogs", label: "Blog" },
 ];
 
 const AppHeader = () => {
@@ -26,53 +35,63 @@ const AppHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const isHome = location.pathname === "/";
+  const transparent = isHome && !scrolled && !isMobileMenuOpen;
 
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+    const handleScroll = () => setScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => setIsMobileMenuOpen(false), [location.pathname]);
+
+  const textCls = transparent ? "text-white" : "text-foreground";
+  const subtleCls = transparent ? "text-white/75" : "text-muted-foreground";
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full overflow-hidden bg-background opacity-100 border-b border-border transition-shadow duration-300 ${
-        scrolled ? 'shadow-lg' : 'shadow-md'
+      className={`fixed top-0 z-50 w-full transition-all duration-500 ${
+        transparent
+          ? "bg-transparent"
+          : "border-b border-border bg-background/85 backdrop-blur-xl shadow-soft"
       }`}
     >
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 max-w-7xl w-full box-border">
-        <div className="flex items-center justify-between gap-3 min-w-0">
+      <div className="container-modern">
+        <div className="flex min-w-0 items-center justify-between gap-3 py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 min-w-0 group">
-            <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
-              <Heart className="h-5 w-5 text-primary-foreground fill-primary-foreground" />
-            </div>
-            <div className="flex flex-col min-w-0">
-              <span className="text-lg sm:text-xl font-display font-bold text-foreground truncate leading-tight tracking-tight">
-                GymSpaYoga
+          <Link to="/" className="group flex min-w-0 flex-shrink-0 items-center gap-2.5">
+            <span className="grid h-10 w-10 flex-shrink-0 place-items-center rounded-2xl bg-gradient-emerald shadow-soft">
+              <Heart className="h-5 w-5 fill-white text-white" />
+            </span>
+            <span className="flex min-w-0 flex-col">
+              <span className={`truncate font-display text-lg font-extrabold leading-tight tracking-tight ${textCls}`}>
+                GYMSPAYOGA
               </span>
-              <span className="text-[10px] text-muted-foreground font-medium tracking-widest uppercase hidden sm:block">
-                TRAIN · RELAX · REJUVENATE
+              <span className={`hidden text-[9px] font-medium uppercase tracking-[0.18em] sm:block ${subtleCls}`}>
+                Discover · Book · Transform
               </span>
-            </div>
+            </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+          {/* Desktop nav */}
+          <nav className="hidden flex-1 items-center justify-center gap-0.5 lg:flex">
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-1.5 text-foreground hover:text-foreground font-medium transition-colors duration-200 px-4 py-2.5 rounded-xl hover:bg-secondary text-sm">
-                Find Services
-                <ChevronDown className="h-3.5 w-3.5" />
+              <DropdownMenuTrigger
+                className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${textCls} ${
+                  transparent ? "hover:bg-white/10" : "hover:bg-secondary"
+                }`}
+              >
+                Explore <ChevronDown className="h-3.5 w-3.5" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-card border border-border shadow-xl rounded-xl p-1.5 min-w-[220px]">
-                {serviceLinks.map((item) => (
+              <DropdownMenuContent className="min-w-[230px] rounded-2xl border border-border bg-popover p-1.5 shadow-strong">
+                {serviceLinks.map(item => (
                   <DropdownMenuItem key={item.path} asChild>
-                    <Link to={item.path} className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm">
-                      <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
-                        <item.icon className={`h-4 w-4 ${item.color}`} />
-                      </div>
+                    <Link to={item.path} className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm">
+                      <span className="grid h-8 w-8 place-items-center rounded-lg bg-secondary">
+                        <item.icon className="h-4 w-4 text-primary" />
+                      </span>
                       <span className="font-medium">{item.label}</span>
                     </Link>
                   </DropdownMenuItem>
@@ -80,132 +99,105 @@ const AppHeader = () => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {[
-              { path: '/community', label: 'Community' },
-              { path: '/explore', label: 'Explore' },
-              { path: '/blogs', label: 'Blog' },
-              { path: '/pricing', label: 'Pricing' },
-            ].map(link => (
+            {navLinks.slice(1).map(link => (
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-colors duration-200 ${
+                className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
                   location.pathname === link.path
-                    ? 'text-primary-foreground bg-primary'
-                    : 'text-foreground hover:text-foreground hover:bg-secondary'
+                    ? "text-primary"
+                    : `${textCls} ${transparent ? "hover:bg-white/10" : "hover:bg-secondary"}`
                 }`}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          
-          {/* Desktop Right Side */}
-          <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
-            {!user ? (
-              <>
-                <Link to="/login">
-                  <Button variant="ghost" className="text-foreground hover:text-foreground hover:bg-secondary font-medium text-sm rounded-xl">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/register-business">
-                  <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-5 rounded-xl text-sm shadow-sm">
-                    List Your Business
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link to="/user-bookings">
-                  <Button variant="outline" size="sm" className="rounded-xl text-sm border-border">My Bookings</Button>
-                </Link>
-                <Link to="/business-dashboard">
-                  <Button size="sm" className="rounded-xl text-sm bg-primary text-primary-foreground">Dashboard</Button>
-                </Link>
-              </>
-            )}
+
+          {/* Right */}
+          <div className="hidden flex-shrink-0 items-center gap-2 lg:flex">
+            <Link
+              to="/register-business"
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 ${
+                transparent
+                  ? "border border-white/25 bg-white/10 text-white backdrop-blur-md hover:bg-white/20"
+                  : "bg-primary text-primary-foreground shadow-emerald"
+              }`}
+            >
+              List Your Business
+            </Link>
+            <Link
+              to="/favorites"
+              aria-label="Wishlist"
+              className={`grid h-10 w-10 place-items-center rounded-full transition-colors ${textCls} ${
+                transparent ? "hover:bg-white/10" : "hover:bg-secondary"
+              }`}
+            >
+              <Heart className="h-[18px] w-[18px]" />
+            </Link>
+            <Link
+              to={user ? "/profile" : "/login"}
+              aria-label={user ? "Your profile" : "Sign in"}
+              className={`grid h-10 w-10 place-items-center rounded-full transition-colors ${textCls} ${
+                transparent ? "hover:bg-white/10" : "hover:bg-secondary"
+              }`}
+            >
+              <User className="h-[18px] w-[18px]" />
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden flex-shrink-0 h-10 w-10 rounded-xl"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          {/* Mobile toggle */}
+          <button
+            className={`grid h-10 w-10 flex-shrink-0 place-items-center rounded-full lg:hidden ${textCls} ${
+              transparent ? "bg-white/10" : "bg-secondary"
+            }`}
+            onClick={() => setIsMobileMenuOpen(v => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
           >
             {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            <span className="sr-only">Toggle menu</span>
-          </Button>
+          </button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile nav */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              className="lg:hidden mt-3 pb-4 border-t border-border w-full overflow-hidden"
-              initial={{ height: 0 }}
-              animate={{ height: 'auto' }}
-              exit={{ height: 0 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
+              className="overflow-hidden border-t border-border pb-5 lg:hidden"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
             >
-              <div className="flex flex-col space-y-0.5 pt-3 w-full min-w-0">
-                {serviceLinks.map((item, i) => (
-                  <motion.div
+              <div className="flex flex-col gap-0.5 pt-3">
+                {serviceLinks.map(item => (
+                  <Link
                     key={item.path}
-                    initial={{ x: -16 }}
-                    animate={{ x: 0 }}
-                    transition={{ delay: i * 0.04 }}
+                    to={item.path}
+                    className="flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-medium text-foreground hover:bg-secondary"
                   >
-                    <Link
-                      to={item.path}
-                      className="flex items-center gap-3 text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors w-full text-sm"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center">
-                        <item.icon className={`h-4 w-4 ${item.color}`} />
-                      </div>
-                      {item.label}
-                    </Link>
-                  </motion.div>
+                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-secondary">
+                      <item.icon className="h-4 w-4 text-primary" />
+                    </span>
+                    {item.label}
+                  </Link>
                 ))}
-                
-                <div className="border-t border-border my-2" />
-                
-                <Link to="/community" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
-                  Community
-                </Link>
-                <Link to="/explore" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
-                  Explore All
-                </Link>
-                <Link to="/pricing" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
-                  Pricing
-                </Link>
-                <Link to="/register-business" className="text-foreground hover:text-foreground font-medium px-3 py-3 rounded-xl hover:bg-secondary transition-colors text-sm" onClick={() => setIsMobileMenuOpen(false)}>
-                  For Business
-                </Link>
-                
-                {!user ? (
-                  <div className="flex flex-col space-y-2 pt-3 border-t border-border w-full">
-                    <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full rounded-xl text-sm">Sign In</Button>
+                <div className="my-2 h-px bg-border" />
+                {["/community", "/explore", "/blogs", "/pricing"].map(p => (
+                  <Link key={p} to={p} className="rounded-2xl px-3 py-3 text-sm font-medium text-foreground hover:bg-secondary">
+                    {p.replace("/", "").replace("blogs", "blog").replace(/^\w/, c => c.toUpperCase())}
+                  </Link>
+                ))}
+                <div className="mt-3 flex flex-col gap-2 border-t border-border pt-3">
+                  {!user && (
+                    <Link to="/login" className="rounded-full border border-border py-3 text-center text-sm font-semibold text-foreground">
+                      Sign In
                     </Link>
-                    <Link to="/register-business" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl text-sm">
-                        List Your Business
-                      </Button>
-                    </Link>
-                  </div>
-                ) : (
-                  <div className="flex flex-col space-y-2 pt-3 border-t border-border w-full">
-                    <Link to="/user-bookings" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full justify-start rounded-xl text-sm">My Bookings</Button>
-                    </Link>
-                    <Link to="/business-dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full justify-start rounded-xl text-sm">Dashboard</Button>
-                    </Link>
-                  </div>
-                )}
+                  )}
+                  <Link to="/register-business" className="rounded-full bg-primary py-3 text-center text-sm font-semibold text-primary-foreground">
+                    List Your Business
+                  </Link>
+                </div>
               </div>
             </motion.div>
           )}
