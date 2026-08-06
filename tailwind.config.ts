@@ -17,30 +17,35 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        display: ['Sora', 'Plus Jakarta Sans', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Sora', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        num: ['Space Grotesk', 'ui-monospace', 'monospace'],
         serif: ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
         mono: ['SF Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
       },
       colors: {
         brand: {
-          '50': '#ECFDF5', '100': '#D1FAE5', '200': '#A7F3D0', '300': '#6EE7B7',
-          '400': '#34D399', '500': '#10B981', '600': '#059669', '700': '#047857',
-          '800': '#065F46', '900': '#064E3B'
+          '50': '#EAF4F1', '100': '#CFE7E0', '200': '#A2D0C4', '300': '#6FB4A3',
+          '400': '#3E9382', '500': '#0B6B57', '600': '#0A5D4C', '700': '#094B3E',
+          '800': '#083B32', '900': '#0A2F2A'
         },
         gold: {
           DEFAULT: 'hsl(var(--gold))',
           foreground: 'hsl(var(--gold-foreground))',
-          '400': '#FBBF24', '500': '#F59E0B', '600': '#D97706'
+          '400': '#F0D48F', '500': '#E8C36A', '600': '#D4A945'
         },
+        mint: { DEFAULT: 'hsl(var(--mint))', '400': '#6BEFD3', '500': '#3DE6C3' },
+        coral: { DEFAULT: 'hsl(var(--coral))', '500': '#FF7A59' },
+        sand: { DEFAULT: '#F8F6F1', '50': '#FDFCFA', '100': '#F8F6F1', '200': '#EFEBE1' },
         emerald: {
-          '400': '#34D399', '500': '#10B981', '600': '#059669'
+          '400': '#3E9382', '500': '#0B6B57', '600': '#0A5D4C'
         },
         charcoal: {
-          '50': '#F8FAFC', '100': '#F1F5F9', '200': '#E2E8F0', '300': '#CBD5E1',
-          '400': '#94A3B8', '500': '#64748B', '600': '#475569',
-          '700': '#1F2937', '800': '#111827', '900': '#0A0F1A', '950': '#05080F'
+          '50': '#F8F8F6', '100': '#F1F1EE', '200': '#E4E4DF', '300': '#CFCFC8',
+          '400': '#A3A39B', '500': '#6F6F6F', '600': '#4A4A4A',
+          '700': '#2E2E2E', '800': '#1A1A1A', '900': '#0A2F2A', '950': '#071F1C'
         },
+
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
