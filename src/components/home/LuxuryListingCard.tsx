@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, MapPin, Star, ShieldCheck } from 'lucide-react';
 import type { HomeListing } from '@/hooks/useHomeListings';
-import { getRatingFromId } from '@/utils/ratingFromId';
+import { getRatingInfo } from '@/utils/ratingFromId';
 
 const TYPE_LABEL: Record<string, string> = {
   gym: 'Gym',
@@ -23,8 +23,7 @@ interface Props {
 const LuxuryListingCard: React.FC<Props> = ({ listing, className = '' }) => {
   const [saved, setSaved] = useState(false);
   const img = listing.image_urls?.[0] || FALLBACK_IMG;
-  const rating = getRatingFromId(listing.id);
-  const reviews = 40 + (listing.id.charCodeAt(0) % 130);
+  const { rating, reviews } = getRatingInfo(listing.id);
   const price = listing.monthly_price
     ? `₹${listing.monthly_price.toLocaleString('en-IN')} / month`
     : listing.session_price
