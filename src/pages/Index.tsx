@@ -1,28 +1,16 @@
 import React, { Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles, Shield, Users, Star, MapPin, Dumbbell, Flower2, Heart, UserCheck, Activity, Stethoscope, Zap, Globe, CheckCircle2, Quote } from 'lucide-react';
+import { ArrowRight, MapPin, Dumbbell, Flower2, Heart, UserCheck, Activity, Stethoscope, ShieldCheck, Star, Users, Globe } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import CinematicHero from '@/components/CinematicHero';
-import CommunityBanner from '@/components/CommunityBanner';
-import AuthBanner from '@/components/AuthBanner';
-import { useAuth } from '@/hooks/useAuth';
-import { motion } from 'framer-motion';
+import LuxuryHero from '@/components/home/LuxuryHero';
+import TrendingNearYou from '@/components/home/TrendingNearYou';
+import EditorialCollections from '@/components/home/EditorialCollections';
+import WellnessPanel from '@/components/home/WellnessPanel';
+import AppDownloadBanner from '@/components/home/AppDownloadBanner';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
-import HealthChallengeHub from '@/components/HealthChallengeHub';
-import BentoShowcase from '@/components/BentoShowcase';
-import DietPlanner from '@/components/DietPlanner';
-import WellnessStats from '@/components/WellnessStats';
-import HomeFAQ from '@/components/HomeFAQ';
+import { motion } from 'framer-motion';
 
-const RecentListings = lazy(() => import('@/components/RecentListings'));
-const BusinessShowcaseCarousel = lazy(() => import('@/components/BusinessShowcaseCarousel'));
-
-const LoadingFallback = () => (
-  <div className="flex justify-center py-12">
-    <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
-  </div>
-);
+const HomeFAQ = lazy(() => import('@/components/HomeFAQ'));
 
 const CATEGORIES = [
   { title: 'Gyms', desc: 'Strength · cardio · CrossFit', icon: Dumbbell, href: '/gyms' },
@@ -33,270 +21,131 @@ const CATEGORIES = [
   { title: 'Chiropractors', desc: 'Spine · posture · pain', icon: Stethoscope, href: '/chiropractors' },
 ];
 
-const FEATURES = [
-  { icon: Shield, title: 'Verified', desc: 'Every listing manually approved by our team.' },
-  { icon: Users, title: 'Expert-led', desc: 'Certified trainers, therapists, instructors.' },
-  { icon: Star, title: 'Real reviews', desc: 'No fakes. Verified by actual booking history.' },
-  { icon: Globe, title: '200+ cities', desc: 'Premium discovery across India and beyond.' },
-];
-
-const TESTIMONIALS = [
-  { name: 'Priya S.', city: 'Mumbai', quote: 'Found my dream yoga studio in 30 seconds. The booking flow is genuinely Apple-level.', avatar: '🧘‍♀️' },
-  { name: 'Arjun K.', city: 'Bangalore', quote: 'Trainer match was perfect. Lost 8kg in 12 weeks. The platform feels truly premium.', avatar: '💪' },
-  { name: 'Ananya R.', city: 'Delhi', quote: 'Booked a spa day for my mom — the quality of verified options blew me away.', avatar: '✨' },
+const TRUST = [
+  { icon: ShieldCheck, title: 'Verified listings', desc: 'Every studio manually reviewed before it goes live.' },
+  { icon: Users, title: 'Expert-led', desc: 'Certified trainers, therapists and instructors only.' },
+  { icon: Star, title: 'Honest reviews', desc: 'Tied to real bookings — never bought, never faked.' },
+  { icon: Globe, title: 'Nationwide', desc: 'Premium wellness discovery across Indian cities.' },
 ];
 
 const CITIES = [
-  { name: 'Mumbai', slug: 'mumbai' }, { name: 'Delhi', slug: 'delhi' },
-  { name: 'Bangalore', slug: 'bangalore' }, { name: 'Pune', slug: 'pune' },
-  { name: 'Hyderabad', slug: 'hyderabad' }, { name: 'Chennai', slug: 'chennai' },
-  { name: 'Kolkata', slug: 'kolkata' }, { name: 'Jaipur', slug: 'jaipur' },
-  { name: 'Goa', slug: 'goa' }, { name: 'Rishikesh', slug: 'rishikesh' },
-  { name: 'Gurgaon', slug: 'gurgaon' }, { name: 'Chandigarh', slug: 'chandigarh' },
+  'Mumbai', 'Delhi', 'Bangalore', 'Pune', 'Hyderabad', 'Chennai',
+  'Kolkata', 'Jaipur', 'Goa', 'Rishikesh', 'Gurgaon', 'Chandigarh',
 ];
 
-const Index = () => {
-  const { user, loading: authLoading } = useAuth();
+const Index = () => (
+  <>
+    <SEOHead
+      title="GymSpaYoga — India's Premium Wellness Marketplace"
+      description="Discover and book luxury gyms, yoga studios, spas, certified trainers and therapists across India. Verified listings, editorial collections, zero commission for studios."
+      keywords="premium gym near me, luxury spa india, yoga studio booking, personal trainer india, wellness marketplace, gymspayoga"
+    />
 
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-primary border-t-transparent" />
-      </div>
-    );
-  }
+    <div className="min-h-screen bg-background text-foreground">
+      <LuxuryHero />
 
-  return (
-    <>
-      <SEOHead
-        title="GymSpaYoga — Premium Wellness Discovery & Booking Platform"
-        description="Discover and book independent gyms, yoga studios, spas, certified trainers, therapists and chiropractors across India. Verified listings, direct booking, zero commission for studios."
-        keywords="gym near me, yoga near me, spa near me, personal trainer, premium wellness platform india, gymspayoga"
-      />
+      {/* Curved white content container that lifts over the hero */}
+      <div className="relative z-20 -mt-8 rounded-t-[40px] bg-background pt-12 lg:pt-16">
+        <div className="container-modern">
+          <div className="grid gap-12 xl:grid-cols-[minmax(0,1fr)_460px] xl:gap-10">
+            {/* Main column */}
+            <div className="min-w-0 space-y-16 lg:space-y-20">
+              <ScrollReveal><TrendingNearYou /></ScrollReveal>
+              <ScrollReveal><EditorialCollections /></ScrollReveal>
 
-      <div className="min-h-screen bg-background text-foreground">
-        <AuthBanner />
+              {/* Explore by category */}
+              <ScrollReveal>
+                <section aria-labelledby="categories-heading">
+                  <div className="mb-7">
+                    <p className="eyebrow mb-2">Explore the ecosystem</p>
+                    <h2 id="categories-heading" className="font-display text-2xl sm:text-3xl font-extrabold text-foreground">
+                      Six categories. One premium destination.
+                    </h2>
+                  </div>
+                  <StaggerContainer className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                    {CATEGORIES.map(c => (
+                      <StaggerItem key={c.title}>
+                        <Link to={c.href} className="block h-full">
+                          <motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="lux-card h-full p-5">
+                            <span className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-secondary">
+                              <c.icon className="h-5 w-5 text-primary" />
+                            </span>
+                            <h3 className="font-display text-[15px] font-bold text-foreground">{c.title}</h3>
+                            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{c.desc}</p>
+                          </motion.div>
+                        </Link>
+                      </StaggerItem>
+                    ))}
+                  </StaggerContainer>
+                </section>
+              </ScrollReveal>
 
-        {/* 1. Cinematic hero */}
-        <CinematicHero />
-
-        {/* 2. Featured categories */}
-        <section className="relative section-padding overflow-hidden">
-          <div className="container-modern">
-            <ScrollReveal>
-              <div className="flex items-end justify-between gap-6 mb-12 flex-wrap">
-                <div className="max-w-2xl">
-                  <p className="text-primary font-medium text-sm uppercase tracking-[0.2em] mb-3">Explore the ecosystem</p>
-                  <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                    Six categories.<br />
-                    <span className="text-gradient-emerald">One premium destination.</span>
+              {/* Trust */}
+              <ScrollReveal>
+                <section aria-labelledby="trust-heading" className="rounded-[32px] bg-secondary p-7 sm:p-10">
+                  <p className="eyebrow mb-2">Why GymSpaYoga</p>
+                  <h2 id="trust-heading" className="font-display text-2xl sm:text-3xl font-extrabold text-foreground">
+                    Built for serious wellness.
                   </h2>
-                </div>
-                <Link to="/explore" className="text-primary text-sm font-medium hover:underline inline-flex items-center gap-1">
-                  View all <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </ScrollReveal>
-
-            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
-              {CATEGORIES.map((cat) => (
-                <StaggerItem key={cat.title}>
-                  <Link to={cat.href} className="block group">
-                    <motion.div
-                      whileHover={{ y: -6 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className="glass-card glass-card-hover p-5 h-full"
-                    >
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-emerald flex items-center justify-center mb-4 shadow-emerald">
-                        <cat.icon className="h-5 w-5 text-charcoal-950" />
+                  <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {TRUST.map(t => (
+                      <div key={t.title} className="lux-card p-5">
+                        <t.icon className="mb-4 h-5 w-5 text-primary" />
+                        <h3 className="font-display text-[15px] font-bold text-foreground">{t.title}</h3>
+                        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">{t.desc}</p>
                       </div>
-                      <h3 className="font-display text-base font-bold text-white mb-1">{cat.title}</h3>
-                      <p className="text-white/55 text-xs mb-3 leading-relaxed">{cat.desc}</p>
-                      <span className="text-primary text-xs font-semibold">Browse {cat.title.toLowerCase()} →</span>
-                    </motion.div>
-                  </Link>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
-
-        {/* 3. Bento grid wellness showcase */}
-        <BentoShowcase />
-
-        {/* 4. Top-rated professionals (featured listings) */}
-        <section className="relative section-padding">
-          <div className="container-modern">
-            <ScrollReveal>
-              <div className="text-center mb-12 max-w-2xl mx-auto">
-                <p className="text-primary font-medium text-sm uppercase tracking-[0.2em] mb-3">Top rated this week</p>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-white">Featured professionals</h2>
-                <p className="text-white/60 mt-3">Hand-picked, highly-rated wellness experts our community keeps coming back to.</p>
-              </div>
-            </ScrollReveal>
-            <Suspense fallback={<LoadingFallback />}>
-              <RecentListings />
-            </Suspense>
-          </div>
-        </section>
-
-        {/* 5. Featured cities */}
-        <section className="relative section-padding">
-          <div className="container-modern">
-            <ScrollReveal>
-              <div className="flex items-end justify-between gap-6 mb-10 flex-wrap">
-                <div>
-                  <p className="text-primary font-medium text-sm uppercase tracking-[0.2em] mb-3">Featured cities</p>
-                  <h2 className="font-display text-4xl md:text-5xl font-bold text-white">Premium wellness, wherever you are</h2>
-                </div>
-                <Link to="/explore" className="text-primary text-sm font-medium hover:underline inline-flex items-center gap-1">
-                  All cities <ArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            </ScrollReveal>
-
-            <StaggerContainer className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              {CITIES.map((c) => (
-                <StaggerItem key={c.slug}>
-                  <Link to={`/city/${c.slug}`} className="block">
-                    <motion.div
-                      whileHover={{ y: -3 }}
-                      className="glass-card glass-card-hover px-4 py-4 flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                        <span className="text-white text-sm font-medium truncate">{c.name}</span>
-                      </div>
-                      <ArrowRight className="h-3.5 w-3.5 text-white/40" />
-                    </motion.div>
-                  </Link>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
-
-        {/* 6. Why choose us */}
-        <section className="relative section-padding">
-          <div className="container-modern">
-            <ScrollReveal>
-              <div className="text-center mb-14 max-w-2xl mx-auto">
-                <p className="text-primary font-medium text-sm uppercase tracking-[0.2em] mb-3">Why GymSpaYoga</p>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-white">Built for serious wellness.</h2>
-                <p className="text-white/60 mt-3">Premium standards. Verified providers. Zero noise.</p>
-              </div>
-            </ScrollReveal>
-
-            <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {FEATURES.map((f) => (
-                <StaggerItem key={f.title}>
-                  <div className="glass-card glass-card-hover p-6 h-full">
-                    <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 flex items-center justify-center mb-5">
-                      <f.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <h3 className="font-display text-lg font-bold text-white mb-2">{f.title}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">{f.desc}</p>
+                    ))}
                   </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
+                </section>
+              </ScrollReveal>
 
-        {/* 7. Real testimonials */}
-        <section className="relative section-padding">
-          <div className="container-modern">
-            <ScrollReveal>
-              <div className="text-center mb-14 max-w-2xl mx-auto">
-                <p className="text-primary font-medium text-sm uppercase tracking-[0.2em] mb-3">Loved by our community</p>
-                <h2 className="font-display text-4xl md:text-5xl font-bold text-white">Real stories. Real results.</h2>
-              </div>
-            </ScrollReveal>
-
-            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {TESTIMONIALS.map((t) => (
-                <StaggerItem key={t.name}>
-                  <div className="glass-card glass-card-hover p-7 h-full">
-                    <Quote className="h-6 w-6 text-primary/60 mb-4" />
-                    <p className="text-white/85 leading-relaxed text-[15px] mb-6">"{t.quote}"</p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-emerald/20 border border-primary/30 flex items-center justify-center text-lg">
-                        {t.avatar}
-                      </div>
-                      <div>
-                        <div className="text-white font-semibold text-sm">{t.name}</div>
-                        <div className="text-white/50 text-xs">{t.city}</div>
-                      </div>
+              {/* Cities */}
+              <ScrollReveal>
+                <section aria-labelledby="cities-heading">
+                  <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <p className="eyebrow mb-2">Featured cities</p>
+                      <h2 id="cities-heading" className="font-display text-2xl sm:text-3xl font-extrabold text-foreground">
+                        Premium wellness, wherever you are
+                      </h2>
                     </div>
-                  </div>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
-          </div>
-        </section>
-
-        {/* 8. Stats */}
-        <WellnessStats />
-
-        {/* 9. Wellness lifestyle banner (Diet Planner + Health Challenge engagement) */}
-        <DietPlanner />
-        <HealthChallengeHub />
-
-        {/* FAQ */}
-        <HomeFAQ />
-
-        {/* 10. Cinematic CTA footer */}
-        <section className="relative section-padding overflow-hidden">
-          <div className="container-modern">
-            <div className="relative rounded-[2rem] overflow-hidden border border-white/10 bg-charcoal-900/60 backdrop-blur-xl p-10 md:p-20 text-center">
-              <div className="absolute inset-0 bg-gradient-hero" aria-hidden />
-              <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary/20 blur-3xl" aria-hidden />
-              <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-gold/15 blur-3xl" aria-hidden />
-
-              <div className="relative z-10 max-w-3xl mx-auto">
-                <Sparkles className="h-8 w-8 text-primary mx-auto mb-5" />
-                <h2 className="font-display text-4xl md:text-6xl font-bold text-white tracking-tight leading-[1.05]">
-                  Your next chapter<br />
-                  <span className="text-gradient-emerald">starts with one tap.</span>
-                </h2>
-                <p className="text-white/65 mt-5 text-base md:text-lg max-w-xl mx-auto">
-                  Discover independent gyms, spas and yoga studios near you — booked directly, with zero commission taken from the studio.
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-                  {!user ? (
-                    <>
-                      <Link to="/signup">
-                        <Button size="lg" className="rounded-2xl bg-gradient-emerald text-charcoal-950 font-semibold h-12 px-8 shadow-emerald hover:opacity-90">
-                          Get Started Free <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Link to="/register-business">
-                        <Button size="lg" variant="outline" className="rounded-2xl h-12 px-8 bg-white/[0.04] border-white/15 text-white hover:bg-white/[0.08] hover:text-white">
-                          List Your Business
-                        </Button>
-                      </Link>
-                    </>
-                  ) : (
-                    <Link to="/explore">
-                      <Button size="lg" className="rounded-2xl bg-gradient-emerald text-charcoal-950 font-semibold h-12 px-8 shadow-emerald hover:opacity-90">
-                        <MapPin className="mr-2 h-4 w-4" /> Explore Near You
-                      </Button>
+                    <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
+                      All cities <ArrowRight className="h-4 w-4" />
                     </Link>
-                  )}
-                </div>
-              </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2.5">
+                    {CITIES.map(c => (
+                      <Link
+                        key={c}
+                        to={`/city/${c.toLowerCase()}`}
+                        className="pill border border-border bg-card text-foreground hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
+                      >
+                        <MapPin className="h-3.5 w-3.5 text-primary" />
+                        {c}
+                      </Link>
+                    ))}
+                  </div>
+                </section>
+              </ScrollReveal>
             </div>
+
+            {/* Sticky wellness panel */}
+            <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:pr-1 scrollbar-hide">
+              <WellnessPanel />
+            </aside>
           </div>
-        </section>
 
-        <Suspense fallback={<LoadingFallback />}>
-          <BusinessShowcaseCarousel />
-        </Suspense>
+          {/* Full-width closing sections */}
+          <div className="mt-16 space-y-16 lg:mt-24 lg:space-y-20">
+            <ScrollReveal><AppDownloadBanner /></ScrollReveal>
+            <Suspense fallback={null}><HomeFAQ /></Suspense>
+          </div>
+        </div>
 
-        <CommunityBanner />
+        <div className="h-16" />
       </div>
-    </>
-  );
-};
+    </div>
+  </>
+);
 
 export default Index;
