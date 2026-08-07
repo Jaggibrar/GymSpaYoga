@@ -280,7 +280,7 @@
 
   /* Image zoom container */
   .zoom-media { @apply overflow-hidden; }
-  .zoom-media img { @apply transition-transform duration-[900ms] ease-out; }
+  .zoom-media img { transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1); }
   .zoom-media:hover img { transform: scale(1.07); }
 
   .premium-divider {
