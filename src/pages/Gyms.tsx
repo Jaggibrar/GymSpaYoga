@@ -15,6 +15,7 @@ import { useAnalytics } from '@/components/analytics/AnalyticsProvider';
 import OptimizedImage from '@/components/performance/ImageOptimizer';
 import { motion, AnimatePresence } from 'framer-motion';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
+import CategoryHero from '@/components/listing/CategoryHero';
 
 const Gyms = () => {
   const navigate = useNavigate();
