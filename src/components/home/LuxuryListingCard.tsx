@@ -18,9 +18,11 @@ const FALLBACK_IMG = 'https://images.unsplash.com/photo-1571902943202-507ec2618e
 interface Props {
   listing: HomeListing;
   className?: string;
+  /** Optional override for the destination route (category pages use type-specific URLs). */
+  href?: string;
 }
 
-const LuxuryListingCard: React.FC<Props> = ({ listing, className = '' }) => {
+const LuxuryListingCard: React.FC<Props> = ({ listing, className = '', href }) => {
   const [saved, setSaved] = useState(false);
   const img = listing.image_urls?.[0] || FALLBACK_IMG;
   const { rating, reviews } = getRatingInfo(listing.id);
@@ -32,7 +34,7 @@ const LuxuryListingCard: React.FC<Props> = ({ listing, className = '' }) => {
 
   return (
     <Link
-      to={`/business/${listing.slug || listing.id}`}
+      to={href || `/business/${listing.slug || listing.id}`}
       className={`group relative block rounded-[24px] overflow-hidden zoom-media lux-card p-0 ${className}`}
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-secondary">
