@@ -20,7 +20,7 @@ const CategoryHero: React.FC<CategoryHeroProps> = ({ eyebrow, title, description
       className="absolute inset-0 h-full w-full object-cover"
       loading="eager"
       decoding="async"
-      fetchPriority="high"
+      {...{ fetchpriority: 'high' } as any}
     />
     <div className="absolute inset-0 bg-gradient-hero" aria-hidden />
 
