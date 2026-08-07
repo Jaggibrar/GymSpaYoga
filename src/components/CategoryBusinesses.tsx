@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { getTierFromPricing } from '@/utils/businessUtils';
 import { ViewMode } from '@/components/ui/ViewModeToggle';
-import PremiumListingCard from '@/components/PremiumListingCard';
+import LuxuryListingCard from '@/components/home/LuxuryListingCard';
 
 interface CategoryBusinessesProps {
   category: string;
