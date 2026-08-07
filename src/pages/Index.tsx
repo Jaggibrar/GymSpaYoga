@@ -8,7 +8,6 @@ import EditorialCollections from '@/components/home/EditorialCollections';
 import WellnessPanel from '@/components/home/WellnessPanel';
 import AppDownloadBanner from '@/components/home/AppDownloadBanner';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
-import { motion } from 'framer-motion';
 
 const HomeFAQ = lazy(() => import('@/components/HomeFAQ'));
 
@@ -46,39 +45,43 @@ const Index = () => (
 
       {/* Curved white content container that lifts over the hero */}
       <div className="relative z-20 -mt-8 rounded-t-[40px] bg-background pt-12 lg:pt-16">
+        {/* Explore by category — full-width premium band */}
+        <ScrollReveal>
+          <section aria-labelledby="categories-heading" className="container-wide py-10 lg:py-16">
+            <div className="mb-9 lg:mb-12">
+              <p className="eyebrow mb-2">Explore the ecosystem</p>
+              <h2 id="categories-heading" className="font-display text-[30px] leading-tight sm:text-[34px] font-extrabold text-foreground">
+                Six categories. One premium destination.
+              </h2>
+            </div>
+            <StaggerContainer className="eco-grid">
+              {CATEGORIES.map(c => (
+                <StaggerItem key={c.title} className="h-full">
+                  <Link to={c.href} className="block h-full">
+                    <div className="eco-card">
+                      <span className="eco-icon mb-6 grid h-16 w-16 lg:h-[68px] lg:w-[68px] shrink-0 place-items-center rounded-[22px] bg-secondary">
+                        <c.icon className="h-7 w-7 lg:h-8 lg:w-8 text-primary" />
+                      </span>
+                      <h3 className="font-display text-[22px] lg:text-[25px] xl:text-[27px] leading-tight font-bold break-words text-foreground">{c.title}</h3>
+                      <p className="mt-2.5 text-[16px] lg:text-[17px] leading-relaxed text-muted-foreground">{c.desc}</p>
+                    </div>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          </section>
+        </ScrollReveal>
+
         <div className="container-modern">
+
           <div className="grid gap-12 xl:grid-cols-[minmax(0,1fr)_460px] xl:gap-10">
             {/* Main column */}
             <div className="min-w-0 space-y-16 lg:space-y-20">
               <ScrollReveal><TrendingNearYou /></ScrollReveal>
               <ScrollReveal><EditorialCollections /></ScrollReveal>
 
-              {/* Explore by category */}
-              <ScrollReveal>
-                <section aria-labelledby="categories-heading">
-                  <div className="mb-7">
-                    <p className="eyebrow mb-2">Explore the ecosystem</p>
-                    <h2 id="categories-heading" className="font-display text-2xl sm:text-3xl font-extrabold text-foreground">
-                      Six categories. One premium destination.
-                    </h2>
-                  </div>
-                  <StaggerContainer className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-                    {CATEGORIES.map(c => (
-                      <StaggerItem key={c.title}>
-                        <Link to={c.href} className="block h-full">
-                          <motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 22 }} className="lux-card h-full p-5">
-                            <span className="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-secondary">
-                              <c.icon className="h-5 w-5 text-primary" />
-                            </span>
-                            <h3 className="font-display text-[15px] font-bold text-foreground">{c.title}</h3>
-                            <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{c.desc}</p>
-                          </motion.div>
-                        </Link>
-                      </StaggerItem>
-                    ))}
-                  </StaggerContainer>
-                </section>
-              </ScrollReveal>
+
+
 
               {/* Trust */}
               <ScrollReveal>
