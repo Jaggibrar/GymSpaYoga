@@ -199,35 +199,13 @@ const Gyms = () => {
       />
       
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden h-[250px] md:h-[350px]">
-          <div className="absolute inset-0">
-            <OptimizedImage 
-              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-              alt="Modern gym equipment and fitness facility interior"
-              className="w-full h-full object-cover"
-              priority={true}
-              width={1920}
-              height={350}
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-charcoal-900/40 via-charcoal-900/50 to-charcoal-900/70"></div>
-          </div>
-          <div className="relative container mx-auto px-4 h-full flex flex-col justify-center">
-            <motion.div
-              className="max-w-4xl mx-auto text-center"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-            >
-              <h1 className="text-3xl md:text-5xl font-display font-bold mb-3 text-white">
-                Explore Premium Gyms
-              </h1>
-              <p className="text-base md:text-lg text-white/90 max-w-2xl mx-auto">
-                Discover state-of-the-art fitness centers with expert trainers
-              </p>
-            </motion.div>
-          </div>
-        </section>
+        <CategoryHero
+          eyebrow="Strength & Training"
+          title="Train Where It Feels Premium"
+          description="State-of-the-art fitness centers, expert trainers and transparent pricing near you."
+          image="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1920&q=80"
+          imageAlt="Modern gym equipment and fitness facility interior"
+        />
 
         {/* Search Section */}
         <motion.section
