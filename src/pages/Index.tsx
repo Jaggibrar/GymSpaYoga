@@ -62,7 +62,7 @@ const Index = () => (
                       <span className="eco-icon mb-6 grid h-16 w-16 lg:h-[68px] lg:w-[68px] shrink-0 place-items-center rounded-[22px] bg-secondary">
                         <c.icon className="h-7 w-7 lg:h-8 lg:w-8 text-primary" />
                       </span>
-                      <h3 className="font-display text-[22px] lg:text-[28px] leading-tight font-bold text-foreground">{c.title}</h3>
+                      <h3 className="font-display text-[22px] lg:text-[25px] xl:text-[27px] leading-tight font-bold break-words text-foreground">{c.title}</h3>
                       <p className="mt-2.5 text-[16px] lg:text-[17px] leading-relaxed text-muted-foreground">{c.desc}</p>
                     </div>
                   </Link>
