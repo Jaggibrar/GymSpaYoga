@@ -34,7 +34,7 @@ const LuxuryListingCard: React.FC<Props> = ({ listing, className = '', href }) =
 
   return (
     <Link
-      to={`/business/${listing.slug || listing.id}`}
+      to={href || `/business/${listing.slug || listing.id}`}
       className={`group relative block rounded-[24px] overflow-hidden zoom-media lux-card p-0 ${className}`}
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-secondary">
