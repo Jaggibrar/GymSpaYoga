@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryBusinesses from '@/components/CategoryBusinesses';
 import CategoryTrainers from '@/components/CategoryTrainers';
 import SEOHead from '@/components/SEOHead';
-import OptimizedImage from '@/components/performance/ImageOptimizer';
+import CategoryHero from '@/components/listing/CategoryHero';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
