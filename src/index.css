@@ -273,6 +273,53 @@
   }
 
   .container-modern { @apply max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10; }
+
+  /* Full-bleed premium container for showcase sections */
+  .container-wide {
+    width: min(96vw, 1600px);
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: 20px;
+  }
+  @media (min-width: 1024px) {
+    .container-wide { padding-inline: 32px; }
+  }
+
+  /* Category ecosystem grid */
+  .eco-grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    align-items: stretch;
+  }
+  @media (min-width: 768px) {
+    .eco-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  }
+  @media (min-width: 1280px) {
+    .eco-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
+  }
+
+  .eco-card {
+    @apply bg-card border border-border flex flex-col h-full;
+    border-radius: 30px;
+    min-height: 250px;
+    padding: 24px;
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+  @media (min-width: 1024px) {
+    .eco-card { min-height: 280px; padding: 36px; }
+  }
+  .eco-card:hover {
+    transform: translateY(-8px);
+    border-color: hsl(var(--primary) / 0.45);
+    box-shadow: var(--shadow-lg), 0 0 0 1px hsl(var(--primary) / 0.15), 0 18px 44px -18px hsl(var(--primary) / 0.45);
+  }
+  .eco-card .eco-icon {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .eco-card:hover .eco-icon { transform: scale(1.08); }
   .section-padding { @apply py-16 lg:py-24; }
 
   .hover-lift { @apply transition-all duration-300 hover:-translate-y-1; }
