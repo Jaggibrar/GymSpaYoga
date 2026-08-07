@@ -94,67 +94,62 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
   }
 
   return (
-    <section className="py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">{title}</h2>
-          <div className="mx-auto h-px w-24 bg-gradient-emerald" />
+    <section className="section-padding bg-background">
+      <div className="container-modern">
+        <div className="max-w-2xl">
+          <span className="eyebrow">Curated selection</span>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl font-bold text-foreground leading-[1.08]">{title}</h2>
+          <p className="mt-4 text-muted-foreground leading-relaxed">{description}</p>
         </div>
 
-        {/* Search and Filter Controls (optional per category) */}
+        {/* Sticky glass filter bar */}
         {showFilters && (
-          <Card className="mb-8">
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    placeholder={`Search ${title.toLowerCase()}...`}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    placeholder="Location..."
-                    value={locationFilter}
-                    onChange={(e) => setLocationFilter(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="created_at">Newest First</SelectItem>
-                    <SelectItem value="name">Name</SelectItem>
-                    <SelectItem value="price">Price</SelectItem>
-                  </SelectContent>
-                </Select>
+          <div className="sticky top-20 z-20 mt-10 glass-card p-4 md:p-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder={`Search ${title.toLowerCase()}...`}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-11 h-12 rounded-full bg-card border-border"
+                />
               </div>
-            </CardContent>
-          </Card>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="City or area..."
+                  value={locationFilter}
+                  onChange={(e) => setLocationFilter(e.target.value)}
+                  className="pl-11 h-12 rounded-full bg-card border-border"
+                />
+              </div>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="h-12 rounded-full bg-card border-border">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at">Newest First</SelectItem>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="price">Price</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         )}
 
-        {/* Business Cards */}
+        {/* Listings */}
         {businesses.length === 0 ? (
-          <div className="text-center py-16 glass-card max-w-xl mx-auto">
-            <div className="text-muted-foreground mb-4">
-              <Search className="h-16 w-16 mx-auto" />
-            </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">No {title.toLowerCase()} found</h3>
-            <p className="text-muted-foreground">Try adjusting your search filters or check back later</p>
+          <div className="text-center py-16 mt-10 glass-card max-w-xl mx-auto">
+            <Search className="h-14 w-14 mx-auto text-muted-foreground" />
+            <h3 className="mt-4 text-xl font-semibold text-foreground">No {title.toLowerCase()} found</h3>
+            <p className="mt-1 text-muted-foreground">Try adjusting your filters or check back soon</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
-            {businesses.map((business, idx) => {
-              const tier = getTierFromPricing(business);
-              const imageUrl = business.image_urls?.[0];
-              const type = business.business_type?.toLowerCase();
-              const identifier = (business as any).slug || business.id;
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
+            {businesses.map((business: any) => {
+              const type = business.business_type?.toLowerCase() || category;
+              const identifier = business.slug || business.id;
               const href =
                 type === 'spa'
                   ? `/spas/${identifier}`
@@ -163,51 +158,33 @@ const CategoryBusinesses: React.FC<CategoryBusinessesProps> = ({
                   : type === 'chiropractor'
                   ? `/chiropractors/${identifier}`
                   : `/gyms/${identifier}`;
-              const price = business.monthly_price
-                ? `₹${business.monthly_price}`
-                : business.session_price
-                ? `₹${business.session_price}`
-                : undefined;
-              const unit = business.monthly_price
-                ? '/month'
-                : business.session_price
-                ? '/session'
-                : undefined;
 
               return (
-                <PremiumListingCard
+                <LuxuryListingCard
                   key={business.id}
-                  index={idx}
                   href={href}
-                  title={business.business_name}
-                  category={business.business_type?.replace('_', ' ') || category}
-                  location={`${business.city}, ${business.state}`}
-                  description={
-                    business.description ||
-                    'Premium wellness destination offering excellent services.'
-                  }
-                  image={imageUrl}
-                  rating={4.8}
-                  price={price}
-                  unit={unit}
-                  phone={business.phone}
-                  tier={tier}
-                  status="Verified"
+                  listing={{
+                    id: business.id,
+                    business_name: business.business_name,
+                    business_type: type,
+                    city: business.city,
+                    state: business.state,
+                    address: business.address,
+                    slug: business.slug,
+                    image_urls: business.image_urls,
+                    monthly_price: business.monthly_price,
+                    session_price: business.session_price,
+                    description: business.description,
+                  } as any}
                 />
               );
             })}
           </div>
         )}
-
-        {/* Description Section - Moved Below Listings */}
-        <div className="text-center mt-16">
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {description}
-          </p>
-        </div>
       </div>
     </section>
   );
 };
 
 export default CategoryBusinesses;
+
