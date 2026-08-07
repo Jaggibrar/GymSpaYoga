@@ -8,7 +8,6 @@ import EditorialCollections from '@/components/home/EditorialCollections';
 import WellnessPanel from '@/components/home/WellnessPanel';
 import AppDownloadBanner from '@/components/home/AppDownloadBanner';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
-import { motion } from 'framer-motion';
 
 const HomeFAQ = lazy(() => import('@/components/HomeFAQ'));
 
