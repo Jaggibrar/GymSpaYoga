@@ -184,10 +184,11 @@ export const useBlogs = () => {
         .eq('published', true)
         .maybeSingle();
 
-      if (error) {
-        console.error('Error fetching blog by slug:', error);
+      if (error || !data) {
+        if (error) console.error('Error fetching blog by slug:', error);
         return null;
       }
+
 
       // Increment view count
       await supabase
