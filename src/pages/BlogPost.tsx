@@ -11,6 +11,7 @@ import TagChip from '@/components/blog/TagChip';
 import ShareButtons from '@/components/blog/ShareButtons';
 import AuthorProfile from '@/components/blog/AuthorProfile';
 import DOMPurify from 'dompurify';
+import { normalizeLegacyContent } from '@/components/blog/RichTextEditor';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
