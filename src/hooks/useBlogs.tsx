@@ -86,52 +86,94 @@ export const useBlogs = () => {
     }
   };
 
+  const slugify = (title: string) =>
+    (title || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .slice(0, 80);
+
+  // Guarantees a slug that does not collide with an existing post.
+  const buildUniqueSlug = async (title: string): Promise<string> => {
+    const base = slugify(title) || 'post';
+
+    const { data } = await supabase
+      .from('blogs')
+      .select('slug')
+      .like('slug', `${base}%`);
+
+    const taken = new Set((data || []).map((row: any) => row.slug));
+    if (!taken.has(base)) return base;
+
+    for (let i = 2; i < 200; i++) {
+      const candidate = `${base}-${i}`;
+      if (!taken.has(candidate)) return candidate;
+    }
+    return `${base}-${Date.now().toString(36)}`;
+  };
+
   const createBlog = async (blogData: Partial<Blog>): Promise<string> => {
     if (!user) {
       toast.error('You must be logged in to create a blog');
       return '';
     }
 
+    if (!blogData.title?.trim() || !blogData.content?.trim()) {
+      toast.error('Title and content are required');
+      return '';
+    }
+
     try {
-      const slug = blogData.title?.toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '') || '';
+      let slug = await buildUniqueSlug(blogData.title);
 
-      const { data, error } = await supabase
-        .from('blogs')
-        .insert({
-          title: blogData.title,
-          content: blogData.content,
-          excerpt: blogData.excerpt,
-          slug: slug,
-          category: blogData.category || 'wellness',
-          tags: Array.isArray(blogData.tags) ? blogData.tags : [],
-          image_url: blogData.image_url || blogData.featured_image_url,
-          author_id: user.id,
-          published: true,
-          featured: false,
-          views_count: 0,
-          likes_count: 0,
-          meta_description: blogData.meta_description || blogData.excerpt
-        })
-        .select()
-        .maybeSingle();
+      const payload = {
+        title: blogData.title,
+        content: blogData.content,
+        excerpt: blogData.excerpt,
+        category: blogData.category || 'wellness',
+        tags: Array.isArray(blogData.tags) ? blogData.tags : [],
+        image_url: blogData.image_url || blogData.featured_image_url,
+        author_id: user.id,
+        published: true,
+        featured: false,
+        views_count: 0,
+        likes_count: 0,
+        meta_description: blogData.meta_description || blogData.excerpt,
+        published_at: new Date().toISOString()
+      };
 
-      if (error) {
+      // Retry once with a timestamped slug if another post won the race.
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const { data, error } = await supabase
+          .from('blogs')
+          .insert({ ...payload, slug })
+          .select()
+          .maybeSingle();
+
+        if (!error && data) {
+          toast.success('Blog published successfully!');
+          fetchBlogs();
+          return data.slug;
+        }
+
+        if (error?.code === '23505' && attempt === 0) {
+          slug = `${slug}-${Date.now().toString(36)}`;
+          continue;
+        }
+
         console.error('Error creating blog:', error);
-        toast.error('Failed to create blog');
+        toast.error(error?.message ? `Failed to publish: ${error.message}` : 'Failed to publish blog');
         return '';
       }
 
-      toast.success('Blog created successfully!');
-      fetchBlogs();
-      return data.slug;
+      return '';
     } catch (error: any) {
       console.error('Error creating blog:', error);
-      toast.error('Failed to create blog');
+      toast.error(`Failed to publish blog: ${error?.message || 'Unknown error'}`);
       return '';
     }
   };
+
 
   const getBlogBySlug = async (slug: string): Promise<Blog | null> => {
     try {
