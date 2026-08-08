@@ -282,6 +282,7 @@ const MyBlogs = () => {
                 <DialogTitle>Create New Blog Post</DialogTitle>
               </DialogHeader>
               <BlogRichEditor
+                key={isCreateModalOpen ? 'create-open' : 'create-closed'}
                 onSubmit={handleCreateBlog}
                 isSubmitting={isSubmitting}
                 onCancel={() => setIsCreateModalOpen(false)}
@@ -296,6 +297,7 @@ const MyBlogs = () => {
                 <DialogTitle>Edit Blog Post</DialogTitle>
               </DialogHeader>
               <BlogRichEditor
+                key={editingBlog?.id || 'edit'}
                 onSubmit={handleEditBlog}
                 isSubmitting={isSubmitting}
                 initialData={editingBlog}
