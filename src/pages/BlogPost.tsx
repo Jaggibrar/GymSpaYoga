@@ -90,7 +90,7 @@ const BlogPost = () => {
 
   const featuredImage = blog.image_url || blog.featured_image_url;
   const rawContent = blog.content || blog.excerpt || '';
-  const safeHtml = DOMPurify.sanitize(rawContent.replace(/\n/g, '<br />'));
+  const safeHtml = DOMPurify.sanitize(normalizeLegacyContent(rawContent));
 
   return (
     <>
