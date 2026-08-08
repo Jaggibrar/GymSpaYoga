@@ -11,6 +11,7 @@ import TagChip from '@/components/blog/TagChip';
 import ShareButtons from '@/components/blog/ShareButtons';
 import AuthorProfile from '@/components/blog/AuthorProfile';
 import DOMPurify from 'dompurify';
+import { normalizeLegacyContent } from '@/components/blog/RichTextEditor';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -90,7 +91,7 @@ const BlogPost = () => {
 
   const featuredImage = blog.image_url || blog.featured_image_url;
   const rawContent = blog.content || blog.excerpt || '';
-  const safeHtml = DOMPurify.sanitize(rawContent.replace(/\n/g, '<br />'));
+  const safeHtml = DOMPurify.sanitize(normalizeLegacyContent(rawContent));
 
   return (
     <>
