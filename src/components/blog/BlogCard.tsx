@@ -80,7 +80,7 @@ const BlogCard = ({ blog, onLike, onShare, onReadMore }: BlogCardProps) => {
             className="group-hover:bg-emerald-500 group-hover:text-white"
             onClick={() => onReadMore(blog)}
           >
-            Read More
+            Read full article
           </Button>
         </div>
       </CardContent>
