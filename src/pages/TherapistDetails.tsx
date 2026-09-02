@@ -45,13 +45,17 @@ const TherapistDetails = () => {
 
   const fetchTherapistDetails = async (therapistId: string) => {
     try {
-      const { data, error } = await supabase
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(therapistId);
+
+      let query = supabase
         .from('public_business_listings' as any)
         .select('*')
-        .eq('id', therapistId)
         .eq('business_type', 'therapist')
-        .eq('status', 'approved')
-        .maybeSingle();
+        .eq('status', 'approved');
+
+      query = isUUID ? query.eq('id', therapistId) : query.eq('slug', therapistId);
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       if (!data) {

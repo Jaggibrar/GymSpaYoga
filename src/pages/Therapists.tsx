@@ -179,7 +179,7 @@ const Therapists = () => {
             </div>
           )}
 
-          {!error && (
+          {!error && (loading || filteredTherapists.length > 0) && (
             <OptimizedBusinessGrid
               businesses={filteredTherapists}
               loading={loading}

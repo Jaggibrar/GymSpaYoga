@@ -51,12 +51,16 @@ const BusinessDetails = () => {
     
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+
+      let query = supabase
         .from('public_business_listings' as any)
         .select('*')
-        .eq('id', id)
-        .eq('status', 'approved')
-        .maybeSingle();
+        .eq('status', 'approved');
+
+      query = isUUID ? query.eq('id', id) : query.eq('slug', id);
+
+      const { data, error } = await query.maybeSingle();
 
       if (error) {
         if (error.code === 'PGRST116') {
