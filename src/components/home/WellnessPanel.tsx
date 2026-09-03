@@ -186,30 +186,6 @@ export const WellnessHighlights: React.FC = () => {
           ))}
         </div>
       </section>
-
-      {/* Premium Trainers */}
-      <section aria-labelledby="trainers-heading">
-        <div id="trainers-heading">
-          <PanelHeader title="Premium Trainers" sub="Certified. Experienced. Trusted." to="/trainers" />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {TRAINERS.map(t => (
-            <Link key={t.name} to="/trainers" className="lux-card flex items-center gap-3 p-3">
-              <img src={t.img} alt={t.name} loading="lazy" className="h-14 w-14 shrink-0 rounded-2xl object-cover" />
-              <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-foreground">{t.name}</p>
-                <p className="truncate text-[11px] text-muted-foreground">{t.role} · {t.exp}</p>
-                <p className="mt-1 flex items-center gap-1 text-[11px]">
-                  <Star className="h-3 w-3 fill-gold text-gold" />
-                  <span className="font-num font-semibold text-foreground">{t.rating}</span>
-                  <span className="text-muted-foreground">({t.reviews})</span>
-                </p>
-                <p className="mt-0.5 font-num text-[11px] font-semibold text-primary">{t.price}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
     </div>
   );
 };
