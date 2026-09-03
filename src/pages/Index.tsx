@@ -59,11 +59,11 @@ const Index = () => (
                 <StaggerItem key={c.title} className="h-full">
                   <Link to={c.href} className="block h-full">
                     <div className="eco-card">
-                      <span className="eco-icon mb-6 grid h-16 w-16 lg:h-[68px] lg:w-[68px] shrink-0 place-items-center rounded-[22px] bg-secondary">
-                        <c.icon className="h-7 w-7 lg:h-8 lg:w-8 text-primary" />
+                      <span className="eco-icon mb-6 grid h-14 w-14 lg:h-16 lg:w-16 shrink-0 place-items-center rounded-[20px] bg-secondary">
+                        <c.icon className="h-6 w-6 lg:h-7 lg:w-7 text-primary" />
                       </span>
-                      <h3 className="font-display text-[22px] lg:text-[25px] xl:text-[27px] leading-tight font-bold break-words text-foreground">{c.title}</h3>
-                      <p className="mt-2.5 text-[16px] lg:text-[17px] leading-relaxed text-muted-foreground">{c.desc}</p>
+                      <h3 className="font-display leading-snug font-bold text-foreground text-[clamp(19px,1.45vw,26px)]">{c.title}</h3>
+                      <p className="mt-2.5 text-[15px] lg:text-[16px] leading-relaxed text-muted-foreground">{c.desc}</p>
                     </div>
                   </Link>
                 </StaggerItem>
