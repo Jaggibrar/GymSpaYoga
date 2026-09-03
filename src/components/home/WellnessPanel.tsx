@@ -111,6 +111,48 @@ const WellnessPanel: React.FC = () => {
           ))}
         </div>
       </section>
+
+      {/* Premium Trainers — compact sidebar list */}
+      <section aria-labelledby="sidebar-trainers-heading">
+        <div id="sidebar-trainers-heading">
+          <PanelHeader title="Premium Trainers" sub="Certified. Experienced. Trusted." to="/trainers" />
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+          {TRAINERS.map(t => (
+            <Link key={t.name} to="/trainers" className="lux-card flex items-center gap-3 p-3">
+              <img src={t.img} alt={t.name} loading="lazy" className="h-14 w-14 shrink-0 rounded-2xl object-cover" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-foreground">{t.name}</p>
+                <p className="truncate text-[11px] text-muted-foreground">{t.role} · {t.exp}</p>
+                <p className="mt-1 flex items-center gap-1 text-[11px]">
+                  <Star className="h-3 w-3 fill-gold text-gold" />
+                  <span className="font-num font-semibold text-foreground">{t.rating}</span>
+                  <span className="text-muted-foreground">({t.reviews})</span>
+                  <span className="ml-auto font-num font-semibold text-primary">{t.price}</span>
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Business CTA */}
+      <section aria-label="List your business">
+        <div className="relative overflow-hidden rounded-[24px] bg-primary p-6 text-primary-foreground shadow-soft">
+          <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-white/10" aria-hidden />
+          <div className="absolute -bottom-12 -left-8 h-28 w-28 rounded-full bg-white/10" aria-hidden />
+          <h3 className="relative font-display text-lg font-bold">Own a gym, spa or studio?</h3>
+          <p className="relative mt-1.5 text-[13px] leading-relaxed text-primary-foreground/80">
+            Join India's premium wellness marketplace. Zero commission, verified badge, direct bookings.
+          </p>
+          <Link
+            to="/register-business"
+            className="relative mt-4 inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-xs font-bold text-primary transition hover:-translate-y-0.5"
+          >
+            List Your Business <ChevronRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </section>
     </div>
   );
 };
