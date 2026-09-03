@@ -5,7 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import LuxuryHero from '@/components/home/LuxuryHero';
 import TrendingNearYou from '@/components/home/TrendingNearYou';
 import EditorialCollections from '@/components/home/EditorialCollections';
-import WellnessPanel from '@/components/home/WellnessPanel';
+import WellnessPanel, { WellnessHighlights } from '@/components/home/WellnessPanel';
 import AppDownloadBanner from '@/components/home/AppDownloadBanner';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
 
@@ -59,11 +59,11 @@ const Index = () => (
                 <StaggerItem key={c.title} className="h-full">
                   <Link to={c.href} className="block h-full">
                     <div className="eco-card">
-                      <span className="eco-icon mb-6 grid h-16 w-16 lg:h-[68px] lg:w-[68px] shrink-0 place-items-center rounded-[22px] bg-secondary">
-                        <c.icon className="h-7 w-7 lg:h-8 lg:w-8 text-primary" />
+                      <span className="eco-icon mb-6 grid h-14 w-14 lg:h-16 lg:w-16 shrink-0 place-items-center rounded-[20px] bg-secondary">
+                        <c.icon className="h-6 w-6 lg:h-7 lg:w-7 text-primary" />
                       </span>
-                      <h3 className="font-display text-[22px] lg:text-[25px] xl:text-[27px] leading-tight font-bold break-words text-foreground">{c.title}</h3>
-                      <p className="mt-2.5 text-[16px] lg:text-[17px] leading-relaxed text-muted-foreground">{c.desc}</p>
+                      <h3 className="font-display leading-snug font-bold text-foreground text-[clamp(19px,1.45vw,26px)]">{c.title}</h3>
+                      <p className="mt-2.5 text-[15px] lg:text-[16px] leading-relaxed text-muted-foreground">{c.desc}</p>
                     </div>
                   </Link>
                 </StaggerItem>
@@ -133,13 +133,14 @@ const Index = () => (
             </div>
 
             {/* Sticky wellness panel */}
-            <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:pr-1 scrollbar-hide">
+            <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start">
               <WellnessPanel />
             </aside>
           </div>
 
           {/* Full-width closing sections */}
           <div className="mt-16 space-y-16 lg:mt-24 lg:space-y-20">
+            <ScrollReveal><WellnessHighlights /></ScrollReveal>
             <ScrollReveal><AppDownloadBanner /></ScrollReveal>
             <Suspense fallback={null}><HomeFAQ /></Suspense>
           </div>

@@ -111,7 +111,14 @@ const WellnessPanel: React.FC = () => {
           ))}
         </div>
       </section>
+    </div>
+  );
+};
 
+/** Full-width sections (Events & Trainers) rendered below the main grid. */
+export const WellnessHighlights: React.FC = () => {
+  return (
+    <div className="space-y-16 lg:space-y-20">
       {/* Events & Challenges */}
       <section aria-labelledby="events-heading">
         <div id="events-heading">
