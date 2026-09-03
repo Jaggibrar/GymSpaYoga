@@ -5,7 +5,7 @@ import SEOHead from '@/components/SEOHead';
 import LuxuryHero from '@/components/home/LuxuryHero';
 import TrendingNearYou from '@/components/home/TrendingNearYou';
 import EditorialCollections from '@/components/home/EditorialCollections';
-import WellnessPanel from '@/components/home/WellnessPanel';
+import WellnessPanel, { WellnessHighlights } from '@/components/home/WellnessPanel';
 import AppDownloadBanner from '@/components/home/AppDownloadBanner';
 import ScrollReveal, { StaggerContainer, StaggerItem } from '@/components/ScrollReveal';
 
@@ -133,13 +133,14 @@ const Index = () => (
             </div>
 
             {/* Sticky wellness panel */}
-            <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto xl:pr-1 scrollbar-hide">
+            <aside className="min-w-0 xl:sticky xl:top-24 xl:self-start">
               <WellnessPanel />
             </aside>
           </div>
 
           {/* Full-width closing sections */}
           <div className="mt-16 space-y-16 lg:mt-24 lg:space-y-20">
+            <ScrollReveal><WellnessHighlights /></ScrollReveal>
             <ScrollReveal><AppDownloadBanner /></ScrollReveal>
             <Suspense fallback={null}><HomeFAQ /></Suspense>
           </div>
