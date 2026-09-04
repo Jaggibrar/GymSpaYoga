@@ -102,31 +102,44 @@ const Index = () => (
                 </section>
               </ScrollReveal>
 
-              {/* Cities */}
+              {/* Cities — editorial split, full-width */}
               <ScrollReveal>
-                <section aria-labelledby="cities-heading">
-                  <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-                    <div>
-                      <p className="eyebrow mb-2">Featured cities</p>
-                      <h2 id="cities-heading" className="font-display text-2xl sm:text-3xl font-extrabold text-foreground">
-                        Premium wellness, wherever you are
-                      </h2>
-                    </div>
-                    <Link to="/explore" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
-                      All cities <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                  <div className="flex flex-wrap gap-2.5">
-                    {CITIES.map(c => (
+                <section aria-labelledby="cities-heading" className="relative overflow-hidden rounded-[32px] border border-border/60 bg-card p-7 sm:p-10 shadow-soft">
+                  <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/5 blur-3xl" aria-hidden />
+                  <div className="pointer-events-none absolute -bottom-28 -left-20 h-56 w-56 rounded-full bg-gold/10 blur-3xl" aria-hidden />
+                  <div className="relative grid gap-8 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-12">
+                    <div className="flex flex-col justify-between gap-6">
+                      <div>
+                        <p className="eyebrow mb-2">Featured cities</p>
+                        <h2 id="cities-heading" className="font-display text-2xl sm:text-[30px] leading-tight font-extrabold text-foreground">
+                          Premium wellness, wherever you are
+                        </h2>
+                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                          Hand-picked studios, spas and trainers across India's most vibrant wellness destinations.
+                        </p>
+                      </div>
                       <Link
-                        key={c}
-                        to={`/city/${c.toLowerCase()}`}
-                        className="pill border border-border bg-card text-foreground hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
+                        to="/explore"
+                        className="group inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
                       >
-                        <MapPin className="h-3.5 w-3.5 text-primary" />
-                        {c}
+                        Explore all cities
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                       </Link>
-                    ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                      {CITIES.map(c => (
+                        <Link
+                          key={c}
+                          to={`/city/${c.toLowerCase()}`}
+                          className="group flex items-center gap-2 rounded-2xl border border-border/70 bg-background px-3 py-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-soft"
+                        >
+                          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-secondary transition-colors group-hover:bg-primary/10">
+                            <MapPin className="h-3.5 w-3.5 text-primary" />
+                          </span>
+                          <span className="min-w-0 text-[13px] font-semibold leading-tight text-foreground transition-colors group-hover:text-primary">{c}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 </section>
               </ScrollReveal>
