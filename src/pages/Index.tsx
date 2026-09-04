@@ -112,6 +112,47 @@ const Index = () => (
 
           {/* Full-width closing sections */}
           <div className="mt-16 space-y-16 lg:mt-24 lg:space-y-20">
+            {/* Cities — full-width editorial band */}
+            <ScrollReveal>
+              <section aria-labelledby="cities-heading" className="relative overflow-hidden rounded-[32px] border border-border/60 bg-card p-7 sm:p-10 lg:p-14 shadow-soft">
+                <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary/5 blur-3xl" aria-hidden />
+                <div className="pointer-events-none absolute -bottom-28 -left-20 h-56 w-56 rounded-full bg-gold/10 blur-3xl" aria-hidden />
+                <div className="relative grid gap-10 lg:grid-cols-[minmax(0,380px)_minmax(0,1fr)] lg:gap-16 items-center">
+                  <div className="flex flex-col gap-6">
+                    <div>
+                      <p className="eyebrow mb-2">Featured cities</p>
+                      <h2 id="cities-heading" className="font-display text-2xl sm:text-[34px] leading-tight font-extrabold text-foreground">
+                        Premium wellness, wherever you are
+                      </h2>
+                      <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+                        Hand-picked studios, spas and trainers across India's most vibrant wellness destinations.
+                      </p>
+                    </div>
+                    <Link
+                      to="/explore"
+                      className="group inline-flex w-fit items-center gap-2 rounded-full border border-border bg-background px-6 py-3 text-sm font-semibold text-foreground transition hover:border-primary/40 hover:text-primary"
+                    >
+                      Explore all cities
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                    {CITIES.map(c => (
+                      <Link
+                        key={c}
+                        to={`/city/${c.toLowerCase()}`}
+                        className="group flex items-center gap-2.5 rounded-2xl border border-border/70 bg-background px-4 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-soft"
+                      >
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-secondary transition-colors group-hover:bg-primary/10">
+                          <MapPin className="h-4 w-4 text-primary" />
+                        </span>
+                        <span className="min-w-0 truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">{c}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </ScrollReveal>
             <ScrollReveal><WellnessHighlights /></ScrollReveal>
             <ScrollReveal><AppDownloadBanner /></ScrollReveal>
             <Suspense fallback={null}><HomeFAQ /></Suspense>
