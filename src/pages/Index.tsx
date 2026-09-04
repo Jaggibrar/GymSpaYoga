@@ -136,7 +136,7 @@ const Index = () => (
                       <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </Link>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
                     {CITIES.map(c => (
                       <Link
                         key={c}
@@ -146,7 +146,7 @@ const Index = () => (
                         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-secondary transition-colors group-hover:bg-primary/10">
                           <MapPin className="h-4 w-4 text-primary" />
                         </span>
-                        <span className="min-w-0 truncate text-sm font-semibold text-foreground transition-colors group-hover:text-primary">{c}</span>
+                        <span className="text-[13px] font-semibold text-foreground transition-colors group-hover:text-primary">{c}</span>
                       </Link>
                     ))}
                   </div>
