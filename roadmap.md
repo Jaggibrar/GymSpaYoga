@@ -1,4 +1,4 @@
 # Roadmap
 
 - [x] Featured Cities section: stretch to full width, fix clipped names
-- [ ] Seed chiropractors in Kolkata with full details so the section/page lists them
+- [x] Seed 4 Kolkata chiropractors with full details; widened business_type check to allow chiropractor/therapist/trainer
