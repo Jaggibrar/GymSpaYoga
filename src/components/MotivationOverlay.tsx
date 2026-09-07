@@ -30,6 +30,22 @@ const MotivationOverlay = () => {
     }
   };
 
+  // Close on Escape
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+    try {
+      localStorage.setItem(STORAGE_KEY, "1");
+    } catch {
+      // ignore
+    }
+  };
+
   return (
     <AnimatePresence>
       {open && (
