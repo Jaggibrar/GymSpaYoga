@@ -215,6 +215,7 @@ const AppContent = () => {
       <React.Suspense fallback={null}>
         <FloatingAIButton />
       </React.Suspense>
+      <MotivationOverlay />
       <Toaster />
     </div>
   );
