@@ -39,12 +39,6 @@ const MotivationOverlay = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      // ignore
-    }
-  };
 
   return (
     <AnimatePresence>
