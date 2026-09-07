@@ -76,6 +76,7 @@ const CommunityProfile = React.lazy(() => import("./pages/CommunityProfile"));
 const CommunityTag = React.lazy(() => import("./pages/CommunityTag"));
 const CommunitySaved = React.lazy(() => import("./pages/CommunitySaved"));
 const FloatingAIButton = React.lazy(() => import("./components/ai/FloatingAIButton"));
+import MotivationOverlay from "./components/MotivationOverlay";
 
 const queryClient = new QueryClient();
 
@@ -214,6 +215,7 @@ const AppContent = () => {
       <React.Suspense fallback={null}>
         <FloatingAIButton />
       </React.Suspense>
+      <MotivationOverlay />
       <Toaster />
     </div>
   );
